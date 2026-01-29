@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Button from '../../components/ui/Button';
+import { createClient } from '../../../lib/supabase/client';
 
 interface Idea {
-    id: number;
+    id: number | string;
     sector: string;
     title: string;
     location: string;
@@ -13,18 +15,102 @@ interface Idea {
 }
 
 export default function InvestorDashboard() {
-    // حالة افتراضية لمحاكاة مستثمر (معتمد أو غير معتمد)
+    const router = useRouter();
     const [isApproved, setIsApproved] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [user, setUser] = useState<any>(null);
+    const [loadingApproval, setLoadingApproval] = useState(false);
 
-    // بيانات تجريبية للأفكار الواردة
-    const ideas: Idea[] = [
+    // بيانات تجريبية (Fallback)
+    const [ideas, setIdeas] = useState<Idea[]>([
         { id: 1, sector: 'السياحة', title: 'مخيم فندقي فاخر في جبة', location: 'حائل', status: 'جديد' },
         { id: 2, sector: 'الصحة', title: 'مركز تأهيل ذكي بمساعدة AI', location: 'الرياض', status: 'قيد التقييم' },
         { id: 3, sector: 'التقنية', title: 'منصة تعليمية للبرمجة', location: 'جدة', status: 'جديد' },
         { id: 4, sector: 'التجزئة', title: 'متجر إلكتروني للحرف اليدوية', location: 'الدمام', status: 'جديد' },
         { id: 5, sector: 'الزراعة', title: 'مزرعة عمودية ذكية', location: 'القصيم', status: 'قيد التقييم' },
         { id: 6, sector: 'المطاعم', title: 'سلسلة مطاعم صحية', location: 'الرياض', status: 'جديد' },
-    ];
+    ]);
+
+    const supabase = createClient();
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const { data: { user }, error } = await supabase.auth.getUser();
+
+                if (error || !user) {
+                    router.push('/login');
+                    return;
+                }
+
+                setUser(user);
+
+                // Fetch Investor Profile
+                const { data: profile, error: profileError } = await supabase
+                    .from('investor_profiles')
+                    .select('approval_status')
+                    .eq('profile_id', user.id)
+                    .single();
+
+                if (profile) {
+                    setIsApproved(profile.approval_status === 'approved');
+                } else {
+                    // Maybe check if it's an entrepreneur trying to access investor dashboard?
+                    // For now, assume pending
+                }
+
+                // Fetch Real Opportunities (Optional - currently using mock)
+                const { data: opportunities } = await supabase
+                    .from('investment_opportunities')
+                    .select('*')
+                    .eq('status', 'published');
+
+                if (opportunities && opportunities.length > 0) {
+                    // Map DB opportunities to UI format if needed
+                    // setIdeas(opportunities);
+                }
+
+            } catch (e) {
+                console.error("Auth check failed", e);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        checkAuth();
+    }, [router, supabase]);
+
+    const requestApproval = async () => {
+        if (!user) return;
+        setLoadingApproval(true);
+
+        try {
+            // In a real app, this might create a notification for admins
+            // For demo purposes, we'll auto-approve after 2 seconds or update DB
+
+            // To update in DB (Simulated Admin Approval)
+            // Note: Users usually can't approve themselves due to RLS, so this might fail 
+            // unless we have a specific RPC or policy.
+            // For the demo, let's just set local state to show the UI effect
+
+            // Call an edge function or just show success message
+            // await supabase.rpc('request_approval', { ... }) 
+
+            // Simulating approval for UX demo
+            setTimeout(() => {
+                setIsApproved(true);
+                setLoadingApproval(false);
+            }, 1500);
+
+        } catch (e) {
+            console.error(e);
+            setLoadingApproval(false);
+        }
+    };
+
+    if (isLoading) {
+        return <div className="min-h-screen flex items-center justify-center">جار التحميل...</div>;
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6" dir="rtl">
@@ -35,9 +121,19 @@ export default function InvestorDashboard() {
                         <h1 className="text-4xl font-bold text-gray-900 mb-2">بوابة المستثمرين المعتمدين</h1>
                         <p className="text-gray-600">استعرض الفرص الاستثمارية الحصرية</p>
                     </div>
-                    <Link href="/">
-                        <Button variant="outline" size="sm">الرئيسية</Button>
-                    </Link>
+                    <div className="flex gap-4">
+                        <span className="text-sm text-gray-500 self-center">مرحباً، {user?.user_metadata?.full_name || 'المستثمر'}</span>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={async () => {
+                                await supabase.auth.signOut();
+                                router.push('/login');
+                            }}
+                        >
+                            تسجيل الخروج
+                        </Button>
+                    </div>
                 </div>
 
                 {/* Status Badge */}
@@ -90,10 +186,11 @@ export default function InvestorDashboard() {
                                         يجب أن يكون حسابك معتمداً لمشاهدة تفاصيل الفكرة والدراسة الأولية
                                     </p>
                                     <button
-                                        onClick={() => setIsApproved(true)}
-                                        className="px-6 py-2.5 bg-gradient-to-r from-primary to-secondary text-white rounded-xl text-sm font-semibold hover:shadow-lg transition-all"
+                                        onClick={requestApproval}
+                                        disabled={loadingApproval}
+                                        className="px-6 py-2.5 bg-gradient-to-r from-primary to-secondary text-white rounded-xl text-sm font-semibold hover:shadow-lg transition-all disabled:opacity-70"
                                     >
-                                        طلب اعتماد الحساب
+                                        {loadingApproval ? 'جارٍ الطلب...' : 'طلب اعتماد الحساب'}
                                     </button>
                                 </div>
                             )}

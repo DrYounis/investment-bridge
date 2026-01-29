@@ -63,7 +63,6 @@ export default function Home() {
               glass
               hover
               className="animate-fade-in-up"
-              style={{ animationDelay: '100ms' }}
             >
               <div className="w-16 h-16 rounded-full bg-secondary/20 flex items-center justify-center mb-4">
                 <svg className="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -80,7 +79,6 @@ export default function Home() {
               glass
               hover
               className="animate-fade-in-up"
-              style={{ animationDelay: '200ms' }}
             >
               <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mb-4">
                 <svg className="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">

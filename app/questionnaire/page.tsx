@@ -166,7 +166,7 @@ export default function QuestionnairePage() {
                 </div>
 
                 {/* Question Card */}
-                <Card glass className="p-8 mb-8 animate-fade-in-up">
+                <Card className="p-8 mb-8 animate-fade-in-up bg-white shadow-xl border border-gray-200">
                     <h2 className="text-2xl font-bold mb-6 text-gray-900">
                         {currentQuestion.title}
                     </h2>

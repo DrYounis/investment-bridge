@@ -117,14 +117,15 @@ export default function QuestionnairePage() {
     const handleSubmit = async () => {
         setIsSubmitting(true);
 
-        // TODO: Save answers to database
-        console.log('Answers:', answers);
+        // Save answers to localStorage to retrieve after registration
+        localStorage.setItem('investmentAnswers', JSON.stringify(answers));
+        localStorage.setItem('questionnaireCompleted', 'true');
 
         // Simulate API call
         setTimeout(() => {
             setIsSubmitting(false);
-            window.location.href = '/dashboard/investor';
-        }, 2000);
+            window.location.href = '/register';
+        }, 1500);
     };
 
     const isAnswered = () => {
@@ -183,8 +184,8 @@ export default function QuestionnairePage() {
                                     key={option.id}
                                     onClick={() => handleAnswer(option.value)}
                                     className={`w-full p-4 rounded-lg border-2 text-right transition-all ${isSelected
-                                            ? 'border-primary bg-primary/10 text-primary'
-                                            : 'border-gray-300 hover:border-primary/50 text-foreground'
+                                        ? 'border-primary bg-primary/10 text-primary'
+                                        : 'border-gray-300 hover:border-primary/50 text-foreground'
                                         }`}
                                 >
                                     <div className="flex items-center gap-3">
@@ -232,17 +233,17 @@ export default function QuestionnairePage() {
                         isLoading={isSubmitting}
                         className="flex-1"
                     >
-                        {currentStep === QUESTIONS.length - 1 ? 'إنهاء' : 'التالي'}
+                        {currentStep === QUESTIONS.length - 1 ? 'التالي: التسجيل' : 'التالي'}
                     </Button>
                 </div>
 
                 {/* Skip Link */}
                 <div className="text-center mt-6">
                     <Link
-                        href="/dashboard/investor"
+                        href="/register"
                         className="text-sm text-foreground/60 hover:text-foreground transition-colors"
                     >
-                        تخطي الاستبيان (يمكنك إكماله لاحقاً)
+                        تخطي الاستبيان والذهاب للتسجيل ←
                     </Link>
                 </div>
             </div>

@@ -1,23 +1,50 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Card from '../../components/ui/Card';
+import { createClient } from '../../../lib/supabase/client';
 
 export default function RegisterPage() {
+    const router = useRouter();
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
         phone: '',
         password: '',
         confirmPassword: '',
-        userType: 'investor' as 'investor' | 'opportunity_provider',
+        userType: 'investor' as 'investor' | 'entrepreneur', // Updated to match DB enums
     });
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const [questionnaireData, setQuestionnaireData] = useState<any>(null);
+
+    // Initialize Supabase client
+    const supabase = createClient();
+
+    // Load questionnaire data from localStorage on mount
+    useEffect(() => {
+        const storedAnswers = localStorage.getItem('investmentAnswers');
+        const userType = localStorage.getItem('userType');
+
+        if (storedAnswers) {
+            try {
+                const parsedAnswers = JSON.parse(storedAnswers);
+                setQuestionnaireData(parsedAnswers);
+
+                // If user type was determined in questionnaire, set it
+                if (userType && (userType === 'investor' || userType === 'entrepreneur')) {
+                    setFormData(prev => ({ ...prev, userType: userType as any }));
+                }
+            } catch (e) {
+                console.error("Error parsing questionnaire data", e);
+            }
+        }
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -36,12 +63,90 @@ export default function RegisterPage() {
 
         setIsLoading(true);
 
-        // TODO: Implement actual registration logic with Supabase
-        setTimeout(() => {
+        try {
+            // 1. Sign up user
+            const { data: authData, error: authError } = await supabase.auth.signUp({
+                email: formData.email,
+                password: formData.password,
+                options: {
+                    data: {
+                        full_name: formData.fullName,
+                        user_type: formData.userType,
+                    },
+                },
+            });
+
+            if (authError) throw authError;
+
+            if (authData.user) {
+                const userId = authData.user.id;
+
+                // 2. Create Profile Entry (if not handled by trigger, but here explicit is safer)
+                // Note: Triggers are great, but manual insertion allows error handling in UI
+                const { error: profileError } = await supabase
+                    .from('profiles')
+                    .insert({
+                        id: userId,
+                        email: formData.email,
+                        full_name: formData.fullName,
+                        phone: formData.phone,
+                        user_type: formData.userType,
+                    });
+
+                if (profileError) {
+                    console.error("Profile creation error:", profileError);
+                    // Continue anyway as auth succeeded, might be a duplicate key if trigger exists
+                }
+
+                // 3. Create Specific Profile (Investor or Entrepreneur)
+                if (formData.userType === 'investor') {
+                    await supabase.from('investor_profiles').insert({
+                        profile_id: userId,
+                        approval_status: 'pending', // Default pending
+                        // Map questionnaire data if available
+                        experience_level: questionnaireData?.['1'], // Assuming Q1 is experience
+                        investment_amount: questionnaireData?.['2'],
+                        risk_tolerance: questionnaireData?.['3'],
+                        investment_duration: questionnaireData?.['4'],
+                        preferred_sectors: questionnaireData?.['5'] ? JSON.stringify(questionnaireData['5']) : null,
+                        expected_return: questionnaireData?.['6'],
+                    });
+                } else {
+                    await supabase.from('entrepreneur_profiles').insert({
+                        profile_id: userId,
+                        sector: questionnaireData?.['sector'] || null,
+                    });
+                }
+
+                // 4. Save Questionnaire Responses
+                if (questionnaireData) {
+                    await supabase.from('questionnaire_responses').insert({
+                        profile_id: userId,
+                        user_type: formData.userType,
+                        sector: questionnaireData?.['sector'] || null,
+                        responses: questionnaireData,
+                        project_summary: questionnaireData?.['summary'] || null,
+                    });
+
+                    // Clear localStorage
+                    localStorage.removeItem('investmentAnswers');
+                    localStorage.removeItem('questionnaireCompleted');
+                    localStorage.removeItem('userType');
+                }
+
+                // 5. Redirect
+                const dashboardPath = formData.userType === 'investor'
+                    ? '/dashboard/investor'
+                    : '/dashboard/investor'; // Fallback for now until entrepreneur dashboard exists
+
+                router.push(dashboardPath);
+            }
+        } catch (err: any) {
+            console.error(err);
+            setError(err.message || 'حدث خطأ أثناء التسجيل. يرجى المحاولة مرة أخرى.');
+        } finally {
             setIsLoading(false);
-            // Redirect to questionnaire
-            window.location.href = '/questionnaire';
-        }, 2000);
+        }
     };
 
     return (
@@ -64,8 +169,8 @@ export default function RegisterPage() {
                                     type="button"
                                     onClick={() => setFormData({ ...formData, userType: 'investor' })}
                                     className={`p-4 rounded-lg border-2 transition-all ${formData.userType === 'investor'
-                                            ? 'border-primary bg-primary/10 text-primary'
-                                            : 'border-gray-300 hover:border-primary/50'
+                                        ? 'border-primary bg-primary/10 text-primary'
+                                        : 'border-gray-300 hover:border-primary/50'
                                         }`}
                                 >
                                     <div className="text-2xl mb-2">💼</div>
@@ -75,15 +180,15 @@ export default function RegisterPage() {
 
                                 <button
                                     type="button"
-                                    onClick={() => setFormData({ ...formData, userType: 'opportunity_provider' })}
-                                    className={`p-4 rounded-lg border-2 transition-all ${formData.userType === 'opportunity_provider'
-                                            ? 'border-primary bg-primary/10 text-primary'
-                                            : 'border-gray-300 hover:border-primary/50'
+                                    onClick={() => setFormData({ ...formData, userType: 'entrepreneur' })}
+                                    className={`p-4 rounded-lg border-2 transition-all ${formData.userType === 'entrepreneur'
+                                        ? 'border-primary bg-primary/10 text-primary'
+                                        : 'border-gray-300 hover:border-primary/50'
                                         }`}
                                 >
-                                    <div className="text-2xl mb-2">🚀</div>
-                                    <div className="font-bold">مقدم فرصة</div>
-                                    <div className="text-xs text-foreground/60">أعرض فرصة استثمارية</div>
+                                    <div className="text-2xl mb-2">💡</div>
+                                    <div className="font-bold">صاحب فكرة</div>
+                                    <div className="text-xs text-foreground/60">أبحث عن تمويل لمشروعي</div>
                                 </button>
                             </div>
                         </div>

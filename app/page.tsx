@@ -18,7 +18,7 @@ export default function Home() {
             منصة ذكية لربط المستثمرين بالفرص الاستثمارية المناسبة
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/register">
+            <Link href="/questionnaire">
               <Button size="lg" variant="secondary" className="shadow-2xl">
                 ابدأ الآن
               </Button>
@@ -151,7 +151,7 @@ export default function Home() {
           <p className="text-xl text-white/90 mb-8">
             انضم إلى آلاف المستثمرين الذين يثقون بمنصتنا
           </p>
-          <Link href="/register">
+          <Link href="/questionnaire">
             <Button size="lg" variant="secondary" className="shadow-2xl">
               ابدأ الآن مجاناً
             </Button>

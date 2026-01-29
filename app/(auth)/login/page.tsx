@@ -2,11 +2,14 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Card from '../../components/ui/Card';
+import { createClient } from '../../../lib/supabase/client';
 
 export default function LoginPage() {
+    const router = useRouter();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -20,12 +23,44 @@ export default function LoginPage() {
         setError('');
         setIsLoading(true);
 
-        // TODO: Implement actual login logic with Supabase
-        setTimeout(() => {
+        const supabase = createClient();
+
+        try {
+            // 1. Sign In
+            const { data: { user }, error: authError } = await supabase.auth.signInWithPassword({
+                email: formData.email,
+                password: formData.password,
+            });
+
+            if (authError) throw authError;
+
+            if (user) {
+                // 2. Refresh session router
+                router.refresh();
+
+                // 3. Check User Type for Redirect
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('user_type')
+                    .eq('id', user.id)
+                    .single();
+
+                if (profile?.user_type === 'investor') {
+                    router.push('/dashboard/investor');
+                } else if (profile?.user_type === 'entrepreneur') {
+                    // Temporarily redirect to investor dash or home until entrepreneur dashboard is ready
+                    // Or keep it simple:
+                    router.push('/dashboard/investor');
+                } else {
+                    router.push('/');
+                }
+            }
+        } catch (err: any) {
+            console.error(err);
+            setError('البريد الإلكتروني أو كلمة المرور غير صحيحة');
+        } finally {
             setIsLoading(false);
-            // Redirect to dashboard
-            window.location.href = '/dashboard/investor';
-        }, 2000);
+        }
     };
 
     return (

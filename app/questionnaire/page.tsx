@@ -137,29 +137,29 @@ export default function QuestionnairePage() {
     };
 
     return (
-        <div className="min-h-screen bg-background py-12 px-4">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12 px-4">
             <div className="max-w-3xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-8 animate-fade-in">
                     <h1 className="text-4xl font-bold text-gradient mb-2">استبيان المستثمر</h1>
-                    <p className="text-foreground/70">
-                        ساعدنا في فهم أهدافك الاستثمارية لنوفر لك أفضل الفرص المناسبة
+                    <p className="text-gray-600">
+                        ساعدنا في فهم أهدافك الاستثمارية لنوفر لك أفضل الفروالمناسبة
                     </p>
                 </div>
 
                 {/* Progress Bar */}
                 <div className="mb-8">
                     <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm text-foreground/60">
+                        <span className="text-sm text-gray-600">
                             السؤال {currentStep + 1} من {QUESTIONS.length}
                         </span>
                         <span className="text-sm font-medium text-primary">
                             {Math.round(progress)}%
                         </span>
                     </div>
-                    <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden shadow-inner">
                         <div
-                            className="h-full bg-primary transition-all duration-500"
+                            className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500"
                             style={{ width: `${progress}%` }}
                         />
                     </div>
@@ -167,7 +167,7 @@ export default function QuestionnairePage() {
 
                 {/* Question Card */}
                 <Card glass className="p-8 mb-8 animate-fade-in-up">
-                    <h2 className="text-2xl font-bold mb-6 text-foreground">
+                    <h2 className="text-2xl font-bold mb-6 text-gray-900">
                         {currentQuestion.title}
                     </h2>
 
@@ -183,20 +183,18 @@ export default function QuestionnairePage() {
                                 <button
                                     key={option.id}
                                     onClick={() => handleAnswer(option.value)}
-                                    className={`w-full p-4 rounded-lg border-2 text-right transition-all ${isSelected
-                                        ? 'border-primary bg-primary/10 text-primary'
-                                        : 'border-gray-300 hover:border-primary/50 text-foreground'
+                                    className={`w-full p-4 rounded-xl border-2 text-right transition-all font-medium ${isSelected
+                                        ? 'border-primary bg-primary text-white shadow-md scale-105'
+                                        : 'border-gray-300 bg-white hover:border-primary/50 hover:shadow-md text-gray-700'
                                         }`}
                                 >
                                     <div className="flex items-center gap-3">
                                         <div
-                                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${isSelected ? 'border-primary bg-primary' : 'border-gray-400'
+                                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${isSelected ? 'border-white bg-white' : 'border-gray-400'
                                                 }`}
                                         >
                                             {isSelected && (
-                                                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 12 12">
-                                                    <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" strokeWidth="2" fill="none" />
-                                                </svg>
+                                                <div className="w-3 h-3 rounded-full bg-primary"></div>
                                             )}
                                         </div>
                                         <span className="font-medium">{option.label}</span>
@@ -207,8 +205,8 @@ export default function QuestionnairePage() {
                     </div>
 
                     {currentQuestion.type === 'multiple-choice' && (
-                        <p className="text-sm text-foreground/60 mt-4">
-                            يمكنك اختيار أكثر من إجابة
+                        <p className="text-sm text-gray-500 mt-4 bg-blue-50 p-3 rounded-lg">
+                            💡 يمكنك اختيار أكثر من إجابة
                         </p>
                     )}
                 </Card>

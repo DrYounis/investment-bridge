@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface CardProps {
+export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
     children: React.ReactNode;
     title?: string;
     description?: string;
@@ -8,7 +8,6 @@ export interface CardProps {
     gradient?: 'primary' | 'secondary' | 'sunset' | 'ocean' | 'forest' | 'none';
     hover?: boolean;
     onClick?: () => void;
-    className?: string;
 }
 
 export default function Card({
@@ -20,6 +19,7 @@ export default function Card({
     hover = false,
     onClick,
     className = '',
+    ...rest
 }: CardProps) {
     const baseStyles = 'rounded-2xl p-6 transition-all duration-300';
     const glassStyles = glass ? 'glass' : 'bg-background border-2 border-gray-200';
@@ -31,6 +31,7 @@ export default function Card({
         <div
             className={`${baseStyles} ${glassStyles} ${gradientStyles} ${hoverStyles} ${clickableStyles} ${className}`}
             onClick={onClick}
+            {...rest}
         >
             {(title || description) && (
                 <div className="mb-4">

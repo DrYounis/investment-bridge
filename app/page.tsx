@@ -138,6 +138,11 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Launch Plan Section */}
+      <section className="py-20 px-4 bg-white dark:bg-black">
+        <LaunchPlan />
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 px-4 gradient-ocean">
         <div className="max-w-4xl mx-auto text-center">

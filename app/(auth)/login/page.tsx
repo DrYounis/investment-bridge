@@ -46,7 +46,27 @@ export default function LoginPage() {
                     .single();
 
                 if (profile?.user_type === 'investor') {
-                    router.push('/dashboard/investor');
+                    // Check approval status for investors
+                    const { data: investorProfile } = await supabase
+                        .from('investor_profiles')
+                        .select('approval_status')
+                        .eq('profile_id', user.id)
+                        .single();
+
+                    if (investorProfile?.approval_status === 'approved') {
+                        router.push('/dashboard/investor');
+                    } else if (investorProfile?.approval_status === 'pending') {
+                        await supabase.auth.signOut();
+                        setError('حسابك قيد المراجعة. سيتم إشعارك عند الموافقة.');
+                    } else if (investorProfile?.approval_status === 'rejected') { // Handle rejected explicitly if needed
+                        await supabase.auth.signOut();
+                        setError('عذراً، لم يتم قبول طلبك.');
+                    } else {
+                        // Fallback case or if status is unexpected (though DB default is pending)
+                        await supabase.auth.signOut();
+                        setError('حالة الحساب غير معروفة. يرجى التواصل مع الدعم.');
+                    }
+
                 } else if (profile?.user_type === 'entrepreneur') {
                     // Temporarily redirect to investor dash or home until entrepreneur dashboard is ready
                     // Or keep it simple:
@@ -67,7 +87,7 @@ export default function LoginPage() {
         <div className="min-h-screen bg-background flex items-center justify-center p-4">
             <div className="w-full max-w-md animate-fade-in-up">
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-gradient mb-2">Investment Bridge</h1>
+                    <h1 className="text-4xl font-bold text-gradient mb-2">مرفأ</h1>
                     <p className="text-foreground/70">تسجيل الدخول</p>
                 </div>
 

@@ -418,6 +418,34 @@ export default function QuestionnairePage() {
                                     💡 يمكنك اختيار أكثر من إجابة
                                 </div>
                             )}
+
+                            {/* Navigation Buttons */}
+                            <div className="flex justify-between mt-8 pt-6 border-t border-gray-100">
+                                <Button
+                                    onClick={handleBack}
+                                    variant="outline"
+                                    disabled={currentStep === 0}
+                                    className={currentStep === 0 ? 'invisible' : ''}
+                                >
+                                    السابق
+                                </Button>
+
+                                {currentStep === questions.length - 1 ? (
+                                    <Button
+                                        onClick={handleSubmit}
+                                        disabled={!answers[currentQuestion.id] || (Array.isArray(answers[currentQuestion.id]) && answers[currentQuestion.id].length === 0)}
+                                    >
+                                        إرسال النتائج
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        onClick={handleNext}
+                                        disabled={!answers[currentQuestion.id] || (Array.isArray(answers[currentQuestion.id]) && answers[currentQuestion.id].length === 0)}
+                                    >
+                                        التالي
+                                    </Button>
+                                )}
+                            </div>
                         </Card>
                     </>
                 )}

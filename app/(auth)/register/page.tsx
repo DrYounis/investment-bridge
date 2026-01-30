@@ -153,14 +153,15 @@ export default function RegisterPage() {
         <div className="min-h-screen bg-background flex items-center justify-center p-4">
             <div className="w-full max-w-md animate-fade-in-up">
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-gradient mb-2">Investment Bridge</h1>
+                    <h1 className="text-4xl font-bold text-gradient mb-2">مرفأ</h1>
                     <p className="text-foreground/70">إنشاء حساب جديد</p>
                 </div>
 
                 <Card glass className="p-8">
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* User Type Selection */}
-                        <div>
+                        {/* User Type Selection - HIDDEN based on user request */}
+                        <div className="hidden">
                             <label className="block text-sm font-medium text-foreground mb-3">
                                 نوع الحساب <span className="text-error">*</span>
                             </label>
@@ -269,6 +270,30 @@ export default function RegisterPage() {
                                 </svg>
                             }
                         />
+
+                        {/* Privacy Policy Checkbox - Added per user request */}
+                        <div className="flex items-start gap-3">
+                            <div className="flex h-6 items-center">
+                                <input
+                                    id="privacy"
+                                    name="privacy"
+                                    type="checkbox"
+                                    required
+                                    className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                                />
+                            </div>
+                            <div className="text-sm leading-6">
+                                <label htmlFor="privacy" className="font-medium text-gray-900">
+                                    أوافق على{' '}
+                                    <Link href="/privacy" target="_blank" className="text-primary hover:underline font-bold">
+                                        سياسة الخصوصية وشروط الاستخدام
+                                    </Link>
+                                </label>
+                                <p className="text-gray-500 text-xs mt-1">
+                                    تتضمن الموافقة على نظام الأسئلة المتشعبة واتفاقية عدم الإفصاح (NDA).
+                                </p>
+                            </div>
+                        </div>
 
                         {/* Error Message */}
                         {error && (

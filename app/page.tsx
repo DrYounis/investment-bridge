@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Button from './components/ui/Button';
 import Card from './components/ui/Card';
+import LaunchPlan from './components/LaunchPlan';
 
 export default function Home() {
   return (
@@ -9,11 +10,8 @@ export default function Home() {
       <section className="relative overflow-hidden gradient-primary py-20 px-4">
         <div className="max-w-6xl mx-auto text-center animate-fade-in-up">
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
-            Investment Bridge
+            مرفأ
           </h1>
-          <h2 className="text-3xl md:text-4xl font-bold text-white/90 mb-4">
-            جسر الاستثمار
-          </h2>
           <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto mb-8">
             منصة ذكية لربط المستثمرين بالفرص الاستثمارية المناسبة
           </p>
@@ -160,9 +158,9 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12 px-4">
         <div className="max-w-6xl mx-auto text-center">
-          <h3 className="text-2xl font-bold mb-4">Investment Bridge</h3>
+          <h3 className="text-2xl font-bold mb-4">مرفأ</h3>
           <p className="text-white/70 mb-6">
-            جسر الاستثمار - نربط المستثمرين بالفرص
+            منصة لربط المستثمرين بالفرص
           </p>
           <div className="flex justify-center gap-6 text-sm text-white/60">
             <Link href="/about" className="hover:text-white transition-colors">عن المنصة</Link>
@@ -171,7 +169,7 @@ export default function Home() {
             <Link href="/privacy" className="hover:text-white transition-colors">سياسة الخصوصية</Link>
           </div>
           <p className="text-white/40 text-sm mt-6">
-            © 2026 Investment Bridge. All rights reserved.
+            © 2026 مرفأ. جميع الحقوق محفوظة.
           </p>
         </div>
       </footer>

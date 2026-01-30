@@ -5,8 +5,8 @@
 
 // ==================== App Configuration ====================
 
-export const APP_NAME = 'Investment Bridge';
-export const APP_NAME_AR = 'جسر الاستثمار';
+export const APP_NAME = 'مرفأ';
+export const APP_NAME_AR = 'مرفأ';
 export const APP_DESCRIPTION = 'منصة لربط المستثمرين بالفرص الاستثمارية المناسبة';
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 

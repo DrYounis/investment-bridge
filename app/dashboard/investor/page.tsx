@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Card from '../../components/ui/Card';
+import SharkTankDeal from '../../components/investor/SharkTankDeal';
 import InvestorWelcomeModal from '../../components/InvestorWelcomeModal';
 
 export default function InvestorDashboard() {
@@ -77,56 +78,35 @@ export default function InvestorDashboard() {
                 <div className="md:col-span-2 space-y-6">
                     <h2 className="font-bold text-xl text-gray-800">الفرص المتوافقة (Investor-Fit)</h2>
 
-                    {/* Mock Opportunity Card */}
-                    <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all border border-gray-100">
-                        <div className="flex justify-between items-start mb-4">
-                            <div className="flex gap-4">
-                                <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center text-2xl">
-                                    🏕️
-                                </div>
-                                <div>
-                                    <h3 className="font-bold text-lg text-slate-900 flex items-center gap-2">
-                                        مخيمات حائل البيئية
-                                        <span className="bg-amber-100 text-amber-700 text-[10px] px-2 py-0.5 rounded-full border border-amber-200">
-                                            فرصة حائل الموعودة ⛰️
-                                        </span>
-                                    </h3>
-                                    <p className="text-sm text-gray-500">سياحة • قيد التنفيذ</p>
-                                </div>
-                            </div>
-                            <div className="text-center">
-                                <div className="text-2xl font-black text-green-600">92%</div>
-                                <div className="text-xs text-gray-400">مؤشر الجذب</div>
-                            </div>
-                        </div>
+                    {/* Shark Tank Style Deal Flow */}
+                    <div className="space-y-6">
+                        <SharkTankDeal
+                            id="deal-101"
+                            title="مخيمات حائل البيئية"
+                            sector="سياحة"
+                            teaser_summary="فرصة في قطاع السياحة البيئية في منطقة حائل تتميز بموقع استراتيجي (جبال أجا) وعقود تشغيلية مضمونة. العائد المتوقع مرتفع وفترة الاسترداد قصيرة."
+                            full_details="مشروع منتجع بيئي متكامل في قلب جبال أجا، يعتمد على الطاقة المتجددة بنسبة 100%. يتضمن 40 وحدة فندقية فاخرة (Glamping). لدينا اتفاقيات موقعة مع موسم الرياض لتشغيل فعاليات شتوية. الأرض مملوكة بصك إلكتروني جاهز للإفراغ. التقييم المالي تم بواسطة شركة (Big 4)."
+                            match_score={92}
+                            metrics={{
+                                roi: "18%",
+                                amount: "500k",
+                                payback: "3 سنوات"
+                            }}
+                        />
 
-                        <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                            "مشروع سياحي بيئي يستغل تضاريس جبال أجا، يعتمد على الطاقة الشمسية بالكامل، مع عقود تشغيل مبدئية لفعاليات موسم الرياض..."
-                        </p>
-
-                        <div className="grid grid-cols-3 gap-4 mb-6">
-                            <div className="bg-gray-50 p-3 rounded-lg text-center">
-                                <div className="text-xs text-gray-400">العائد المتوقع</div>
-                                <div className="font-bold text-slate-800">18%</div>
-                            </div>
-                            <div className="bg-gray-50 p-3 rounded-lg text-center">
-                                <div className="text-xs text-gray-400">المبلغ المطلوب</div>
-                                <div className="font-bold text-slate-800">500k</div>
-                            </div>
-                            <div className="bg-gray-50 p-3 rounded-lg text-center">
-                                <div className="text-xs text-gray-400">فترة الاسترداد</div>
-                                <div className="font-bold text-slate-800">3 سنوات</div>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-3">
-                            <button className="flex-1 bg-slate-900 text-white py-3 rounded-xl hover:bg-slate-800 font-medium transition-colors">
-                                طلب تفاصيل أكثر
-                            </button>
-                            <button className="w-12 h-12 flex items-center justify-center border-2 border-slate-100 rounded-xl hover:border-red-200 hover:text-red-500 transition-colors">
-                                ♥
-                            </button>
-                        </div>
+                        <SharkTankDeal
+                            id="deal-102"
+                            title="تطبيق صحتي الذكي"
+                            sector="تقنية صحية"
+                            teaser_summary="منصة تعتمد على الذكاء الاصطناعي للتشخيص الأولي وربط المرضى بالأطباء المختصين عن بعد. نموذج عمل SaaS قابل للتوسع عالمياً."
+                            full_details="التطبيق يستخدم خوارزميات NLP لتحليل أعراض المريض وتوجيهه للتخصص الدقيق. تم اختباره على 5000 مريض بنسبة دقة 89%. الفريق يضم أطباء استشاريين ومطورين سابقين في Google. نبحث عن تمويل للتوسع في السوق الخليجي."
+                            match_score={88}
+                            metrics={{
+                                roi: "25%",
+                                amount: "1.2M",
+                                payback: "2.5 سنة"
+                            }}
+                        />
                     </div>
 
                     {/* Placeholder for no more data */}

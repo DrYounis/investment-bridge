@@ -36,13 +36,13 @@ export default function PitchDeckServicePage() {
                         </ul>
 
                         <div className="flex items-center gap-4 pt-6">
-                            <button
+                            <Link
+                                href="/services/pitch-deck/create"
                                 className="px-10 py-5 bg-slate-900 text-white rounded-2xl font-bold shadow-xl hover:bg-slate-800 transition-all flex items-center gap-4 group"
-                                onClick={() => alert('سيتم تفعيل بوابة الدفع قريباً')}
                             >
-                                <span>ابدأ التصميم الآن</span>
-                                <span className="bg-white/20 px-3 py-1 rounded text-sm text-yellow-300 font-mono">2500 SAR</span>
-                            </button>
+                                <span>ابدأ التصميم الآن (تجريبي)</span>
+                                <span className="bg-white/20 px-3 py-1 rounded text-sm text-yellow-300 font-mono">مجاني لفترة محدودة</span>
+                            </Link>
                         </div>
                     </div>
 

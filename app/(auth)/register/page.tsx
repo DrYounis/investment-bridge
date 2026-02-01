@@ -137,7 +137,7 @@ export default function RegisterPage() {
                 // 5. Redirect
                 const dashboardPath = formData.userType === 'investor'
                     ? '/dashboard/investor'
-                    : '/dashboard/investor'; // Fallback for now until entrepreneur dashboard exists
+                    : '/dashboard/entrepreneur';
 
                 router.push(dashboardPath);
             }

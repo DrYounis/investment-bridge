@@ -105,7 +105,7 @@ export default function LoginPage() {
                     }
 
                 } else if (profile?.user_type === 'entrepreneur') {
-                    router.push('/dashboard/investor'); // Fallback route
+                    router.push('/dashboard/entrepreneur');
                 } else {
                     router.push('/');
                 }

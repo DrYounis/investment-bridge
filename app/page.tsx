@@ -1,183 +1,129 @@
 import Link from 'next/link';
-import Button from './components/ui/Button';
-import Card from './components/ui/Card';
-import LaunchPlan from './components/LaunchPlan';
+import Image from 'next/image';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden gradient-primary py-20 px-4">
-        <div className="max-w-6xl mx-auto text-center animate-fade-in-up">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
-            مرفأ
-          </h1>
-          <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto mb-8">
-            منصة ذكية لربط المستثمرين بالفرص الاستثمارية المناسبة
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/questionnaire">
-              <Button size="lg" variant="secondary" className="shadow-2xl">
-                ابدأ الآن
-              </Button>
-            </Link>
-            <Link href="/login">
-              <Button size="lg" variant="outline" className="bg-white/10 text-white border-white hover:bg-white hover:text-primary">
-                تسجيل الدخول
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
+    <div className="min-h-screen bg-slate-50 font-sans" dir="rtl">
 
-      {/* Features Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-4 text-foreground">
-            كيف نساعدك؟
-          </h2>
-          <p className="text-xl text-center text-foreground/70 mb-12">
-            نوفر لك أفضل الأدوات للوصول إلى أهدافك الاستثمارية
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card
-              glass
-              hover
-              className="animate-fade-in-up"
-            >
-              <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4">
-                <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold mb-3 text-foreground">تطابق ذكي</h3>
-              <p className="text-foreground/70">
-                نظام تطابق متقدم يربطك بالفرص الاستثمارية المناسبة لملفك الاستثماري
-              </p>
-            </Card>
-
-            <Card
-              glass
-              hover
-              className="animate-fade-in-up"
-            >
-              <div className="w-16 h-16 rounded-full bg-secondary/20 flex items-center justify-center mb-4">
-                <svg className="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold mb-3 text-foreground">آمن ومضمون</h3>
-              <p className="text-foreground/70">
-                أعلى معايير الأمان لحماية بياناتك ومعاملاتك الاستثمارية
-              </p>
-            </Card>
-
-            <Card
-              glass
-              hover
-              className="animate-fade-in-up"
-            >
-              <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mb-4">
-                <svg className="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold mb-3 text-foreground">تتبع الأداء</h3>
-              <p className="text-foreground/70">
-                لوحة تحكم شاملة لمتابعة استثماراتك وتحليل أدائها
-              </p>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="py-20 px-4 bg-gray-50 dark:bg-gray-900">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-4 text-foreground">
-            كيف تعمل المنصة؟
-          </h2>
-          <p className="text-xl text-center text-foreground/70 mb-12">
-            عملية بسيطة وسهلة للبدء في رحلتك الاستثمارية
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="w-20 h-20 rounded-full gradient-primary text-white flex items-center justify-center text-3xl font-bold mx-auto mb-4 shadow-glow">
-                1
-              </div>
-              <h3 className="text-xl font-bold mb-2 text-foreground">سجّل حسابك</h3>
-              <p className="text-foreground/70">أنشئ حساباً مجانياً في دقائق</p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-20 h-20 rounded-full gradient-secondary text-white flex items-center justify-center text-3xl font-bold mx-auto mb-4 shadow-glow-secondary">
-                2
-              </div>
-              <h3 className="text-xl font-bold mb-2 text-foreground">أكمل الاستبيان</h3>
-              <p className="text-foreground/70">ساعدنا لنفهم أهدافك الاستثمارية</p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-20 h-20 rounded-full gradient-primary text-white flex items-center justify-center text-3xl font-bold mx-auto mb-4 shadow-glow">
-                3
-              </div>
-              <h3 className="text-xl font-bold mb-2 text-foreground">تصفح الفرص</h3>
-              <p className="text-foreground/70">استعرض الفرص المناسبة لك</p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-20 h-20 rounded-full gradient-secondary text-white flex items-center justify-center text-3xl font-bold mx-auto mb-4 shadow-glow-secondary">
-                4
-              </div>
-              <h3 className="text-xl font-bold mb-2 text-foreground">ابدأ الاستثمار</h3>
-              <p className="text-foreground/70">اختر وابدأ رحلتك الاستثمارية</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Launch Plan Section */}
-      <section className="py-20 px-4 bg-white dark:bg-black">
-        <LaunchPlan />
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-4 gradient-ocean">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            هل أنت مستعد للبدء؟
-          </h2>
-          <p className="text-xl text-white/90 mb-8">
-            انضم إلى آلاف المستثمرين الذين يثقون بمنصتنا
-          </p>
-          <Link href="/questionnaire">
-            <Button size="lg" variant="secondary" className="shadow-2xl">
-              ابدأ الآن مجاناً
-            </Button>
+      {/* Navbar Minimal */}
+      <nav className="absolute top-0 w-full p-6 flex justify-between items-center z-50">
+        <div className="text-2xl font-black text-slate-800 tracking-tight">مرفأ <span className="text-blue-600">.</span></div>
+        <div className="flex gap-4">
+          <Link href="/login" className="px-6 py-2 bg-white/80 backdrop-blur text-sm font-bold text-slate-700 rounded-full hover:bg-white transition shadow-sm">
+            دخول
           </Link>
         </div>
-      </section>
+      </nav>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-4">
-        <div className="max-w-6xl mx-auto text-center">
-          <h3 className="text-2xl font-bold mb-4">مرفأ</h3>
-          <p className="text-white/70 mb-6">
-            منصة لربط المستثمرين بالفرص
-          </p>
-          <div className="flex justify-center gap-6 text-sm text-white/60">
-            <Link href="/about" className="hover:text-white transition-colors">عن المنصة</Link>
-            <Link href="/contact" className="hover:text-white transition-colors">اتصل بنا</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">الشروط والأحكام</Link>
-            <Link href="/privacy" className="hover:text-white transition-colors">سياسة الخصوصية</Link>
-          </div>
-          <p className="text-white/40 text-sm mt-6">
-            © 2026 مرفأ. جميع الحقوق محفوظة.
+      {/* Main Split Screen Hero */}
+      <main className="relative min-h-screen flex flex-col pt-24 pb-12 px-4 max-w-7xl mx-auto">
+
+        <div className="text-center mb-16 space-y-4 animate-fade-in-down">
+          <h1 className="text-5xl md:text-7xl font-black text-slate-900 mb-4">
+            أين تقع في عالم <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">الاستثمار؟</span>
+          </h1>
+          <p className="text-xl text-gray-500 max-w-2xl mx-auto">
+            منصة مرفأ هي الجسر الذكي الذي يربط بين رأس المال الجريء والأفكار الاستثنائية.
           </p>
         </div>
-      </footer>
+
+        {/* The Two Pathways */}
+        <div className="grid md:grid-cols-2 gap-6 lg:gap-12 w-full max-w-6xl mx-auto mb-20">
+
+          {/* Pathway 1: Entrepreneur / Idea */}
+          <Link href="/marfa" className="group relative overflow-hidden rounded-3xl h-[500px] shadow-2xl transition-all duration-500 hover:shadow-blue-200/50 hover:scale-[1.02]">
+            <div className="absolute inset-0 bg-white"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+            <div className="relative z-10 p-10 h-full flex flex-col justify-between">
+              <div>
+                <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                  💡
+                </div>
+                <h2 className="text-4xl font-bold text-slate-900 mb-4">لدي فكرة مشروع</h2>
+                <p className="text-gray-500 text-lg leading-relaxed group-hover:text-gray-700 transition-colors">
+                  هل تبحث عن تمويل؟ أو تريد التأكد من جدوى فكرتك؟ <br />
+                  ابدأ رحلتك هنا لتحويل الفكرة إلى شركة ناشئة.
+                </p>
+              </div>
+
+              <div className="w-full py-4 bg-slate-100 text-slate-600 text-center rounded-xl font-bold group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                دخول ريادي الأعمال ⬅
+              </div>
+            </div>
+            {/* Decorative Pattern */}
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl group-hover:bg-blue-500/10 transition-colors"></div>
+          </Link>
+
+          {/* Pathway 2: Investor */}
+          {/* Assuming dashboard/investor is the route, or a specific landing page */}
+          <Link href="/dashboard/investor" className="group relative overflow-hidden rounded-3xl h-[500px] shadow-2xl transition-all duration-500 hover:shadow-indigo-200/50 hover:scale-[1.02]">
+            <div className="absolute inset-0 bg-slate-900"></div>
+
+            <div className="relative z-10 p-10 h-full flex flex-col justify-between">
+              <div>
+                <div className="w-16 h-16 bg-slate-800 text-indigo-400 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-indigo-500 group-hover:text-white transition-colors duration-300">
+                  📈
+                </div>
+                <h2 className="text-4xl font-bold text-white mb-4">أنا مستثمر</h2>
+                <p className="text-slate-400 text-lg leading-relaxed group-hover:text-slate-300 transition-colors">
+                  اكتشف فرصاً استثمارية مدروسة ومفلترة بعناية.<br />
+                  لوحة تحكم ذكية لعرض العائد المتوقع وتحليل المخاطر.
+                </p>
+              </div>
+
+              <div className="w-full py-4 bg-slate-800 text-slate-300 text-center rounded-xl font-bold group-hover:bg-indigo-500 group-hover:text-white transition-colors">
+                دخول المستثمرين ⬅
+              </div>
+            </div>
+            {/* Decorative Pattern */}
+            <div className="absolute -top-20 -right-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl"></div>
+          </Link>
+
+        </div>
+
+        {/* Featured Service: Pitch Deck */}
+        <div className="max-w-6xl mx-auto w-full mb-20 animate-fade-in-up delay-200">
+          <h3 className="text-2xl font-bold text-center text-slate-800 mb-8">أدوات مميزة للنجاح</h3>
+
+          <Link href="/services/pitch-deck" className="block group">
+            <div className="bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-3xl p-1 shadow-2xl hover:shadow-fuchsia-300 transition-shadow duration-300">
+              <div className="bg-white rounded-[22px] p-8 md:p-12 relative overflow-hidden">
+                <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                  <div className="text-right flex-1">
+                    <div className="inline-block px-3 py-1 bg-fuchsia-100 text-fuchsia-700 rounded-full text-xs font-bold mb-4">
+                      Productivity Tool
+                    </div>
+                    <h3 className="text-3xl md:text-4xl font-black text-slate-900 mb-4">
+                      صانع العروض الاستثمارية <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">.AI</span>
+                    </h3>
+                    <p className="text-gray-500 text-lg mb-6 max-w-xl">
+                      لا تملك الوقت لتصميم عرضك؟ دعنا نقوم بذلك نيابة عنك باستخدام أحدث تقنيات الذكاء الاصطناعي لتوليد محتوى احترافي ومقنع.
+                    </p>
+                    <div className="flex items-center gap-4">
+                      <span className="text-2xl font-bold text-slate-900">2500 SAR</span>
+                      <span className="px-6 py-2 bg-slate-900 text-white rounded-full font-bold group-hover:bg-fuchsia-600 transition-colors">
+                        اطلب الخدمة الآن
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Visual Icon/Abstract */}
+                  <div className="w-48 h-48 bg-fuchsia-50 rounded-full flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500">
+                    <span className="text-7xl">📊</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </div>
+
+        {/* Footer Minimal */}
+        <footer className="text-center text-gray-400 text-sm py-8 border-t border-gray-200">
+          © 2026 Marfa Investment Bridge. All rights reserved.
+        </footer>
+
+      </main>
     </div>
   );
 }

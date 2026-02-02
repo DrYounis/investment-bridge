@@ -18,6 +18,10 @@ create table if not exists public.profiles (
 -- Enable RLS for profiles
 alter table public.profiles enable row level security;
 
+drop policy if exists "Public profiles are viewable by everyone" on profiles;
+drop policy if exists "Users can insert their own profile" on profiles;
+drop policy if exists "Users can update own profile" on profiles;
+
 create policy "Public profiles are viewable by everyone"
   on profiles for select
   using ( true );
@@ -29,6 +33,67 @@ create policy "Users can insert their own profile"
 create policy "Users can update own profile"
   on profiles for update
   using ( auth.uid() = id );
+
+-- 1A. Create INVESTOR PROFILES table
+create table if not exists public.investor_profiles (
+  id uuid default gen_random_uuid() primary key,
+  profile_id uuid references public.profiles(id) on delete cascade not null unique,
+  approval_status text default 'pending' check (approval_status in ('pending', 'approved', 'rejected')),
+  commercial_register varchar(50),
+  experience_level text,
+  investment_amount text,
+  risk_tolerance text,
+  investment_duration text,
+  preferred_sectors jsonb,
+  expected_return text,
+  approved_at timestamptz,
+  approved_by uuid,
+  created_at timestamptz default now() not null
+);
+
+alter table public.investor_profiles enable row level security;
+
+drop policy if exists "Investors can insert their own profile details" on investor_profiles;
+drop policy if exists "Investors can view their own profile details" on investor_profiles;
+drop policy if exists "Investors can update their own profile details" on investor_profiles;
+
+create policy "Investors can insert their own profile details"
+  on investor_profiles for insert
+  with check ( auth.uid() = profile_id );
+
+create policy "Investors can view their own profile details"
+  on investor_profiles for select
+  using ( auth.uid() = profile_id );
+
+create policy "Investors can update their own profile details"
+  on investor_profiles for update
+  using ( auth.uid() = profile_id );
+
+-- 1B. Create ENTREPRENEUR PROFILES table
+create table if not exists public.entrepreneur_profiles (
+  id uuid default gen_random_uuid() primary key,
+  profile_id uuid references public.profiles(id) on delete cascade not null unique,
+  sector text,
+  created_at timestamptz default now() not null
+);
+
+alter table public.entrepreneur_profiles enable row level security;
+
+drop policy if exists "Entrepreneurs can insert own profile" on entrepreneur_profiles;
+drop policy if exists "Entrepreneurs can view own profile" on entrepreneur_profiles;
+drop policy if exists "Entrepreneurs can update own profile" on entrepreneur_profiles;
+
+create policy "Entrepreneurs can insert own profile"
+  on entrepreneur_profiles for insert
+  with check ( auth.uid() = profile_id );
+
+create policy "Entrepreneurs can view own profile"
+  on entrepreneur_profiles for select
+  using ( auth.uid() = profile_id );
+
+create policy "Entrepreneurs can update own profile"
+  on entrepreneur_profiles for update
+  using ( auth.uid() = profile_id );
 
 -- 2. Create INVESTMENT OPPORTUNITIES table
 create table if not exists public.investment_opportunities (
@@ -51,6 +116,9 @@ create table if not exists public.investment_opportunities (
 
 -- Enable RLS for opportunities
 alter table public.investment_opportunities enable row level security;
+
+drop policy if exists "Published opportunities are viewable by everyone" on investment_opportunities;
+drop policy if exists "Entrepreneurs can manage their own opportunities" on investment_opportunities;
 
 create policy "Published opportunities are viewable by everyone"
   on investment_opportunities for select

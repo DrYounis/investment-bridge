@@ -6,6 +6,33 @@ import Link from 'next/link';
 export default function EntrepreneurDashboard() {
     const [activeTab, setActiveTab] = useState<'overview' | 'profile'>('overview');
 
+    // Calculate attraction score based on profile completeness
+    const [profileCompleteness] = useState({
+        basicInfo: true,  // Name, email (always complete after signup)
+        businessDescription: false,
+        marketResearch: false,
+        financialProjections: false,
+    });
+
+    const calculateAttractionScore = () => {
+        const weights = {
+            basicInfo: 20,
+            businessDescription: 20,
+            marketResearch: 30,
+            financialProjections: 30,
+        };
+
+        let score = 0;
+        if (profileCompleteness.basicInfo) score += weights.basicInfo;
+        if (profileCompleteness.businessDescription) score += weights.businessDescription;
+        if (profileCompleteness.marketResearch) score += weights.marketResearch;
+        if (profileCompleteness.financialProjections) score += weights.financialProjections;
+
+        return score;
+    };
+
+    const attractionScore = calculateAttractionScore();
+
     return (
         <div className="min-h-screen bg-slate-50" dir="rtl">
             <nav className="bg-white border-b border-gray-100 px-6 py-4 mb-4">
@@ -40,7 +67,7 @@ export default function EntrepreneurDashboard() {
                 </div>
 
                 {activeTab === 'overview' ? (
-                    <EntrepreneurOverview />
+                    <EntrepreneurOverview attractionScore={attractionScore} profileCompleteness={profileCompleteness} />
                 ) : (
                     <EntrepreneurProfile />
                 )}
@@ -50,55 +77,94 @@ export default function EntrepreneurDashboard() {
     );
 }
 
-function EntrepreneurOverview() {
-    return (
-        <div className="grid md:grid-cols-2 gap-8">
-            {/* Status Card */}
-            <div className="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">حالة المشروع الحالي</h2>
+function EntrepreneurOverview({ attractionScore, profileCompleteness }: { attractionScore: number, profileCompleteness: any }) {
+    // Determine next action tip
+    const getNextActionTip = () => {
+        if (!profileCompleteness.businessDescription) {
+            return 'أكمل وصف المشروع لرفع النسبة إلى 40%';
+        } else if (!profileCompleteness.marketResearch) {
+            return 'أضف دراسة السوق لرفع النسبة إلى 70%';
+        } else if (!profileCompleteness.financialProjections) {
+            return 'أضف التوقعات المالية للوصول إلى 100%!';
+        }
+        return 'بروفايلك مكتمل! الآن يمكن للمستثمرين رؤية مشروعك';
+    };
 
-                <div className="flex items-center gap-4 mb-6">
-                    <div className="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center text-3xl">
-                        🧪
+    return (
+        <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Left Column: Attraction Score + Project Status */}
+            <div className="lg:col-span-2 space-y-6">
+
+                {/* Gamification Meter - NEW */}
+                <div className="bg-gradient-to-br from-teal-500 to-blue-600 p-8 rounded-3xl text-white shadow-xl">
+                    <div className="flex justify-between items-end mb-4">
+                        <div>
+                            <h3 className="font-bold text-white/90 text-sm mb-1">مؤشر جذب المستثمرين</h3>
+                            <p className="text-white/70 text-xs">كلما زادت النسبة, زادت فرص التمويل</p>
+                        </div>
+                        <span className="text-5xl font-black">{attractionScore}%</span>
                     </div>
-                    <div>
-                        <h3 className="font-bold text-lg">مشروع: منصة تمور</h3>
-                        <p className="text-sm text-gray-500">آخر تحديث: قبل ساعتين</p>
+                    <div className="w-full bg-white/20 rounded-full h-5 overflow-hidden backdrop-blur mb-4">
+                        <div
+                            className="bg-white h-full rounded-full transition-all duration-1000 shadow-lg"
+                            style={{ width: `${attractionScore}%` }}
+                        ></div>
                     </div>
-                    <div className="mr-auto">
-                        <span className="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold">قيد المختبر</span>
+                    <div className="flex items-start gap-2 bg-white/10 backdrop-blur p-3 rounded-xl">
+                        <span className="text-yellow-300 text-xl">💡</span>
+                        <p className="text-sm text-white/90">
+                            <span className="font-bold">نصيحة:</span> {getNextActionTip()}
+                        </p>
                     </div>
                 </div>
 
-                <div className="space-y-4">
-                    <div>
-                        <div className="flex justify-between text-sm mb-1">
-                            <span>اكتمال الدراسة</span>
-                            <span className="font-bold text-blue-600">65%</span>
+                {/* Status Card */}
+                <div className="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm">
+                    <h2 className="text-xl font-bold text-gray-900 mb-6">حالة المشروع الحالي</h2>
+
+                    <div className="flex items-center gap-4 mb-6">
+                        <div className="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center text-3xl">
+                            🧪
                         </div>
-                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div className="h-full bg-blue-600 w-[65%]"></div>
+                        <div>
+                            <h3 className="font-bold text-lg">مشروع: منصة تمور</h3>
+                            <p className="text-sm text-gray-500">آخر تحديث: قبل ساعتين</p>
+                        </div>
+                        <div className="mr-auto">
+                            <span className="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold">قيد المختبر</span>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 mt-6">
-                        <Link href="/marfa/lab/financial" className="p-4 bg-gray-50 rounded-xl border border-gray-100 hover:border-blue-300 hover:bg-blue-50 transition text-center group">
-                            <div className="text-2xl mb-2 group-hover:scale-110 transition">💰</div>
-                            <div className="text-sm font-bold text-gray-700">التدقيق المالي</div>
-                        </Link>
-                        <Link href="/marfa/lab/mvp" className="p-4 bg-gray-50 rounded-xl border border-gray-100 hover:border-blue-300 hover:bg-blue-50 transition text-center group">
-                            <div className="text-2xl mb-2 group-hover:scale-110 transition">🏗️</div>
-                            <div className="text-sm font-bold text-gray-700">النموذج الأولي</div>
+                    <div className="space-y-4">
+                        <div>
+                            <div className="flex justify-between text-sm mb-1">
+                                <span>اكتمال الدراسة</span>
+                                <span className="font-bold text-blue-600">65%</span>
+                            </div>
+                            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                <div className="h-full bg-blue-600 w-[65%]"></div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 mt-6">
+                            <Link href="/marfa/lab/financial" className="p-4 bg-gray-50 rounded-xl border border-gray-100 hover:border-blue-300 hover:bg-blue-50 transition text-center group">
+                                <div className="text-2xl mb-2 group-hover:scale-110 transition">💰</div>
+                                <div className="text-sm font-bold text-gray-700">التدقيق المالي</div>
+                            </Link>
+                            <Link href="/marfa/lab/mvp" className="p-4 bg-gray-50 rounded-xl border border-gray-100 hover:border-blue-300 hover:bg-blue-50 transition text-center group">
+                                <div className="text-2xl mb-2 group-hover:scale-110 transition">🏗️</div>
+                                <div className="text-sm font-bold text-gray-700">النموذج الأولي</div>
+                            </Link>
+                        </div>
+
+                        <Link href="/marfa/lab" className="block w-full py-3 bg-blue-600 text-white text-center rounded-xl font-bold font-sm mt-4 hover:bg-blue-700">
+                            متابعة العمل في المختبر ⬅
                         </Link>
                     </div>
-
-                    <Link href="/marfa/lab" className="block w-full py-3 bg-blue-600 text-white text-center rounded-xl font-bold font-sm mt-4 hover:bg-blue-700">
-                        متابعة العمل في المختبر ⬅
-                    </Link>
                 </div>
             </div>
 
-            {/* Notifications / Next Steps */}
+            {/* Right Column: Sidebar */}
             <div className="space-y-6">
                 <div className="bg-gradient-to-br from-indigo-900 to-slate-800 rounded-3xl p-8 text-white relative overflow-hidden">
                     <div className="relative z-10">

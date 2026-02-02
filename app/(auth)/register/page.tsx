@@ -17,7 +17,8 @@ function RegisterForm() {
         phone: '',
         password: '',
         confirmPassword: '',
-        userType: 'investor' as 'investor' | 'entrepreneur', // Updated to match DB enums
+        commercialRegister: '', // New field for investors
+        userType: '' as '' | 'investor' | 'entrepreneur', // Empty until selected
     });
 
     const [isLoading, setIsLoading] = useState(false);
@@ -43,6 +44,7 @@ function RegisterForm() {
         else if (userType && (userType === 'investor' || userType === 'entrepreneur')) {
             setFormData(prev => ({ ...prev, userType: userType as any }));
         }
+        // If no type is set yet, user will see role selection screen
 
         if (storedAnswers) {
             try {
@@ -111,6 +113,7 @@ function RegisterForm() {
                     await supabase.from('investor_profiles').insert({
                         profile_id: userId,
                         approval_status: 'pending', // Default pending
+                        commercial_register: formData.commercialRegister || null, // New field
                         // Map questionnaire data if available
                         experience_level: questionnaireData?.['1'], // Assuming Q1 is experience
                         investment_amount: questionnaireData?.['2'],
@@ -157,8 +160,76 @@ function RegisterForm() {
         }
     };
 
+    // Role Selection Screen - shown first if no userType selected
+    if (!formData.userType) {
+        return (
+            <div className="min-h-screen bg-background flex items-center justify-center p-4" dir="rtl">
+                <div className="w-full max-w-md animate-fade-in-up">
+                    <div className="text-center mb-8">
+                        <Image
+                            src="/images/logo-marfa.png"
+                            alt="Marfa Logo"
+                            width={120}
+                            height={160}
+                            className="mx-auto mb-4 h-32 w-auto object-contain"
+                        />
+                        <h2 className="text-2xl font-bold text-foreground mb-2">اختر نوع الحساب</h2>
+                        <p className="text-foreground/60 text-sm">ابدأ رحلتك في مجتمع مرفأ الاستثماري</p>
+                    </div>
+
+                    <div className="space-y-4">
+                        {/* Investor Card */}
+                        <button
+                            onClick={() => setFormData({ ...formData, userType: 'investor' })}
+                            className="w-full p-6 bg-white border-2 border-slate-100 rounded-2xl flex items-center gap-4 hover:border-blue-500 hover:bg-blue-50 transition-all group text-right shadow-sm"
+                        >
+                            <div className="bg-blue-100 text-blue-600 p-4 rounded-xl text-3xl group-hover:scale-110 transition-transform">
+                                💰
+                            </div>
+                            <div className="flex-1">
+                                <h3 className="font-bold text-slate-800 text-lg mb-1">أنا مستثمر</h3>
+                                <p className="text-xs text-slate-500">أبحث عن فرص واعدة في حائل والمملكة</p>
+                            </div>
+                            <div className="text-slate-300 group-hover:text-blue-500 transition">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                            </div>
+                        </button>
+
+                        {/* Entrepreneur Card */}
+                        <button
+                            onClick={() => setFormData({ ...formData, userType: 'entrepreneur' })}
+                            className="w-full p-6 bg-white border-2 border-slate-100 rounded-2xl flex items-center gap-4 hover:border-teal-500 hover:bg-teal-50 transition-all group text-right shadow-sm"
+                        >
+                            <div className="bg-teal-100 text-teal-600 p-4 rounded-xl text-3xl group-hover:scale-110 transition-transform">
+                                💡
+                            </div>
+                            <div className="flex-1">
+                                <h3 className="font-bold text-slate-800 text-lg mb-1">لدي فكرة مشروع</h3>
+                                <p className="text-xs text-slate-500">أبحث عن تمويل وشراكات ذكية</p>
+                            </div>
+                            <div className="text-slate-300 group-hover:text-teal-500 transition">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                            </div>
+                        </button>
+
+                        {/* Back to Login */}
+                        <div className="text-center mt-6">
+                            <Link href="/login" className="text-sm text-slate-400 hover:text-blue-600 transition">
+                                لديك حساب بالفعل؟ تسجيل الدخول
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="min-h-screen bg-background flex items-center justify-center p-4" dir="rtl">
             <div className="w-full max-w-md animate-fade-in-up">
                 <div className="text-center mb-8">
                     <Image
@@ -168,45 +239,23 @@ function RegisterForm() {
                         height={160}
                         className="mx-auto mb-4 h-32 w-auto object-contain"
                     />
-                    <p className="text-foreground/70">إنشاء حساب جديد</p>
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                        <button
+                            onClick={() => setFormData({ ...formData, userType: '', email: '', fullName: '', phone: '', password: '', confirmPassword: '', commercialRegister: '' })}
+                            className="text-slate-400 hover:text-blue-600 transition"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <p className="text-foreground/70">
+                            {formData.userType === 'investor' ? 'تسجيل مستثمر' : 'تسجيل رائد أعمال'}
+                        </p>
+                    </div>
                 </div>
 
                 <Card glass className="p-8">
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* User Type Selection */}
-                        {/* User Type Selection - HIDDEN based on user request */}
-                        <div className="hidden">
-                            <label className="block text-sm font-medium text-foreground mb-3">
-                                نوع الحساب <span className="text-error">*</span>
-                            </label>
-                            <div className="grid grid-cols-2 gap-4">
-                                <button
-                                    type="button"
-                                    onClick={() => setFormData({ ...formData, userType: 'investor' })}
-                                    className={`p-4 rounded-lg border-2 transition-all ${formData.userType === 'investor'
-                                        ? 'border-primary bg-primary/10 text-primary'
-                                        : 'border-gray-300 hover:border-primary/50'
-                                        }`}
-                                >
-                                    <div className="text-2xl mb-2">💼</div>
-                                    <div className="font-bold">مستثمر</div>
-                                    <div className="text-xs text-foreground/60">أبحث عن فرص استثمارية</div>
-                                </button>
-
-                                <button
-                                    type="button"
-                                    onClick={() => setFormData({ ...formData, userType: 'entrepreneur' })}
-                                    className={`p-4 rounded-lg border-2 transition-all ${formData.userType === 'entrepreneur'
-                                        ? 'border-primary bg-primary/10 text-primary'
-                                        : 'border-gray-300 hover:border-primary/50'
-                                        }`}
-                                >
-                                    <div className="text-2xl mb-2">💡</div>
-                                    <div className="font-bold">صاحب فكرة</div>
-                                    <div className="text-xs text-foreground/60">أبحث عن تمويل لمشروعي</div>
-                                </button>
-                            </div>
-                        </div>
 
                         {/* Full Name */}
                         <Input
@@ -252,6 +301,23 @@ function RegisterForm() {
                                 </svg>
                             }
                         />
+
+                        {/* Commercial Register - Only for Investors */}
+                        {formData.userType === 'investor' && (
+                            <Input
+                                label="رقم السجل التجاري (اختياري)"
+                                type="text"
+                                value={formData.commercialRegister}
+                                onChange={(e) => setFormData({ ...formData, commercialRegister: e.target.value })}
+                                placeholder="700xxxxxxx"
+                                helperText="إضافة السجل التجاري يساعد في تسريع عملية الاعتماد"
+                                startIcon={
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                }
+                            />
+                        )}
 
                         {/* Password */}
                         <Input

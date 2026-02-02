@@ -78,7 +78,7 @@ export default function LoginPage() {
                 }
 
                 if (profile?.user_type === 'investor') {
-                    // Check approval status for investors
+                    // Check approval status BEFORE signing in
                     const { data: investorProfile } = await supabase
                         .from('investor_profiles')
                         .select('approval_status')
@@ -88,18 +88,16 @@ export default function LoginPage() {
                     if (investorProfile?.approval_status === 'approved') {
                         router.push('/dashboard/investor');
                     } else if (investorProfile?.approval_status === 'pending') {
-                        // ALLOW LOGIN even if pending, but maybe show a banner? 
-                        // For now, based on previous code, it forced logout. 
-                        // But usually users want to see a "Pending" screen.
-                        // Let's stick to the previous logic BUT allow them to enter if we want them to see dashboard.
-                        // User said "I CANT LOG IN". Better to let them in and show "Pending" state on dashboard.
-                        // But the previous code explicitly signed them out. I will KEEP the sign out to avoid changing business logic,
-                        // but I will ensure the error message is clear.
+                        // Sign out immediately and show clear message
                         await supabase.auth.signOut();
-                        setError('تم تسجيل الدخول بنجاح، ولكن حسابك لا يزال قيد المراجعة (Pending Approval).');
+                        setError('⏳ حسابك قيد المراجعة الإدارية. سيتم إرسال بريد إلكتروني فور الموافقة. عادة تستغرق المراجعة أقل من 24 ساعة.');
+                        setIsLoading(false);
+                        return; // Don't proceed
                     } else if (investorProfile?.approval_status === 'rejected') {
                         await supabase.auth.signOut();
-                        setError('عذراً، لم يتم قبول طلبك.');
+                        setError('عذراً، لم يتم قبول طلبك. يرجى التواصل مع الإدارة للمزيد من المعلومات.');
+                        setIsLoading(false);
+                        return;
                     } else {
                         // If no investor profile found (rare), let them in or recreate
                         router.push('/dashboard/investor');

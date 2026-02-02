@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Header() {
@@ -6,14 +7,22 @@ export default function Header() {
             <div className="max-w-7xl mx-auto flex justify-between items-center">
                 {/* Logo / Brand Name - Right Side (Arabic Only) */}
                 <div className="flex items-center gap-2">
-                    <Link href="/" className="text-2xl font-black text-white hover:opacity-80 transition-opacity">
-                        مرفأ
+                    <Link href="/" className="hover:opacity-80 transition-opacity">
+                        <Image
+                            src="/images/logo-marfa.png"
+                            alt="Marfa Logo"
+                            width={50}
+                            height={70}
+                            className="object-contain h-16 w-auto"
+                        />
                     </Link>
                 </div>
 
-                {/* Optional: Navigation items could go here */}
-                <div>
-                    {/* ... */}
+                {/* Navigation items */}
+                <div className="flex items-center gap-6">
+                    <Link href="/marfa/academy" className="text-white/80 hover:text-white hover:scale-105 transition-all font-medium">
+                        أكاديمية مرفأ
+                    </Link>
                 </div>
             </div>
         </header>

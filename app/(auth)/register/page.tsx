@@ -1,8 +1,9 @@
 "use client";
 
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Card from '../../components/ui/Card';
@@ -26,25 +27,32 @@ export default function RegisterPage() {
     // Initialize Supabase client
     const supabase = createClient();
 
-    // Load questionnaire data from localStorage on mount
+    const searchParams = useSearchParams();
+
+    // Load questionnaire data from localStorage on mount and check query params
     useEffect(() => {
         const storedAnswers = localStorage.getItem('investmentAnswers');
         const userType = localStorage.getItem('userType');
+        const typeParam = searchParams.get('type');
+
+        // Priority 1: Query Param
+        if (typeParam === 'investor' || typeParam === 'entrepreneur') {
+            setFormData(prev => ({ ...prev, userType: typeParam as any }));
+        }
+        // Priority 2: LocalStorage
+        else if (userType && (userType === 'investor' || userType === 'entrepreneur')) {
+            setFormData(prev => ({ ...prev, userType: userType as any }));
+        }
 
         if (storedAnswers) {
             try {
                 const parsedAnswers = JSON.parse(storedAnswers);
                 setQuestionnaireData(parsedAnswers);
-
-                // If user type was determined in questionnaire, set it
-                if (userType && (userType === 'investor' || userType === 'entrepreneur')) {
-                    setFormData(prev => ({ ...prev, userType: userType as any }));
-                }
             } catch (e) {
                 console.error("Error parsing questionnaire data", e);
             }
         }
-    }, []);
+    }, [searchParams]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -153,7 +161,13 @@ export default function RegisterPage() {
         <div className="min-h-screen bg-background flex items-center justify-center p-4">
             <div className="w-full max-w-md animate-fade-in-up">
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-gradient mb-2">مرفأ</h1>
+                    <Image
+                        src="/images/logo-marfa.png"
+                        alt="Marfa Logo"
+                        width={120}
+                        height={160}
+                        className="mx-auto mb-4 h-32 w-auto object-contain"
+                    />
                     <p className="text-foreground/70">إنشاء حساب جديد</p>
                 </div>
 

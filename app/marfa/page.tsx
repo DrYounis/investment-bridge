@@ -100,11 +100,14 @@ export default function MarfaLandingPage() {
                     <div className="relative z-10 max-w-2xl mx-auto">
                         <h2 className="text-3xl font-bold mb-6">جاهز لاختبار فكرتك؟</h2>
                         <p className="text-slate-300 mb-8 text-lg">
-                            أدخل "مختبر دراسة الجدوى" الآن واحصل على تقرير فوري يوضح نقاط القوة والضعف في مشروعك.
+                            أدخل "مختبر دراسة الجدوى" الآن واحصل على تقرير فوري (SWOT) يوضح نقاط القوة والضعف في مشروعك.
                         </p>
-                        <Link href="/marfa/assessment" className="inline-block px-10 py-5 bg-green-500 hover:bg-green-600 text-white rounded-2xl font-bold shadow-lg shadow-green-900/20 transition-all font-xl">
-                            إبدأ التحليل مجاناً 🚀
-                        </Link>
+                        <div className="flex flex-col md:flex-row justify-center gap-4">
+                            <Link href="/marfa/assessment" className="inline-block px-10 py-5 bg-green-500 hover:bg-green-600 text-white rounded-2xl font-bold shadow-lg shadow-green-900/20 transition-all font-xl">
+                                إبدأ التحليل المجاني (Free) 🚀
+                            </Link>
+                        </div>
+                        <p className="mt-4 text-xs text-slate-400 opacity-60">* لا يتطلب اشتراك مدفوع لهذه المرحلة</p>
                     </div>
                 </div>
 

@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import FinancialCalculator from '../../../components/marfa/FinancialCalculator';
+import SubscriptionGuard from '../../../components/SubscriptionGuard';
 
 export default function FinancialPillarPage() {
     return (
@@ -23,7 +24,24 @@ export default function FinancialPillarPage() {
                 </p>
             </div>
 
-            <FinancialCalculator />
+            <SubscriptionGuard featureName="التدقيق المالي" fallback={
+                <div className="max-w-4xl mx-auto px-4 mt-8">
+                    <div className="bg-slate-900 rounded-3xl p-12 text-center text-white relative overflow-hidden">
+                        <div className="relative z-10">
+                            <div className="text-6xl mb-6">💰</div>
+                            <h2 className="text-3xl font-bold mb-4">حاسبة الجدوى المالية (Pro Only)</h2>
+                            <p className="text-slate-300 mb-8 max-w-lg mx-auto">
+                                احصل على تحليل مالي دقيق لمشروعك، يشمل حساب العائد على الاستثمار (ROI) ونقطة التعادل، مع ميزة التصدير.
+                            </p>
+                            <Link href="/dashboard/entrepreneur" className="px-8 py-3 bg-white text-slate-900 rounded-xl font-bold hover:bg-gray-100 transition">
+                                ترقية الحساب
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            }>
+                <FinancialCalculator />
+            </SubscriptionGuard>
         </div>
     );
 }

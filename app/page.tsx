@@ -82,6 +82,31 @@ export default function Home() {
 
         </div>
 
+        {/* Free Tool: SWOT Analysis */}
+        <div className="max-w-6xl mx-auto w-full mb-12 animate-fade-in-up delay-100">
+          <Link href="/marfa/assessment" className="block group">
+            <div className="bg-white border-2 border-green-100 rounded-3xl p-8 md:p-10 shadow-lg hover:border-green-400 hover:shadow-green-100 transition-all relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-green-500 text-white text-xs font-bold px-4 py-1 rounded-bl-xl">مجاناً Free</div>
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-3xl">🛡️</span>
+                    <h3 className="text-2xl font-bold text-slate-800">أداة تحليل الأفكار (SWOT)</h3>
+                  </div>
+                  <p className="text-gray-500 text-lg">
+                    هل فكرتك صلبة؟ استخدم أداتنا المجانية لفحص نقاط القوة والضعف قبل البدء.
+                  </p>
+                </div>
+                <div className="px-8 py-3 bg-green-50 text-green-700 font-bold rounded-xl group-hover:bg-green-500 group-hover:text-white transition-colors">
+                  ابدأ التحليل المجاني ⬅
+                </div>
+              </div>
+              {/* Decor */}
+              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-green-50 rounded-full blur-2xl group-hover:bg-green-100 transition-colors"></div>
+            </div>
+          </Link>
+        </div>
+
         {/* Featured Service: Pitch Deck */}
         <div className="max-w-6xl mx-auto w-full mb-20 animate-fade-in-up delay-200">
           <h3 className="text-2xl font-bold text-center text-slate-800 mb-8">أدوات مميزة للنجاح</h3>

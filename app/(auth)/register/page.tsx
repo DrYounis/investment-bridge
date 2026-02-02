@@ -111,7 +111,7 @@ function RegisterForm() {
 
                 // 3. Create Specific Profile (Investor or Entrepreneur)
                 if (formData.userType === 'investor') {
-                    await supabase.from('investor_profiles').insert({
+                    const { error: investorError } = await supabase.from('investor_profiles').insert({
                         profile_id: userId,
                         approval_status: 'pending', // Default pending
                         commercial_register: formData.commercialRegister || null, // New field
@@ -123,11 +123,21 @@ function RegisterForm() {
                         preferred_sectors: questionnaireData?.['5'] ? JSON.stringify(questionnaireData['5']) : null,
                         expected_return: questionnaireData?.['6'],
                     });
+
+                    if (investorError) {
+                        console.error("Investor profile creation error:", investorError);
+                        throw new Error(`فشل في إنشاء ملف المستثمر: ${investorError.message}`);
+                    }
                 } else {
-                    await supabase.from('entrepreneur_profiles').insert({
+                    const { error: entrepreneurError } = await supabase.from('entrepreneur_profiles').insert({
                         profile_id: userId,
                         sector: questionnaireData?.['sector'] || null,
                     });
+
+                    if (entrepreneurError) {
+                        console.error("Entrepreneur profile creation error:", entrepreneurError);
+                        throw new Error(`فشل في إنشاء ملف رائد الأعمال: ${entrepreneurError.message}`);
+                    }
                 }
 
                 // 4. Save Questionnaire Responses

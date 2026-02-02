@@ -23,6 +23,7 @@ function RegisterForm() {
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState(''); // New success message state
     const [questionnaireData, setQuestionnaireData] = useState<any>(null);
 
     // Initialize Supabase client
@@ -145,12 +146,21 @@ function RegisterForm() {
                     localStorage.removeItem('userType');
                 }
 
-                // 5. Redirect
+                // 5. Show success message then redirect
                 const dashboardPath = formData.userType === 'investor'
                     ? '/dashboard/investor'
                     : '/dashboard/entrepreneur';
 
-                router.push(dashboardPath);
+                const successMessage = formData.userType === 'investor'
+                    ? '✅ تم التسجيل بنجاح! حسابك قيد المراجعة الإدارية. سيتم إرسال بريد إلكتروني فور الموافقة.'
+                    : '✅ تم التسجيل بنجاح! مرحباً بك في مجتمع مرفأ لرواد الأعمال.';
+
+                setSuccess(successMessage);
+
+                // Redirect after 3 seconds to show success message
+                setTimeout(() => {
+                    router.push(dashboardPath);
+                }, 3000);
             }
         } catch (err: any) {
             console.error(err);
@@ -374,6 +384,13 @@ function RegisterForm() {
                                 </p>
                             </div>
                         </div>
+
+                        {/* Success Message */}
+                        {success && (
+                            <div className="bg-green-50 border-2 border-green-500 text-green-800 px-4 py-4 rounded-xl text-sm font-bold text-center animate-fade-in">
+                                {success}
+                            </div>
+                        )}
 
                         {/* Error Message */}
                         {error && (

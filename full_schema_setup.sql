@@ -140,11 +140,15 @@ create table if not exists public.questionnaire_responses (
 -- Enable RLS for questionnaire
 alter table public.questionnaire_responses enable row level security;
 
+drop policy if exists "Users can manage their own responses" on questionnaire_responses;
+
 create policy "Users can manage their own responses"
   on questionnaire_responses for all
   using ( auth.uid() = profile_id );
 
 -- 4. Create INVESTOR INTERACTIONS table (For Shark Tank Flow)
+drop type if exists interaction_status cascade;
+
 create type interaction_status as enum ('pending', 'connected', 'passed', 'expired');
 
 create table if not exists public.investor_interactions (
@@ -162,6 +166,10 @@ create table if not exists public.investor_interactions (
 -- Enable RLS for interactions
 alter table public.investor_interactions enable row level security;
 
+drop policy if exists "Investors can view their own interactions" on investor_interactions;
+drop policy if exists "Investors can insert their own interactions" on investor_interactions;
+drop policy if exists "Investors can update their own interactions" on investor_interactions;
+
 create policy "Investors can view their own interactions"
   on investor_interactions for select
   using (auth.uid() = investor_id);
@@ -175,11 +183,78 @@ create policy "Investors can update their own interactions"
   using (auth.uid() = investor_id);
 
 -- 5. Trigger to automatically create profile on sign up
+-- 5. Trigger to automatically create profile and sub-profiles on sign up
 create or replace function public.handle_new_user()
 returns trigger as $$
+declare
+  meta jsonb;
+  u_role text;
 begin
-  insert into public.profiles (id, full_name, email, role)
-  values (new.id, new.raw_user_meta_data->>'full_name', new.email, coalesce(new.raw_user_meta_data->>'role', 'investor'));
+  meta := new.raw_user_meta_data;
+  -- Determine role, defaulting to investor
+  u_role := coalesce(meta->>'user_type', meta->>'role', 'investor');
+
+  -- 1. Insert into base PROFILES
+  insert into public.profiles (id, full_name, full_name_ar, email, phone, role, user_type)
+  values (
+    new.id,
+    meta->>'full_name',
+    meta->>'full_name', -- Default Arabic name to same as English if not provided
+    new.email,
+    meta->>'phone',
+    u_role,
+    u_role
+  );
+
+  -- 2. Insert into sub-profiles based on role
+  if u_role = 'investor' then
+    insert into public.investor_profiles (
+      profile_id,
+      commercial_register,
+      experience_level,
+      investment_amount,
+      risk_tolerance,
+      investment_duration,
+      expected_return,
+      preferred_sectors,
+      approval_status
+    ) values (
+      new.id,
+      meta->>'commercial_register',
+      meta->>'experience_level',
+      meta->>'investment_amount',
+      meta->>'risk_tolerance',
+      meta->>'investment_duration',
+      meta->>'expected_return',
+      case 
+        when meta->>'preferred_sectors' is not null then (meta->>'preferred_sectors')::jsonb 
+        else null 
+      end,
+      'pending'
+    );
+  elsif u_role = 'entrepreneur' then
+    insert into public.entrepreneur_profiles (
+      profile_id,
+      sector
+    ) values (
+      new.id,
+      meta->>'sector'
+    );
+  end if;
+
+  -- 3. Insert QUESTIONNAIRE RESPONSES if provided
+  if meta ? 'questionnaire_responses' then
+    insert into public.questionnaire_responses (
+      profile_id,
+      responses,
+      project_summary
+    ) values (
+      new.id,
+      (meta->>'questionnaire_responses')::jsonb,
+      meta->>'project_summary'
+    );
+  end if;
+
   return new;
 end;
 $$ language plpgsql security definer;

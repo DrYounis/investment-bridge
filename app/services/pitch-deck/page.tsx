@@ -40,8 +40,13 @@ export default function PitchDeckServicePage() {
                                 href="/services/pitch-deck/create"
                                 className="px-10 py-5 bg-slate-900 text-white rounded-2xl font-bold shadow-xl hover:bg-slate-800 transition-all flex items-center gap-4 group"
                             >
-                                <span>ابدأ التصميم الآن (تجريبي)</span>
-                                <span className="bg-white/20 px-3 py-1 rounded text-sm text-yellow-300 font-mono">مجاني لفترة محدودة</span>
+                                <span>ابدأ التصميم الآن (Pro)</span>
+                                <span className="bg-white/20 px-3 py-1 rounded text-sm text-yellow-300 font-mono">2500 ريال</span>
+                            </Link>
+                        </div>
+                        <div className="pt-4">
+                            <Link href="/marfa/assessment" className="text-sm text-gray-400 hover:text-blue-600 underline decoration-dotted">
+                                لست مستعداً للدفع؟ جرب أداة تحليل الفكرة (SWOT) مجاناً أولاً
                             </Link>
                         </div>
                     </div>
@@ -113,6 +118,31 @@ export default function PitchDeckServicePage() {
                             desc="نرفق لك ملاحظات المتحدث (Speaker Notes) لكل شريحة لمساعدتك في تقديم العرض بثقة."
                         />
                     </div>
+                </section>
+
+                {/* Templates Preview Section */}
+                <section className="mb-24 bg-slate-900 rounded-3xl p-12 text-center text-white relative overflow-hidden">
+                    <div className="relative z-10">
+                        <h2 className="text-3xl font-bold mb-4">اكتشف أكثر من 20+ قالب جاهز (Pro)</h2>
+                        <p className="text-slate-300 mb-8 max-w-2xl mx-auto">
+                            استلهمنا تصاميمنا من أفضل الشركات العالمية (مثل: Pitch.com, Airbnb, Uber).
+                            مكتبة متكاملة تغطي جميع احتياجاتك: من جولات الاستثمار إلى تقارير المبيعات.
+                        </p>
+
+                        <div className="flex justify-center flex-wrap gap-4 mb-8 opacity-70">
+                            {['Investor', 'Marketing', 'Sales', 'Agency', 'Startup'].map(tag => (
+                                <span key={tag} className="px-4 py-1 border border-white/20 rounded-full text-sm">{tag}</span>
+                            ))}
+                        </div>
+
+                        <Link href="/services/pitch-deck/templates" className="inline-block px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition shadow-lg shadow-blue-900/50">
+                            تصفح المكتبة كاملة ⬅
+                        </Link>
+                    </div>
+
+                    {/* Abstract Shapes */}
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-600 rounded-full blur-[80px] opacity-30"></div>
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-pink-500 rounded-full blur-[80px] opacity-30"></div>
                 </section>
 
             </main>

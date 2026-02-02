@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import MarfaAcademySection from './components/marfa/MarfaAcademySection';
 
 export default function Home() {
   return (
@@ -142,6 +143,9 @@ export default function Home() {
             </div>
           </Link>
         </div>
+
+        {/* Marfa Academy Section */}
+        <MarfaAcademySection />
 
         {/* Footer Minimal */}
         <footer className="text-center text-gray-400 text-sm py-8 border-t border-gray-200">

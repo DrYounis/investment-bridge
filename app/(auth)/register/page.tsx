@@ -75,103 +75,55 @@ function RegisterForm() {
         setIsLoading(true);
 
         try {
-            // 1. Sign up user
+            // Prepare metadata for the trigger to handle profile creation securely
+            const metadata: any = {
+                full_name: formData.fullName,
+                user_type: formData.userType,
+                role: formData.userType,
+                phone: formData.phone,
+            };
+
+            if (formData.userType === 'investor') {
+                metadata.commercial_register = formData.commercialRegister || null;
+                if (questionnaireData) {
+                    metadata.experience_level = questionnaireData['1'];
+                    metadata.investment_amount = questionnaireData['2'];
+                    metadata.risk_tolerance = questionnaireData['3'];
+                    metadata.investment_duration = questionnaireData['4'];
+                    metadata.preferred_sectors = questionnaireData['5'];
+                    metadata.expected_return = questionnaireData['6'];
+                }
+            } else {
+                if (questionnaireData) {
+                    metadata.sector = questionnaireData['sector'] || null;
+                }
+            }
+
+            if (questionnaireData) {
+                metadata.questionnaire_responses = questionnaireData;
+                metadata.project_summary = questionnaireData['summary'] || null;
+            }
+
+            // 1. Sign up user (Trigger handles DB insertion)
             const { data: authData, error: authError } = await supabase.auth.signUp({
                 email: formData.email,
                 password: formData.password,
                 options: {
-                    data: {
-                        full_name: formData.fullName,
-                        user_type: formData.userType,
-                    },
+                    data: metadata,
                 },
             });
 
             if (authError) throw authError;
 
             if (authData.user) {
-                const userId = authData.user.id;
-                console.log("✅ User created successfully:", userId);
-                console.log("User email confirmed:", authData.user.email_confirmed_at);
+                console.log("✅ User created successfully:", authData.user.id);
 
-                // 2. Create Profile Entry (if not handled by trigger, but here explicit is safer)
-                // Note: Triggers are great, but manual insertion allows error handling in UI
-                console.log("📝 Attempting to create profile...");
-                const { error: profileError } = await supabase
-                    .from('profiles')
-                    .insert({
-                        id: userId,
-                        email: formData.email,
-                        full_name: formData.fullName,
-                        phone: formData.phone,
-                        user_type: formData.userType,
-                    });
+                // Clear localStorage
+                localStorage.removeItem('investmentAnswers');
+                localStorage.removeItem('questionnaireCompleted');
+                localStorage.removeItem('userType');
 
-                if (profileError) {
-                    console.error("❌ Profile creation error:", profileError);
-                    // Continue anyway as auth succeeded, might be a duplicate key if trigger exists
-                } else {
-                    console.log("✅ Profile created successfully");
-                }
-
-                // 3. Create Specific Profile (Investor or Entrepreneur)
-                if (formData.userType === 'investor') {
-                    console.log("📝 Creating investor profile...");
-                    const { error: investorError } = await supabase.from('investor_profiles').insert({
-                        profile_id: userId,
-                        approval_status: 'pending', // Default pending
-                        commercial_register: formData.commercialRegister || null, // New field
-                        // Map questionnaire data if available
-                        experience_level: questionnaireData?.['1'], // Assuming Q1 is experience
-                        investment_amount: questionnaireData?.['2'],
-                        risk_tolerance: questionnaireData?.['3'],
-                        investment_duration: questionnaireData?.['4'],
-                        preferred_sectors: questionnaireData?.['5'] ? JSON.stringify(questionnaireData['5']) : null,
-                        expected_return: questionnaireData?.['6'],
-                    });
-
-                    if (investorError) {
-                        console.error("❌ Investor profile creation error:", investorError);
-                        throw new Error(`فشل في إنشاء ملف المستثمر: ${investorError.message}`);
-                    }
-                    console.log("✅ Investor profile created successfully");
-                } else {
-                    console.log("📝 Creating entrepreneur profile...");
-                    const { error: entrepreneurError } = await supabase.from('entrepreneur_profiles').insert({
-                        profile_id: userId,
-                        sector: questionnaireData?.['sector'] || null,
-                    });
-
-                    if (entrepreneurError) {
-                        console.error("❌ Entrepreneur profile creation error:", entrepreneurError);
-                        throw new Error(`فشل في إنشاء ملف رائد الأعمال: ${entrepreneurError.message}`);
-                    }
-                    console.log("✅ Entrepreneur profile created successfully");
-                }
-
-                // 4. Save Questionnaire Responses
-                if (questionnaireData) {
-                    console.log("📝 Saving questionnaire responses...");
-                    const { error: questionnaireError } = await supabase.from('questionnaire_responses').insert({
-                        profile_id: userId,
-                        user_type: formData.userType,
-                        sector: questionnaireData?.['sector'] || null,
-                        responses: questionnaireData,
-                        project_summary: questionnaireData?.['summary'] || null,
-                    });
-
-                    if (questionnaireError) {
-                        console.error("⚠️ Questionnaire save error (non-critical):", questionnaireError);
-                        // Don't throw, this is optional
-                    } else {
-                        console.log("✅ Questionnaire responses saved");
-                    }
-
-                    // Clear localStorage
-                    localStorage.removeItem('investmentAnswers');
-                    localStorage.removeItem('questionnaireCompleted');
-                    localStorage.removeItem('userType');
-                }
+                // Success message handling below...
 
                 // 5. Show success message then redirect
                 const dashboardPath = formData.userType === 'investor'

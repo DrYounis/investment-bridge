@@ -91,9 +91,12 @@ function RegisterForm() {
 
             if (authData.user) {
                 const userId = authData.user.id;
+                console.log("✅ User created successfully:", userId);
+                console.log("User email confirmed:", authData.user.email_confirmed_at);
 
                 // 2. Create Profile Entry (if not handled by trigger, but here explicit is safer)
                 // Note: Triggers are great, but manual insertion allows error handling in UI
+                console.log("📝 Attempting to create profile...");
                 const { error: profileError } = await supabase
                     .from('profiles')
                     .insert({
@@ -105,12 +108,15 @@ function RegisterForm() {
                     });
 
                 if (profileError) {
-                    console.error("Profile creation error:", profileError);
+                    console.error("❌ Profile creation error:", profileError);
                     // Continue anyway as auth succeeded, might be a duplicate key if trigger exists
+                } else {
+                    console.log("✅ Profile created successfully");
                 }
 
                 // 3. Create Specific Profile (Investor or Entrepreneur)
                 if (formData.userType === 'investor') {
+                    console.log("📝 Creating investor profile...");
                     const { error: investorError } = await supabase.from('investor_profiles').insert({
                         profile_id: userId,
                         approval_status: 'pending', // Default pending
@@ -125,30 +131,41 @@ function RegisterForm() {
                     });
 
                     if (investorError) {
-                        console.error("Investor profile creation error:", investorError);
+                        console.error("❌ Investor profile creation error:", investorError);
                         throw new Error(`فشل في إنشاء ملف المستثمر: ${investorError.message}`);
                     }
+                    console.log("✅ Investor profile created successfully");
                 } else {
+                    console.log("📝 Creating entrepreneur profile...");
                     const { error: entrepreneurError } = await supabase.from('entrepreneur_profiles').insert({
                         profile_id: userId,
                         sector: questionnaireData?.['sector'] || null,
                     });
 
                     if (entrepreneurError) {
-                        console.error("Entrepreneur profile creation error:", entrepreneurError);
+                        console.error("❌ Entrepreneur profile creation error:", entrepreneurError);
                         throw new Error(`فشل في إنشاء ملف رائد الأعمال: ${entrepreneurError.message}`);
                     }
+                    console.log("✅ Entrepreneur profile created successfully");
                 }
 
                 // 4. Save Questionnaire Responses
                 if (questionnaireData) {
-                    await supabase.from('questionnaire_responses').insert({
+                    console.log("📝 Saving questionnaire responses...");
+                    const { error: questionnaireError } = await supabase.from('questionnaire_responses').insert({
                         profile_id: userId,
                         user_type: formData.userType,
                         sector: questionnaireData?.['sector'] || null,
                         responses: questionnaireData,
                         project_summary: questionnaireData?.['summary'] || null,
                     });
+
+                    if (questionnaireError) {
+                        console.error("⚠️ Questionnaire save error (non-critical):", questionnaireError);
+                        // Don't throw, this is optional
+                    } else {
+                        console.log("✅ Questionnaire responses saved");
+                    }
 
                     // Clear localStorage
                     localStorage.removeItem('investmentAnswers');

@@ -20,6 +20,41 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Project Structure
+
+Here is an overview of the main pages and services in the project:
+
+```
+├── app
+│   ├── (auth)              # Authentication routes
+│   │   ├── login           # Login page
+│   │   ├── register        # Registration page (Investor/Entrepreneur)
+│   │   └── forgot-password
+│   ├── (dashboard)         # Role-based dashboards
+│   │   ├── entrepreneur    # Entrepreneur dashboard
+│   │   └── investor        # Investor dashboard
+│   ├── actions             # Server Actions
+│   │   └── marfa.ts        # Marfa utilities
+│   ├── admin               # Admin control panel
+│   ├── executive-summary   # Executive Summary Generator tool
+│   ├── marfa               # Marfa Ecosystem
+│   │   ├── academy         # Educational resources
+│   │   ├── assessment      # Project assessment tools
+│   │   ├── lab             # Innovation lab
+│   │   └── swot            # SWOT analysis tool
+│   ├── services            # Application services
+│   │   └── pitch-deck      # Pitch deck generation services
+│   ├── questionnaire       # Onboarding questionnaire
+│   ├── layout.tsx          # Root layout
+│   └── page.tsx            # Landing page
+├── lib
+│   └── supabase            # Supabase configuration
+│       ├── client.ts       # Client-side Supabase client
+│       ├── server.ts       # Server-side Supabase client
+│       └── middleware.ts   # Middleware for session management
+└── docs                    # Documentation and migration records
+```
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

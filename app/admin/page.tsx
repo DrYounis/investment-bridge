@@ -21,8 +21,33 @@ const AdminPanel = () => {
     const router = useRouter();
 
     useEffect(() => {
-        fetchInvestors();
+        const checkAdmin = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) {
+                router.push('/admin/login');
+                return;
+            }
+
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('user_type')
+                .eq('id', user.id)
+                .single();
+
+            if (profile?.user_type !== 'admin') {
+                router.push('/admin/login'); // Or unauthorized page
+            } else {
+                fetchInvestors();
+            }
+        };
+
+        checkAdmin();
     }, []);
+
+    // Remove the original fetchInvestors call from here since we call it after auth check
+    // useEffect(() => {
+    //    fetchInvestors();
+    // }, []);
 
     const fetchInvestors = async () => {
         try {

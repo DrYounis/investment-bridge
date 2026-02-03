@@ -17,6 +17,7 @@ const AdminPanel = () => {
     const [pendingInvestors, setPendingInvestors] = useState<PendingInvestor[]>([]);
     const [stats, setStats] = useState({ pending: 0, accepted: 0 });
     const [loading, setLoading] = useState(true);
+    const [isCheckingAuth, setIsCheckingAuth] = useState(true); // New state to block rendering
     const supabase = createClient();
     const router = useRouter();
 
@@ -35,8 +36,9 @@ const AdminPanel = () => {
                 .single();
 
             if (profile?.user_type !== 'admin') {
-                router.push('/admin/login'); // Or unauthorized page
+                router.push('/admin/login');
             } else {
+                setIsCheckingAuth(false); // Only allow rendering if admin
                 fetchInvestors();
             }
         };
@@ -115,6 +117,14 @@ const AdminPanel = () => {
             alert("حدث خطأ أثناء الاعتماد.");
         }
     };
+
+    if (isCheckingAuth) {
+        return (
+            <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+                <div className="text-white">جاري التحقق من الصلاحيات...</div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-100 flex font-sans" dir="rtl">

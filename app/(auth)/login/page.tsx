@@ -111,7 +111,16 @@ export default function LoginPage() {
             }
         } catch (err: any) {
             console.error(err);
-            setError(err.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة');
+            let errorMessage = err.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+
+            // Translate generic Supabase errors to helpful Arabic messages
+            if (errorMessage.includes('Invalid login credentials')) {
+                errorMessage = 'البريد الإلكتروني أو كلمة المرور غير صحيحة، أو لم يتم تفعيل الحساب بعد. يرجى التحقق من بريدك الإلكتروني.';
+            } else if (errorMessage.includes('Email not confirmed')) {
+                errorMessage = 'لم يتم تفعيل الحساب بعد. يرجى التحقق من بريدك الإلكتروني لتأكيد التسجيل.';
+            }
+
+            setError(errorMessage);
         } finally {
             setIsLoading(false);
         }

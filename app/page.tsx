@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import MarfaAcademySection from './components/marfa/MarfaAcademySection';
+
 
 export default function Home() {
   return (
@@ -13,9 +13,16 @@ export default function Home() {
 
       {/* Navbar Minimal */}
       <nav className="absolute top-0 w-full p-6 flex justify-between items-center z-50">
-        <div className="flex items-center gap-3">
-          <div className="text-2xl font-black text-slate-800 tracking-tight">مرفأ</div>
-          <div className="w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
+        <div className="flex items-center gap-2">
+          <Link href="/" className="hover:opacity-80 transition-opacity">
+            <Image
+              src="/images/logo-marfa.png"
+              alt="Marfa Logo"
+              width={50}
+              height={70}
+              className="object-contain h-16 w-auto"
+            />
+          </Link>
         </div>
         <div className="flex gap-3">
           <Link href="/register" className="px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold rounded-full hover:shadow-lg hover:shadow-blue-200 transition-all duration-300">
@@ -204,8 +211,39 @@ export default function Home() {
           </Link>
         </div>
 
-        {/* Marfa Academy Section */}
-        <MarfaAcademySection />
+        {/* Marfa Academy Link */}
+        <div className="max-w-6xl mx-auto w-full mb-20 animate-fade-in-up">
+          <Link href="/academy" className="block group relative">
+            <div className="bg-white border-2 border-blue-100 rounded-3xl p-8 md:p-10 shadow-lg hover:border-blue-400 hover:shadow-xl hover:shadow-blue-100/50 transition-all relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-gradient-to-br from-blue-500 to-teal-600 text-white text-xs font-bold px-5 py-2 rounded-bl-2xl shadow-lg">
+                <span className="mr-1">🎓</span> أكاديمية
+              </div>
+
+              {/* Background Pattern */}
+              <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/5 rounded-full blur-3xl group-hover:bg-blue-500/10 transition-colors"></div>
+
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-teal-600 rounded-xl flex items-center justify-center text-2xl shadow-lg shadow-blue-200">
+                      🏛️
+                    </div>
+                    <h3 className="text-3xl font-bold text-slate-800">أكاديمية مرفأ للقيادة</h3>
+                  </div>
+                  <p className="text-slate-600 text-lg leading-relaxed">
+                    نخرج من الإطار النظري إلى الواقع عبر دراسة حالات عالمية ومناقشتها بأسلوب الـ MBA التنفيذي
+                  </p>
+                </div>
+                <div className="px-8 py-4 bg-gradient-to-r from-blue-50 to-teal-50 text-blue-700 font-bold rounded-xl group-hover:from-blue-600 group-hover:to-teal-600 group-hover:text-white transition-all shadow-sm flex items-center gap-2">
+                  <span>تصفح الأكاديمية</span>
+                  <svg className="w-5 h-5 transition-transform group-hover:-translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </div>
 
         {/* Footer */}
         <footer className="text-center text-slate-400 text-sm py-12 border-t border-slate-200 mt-16">

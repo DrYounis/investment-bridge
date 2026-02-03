@@ -33,9 +33,15 @@ export default function FinancialPillarPage() {
                             <p className="text-slate-300 mb-8 max-w-lg mx-auto">
                                 احصل على تحليل مالي دقيق لمشروعك، يشمل حساب العائد على الاستثمار (ROI) ونقطة التعادل، مع ميزة التصدير.
                             </p>
-                            <Link href="/dashboard/entrepreneur" className="px-8 py-3 bg-white text-slate-900 rounded-xl font-bold hover:bg-gray-100 transition">
+                            <Link href="/dashboard/entrepreneur" className="px-8 py-3 bg-white text-slate-900 rounded-xl font-bold hover:bg-gray-100 transition mb-6 inline-block">
                                 ترقية الحساب
                             </Link>
+                            <p className="text-sm text-slate-400">
+                                لست مستعداً للدفع؟{' '}
+                                <Link href="/marfa/assessment" className="text-blue-300 hover:text-white underline transition">
+                                    جرب أداة تحليل الفكرة (SWOT) مجاناً أولاً
+                                </Link>
+                            </p>
                         </div>
                     </div>
                 </div>

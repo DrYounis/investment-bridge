@@ -110,6 +110,7 @@ function RegisterForm() {
                 password: formData.password,
                 options: {
                     data: metadata,
+                    emailRedirectTo: `${window.location.origin}/auth/callback`,
                 },
             });
 

@@ -255,6 +255,8 @@ export default function Home() {
           <p>
             © 2026 Marfa. جميع الحقوق محفوظة
             <span className="mx-2 text-slate-300">|</span>
+            <span className="font-medium text-slate-500">صُنع بحب في حائل ❤️</span>
+            <span className="mx-2 text-slate-300">|</span>
             <Link href="/admin/login" className="hover:text-slate-600 transition-colors">
               دخول المسؤول
             </Link>

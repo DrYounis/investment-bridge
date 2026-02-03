@@ -252,7 +252,13 @@ export default function Home() {
             <div className="w-1 h-1 bg-slate-400 rounded-full"></div>
             <span>Investment Bridge</span>
           </div>
-          <p>© 2026 Marfa. جميع الحقوق محفوظة</p>
+          <p>
+            © 2026 Marfa. جميع الحقوق محفوظة
+            <span className="mx-2 text-slate-300">|</span>
+            <Link href="/admin/login" className="hover:text-slate-600 transition-colors">
+              دخول المسؤول
+            </Link>
+          </p>
         </footer>
 
       </main>

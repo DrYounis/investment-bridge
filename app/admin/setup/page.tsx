@@ -8,7 +8,8 @@ import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 
 export default function AdminSetupPage() {
-    const [isLoading, setIsLoading] = useState(true);
+    const [isChecking, setIsChecking] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [canSetup, setCanSetup] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -40,14 +41,14 @@ export default function AdminSetupPage() {
         } catch (err) {
             console.error(err);
         } finally {
-            setIsLoading(false);
+            setIsChecking(false);
         }
     };
 
     const handleSetup = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-        setIsLoading(true);
+        setIsSubmitting(true);
 
         try {
             // 1. Sign Up
@@ -96,11 +97,11 @@ export default function AdminSetupPage() {
         } catch (err: any) {
             setError(err.message);
         } finally {
-            setIsLoading(false);
+            setIsSubmitting(false);
         }
     };
 
-    if (isLoading) {
+    if (isChecking) {
         return <div className="min-h-screen flex items-center justify-center">جاري التحقق...</div>;
     }
 
@@ -147,7 +148,7 @@ export default function AdminSetupPage() {
                         {error && <div className="text-red-500 text-sm text-center">{error}</div>}
                         {success && <div className="text-green-500 text-sm font-bold text-center">{success}</div>}
 
-                        <Button type="submit" fullWidth isLoading={isLoading === true}>
+                        <Button type="submit" fullWidth isLoading={isSubmitting}>
                             إنشاء وحماية النظام
                         </Button>
                     </form>

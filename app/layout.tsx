@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "مرفأ",
   description: "منصة ذكية لربط المستثمرين بالفرص الاستثمارية",
+  icons: {
+    icon: "/images/logo-marfa.png",
+  },
 };
 
 export default function RootLayout({

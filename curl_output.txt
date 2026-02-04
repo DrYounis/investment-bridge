@@ -1,0 +1,79 @@
+Note: Unnecessary use of -X or --request, POST is already inferred.
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* Host gxrpgjbvbueqaqculndl.supabase.co:443 was resolved.
+* IPv6: (none)
+* IPv4: 104.18.38.10, 172.64.149.246
+*   Trying 104.18.38.10:443...
+* Connected to gxrpgjbvbueqaqculndl.supabase.co (104.18.38.10) port 443
+* ALPN: curl offers h2,http/1.1
+* (304) (OUT), TLS handshake, Client hello (1):
+} [337 bytes data]
+*  CAfile: /etc/ssl/cert.pem
+*  CApath: none
+* (304) (IN), TLS handshake, Server hello (2):
+{ [122 bytes data]
+* (304) (IN), TLS handshake, Unknown (8):
+{ [19 bytes data]
+* (304) (IN), TLS handshake, Certificate (11):
+{ [2528 bytes data]
+* (304) (IN), TLS handshake, CERT verify (15):
+{ [79 bytes data]
+* (304) (IN), TLS handshake, Finished (20):
+{ [52 bytes data]
+* (304) (OUT), TLS handshake, Finished (20):
+} [52 bytes data]
+* SSL connection using TLSv1.3 / AEAD-AES256-GCM-SHA384 / [blank] / UNDEF
+* ALPN: server accepted h2
+* Server certificate:
+*  subject: CN=supabase.co
+*  start date: Jan  2 06:20:04 2026 GMT
+*  expire date: Apr  2 07:19:59 2026 GMT
+*  subjectAltName: host "gxrpgjbvbueqaqculndl.supabase.co" matched cert's "*.supabase.co"
+*  issuer: C=US; O=Google Trust Services; CN=WE1
+*  SSL certificate verify ok.
+* using HTTP/2
+* [HTTP/2] [1] OPENED stream for https://gxrpgjbvbueqaqculndl.supabase.co/auth/v1/token?grant_type=password
+* [HTTP/2] [1] [:method: POST]
+* [HTTP/2] [1] [:scheme: https]
+* [HTTP/2] [1] [:authority: gxrpgjbvbueqaqculndl.supabase.co]
+* [HTTP/2] [1] [:path: /auth/v1/token?grant_type=password]
+* [HTTP/2] [1] [user-agent: curl/8.7.1]
+* [HTTP/2] [1] [accept: */*]
+* [HTTP/2] [1] [apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4cnBnamJ2YnVlcWFxY3VsbmRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUyMTIyMzIsImV4cCI6MjA4MDc4ODIzMn0.jtiSfJP6QOWD4eQ7b6H2tvONhkhv7SYhf_xO07FoNa0]
+* [HTTP/2] [1] [content-type: application/json]
+* [HTTP/2] [1] [content-length: 54]
+> POST /auth/v1/token?grant_type=password HTTP/2
+> Host: gxrpgjbvbueqaqculndl.supabase.co
+> User-Agent: curl/8.7.1
+> Accept: */*
+> apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4cnBnamJ2YnVlcWFxY3VsbmRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUyMTIyMzIsImV4cCI6MjA4MDc4ODIzMn0.jtiSfJP6QOWD4eQ7b6H2tvONhkhv7SYhf_xO07FoNa0
+> Content-Type: application/json
+> Content-Length: 54
+> 
+} [54 bytes data]
+* upload completely sent off: 54 bytes
+< HTTP/2 200 
+< date: Tue, 03 Feb 2026 20:10:11 GMT
+< content-type: application/json
+< server: cloudflare
+< cf-ray: 9c8491fd282a2cff-RUH
+< cf-cache-status: DYNAMIC
+< strict-transport-security: max-age=31536000; includeSubDomains; preload
+< vary: Origin, Accept-Encoding
+< x-content-type-options: nosniff
+< sb-auth-refresh-token-prefix: oscen
+< sb-auth-session-id: f70c35d6-8840-493f-a166-401ad262842b
+< sb-auth-user-id: 35f2b09f-498b-4911-b5c2-b632b1db227c
+< sb-gateway-version: 1
+< sb-project-ref: gxrpgjbvbueqaqculndl
+< sb-request-id: 019c2520-7a46-7140-ae24-8ca8e8ee38f9
+< x-envoy-attempt-count: 1
+< x-envoy-upstream-service-time: 91
+< set-cookie: __cf_bm=RUA8dZ4q4gElmA8MwdO32MJ39OcapoQjTn3FRNseTCs-1770149411-1.0.1.1-2F7rffrqB_hTAwyfXkcM931AGKXhSEqVRFq6x9K1hkPGNotUbT9jVjdje9LCX0nvdAF6RdpQgOtJv9Rgy2K77T1XPqgblPJM2r.UfS5qCCo; path=/; expires=Tue, 03-Feb-26 20:40:11 GMT; domain=.supabase.co; HttpOnly; Secure; SameSite=None
+< alt-svc: h3=":443"; ma=86400
+< 
+{ [1360 bytes data]
+100  2184    0  2130  100    54   3081     78 --:--:-- --:--:-- --:--:--  3156100  2184    0  2130  100    54   3079     78 --:--:-- --:--:-- --:--:--  3156
+* Connection #0 to host gxrpgjbvbueqaqculndl.supabase.co left intact
+{"access_token":"eyJhbGciOiJIUzI1NiIsImtpZCI6ImM0eXRNZ0ZYQVVpNGo5VTkiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2d4cnBnamJ2YnVlcWFxY3VsbmRsLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiIzNWYyYjA5Zi00OThiLTQ5MTEtYjVjMi1iNjMyYjFkYjIyN2MiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzcwMTUzMDExLCJpYXQiOjE3NzAxNDk0MTEsImVtYWlsIjoiYWRtaW4udGVzdEBnbWFpbC5jb20iLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsIjoiYWRtaW4udGVzdEBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInBob25lX3ZlcmlmaWVkIjpmYWxzZSwic3ViIjoiMzVmMmIwOWYtNDk4Yi00OTExLWI1YzItYjYzMmIxZGIyMjdjIn0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NzAxNDk0MTF9XSwic2Vzc2lvbl9pZCI6ImY3MGMzNWQ2LTg4NDAtNDkzZi1hMTY2LTQwMWFkMjYyODQyYiIsImlzX2Fub255bW91cyI6ZmFsc2V9.4VBhgtSFEMez3UGfGsHRNVZBayrRDPr3Nbh5mtn94vM","token_type":"bearer","expires_in":3600,"expires_at":1770153011,"refresh_token":"oscengxt7uhi","user":{"id":"35f2b09f-498b-4911-b5c2-b632b1db227c","aud":"authenticated","role":"authenticated","email":"admin.test@gmail.com","email_confirmed_at":"2026-02-03T20:05:31.664815Z","phone":"","confirmation_sent_at":"2026-02-03T19:59:18.487165Z","confirmed_at":"2026-02-03T20:05:31.664815Z","last_sign_in_at":"2026-02-03T20:10:11.592122135Z","app_metadata":{"provider":"email","providers":["email"]},"user_metadata":{"email":"admin.test@gmail.com","email_verified":false,"phone_verified":false,"sub":"35f2b09f-498b-4911-b5c2-b632b1db227c"},"identities":[{"identity_id":"fca41318-86f3-46de-9202-191e682b0a9d","id":"35f2b09f-498b-4911-b5c2-b632b1db227c","user_id":"35f2b09f-498b-4911-b5c2-b632b1db227c","identity_data":{"email":"admin.test@gmail.com","email_verified":false,"phone_verified":false,"sub":"35f2b09f-498b-4911-b5c2-b632b1db227c"},"provider":"email","last_sign_in_at":"2026-02-03T19:59:18.484381Z","created_at":"2026-02-03T19:59:18.484433Z","updated_at":"2026-02-03T19:59:18.484433Z","email":"admin.test@gmail.com"}],"created_at":"2026-02-03T19:59:18.476677Z","updated_at":"2026-02-03T20:10:11.594536Z","is_anonymous":false},"weak_password":null}

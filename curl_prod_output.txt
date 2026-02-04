@@ -1,0 +1,78 @@
+Note: Unnecessary use of -X or --request, POST is already inferred.
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* Host tkokgarmxcgvsedtgben.supabase.co:443 was resolved.
+* IPv6: (none)
+* IPv4: 104.18.38.10, 172.64.149.246
+*   Trying 104.18.38.10:443...
+* Connected to tkokgarmxcgvsedtgben.supabase.co (104.18.38.10) port 443
+* ALPN: curl offers h2,http/1.1
+* (304) (OUT), TLS handshake, Client hello (1):
+} [337 bytes data]
+*  CAfile: /etc/ssl/cert.pem
+*  CApath: none
+* (304) (IN), TLS handshake, Server hello (2):
+{ [122 bytes data]
+* (304) (IN), TLS handshake, Unknown (8):
+{ [19 bytes data]
+* (304) (IN), TLS handshake, Certificate (11):
+{ [2528 bytes data]
+* (304) (IN), TLS handshake, CERT verify (15):
+{ [79 bytes data]
+* (304) (IN), TLS handshake, Finished (20):
+{ [52 bytes data]
+* (304) (OUT), TLS handshake, Finished (20):
+} [52 bytes data]
+* SSL connection using TLSv1.3 / AEAD-AES256-GCM-SHA384 / [blank] / UNDEF
+* ALPN: server accepted h2
+* Server certificate:
+*  subject: CN=supabase.co
+*  start date: Jan  2 06:20:04 2026 GMT
+*  expire date: Apr  2 07:19:59 2026 GMT
+*  subjectAltName: host "tkokgarmxcgvsedtgben.supabase.co" matched cert's "*.supabase.co"
+*  issuer: C=US; O=Google Trust Services; CN=WE1
+*  SSL certificate verify ok.
+* using HTTP/2
+* [HTTP/2] [1] OPENED stream for https://tkokgarmxcgvsedtgben.supabase.co/auth/v1/token?grant_type=password
+* [HTTP/2] [1] [:method: POST]
+* [HTTP/2] [1] [:scheme: https]
+* [HTTP/2] [1] [:authority: tkokgarmxcgvsedtgben.supabase.co]
+* [HTTP/2] [1] [:path: /auth/v1/token?grant_type=password]
+* [HTTP/2] [1] [user-agent: curl/8.7.1]
+* [HTTP/2] [1] [accept: */*]
+* [HTTP/2] [1] [apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRrb2tnYXJteGNndnNlZHRnYmVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk4NTU1NjcsImV4cCI6MjA4NTQzMTU2N30.vr_eNpSUfSwODDt8t9EFQlN1rKwiIRhCj0JBsSrnwnE]
+* [HTTP/2] [1] [content-type: application/json]
+* [HTTP/2] [1] [content-length: 54]
+> POST /auth/v1/token?grant_type=password HTTP/2
+> Host: tkokgarmxcgvsedtgben.supabase.co
+> User-Agent: curl/8.7.1
+> Accept: */*
+> apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRrb2tnYXJteGNndnNlZHRnYmVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk4NTU1NjcsImV4cCI6MjA4NTQzMTU2N30.vr_eNpSUfSwODDt8t9EFQlN1rKwiIRhCj0JBsSrnwnE
+> Content-Type: application/json
+> Content-Length: 54
+> 
+} [54 bytes data]
+* upload completely sent off: 54 bytes
+100    54    0     0  100    54      0    228 --:--:-- --:--:-- --:--:--   228< HTTP/2 400 
+< date: Wed, 04 Feb 2026 04:20:00 GMT
+< content-type: application/json
+< content-length: 81
+< server: cloudflare
+< cf-ray: 9c875f7e9af62cfd-RUH
+< cf-cache-status: DYNAMIC
+< strict-transport-security: max-age=31536000; includeSubDomains; preload
+< vary: Origin
+< x-content-type-options: nosniff
+< sb-gateway-version: 1
+< sb-project-ref: tkokgarmxcgvsedtgben
+< sb-request-id: 019c26e0-eb2c-70be-8669-f40ad9ea9e90
+< x-envoy-attempt-count: 1
+< x-envoy-upstream-service-time: 1
+< x-sb-error-code: invalid_credentials
+< set-cookie: __cf_bm=jHPYsnicLPv.ObbTludj2oTc_lYdQaEM_.oIv8YsZcw-1770178800-1.0.1.1-obgIQGG5mJg7bB3x37n2W8qU7ZS70K5Mil4vtmvsHjs7PrVjj4mA9aX6J8PqmXbAd24_hfUPAF4jTc_G7iC_61CBazwZiW4PMGYmQTyigKw; path=/; expires=Wed, 04-Feb-26 04:50:00 GMT; domain=.supabase.co; HttpOnly; Secure; SameSite=None
+< alt-svc: h3=":443"; ma=86400
+< 
+{ [81 bytes data]
+100   135  100    81  100    54    179    119 --:--:-- --:--:-- --:--:--   299
+* Connection #0 to host tkokgarmxcgvsedtgben.supabase.co left intact
+{"code":400,"error_code":"invalid_credentials","msg":"Invalid login credentials"}

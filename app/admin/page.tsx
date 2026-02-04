@@ -44,6 +44,65 @@ const AdminPanel = () => {
         };
 
         checkAdmin();
+
+        // Realtime Subscription
+        const channel = supabase
+            .channel('admin-dashboard-investors')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*', // Listen to all events (INSERT, UPDATE)
+                    schema: 'public',
+                    table: 'investor_profiles'
+                },
+                async (payload) => {
+                    console.log('Realtime Event:', payload);
+
+                    if (payload.eventType === 'INSERT') {
+                        // New investor signed up!
+                        // The payload only has fields from investor_profiles (profile_id, approval_status, etc.)
+                        // We need to fetch the name and email from 'profiles'
+                        const newInvestorProfile = payload.new as { profile_id: string, approval_status: string };
+
+                        if (newInvestorProfile.approval_status === 'pending') {
+                            // Fetch details
+                            const { data: profileData } = await supabase
+                                .from('profiles')
+                                .select('full_name, email')
+                                .eq('id', newInvestorProfile.profile_id)
+                                .single();
+
+                            if (profileData) {
+                                const newEntry: PendingInvestor = {
+                                    id: newInvestorProfile.profile_id,
+                                    full_name: profileData.full_name,
+                                    email: profileData.email,
+                                    approval_status: newInvestorProfile.approval_status,
+                                    created_at: new Date().toISOString()
+                                };
+
+                                setPendingInvestors(prev => [newEntry, ...prev]);
+                                setStats(prev => ({ ...prev, pending: prev.pending + 1 }));
+
+                                // Optional: Play sound or show toast here
+                            }
+                        }
+                    } else if (payload.eventType === 'UPDATE') {
+                        // Status changed (likely approved outside this window or by another admin)
+                        const updatedProfile = payload.new as { profile_id: string, approval_status: string };
+
+                        if (updatedProfile.approval_status !== 'pending') {
+                            setPendingInvestors(prev => prev.filter(inv => inv.id !== updatedProfile.profile_id));
+                            setStats(prev => ({ ...prev, pending: Math.max(0, prev.pending - 1) }));
+                        }
+                    }
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, []);
 
     // Remove the original fetchInvestors call from here since we call it after auth check

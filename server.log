@@ -468,3 +468,387 @@ Caused by:
     2: Unable to open static sorted file 00000744.sst
     3: No such file or directory (os error 2)
 Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+
+thread 'tokio-runtime-worker' (2031286) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for EsmAssetReference::get_referenced_asset (TaskId 240348))
+
+Caused by:
+    0: Looking up data for TaskId 240348 from database failed
+    1: Unable to open static sorted file referenced from 00000748.meta
+    2: Unable to open static sorted file 00000744.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2038917) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for <ModuleAssetContext as AssetContext>::resolve_asset (TaskId 240355))
+
+Caused by:
+    0: Looking up data for TaskId 240355 from database failed
+    1: Unable to open static sorted file referenced from 00000732.meta
+    2: Unable to open static sorted file 00000727.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2038918) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for FileSource::new_with_query_and_fragment (TaskId 240368))
+
+Caused by:
+    0: Looking up data for TaskId 240368 from database failed
+    1: Unable to open static sorted file referenced from 00000732.meta
+    2: Unable to open static sorted file 00000727.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2081150) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for PlainIssue::from_issue (TaskId 240372))
+
+Caused by:
+    0: Looking up data for TaskId 240372 from database failed
+    1: Unable to open static sorted file referenced from 00000788.meta
+    2: Unable to open static sorted file 00000784.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2030487) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for <ModuleGraphImportTracer as ImportTracer>::get_traces (TaskId 240398))
+
+Caused by:
+    0: Looking up data for TaskId 240398 from database failed
+    1: Unable to open static sorted file referenced from 00000769.meta
+    2: Unable to open static sorted file 00000766.sst
+    3: No such file or directory (os error 2)
+
+-----
+[1m[31mFATAL[39m[0m: An unexpected Turbopack error occurred. A panic log has been written to /var/folders/gy/d2_yj5g90kx22k8r67l6qx440000gn/T/next-panic-294796e020aaf79484c9bdbb1191bd43.log.
+
+To help make Turbopack better, report this error by ]8;;https://github.com/vercel/next.js/discussions/new?category=turbopack-error-report&title=Turbopack%20Error%3A%20Failed%20to%20restore%20task%20data%20%28corrupted%20database%20or%20bug%29%3A%20Meta%20for%20%3CModuleGraphImportTracer%20as%20ImportTracer%3E%3A%3Aget_traces%20%28TaskId%20240398%29%29&body=Turbopack%20version%3A%20%60v16.1.0-canary.22-82-gadf8c612a%60%0ANext.js%20version%3A%20%600.0.0%60%0A%0AError%20message%3A%0A%60%60%60%0AFailed%20to%20restore%20task%20data%20%28corrupted%20database%20or%20bug%29%3A%20Meta%20for%20%3CModuleGraphImportTracer%20as%20ImportTracer%3E%3A%3Aget_traces%20%28TaskId%20240398%29%29%0A%0ADebug%20info%3A%0A-%20Execution%20of%20subscribe_issues_and_diags_operation%20failed%0A-%20Execution%20of%20PlainIssue%3A%3Afrom_issue%20failed%0A-%20Failed%20to%20restore%20task%20data%20%28corrupted%20database%20or%20bug%29%3A%20Meta%20for%20%3CModuleGraphImportTracer%20as%20ImportTracer%3E%3A%3Aget_traces%20%28TaskId%20240398%29%29%0A%20%20%0A%20%20Caused%20by%3A%0A%20%20%20%20%20%200%3A%20Looking%20up%20data%20for%20TaskId%20240398%20from%20database%20failed%0A%20%20%20%20%20%201%3A%20Unable%20to%20open%20static%20sorted%20file%20referenced%20from%2000000769.meta%0A%20%20%20%20%20%202%3A%20Unable%20to%20open%20static%20sorted%20file%2000000766.sst%0A%20%20%20%20%20%203%3A%20No%20such%20file%20or%20directory%20%28os%20error%202%29%0A%60%60%60&labels=Turbopack,Turbopack%20Panic%20Backtrace\clicking here.]8;;\
+-----
+
+
+thread 'tokio-runtime-worker' (2038917) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for <ModuleGraphImportTracer as ImportTracer>::get_traces (TaskId 240406))
+
+Caused by:
+    0: Looking up data for TaskId 240406 from database failed
+    1: Unable to open static sorted file referenced from 00000769.meta
+    2: Unable to open static sorted file 00000766.sst
+    3: No such file or directory (os error 2)
+⨯ ./app/layout.tsx:4:1
+Module not found: Can't resolve './components/layout/Footer'
+[0m [90m 2 |[39m [36mimport[39m { [33mGeist[39m[33m,[39m [33mGeist_Mono[39m } [36mfrom[39m [32m"next/font/google"[39m[33m;[39m
+ [90m 3 |[39m [36mimport[39m [33mHeader[39m [36mfrom[39m [32m"./components/layout/Header"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m [33mFooter[39m [36mfrom[39m [32m"./components/layout/Footer"[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 5 |[39m [36mimport[39m [32m"./globals.css"[39m[33m;[39m
+ [90m 6 |[39m
+ [90m 7 |[39m [36mconst[39m geistSans [33m=[39m [33mGeist[39m({[0m
+
+Failed to restore task data (corrupted database or bug): Meta for FileSource::new_with_query_and_fragment (TaskId 240368))
+
+Debug info:
+- Execution of <ModuleAssetContext as AssetContext>::resolve_asset failed
+- Execution of resolve failed
+- Execution of resolve_internal failed
+- Failed to restore task data (corrupted database or bug): Meta for FileSource::new_with_query_and_fragment (TaskId 240368))
+  
+  Caused by:
+      0: Looking up data for TaskId 240368 from database failed
+      1: Unable to open static sorted file referenced from 00000732.meta
+      2: Unable to open static sorted file 00000727.sst
+      3: No such file or directory (os error 2)
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/layout.tsx:4:1
+Module not found: Can't resolve './components/layout/Footer'
+[0m [90m 2 |[39m [36mimport[39m { [33mGeist[39m[33m,[39m [33mGeist_Mono[39m } [36mfrom[39m [32m"next/font/google"[39m[33m;[39m
+ [90m 3 |[39m [36mimport[39m [33mHeader[39m [36mfrom[39m [32m"./components/layout/Header"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m [33mFooter[39m [36mfrom[39m [32m"./components/layout/Footer"[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 5 |[39m [36mimport[39m [32m"./globals.css"[39m[33m;[39m
+ [90m 6 |[39m
+ [90m 7 |[39m [36mconst[39m geistSans [33m=[39m [33mGeist[39m({[0m
+
+Failed to restore task data (corrupted database or bug): Meta for FileSource::new_with_query_and_fragment (TaskId 240368))
+
+Debug info:
+- Execution of <ModuleAssetContext as AssetContext>::resolve_asset failed
+- Execution of resolve failed
+- Execution of resolve_internal failed
+- Failed to restore task data (corrupted database or bug): Meta for FileSource::new_with_query_and_fragment (TaskId 240368))
+  
+  Caused by:
+      0: Looking up data for TaskId 240368 from database failed
+      1: Unable to open static sorted file referenced from 00000732.meta
+      2: Unable to open static sorted file 00000727.sst
+      3: No such file or directory (os error 2)
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/layout.tsx:4:1
+Module not found: Can't resolve './components/layout/Footer'
+[0m [90m 2 |[39m [36mimport[39m { [33mGeist[39m[33m,[39m [33mGeist_Mono[39m } [36mfrom[39m [32m"next/font/google"[39m[33m;[39m
+ [90m 3 |[39m [36mimport[39m [33mHeader[39m [36mfrom[39m [32m"./components/layout/Header"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m [33mFooter[39m [36mfrom[39m [32m"./components/layout/Footer"[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 5 |[39m [36mimport[39m [32m"./globals.css"[39m[33m;[39m
+ [90m 6 |[39m
+ [90m 7 |[39m [36mconst[39m geistSans [33m=[39m [33mGeist[39m({[0m
+
+Failed to restore task data (corrupted database or bug): Meta for FileSource::new_with_query_and_fragment (TaskId 240368))
+
+Debug info:
+- Execution of <ModuleAssetContext as AssetContext>::resolve_asset failed
+- Execution of resolve failed
+- Execution of resolve_internal failed
+- Failed to restore task data (corrupted database or bug): Meta for FileSource::new_with_query_and_fragment (TaskId 240368))
+  
+  Caused by:
+      0: Looking up data for TaskId 240368 from database failed
+      1: Unable to open static sorted file referenced from 00000732.meta
+      2: Unable to open static sorted file 00000727.sst
+      3: No such file or directory (os error 2)
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/layout.tsx:4:1
+Module not found: Can't resolve './components/layout/Footer'
+[0m [90m 2 |[39m [36mimport[39m { [33mGeist[39m[33m,[39m [33mGeist_Mono[39m } [36mfrom[39m [32m"next/font/google"[39m[33m;[39m
+ [90m 3 |[39m [36mimport[39m [33mHeader[39m [36mfrom[39m [32m"./components/layout/Header"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m [33mFooter[39m [36mfrom[39m [32m"./components/layout/Footer"[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 5 |[39m [36mimport[39m [32m"./globals.css"[39m[33m;[39m
+ [90m 6 |[39m
+ [90m 7 |[39m [36mconst[39m geistSans [33m=[39m [33mGeist[39m({[0m
+
+Failed to restore task data (corrupted database or bug): Meta for FileSource::new_with_query_and_fragment (TaskId 240368))
+
+Debug info:
+- Execution of <ModuleAssetContext as AssetContext>::resolve_asset failed
+- Execution of resolve failed
+- Execution of resolve_internal failed
+- Failed to restore task data (corrupted database or bug): Meta for FileSource::new_with_query_and_fragment (TaskId 240368))
+  
+  Caused by:
+      0: Looking up data for TaskId 240368 from database failed
+      1: Unable to open static sorted file referenced from 00000732.meta
+      2: Unable to open static sorted file 00000727.sst
+      3: No such file or directory (os error 2)
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/layout.tsx:4:1
+Module not found: Can't resolve './components/layout/Footer'
+[0m [90m 2 |[39m [36mimport[39m { [33mGeist[39m[33m,[39m [33mGeist_Mono[39m } [36mfrom[39m [32m"next/font/google"[39m[33m;[39m
+ [90m 3 |[39m [36mimport[39m [33mHeader[39m [36mfrom[39m [32m"./components/layout/Header"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m [33mFooter[39m [36mfrom[39m [32m"./components/layout/Footer"[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 5 |[39m [36mimport[39m [32m"./globals.css"[39m[33m;[39m
+ [90m 6 |[39m
+ [90m 7 |[39m [36mconst[39m geistSans [33m=[39m [33mGeist[39m({[0m
+
+Failed to restore task data (corrupted database or bug): Meta for FileSource::new_with_query_and_fragment (TaskId 240368))
+
+Debug info:
+- Execution of <ModuleAssetContext as AssetContext>::resolve_asset failed
+- Execution of resolve failed
+- Execution of resolve_internal failed
+- Failed to restore task data (corrupted database or bug): Meta for FileSource::new_with_query_and_fragment (TaskId 240368))
+  
+  Caused by:
+      0: Looking up data for TaskId 240368 from database failed
+      1: Unable to open static sorted file referenced from 00000732.meta
+      2: Unable to open static sorted file 00000727.sst
+      3: No such file or directory (os error 2)
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/layout.tsx:4:1
+Module not found: Can't resolve './components/layout/Footer'
+[0m [90m 2 |[39m [36mimport[39m { [33mGeist[39m[33m,[39m [33mGeist_Mono[39m } [36mfrom[39m [32m"next/font/google"[39m[33m;[39m
+ [90m 3 |[39m [36mimport[39m [33mHeader[39m [36mfrom[39m [32m"./components/layout/Header"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m [33mFooter[39m [36mfrom[39m [32m"./components/layout/Footer"[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 5 |[39m [36mimport[39m [32m"./globals.css"[39m[33m;[39m
+ [90m 6 |[39m
+ [90m 7 |[39m [36mconst[39m geistSans [33m=[39m [33mGeist[39m({[0m
+
+Failed to restore task data (corrupted database or bug): Meta for FileSource::new_with_query_and_fragment (TaskId 240368))
+
+Debug info:
+- Execution of <ModuleAssetContext as AssetContext>::resolve_asset failed
+- Execution of resolve failed
+- Execution of resolve_internal failed
+- Failed to restore task data (corrupted database or bug): Meta for FileSource::new_with_query_and_fragment (TaskId 240368))
+  
+  Caused by:
+      0: Looking up data for TaskId 240368 from database failed
+      1: Unable to open static sorted file referenced from 00000732.meta
+      2: Unable to open static sorted file 00000727.sst
+      3: No such file or directory (os error 2)
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/layout.tsx:4:1
+Module not found: Can't resolve './components/layout/Footer'
+[0m [90m 2 |[39m [36mimport[39m { [33mGeist[39m[33m,[39m [33mGeist_Mono[39m } [36mfrom[39m [32m"next/font/google"[39m[33m;[39m
+ [90m 3 |[39m [36mimport[39m [33mHeader[39m [36mfrom[39m [32m"./components/layout/Header"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m [33mFooter[39m [36mfrom[39m [32m"./components/layout/Footer"[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 5 |[39m [36mimport[39m [32m"./globals.css"[39m[33m;[39m
+ [90m 6 |[39m
+ [90m 7 |[39m [36mconst[39m geistSans [33m=[39m [33mGeist[39m({[0m
+
+Failed to restore task data (corrupted database or bug): Meta for FileSource::new_with_query_and_fragment (TaskId 240368))
+
+Debug info:
+- Execution of <ModuleAssetContext as AssetContext>::resolve_asset failed
+- Execution of resolve failed
+- Execution of resolve_internal failed
+- Failed to restore task data (corrupted database or bug): Meta for FileSource::new_with_query_and_fragment (TaskId 240368))
+  
+  Caused by:
+      0: Looking up data for TaskId 240368 from database failed
+      1: Unable to open static sorted file referenced from 00000732.meta
+      2: Unable to open static sorted file 00000727.sst
+      3: No such file or directory (os error 2)
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+
+thread 'tokio-runtime-worker' (2081150) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for read_matches (TaskId 240482))
+
+Caused by:
+    0: Looking up data for TaskId 240482 from database failed
+    1: Unable to open static sorted file referenced from 00000732.meta
+    2: Unable to open static sorted file 00000727.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2028935) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for cjs_resolve (TaskId 240559))
+
+Caused by:
+    0: Looking up data for TaskId 240559 from database failed
+    1: Unable to open static sorted file referenced from 00000748.meta
+    2: Unable to open static sorted file 00000744.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2030487) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for <EcmascriptModuleAsset as ResolveOrigin>::get_inner_asset (TaskId 240601))
+
+Caused by:
+    0: Looking up data for TaskId 240601 from database failed
+    1: Unable to open static sorted file referenced from 00000776.meta
+    2: Unable to open static sorted file 00000772.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2030487) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Data for ModuleResolveResult::primary_modules (TaskId 240651))
+
+Caused by:
+    0: Looking up data for TaskId 240651 from database failed
+    1: Unable to open static sorted file referenced from 00000738.meta
+    2: Unable to open static sorted file 00000737.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2031286) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Data for <NextServerComponentModule as EcmascriptChunkPlaceable>::get_exports (TaskId 240680))
+
+Caused by:
+    0: Looking up data for TaskId 240680 from database failed
+    1: Unable to open static sorted file referenced from 00000738.meta
+    2: Unable to open static sorted file 00000737.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2030487) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for <ModuleAssetContext as AssetContext>::process (TaskId 240696))
+
+Caused by:
+    0: Looking up data for TaskId 240696 from database failed
+    1: Unable to open static sorted file referenced from 00000732.meta
+    2: Unable to open static sorted file 00000727.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2081150) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for <ResolveOriginWithTransition as ResolveOrigin>::get_inner_asset (TaskId 240708))
+
+Caused by:
+    0: Looking up data for TaskId 240708 from database failed
+    1: Unable to open static sorted file referenced from 00000748.meta
+    2: Unable to open static sorted file 00000744.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2028935) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for EcmascriptModuleAsset::analyze (TaskId 240749))
+
+Caused by:
+    0: Looking up data for TaskId 240749 from database failed
+    1: Unable to open static sorted file referenced from 00000764.meta
+    2: Unable to open static sorted file 00000759.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2028935) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for <StructuredImageFileSource as Asset>::content (TaskId 240759))
+
+Caused by:
+    0: Looking up data for TaskId 240759 from database failed
+    1: Unable to open static sorted file referenced from 00000776.meta
+    2: Unable to open static sorted file 00000772.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2038918) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for ResolveOrigin::resolve_options (TaskId 240787))
+
+Caused by:
+    0: Looking up data for TaskId 240787 from database failed
+    1: Unable to open static sorted file referenced from 00000748.meta
+    2: Unable to open static sorted file 00000744.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2038917) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for <ResolveOriginWithTransition as ResolveOrigin>::origin_path (TaskId 240804))
+
+Caused by:
+    0: Looking up data for TaskId 240804 from database failed
+    1: Unable to open static sorted file referenced from 00000776.meta
+    2: Unable to open static sorted file 00000772.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2038917) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Data for cjs_resolve (TaskId 240817))
+
+Caused by:
+    0: Looking up data for TaskId 240817 from database failed
+    1: Unable to open static sorted file referenced from 00000738.meta
+    2: Unable to open static sorted file 00000737.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2038918) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for <ResolveOriginWithTransition as ResolveOrigin>::get_inner_asset (TaskId 240823))
+
+Caused by:
+    0: Looking up data for TaskId 240823 from database failed
+    1: Unable to open static sorted file referenced from 00000769.meta
+    2: Unable to open static sorted file 00000766.sst
+    3: No such file or directory (os error 2)
+
+-----
+[1m[31mFATAL[39m[0m: An unexpected Turbopack error occurred. A panic log has been written to /var/folders/gy/d2_yj5g90kx22k8r67l6qx440000gn/T/next-panic-294796e020aaf79484c9bdbb1191bd43.log.
+
+To help make Turbopack better, report this error by ]8;;https://github.com/vercel/next.js/discussions/new?category=turbopack-error-report&title=Turbopack%20Error%3A%20Failed%20to%20restore%20task%20data%20%28corrupted%20database%20or%20bug%29%3A%20Meta%20for%20%3CModuleAssetContext%20as%20AssetContext%3E%3A%3Aprocess%20%28TaskId%20240696%29%29&body=Turbopack%20version%3A%20%60v16.1.0-canary.22-82-gadf8c612a%60%0ANext.js%20version%3A%20%600.0.0%60%0A%0AError%20message%3A%0A%60%60%60%0AFailed%20to%20restore%20task%20data%20%28corrupted%20database%20or%20bug%29%3A%20Meta%20for%20%3CModuleAssetContext%20as%20AssetContext%3E%3A%3Aprocess%20%28TaskId%20240696%29%29%0A%0ADebug%20info%3A%0A-%20Execution%20of%20subscribe_issues_and_diags_operation%20failed%0A-%20Execution%20of%20%3CAppEndpoint%20as%20Endpoint%3E%3A%3Aserver_changed%20failed%0A-%20Execution%20of%20%2AProject%3A%3Aserver_changed%20failed%0A-%20Execution%20of%20%2AAppEndpointOutput%3A%3Aserver_assets%20failed%0A-%20Execution%20of%20AppEndpoint%3A%3Aoutput%20failed%0A-%20Execution%20of%20get_app_page_entry%20failed%0A-%20Execution%20of%20%2A%3CNextServerComponentTransition%20as%20Transition%3E%3A%3Aprocess_module%20failed%0A-%20Execution%20of%20StructuredImageModuleType%3A%3Acreate_module%20failed%0A-%20Failed%20to%20restore%20task%20data%20%28corrupted%20database%20or%20bug%29%3A%20Meta%20for%20%3CModuleAssetContext%20as%20AssetContext%3E%3A%3Aprocess%20%28TaskId%20240696%29%29%0A%20%20%0A%20%20Caused%20by%3A%0A%20%20%20%20%20%200%3A%20Looking%20up%20data%20for%20TaskId%20240696%20from%20database%20failed%0A%20%20%20%20%20%201%3A%20Unable%20to%20open%20static%20sorted%20file%20referenced%20from%2000000732.meta%0A%20%20%20%20%20%202%3A%20Unable%20to%20open%20static%20sorted%20file%2000000727.sst%0A%20%20%20%20%20%203%3A%20No%20such%20file%20or%20directory%20%28os%20error%202%29%0A%60%60%60&labels=Turbopack,Turbopack%20Panic%20Backtrace\clicking here.]8;;\
+-----
+
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)

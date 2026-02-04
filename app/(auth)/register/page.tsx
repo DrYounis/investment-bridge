@@ -127,9 +127,7 @@ function RegisterForm() {
                 // Success message handling below...
 
                 // 5. Show success message then redirect
-                const dashboardPath = formData.userType === 'investor'
-                    ? '/dashboard/investor'
-                    : '/dashboard/entrepreneur';
+                const dashboardPath = '/dashboard/hub';
 
                 const successMessage = formData.userType === 'investor'
                     ? '✅ تم التسجيل بنجاح! حسابك قيد المراجعة الإدارية. سيتم إرسال بريد إلكتروني فور الموافقة.'

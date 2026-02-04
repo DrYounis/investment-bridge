@@ -16,7 +16,7 @@ export default async function MarfaLandingPage() {
                 <div className="flex gap-4 items-center">
                     <Link href="/" className="text-gray-600 hover:text-blue-600 font-medium transition">الرئيسية</Link>
                     {user ? (
-                        <Link href="/dashboard" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium text-sm">
+                        <Link href="/dashboard/hub" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium text-sm">
                             لوحة التحكم
                         </Link>
                     ) : (

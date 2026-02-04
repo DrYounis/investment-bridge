@@ -1,8 +1,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { createClient } from '@/lib/supabase/server';
 
+export const dynamic = 'force-dynamic';
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 font-sans relative overflow-hidden" dir="rtl">
 
@@ -25,12 +30,20 @@ export default function Home() {
           </Link>
         </div>
         <div className="flex gap-3">
-          <Link href="/register" className="px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold rounded-full hover:shadow-lg hover:shadow-blue-200 transition-all duration-300">
-            تسجيل جديد
-          </Link>
-          <Link href="/login" className="px-5 py-2 bg-white/90 backdrop-blur text-sm font-bold text-slate-700 rounded-full hover:bg-white hover:shadow-md transition-all duration-300 border border-slate-200">
-            دخول
-          </Link>
+          {user ? (
+            <Link href="/dashboard" className="px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold rounded-full hover:shadow-lg hover:shadow-blue-200 transition-all duration-300">
+              لوحة التحكم
+            </Link>
+          ) : (
+            <>
+              <Link href="/register" className="px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold rounded-full hover:shadow-lg hover:shadow-blue-200 transition-all duration-300">
+                تسجيل جديد
+              </Link>
+              <Link href="/login" className="px-5 py-2 bg-white/90 backdrop-blur text-sm font-bold text-slate-700 rounded-full hover:bg-white hover:shadow-md transition-all duration-300 border border-slate-200">
+                دخول
+              </Link>
+            </>
+          )}
         </div>
       </nav>
 

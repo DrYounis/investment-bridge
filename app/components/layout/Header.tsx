@@ -20,8 +20,8 @@ export default function Header() {
 
                 {/* Navigation items */}
                 <div className="flex items-center gap-6">
-                    <Link href="/marfa/academy" className="text-white/80 hover:text-white hover:scale-105 transition-all font-medium">
-                        أكاديمية مرفأ
+                    <Link href="/meetings" className="text-white/80 hover:text-white hover:scale-105 transition-all font-medium">
+                        لقاءات مرفأ
                     </Link>
                 </div>
             </div>

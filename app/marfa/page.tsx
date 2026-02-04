@@ -1,15 +1,30 @@
-'use client';
-
 import React from 'react';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/server';
 
-export default function MarfaLandingPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function MarfaLandingPage() {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 text-right" dir="rtl">
             {/* Navbar Placeholder */}
             <nav className="p-6 flex justify-between items-center max-w-7xl mx-auto">
                 <div className="text-2xl font-bold text-blue-900">مرفأ <span className="text-blue-500">.</span></div>
-                <Link href="/" className="text-gray-600 hover:text-blue-600 font-medium transition">الرئيسية</Link>
+                <div className="flex gap-4 items-center">
+                    <Link href="/" className="text-gray-600 hover:text-blue-600 font-medium transition">الرئيسية</Link>
+                    {user ? (
+                        <Link href="/dashboard" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium text-sm">
+                            لوحة التحكم
+                        </Link>
+                    ) : (
+                        <Link href="/login" className="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition font-medium text-sm">
+                            دخول
+                        </Link>
+                    )}
+                </div>
             </nav>
 
             <main className="max-w-7xl mx-auto px-6 py-12 md:py-20">

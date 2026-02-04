@@ -61,7 +61,7 @@ const METHOD_STEPS = [
     }
 ];
 
-export default function AcademySchedule() {
+export default function MeetingsSchedule() {
     return (
         <div className="space-y-12">
             {/* Intro / Philosophy */}
@@ -70,8 +70,8 @@ export default function AcademySchedule() {
                     منهج دراسة الحالة - The Case Study Method
                 </h2>
                 <p className="text-foreground/80 leading-relaxed text-lg">
-                    تحويل اللقاءات إلى دراسات حالة هو الأسلوب المتبع في جامعة هارفارد، وهو الأنسب لبيئة "مرفأ" لأن النظرية وحدها لا تصنع تاجراً.
-                    في كل لقاء، سنأخذ مشروعاً واقعياً ونقوم بتفكيكه كأننا مجلس إدارة.
+                    تحويل اللقاءات إلى دراسات حالة هو الأسلوب المتبع في الجامعات العريقة، وهو الأنسب لبيئة "مرفأ" لتعزيز تبادل الخبرات.
+                    في كل لقاء، سنناقش مشروعاً واقعياً وتحديات حقيقية.
                 </p>
             </div>
 
@@ -91,7 +91,7 @@ export default function AcademySchedule() {
             {/* Schedule Table */}
             <Card glass className="overflow-hidden">
                 <div className="p-6 border-b border-white/10">
-                    <h3 className="text-xl font-bold">جدول أكاديمية مرفأ (3 أشهر)</h3>
+                    <h3 className="text-xl font-bold">جدول لقاءات مرفأ (3 أشهر)</h3>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-right">

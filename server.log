@@ -1,0 +1,470 @@
+
+> investment-bridge@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.199:3000
+- Environments: .env.local
+
+✓ Starting...
+○ Compiling proxy ...
+✓ Ready in 11.7s
+○ Compiling /register ...
+ GET /register?type=investor 200 in 12.3s (compile: 10.8s, proxy.ts: 680ms, render: 835ms)
+ GET /register?type=investor 200 in 2.3s (compile: 659ms, proxy.ts: 434ms, render: 1158ms)
+○ Compiling /login ...
+ GET /login 200 in 24.2s (compile: 20.8s, proxy.ts: 918ms, render: 2.4s)
+✓ Finished writing to filesystem cache in 15.7s
+✓ Finished filesystem cache database compaction in 10.8s
+✓ Finished writing to filesystem cache in 11.2s
+✓ Compiled in 2.7s
+Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+⨯ unhandledRejection: Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+⨯ unhandledRejection:  Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+⨯ unhandledRejection: Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+⨯ unhandledRejection:  Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+○ Compiling middleware ...
+✓ Compiled in 4s
+○ Compiling /_not-found/page ...
+ GET /login 404 in 8.3s (compile: 8.0s, proxy.ts: 77ms, render: 183ms)
+✓ Finished writing to filesystem cache in 15.0s
+ GET / 404 in 430ms (compile: 118ms, proxy.ts: 63ms, render: 249ms)
+ GET /login 404 in 371ms (compile: 48ms, proxy.ts: 81ms, render: 242ms)
+ GET /marfa/academy 404 in 215ms (compile: 66ms, proxy.ts: 29ms, render: 120ms)
+ GET /marfa/login 404 in 214ms (compile: 37ms, proxy.ts: 31ms, render: 147ms)
+ GET /auth/login 404 in 232ms (compile: 32ms, proxy.ts: 40ms, render: 161ms)
+ GET /login 404 in 211ms (compile: 33ms, proxy.ts: 32ms, render: 147ms)
+ GET /register 404 in 204ms (compile: 30ms, proxy.ts: 25ms, render: 149ms)
+ GET /marfa 404 in 268ms (compile: 50ms, proxy.ts: 50ms, render: 168ms)
+ GET /marfa/academy 404 in 271ms (compile: 90ms, proxy.ts: 39ms, render: 142ms)
+ GET /marfa/academy 404 in 262ms (compile: 18ms, proxy.ts: 22ms, render: 222ms)
+ GET /marfa 404 in 519ms (compile: 301ms, proxy.ts: 83ms, render: 136ms)
+ GET /login 404 in 99ms (compile: 26ms, proxy.ts: 27ms, render: 46ms)
+ GET /signin 404 in 1380ms (compile: 235ms, proxy.ts: 161ms, render: 983ms)
+ GET /login 404 in 1423ms (compile: 41ms, proxy.ts: 20ms, render: 1363ms)
+ GET /api/auth/signin 404 in 446ms (compile: 50ms, proxy.ts: 27ms, render: 369ms)
+ GET / 404 in 199ms (compile: 21ms, proxy.ts: 52ms, render: 126ms)
+ GET /ar 404 in 206ms (compile: 27ms, proxy.ts: 29ms, render: 150ms)
+ GET /login 404 in 423ms (compile: 27ms, proxy.ts: 47ms, render: 348ms)
+ GET /login 404 in 245ms (compile: 21ms, proxy.ts: 16ms, render: 208ms)
+⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ GET /login 404 in 257ms (compile: 20ms, proxy.ts: 16ms, render: 221ms)
+ GET /login 404 in 300ms (compile: 65ms, proxy.ts: 51ms, render: 184ms)
+ GET /api/auth/session 404 in 162ms (compile: 29ms, proxy.ts: 23ms, render: 110ms)
+ GET /marfa/academy 404 in 402ms (compile: 59ms, proxy.ts: 208ms, render: 135ms)
+ GET /marfa/academy 404 in 439ms (compile: 36ms, proxy.ts: 27ms, render: 376ms)
+Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+⨯ unhandledRejection: Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+⨯ unhandledRejection:  Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+⨯ unhandledRejection: Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+⨯ unhandledRejection:  Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+✓ Compiled in 1361ms
+ GET /marfa/academy 404 in 525ms (compile: 44ms, proxy.ts: 317ms, render: 164ms)
+ GET /marfa/academy 404 in 329ms (compile: 204ms, proxy.ts: 14ms, render: 111ms)
+ GET /marfa/academy 404 in 475ms (compile: 64ms, proxy.ts: 23ms, render: 388ms)
+ GET /marfa/academy 404 in 464ms (compile: 99ms, proxy.ts: 61ms, render: 304ms)
+Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+⨯ unhandledRejection: Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+⨯ unhandledRejection:  Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+⨯ unhandledRejection: Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+⨯ unhandledRejection:  Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+⨯ unhandledRejection: Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+⨯ unhandledRejection:  Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+⨯ unhandledRejection: Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+⨯ unhandledRejection:  Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+✓ Compiled in 6.3s
+Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+⨯ unhandledRejection: Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+⨯ unhandledRejection:  Error: Both middleware file "./middleware.ts" and proxy file "./proxy.ts" are detected. Please use "./proxy.ts" only. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+    at ignore-listed frames
+ GET /login 404 in 2.7s (compile: 1421ms, proxy.ts: 46ms, render: 1220ms)
+ GET /login 404 in 396ms (compile: 174ms, proxy.ts: 11ms, render: 211ms)
+ GET /auth/login 404 in 278ms (compile: 39ms, proxy.ts: 67ms, render: 172ms)
+ GET / 404 in 365ms (compile: 71ms, proxy.ts: 44ms, render: 250ms)
+ GET /marfa/academy 404 in 287ms (compile: 32ms, proxy.ts: 130ms, render: 124ms)
+ GET /login 404 in 188ms (compile: 45ms, proxy.ts: 42ms, render: 101ms)
+ GET /auth/register 404 in 302ms (compile: 33ms, proxy.ts: 27ms, render: 242ms)
+ HEAD /login 404 in 861ms (compile: 287ms, proxy.ts: 207ms, render: 368ms)
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+✓ Compiled in 6.6s
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+○ Compiling /login ...
+ GET /login 200 in 4.2s (compile: 1673ms, proxy.ts: 13ms, render: 2.5s)
+ GET /auth/register 404 in 7.3s (compile: 4.8s, proxy.ts: 1781ms, render: 706ms)
+ GET /login 200 in 5.5s (compile: 2.8s, proxy.ts: 47ms, render: 2.7s)
+ GET /login 200 in 964ms (compile: 488ms, proxy.ts: 89ms, render: 387ms)
+ GET /auth/register 404 in 769ms (compile: 342ms, proxy.ts: 104ms, render: 323ms)
+ GET /login 200 in 683ms (compile: 121ms, proxy.ts: 25ms, render: 537ms)
+ GET /auth/register 404 in 285ms (compile: 42ms, proxy.ts: 210ms, render: 34ms)
+ GET /auth/register 404 in 252ms (compile: 44ms, proxy.ts: 5ms, render: 204ms)
+ GET /login 200 in 253ms (compile: 5ms, proxy.ts: 6ms, render: 243ms)
+ GET /login 200 in 211ms (compile: 11ms, proxy.ts: 28ms, render: 171ms)
+ GET /auth/register 404 in 182ms (compile: 57ms, proxy.ts: 7ms, render: 118ms)
+✓ Finished writing to filesystem cache in 14.8s
+ GET /marfa/academy 200 in 21.2s (compile: 19.4s, proxy.ts: 38ms, render: 1749ms)
+ GET /marfa/academy 200 in 15.5s (compile: 12.2s, proxy.ts: 209ms, render: 3.1s)
+ GET /marfa/academy 200 in 487ms (compile: 224ms, proxy.ts: 163ms, render: 100ms)
+ GET /marfa/academy 200 in 147ms (compile: 13ms, proxy.ts: 10ms, render: 123ms)
+ GET /marfa/academy 200 in 172ms (compile: 37ms, proxy.ts: 18ms, render: 116ms)
+✓ Finished writing to filesystem cache in 21.9s
+✓ Finished filesystem cache database compaction in 14.3s
+ HEAD /login 200 in 979ms (compile: 490ms, proxy.ts: 212ms, render: 277ms)
+ GET /login 200 in 704ms (compile: 102ms, proxy.ts: 28ms, render: 574ms)
+ GET /login 200 in 1999ms (compile: 60ms, proxy.ts: 1839ms, render: 100ms)
+ GET /login 200 in 438ms (compile: 49ms, proxy.ts: 36ms, render: 354ms)
+ GET /login 200 in 1356ms (compile: 46ms, proxy.ts: 1155ms, render: 155ms)
+ GET /login 200 in 409ms (compile: 102ms, proxy.ts: 24ms, render: 283ms)
+ GET /login 200 in 336ms (compile: 44ms, proxy.ts: 35ms, render: 257ms)
+ GET /login 200 in 177ms (compile: 16ms, proxy.ts: 14ms, render: 147ms)
+ GET /login 200 in 278ms (compile: 19ms, proxy.ts: 8ms, render: 250ms)
+ GET /login 200 in 1045ms (compile: 200ms, proxy.ts: 641ms, render: 204ms)
+ GET /login 200 in 508ms (compile: 58ms, proxy.ts: 9ms, render: 441ms)
+ GET /login 200 in 1894ms (compile: 390ms, proxy.ts: 634ms, render: 870ms)
+ GET /login 200 in 1915ms (compile: 73ms, proxy.ts: 1488ms, render: 354ms)
+ GET /login 200 in 2.9s (compile: 651ms, proxy.ts: 29ms, render: 2.3s)
+✓ Compiled in 10.3s
+○ Compiling /login ...
+ GET /marfa/academy 200 in 16.3s (compile: 6.6s, proxy.ts: 127ms, render: 9.6s)
+ GET /login 200 in 20.2s (compile: 12.4s, proxy.ts: 3.8s, render: 4.1s)
+ GET /auth/register 404 in 19.0s (compile: 15.0s, proxy.ts: 2.2s, render: 1685ms)
+ GET /marfa/academy 200 in 3.6s (compile: 223ms, proxy.ts: 2.1s, render: 1239ms)
+ GET /login 200 in 1743ms (compile: 468ms, proxy.ts: 238ms, render: 1037ms)
+ GET /auth/register 404 in 1891ms (compile: 701ms, proxy.ts: 27ms, render: 1164ms)
+ GET /marfa/academy 200 in 988ms (compile: 131ms, proxy.ts: 29ms, render: 829ms)
+ GET /auth/register 404 in 1282ms (compile: 297ms, proxy.ts: 317ms, render: 668ms)
+ GET /marfa/academy 200 in 2.4s (compile: 28ms, proxy.ts: 18ms, render: 2.4s)
+ GET /login 200 in 3.1s (compile: 517ms, proxy.ts: 80ms, render: 2.5s)
+ GET /auth/register 404 in 2.7s (compile: 604ms, proxy.ts: 21ms, render: 2.1s)
+ GET /login 200 in 2.3s (compile: 357ms, proxy.ts: 132ms, render: 1787ms)
+ GET /login 200 in 1440ms (compile: 388ms, proxy.ts: 430ms, render: 622ms)
+ GET /login 200 in 197ms (compile: 37ms, proxy.ts: 57ms, render: 103ms)
+ GET /login 200 in 140ms (compile: 28ms, proxy.ts: 19ms, render: 94ms)
+ GET /login 200 in 79ms (compile: 18ms, proxy.ts: 7ms, render: 55ms)
+ GET /auth/register 404 in 1687ms (compile: 89ms, proxy.ts: 40ms, render: 1557ms)
+✓ Compiled in 11.2s
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+○ Compiling /login ...
+ GET /marfa/academy 404 in 1887ms (compile: 567ms, proxy.ts: 20ms, render: 1300ms)
+ GET /auth/register 404 in 1998ms (compile: 242ms, proxy.ts: 45ms, render: 1710ms)
+ GET /auth/register 404 in 11.5s (compile: 5.1s, proxy.ts: 3.3s, render: 3.1s)
+ GET /marfa/academy 404 in 11.5s (compile: 5.5s, proxy.ts: 3.3s, render: 2.8s)
+ GET /login 200 in 11.6s (compile: 2.1s, proxy.ts: 3.3s, render: 6.2s)
+ GET /login 200 in 4.5s (compile: 171ms, proxy.ts: 124ms, render: 4.2s)
+ GET /auth/register 404 in 2.5s (compile: 1707ms, proxy.ts: 34ms, render: 778ms)
+ GET /marfa/academy 404 in 4.3s (compile: 858ms, proxy.ts: 1169ms, render: 2.2s)
+ GET /login 200 in 4.4s (compile: 110ms, proxy.ts: 62ms, render: 4.3s)
+ GET /auth/register 404 in 4.5s (compile: 1412ms, proxy.ts: 64ms, render: 3.0s)
+ GET /marfa/academy 404 in 4.4s (compile: 1588ms, proxy.ts: 27ms, render: 2.8s)
+ GET /login 200 in 4.1s (compile: 227ms, proxy.ts: 114ms, render: 3.7s)
+ GET /login 200 in 2.2s (compile: 65ms, proxy.ts: 78ms, render: 2.1s)
+ GET /marfa/academy 404 in 2.2s (compile: 503ms, proxy.ts: 23ms, render: 1653ms)
+ GET /login 200 in 2.1s (compile: 111ms, proxy.ts: 290ms, render: 1705ms)
+ GET /marfa/academy 404 in 1813ms (compile: 487ms, proxy.ts: 22ms, render: 1304ms)
+ GET /login 200 in 1345ms (compile: 596ms, proxy.ts: 19ms, render: 730ms)
+ GET /login 200 in 462ms (compile: 19ms, proxy.ts: 33ms, render: 410ms)
+ GET /marfa/academy 404 in 788ms (compile: 353ms, proxy.ts: 38ms, render: 398ms)
+ GET /marfa/academy 404 in 775ms (compile: 16ms, proxy.ts: 9ms, render: 750ms)
+ GET /login 200 in 848ms (compile: 74ms, proxy.ts: 66ms, render: 709ms)
+ GET /login 200 in 416ms (compile: 253ms, proxy.ts: 15ms, render: 147ms)
+ GET /marfa/academy 404 in 584ms (compile: 35ms, proxy.ts: 9ms, render: 540ms)
+ GET /marfa/academy 404 in 516ms (compile: 210ms, proxy.ts: 73ms, render: 234ms)
+ GET /marfa/academy 404 in 1812ms (compile: 31ms, proxy.ts: 114ms, render: 1667ms)
+ GET /marfa/academy 404 in 1188ms (compile: 157ms, proxy.ts: 151ms, render: 880ms)
+ GET /marfa/academy 404 in 147ms (compile: 22ms, proxy.ts: 59ms, render: 65ms)
+ GET /marfa/academy 404 in 74ms (compile: 14ms, proxy.ts: 8ms, render: 52ms)
+ GET /marfa/academy 404 in 83ms (compile: 13ms, proxy.ts: 10ms, render: 60ms)
+ GET /marfa/academy 404 in 191ms (compile: 18ms, proxy.ts: 12ms, render: 161ms)
+ GET /marfa/academy 404 in 291ms (compile: 16ms, proxy.ts: 16ms, render: 259ms)
+ GET /marfa/academy 404 in 254ms (compile: 40ms, proxy.ts: 11ms, render: 203ms)
+ GET /marfa/academy 404 in 145ms (compile: 17ms, proxy.ts: 8ms, render: 120ms)
+ GET /marfa/academy 404 in 203ms (compile: 9ms, proxy.ts: 10ms, render: 184ms)
+ GET /marfa/academy 404 in 237ms (compile: 11ms, proxy.ts: 13ms, render: 212ms)
+ GET /marfa/academy 404 in 165ms (compile: 14ms, proxy.ts: 16ms, render: 135ms)
+ GET /marfa/academy 404 in 134ms (compile: 10ms, proxy.ts: 10ms, render: 114ms)
+ GET /marfa/academy 404 in 194ms (compile: 15ms, proxy.ts: 8ms, render: 171ms)
+ GET /marfa/academy 404 in 221ms (compile: 22ms, proxy.ts: 10ms, render: 189ms)
+ GET /marfa/academy 404 in 196ms (compile: 13ms, proxy.ts: 23ms, render: 159ms)
+ GET /marfa/academy 404 in 446ms (compile: 17ms, proxy.ts: 12ms, render: 417ms)
+ GET /marfa/academy 404 in 351ms (compile: 53ms, proxy.ts: 17ms, render: 280ms)
+✓ Finished writing to filesystem cache in 80s
+○ Compiling / ...
+ GET /login 200 in 5.3s (compile: 1395ms, proxy.ts: 190ms, render: 3.7s)
+ GET / 200 in 67s (compile: 58s, proxy.ts: 3.0s, render: 6.3s)
+✓ Finished writing to filesystem cache in 36.8s
+ GET /login 200 in 8.0s (compile: 922ms, proxy.ts: 5.9s, render: 1207ms)
+○ Compiling /dashboard/investor ...
+ GET /dashboard/investor 200 in 35.1s (compile: 28.2s, proxy.ts: 5.4s, render: 1503ms)
+ GET /dashboard/investor 200 in 4.1s (compile: 212ms, proxy.ts: 2.5s, render: 1350ms)
+ GET /login 200 in 3.3s (compile: 829ms, proxy.ts: 1637ms, render: 802ms)
+○ Compiling /meetings ...
+✓ Finished writing to filesystem cache in 19.3s
+ GET /meetings 200 in 6.9s (compile: 4.8s, proxy.ts: 664ms, render: 1430ms)
+ GET /login 200 in 4.5s (compile: 290ms, proxy.ts: 3.2s, render: 1002ms)
+✓ Finished filesystem cache database compaction in 67s
+✓ Finished writing to filesystem cache in 67s
+ GET /login 200 in 1610ms (compile: 105ms, proxy.ts: 1260ms, render: 245ms)
+ GET /dashboard/investor 200 in 1050ms (compile: 89ms, proxy.ts: 832ms, render: 129ms)
+ GET /meetings 200 in 940ms (compile: 52ms, proxy.ts: 678ms, render: 210ms)
+ GET /meetings 200 in 2.3s (compile: 57ms, proxy.ts: 1748ms, render: 501ms)
+ GET /dashboard/investor 200 in 2.1s (compile: 66ms, proxy.ts: 1225ms, render: 809ms)
+ GET /meetings 200 in 1534ms (compile: 181ms, proxy.ts: 1076ms, render: 278ms)
+ GET /dashboard/investor 200 in 3.9s (compile: 504ms, proxy.ts: 2.7s, render: 752ms)
+ GET /meetings 200 in 10.8s (compile: 1054ms, proxy.ts: 6.2s, render: 3.6s)
+○ Compiling /admin ...
+ GET /admin 200 in 89s (compile: 73s, proxy.ts: 10.8s, render: 5.3s)
+○ Compiling /admin/login ...
+✓ Finished writing to filesystem cache in 27.7s
+ GET /admin/login 200 in 12.8s (compile: 10.8s, proxy.ts: 1752ms, render: 249ms)
+ GET /login 200 in 1063ms (compile: 31ms, proxy.ts: 775ms, render: 257ms)
+ GET / 200 in 1854ms (compile: 189ms, proxy.ts: 913ms, render: 753ms)
+ GET /login 200 in 2.1s (compile: 139ms, proxy.ts: 1115ms, render: 821ms)
+✓ Finished filesystem cache database compaction in 65s
+✓ Finished writing to filesystem cache in 59s
+✓ Finished writing to filesystem cache in 13.8s
+○ Compiling /dashboard/hub ...
+ GET /dashboard/hub 200 in 34.3s (compile: 26.1s, proxy.ts: 4.7s, render: 3.5s)
+✓ Finished writing to filesystem cache in 10.8s
+✓ Finished filesystem cache database compaction in 49s
+✓ Finished writing to filesystem cache in 45s
+ GET /admin 200 in 7.5s (compile: 2.1s, proxy.ts: 3.1s, render: 2.3s)
+✓ Finished filesystem cache database compaction in 56s
+✓ Finished writing to filesystem cache in 27.1s
+ GET /admin 200 in 2.6s (compile: 118ms, proxy.ts: 1922ms, render: 576ms)
+ GET /login 200 in 3.2s (compile: 1419ms, proxy.ts: 732ms, render: 1013ms)
+ GET /login 200 in 2.2s (compile: 176ms, proxy.ts: 1000ms, render: 1043ms)
+ GET / 200 in 1920ms (compile: 1080ms, proxy.ts: 630ms, render: 209ms)
+ GET /admin 200 in 1991ms (compile: 24ms, proxy.ts: 1505ms, render: 462ms)
+ GET /signup 404 in 6.5s (compile: 3.0s, proxy.ts: 1971ms, render: 1494ms)
+ GET / 200 in 2.9s (compile: 83ms, proxy.ts: 1950ms, render: 828ms)
+ GET /register 200 in 2.3s (compile: 846ms, proxy.ts: 529ms, render: 916ms)
+ GET /register 200 in 906ms (compile: 27ms, proxy.ts: 826ms, render: 52ms)
+ GET /admin 200 in 4.4s (compile: 462ms, proxy.ts: 2.7s, render: 1318ms)
+ GET /admin/investors 404 in 2.4s (compile: 405ms, proxy.ts: 1046ms, render: 997ms)
+ GET /admin 200 in 1568ms (compile: 309ms, proxy.ts: 750ms, render: 509ms)
+ GET /admin 200 in 3.8s (compile: 470ms, proxy.ts: 2.1s, render: 1296ms)
+ GET /admin 200 in 923ms (compile: 22ms, proxy.ts: 707ms, render: 195ms)
+ GET /admin 200 in 1698ms (compile: 101ms, proxy.ts: 967ms, render: 630ms)
+ GET /admin 200 in 2.9s (compile: 724ms, proxy.ts: 1470ms, render: 657ms)
+ GET /admin 200 in 7.2s (compile: 821ms, proxy.ts: 3.9s, render: 2.5s)
+ GET /admin 200 in 5.1s (compile: 253ms, proxy.ts: 3.3s, render: 1491ms)
+ GET /admin 200 in 6.0s (compile: 689ms, proxy.ts: 2.9s, render: 2.4s)
+ GET /login 200 in 5.1s (compile: 525ms, proxy.ts: 1621ms, render: 3.0s)
+ GET /login 200 in 4.5s (compile: 353ms, proxy.ts: 2.3s, render: 1893ms)
+✓ Finished writing to filesystem cache in 22.6s
+✓ Compiled in 64.3s
+✓ Compiled in 24.2s
+ GET /login 200 in 15.5s (compile: 2.5s, proxy.ts: 7.8s, render: 5.2s)
+✓ Finished writing to filesystem cache in 25.4s
+○ Compiling /dashboard/hub ...
+ GET /dashboard/hub 200 in 26.0s (compile: 12.8s, proxy.ts: 5.8s, render: 7.4s)
+ GET /dashboard/hub 200 in 5.6s (compile: 218ms, proxy.ts: 4.9s, render: 514ms)
+ GET /admin 200 in 24.8s (compile: 5.4s, proxy.ts: 13.4s, render: 6.1s)
+ GET /admin 200 in 8.7s (compile: 190ms, proxy.ts: 8.2s, render: 277ms)
+ GET /admin 200 in 5.5s (compile: 474ms, proxy.ts: 4.1s, render: 904ms)
+ GET /admin 200 in 3.4s (compile: 512ms, proxy.ts: 2.2s, render: 691ms)
+ GET /admin 200 in 4.5s (compile: 281ms, proxy.ts: 3.2s, render: 999ms)
+ GET /admin 200 in 2.9s (compile: 166ms, proxy.ts: 2.0s, render: 724ms)
+ GET /admin 200 in 968ms (compile: 28ms, proxy.ts: 754ms, render: 187ms)
+ GET /admin 200 in 2.8s (compile: 58ms, proxy.ts: 2.5s, render: 279ms)
+ GET /admin 200 in 1466ms (compile: 63ms, proxy.ts: 1043ms, render: 361ms)
+ GET /admin 200 in 2.1s (compile: 58ms, proxy.ts: 1688ms, render: 311ms)
+ GET /admin 200 in 23.8s (compile: 2.8s, proxy.ts: 13.7s, render: 7.3s)
+ GET /admin 200 in 10.9s (compile: 1471ms, proxy.ts: 6.2s, render: 3.3s)
+ GET /admin 200 in 2.8s (compile: 191ms, proxy.ts: 1411ms, render: 1206ms)
+ GET /admin 200 in 3.3s (compile: 174ms, proxy.ts: 1500ms, render: 1651ms)
+ GET /admin 200 in 1919ms (compile: 154ms, proxy.ts: 1145ms, render: 620ms)
+ GET /admin 200 in 2.4s (compile: 158ms, proxy.ts: 1471ms, render: 738ms)
+ GET /admin 200 in 3.2s (compile: 535ms, proxy.ts: 1837ms, render: 857ms)
+ GET /admin 200 in 2.6s (compile: 107ms, proxy.ts: 1621ms, render: 829ms)
+ GET /admin 200 in 3.4s (compile: 189ms, proxy.ts: 2.3s, render: 903ms)
+ GET /admin 200 in 4.0s (compile: 514ms, proxy.ts: 1955ms, render: 1536ms)
+ GET /admin 200 in 4.2s (compile: 791ms, proxy.ts: 2.0s, render: 1365ms)
+ GET /admin 200 in 3.9s (compile: 281ms, proxy.ts: 2.3s, render: 1309ms)
+ GET /admin 200 in 4.0s (compile: 216ms, proxy.ts: 2.3s, render: 1471ms)
+ GET /admin 200 in 2.6s (compile: 157ms, proxy.ts: 1744ms, render: 687ms)
+ GET /admin 200 in 1873ms (compile: 109ms, proxy.ts: 1209ms, render: 555ms)
+ GET /admin 200 in 1276ms (compile: 72ms, proxy.ts: 754ms, render: 449ms)
+ GET /admin 200 in 2.3s (compile: 179ms, proxy.ts: 1420ms, render: 730ms)
+ GET /admin 200 in 4.3s (compile: 172ms, proxy.ts: 3.4s, render: 719ms)
+✓ Finished writing to filesystem cache in 14.6s
+✓ Finished writing to filesystem cache in 20.5s
+ GET /dashboard/hub 200 in 34.5s (compile: 20.2s, proxy.ts: 2.1s, render: 12.2s)
+ GET /dashboard/hub 200 in 1786ms (compile: 381ms, proxy.ts: 1082ms, render: 322ms)
+ GET /admin 200 in 14.6s (compile: 4.8s, proxy.ts: 4.7s, render: 5.1s)
+ GET /admin 200 in 3.0s (compile: 375ms, proxy.ts: 1890ms, render: 719ms)
+ GET /admin 200 in 4.1s (compile: 521ms, proxy.ts: 3.1s, render: 527ms)
+ GET /admin 200 in 1823ms (compile: 99ms, proxy.ts: 1190ms, render: 535ms)
+ GET /admin 200 in 2.8s (compile: 188ms, proxy.ts: 2.2s, render: 490ms)
+ GET /admin 200 in 4.7s (compile: 496ms, proxy.ts: 2.5s, render: 1625ms)
+ GET /admin 200 in 3.6s (compile: 478ms, proxy.ts: 1960ms, render: 1199ms)
+ GET /admin 200 in 9.3s (compile: 890ms, proxy.ts: 6.2s, render: 2.2s)
+ GET /admin 200 in 4.0s (compile: 557ms, proxy.ts: 2.1s, render: 1255ms)
+ GET /admin 200 in 14.1s (compile: 1345ms, proxy.ts: 7.3s, render: 5.5s)
+✓ Compiled in 3.1s
+✓ Finished filesystem cache database compaction in 11.1s
+ GET / 200 in 6.8s (compile: 2.9s, proxy.ts: 2.1s, render: 1793ms)
+ GET /login 200 in 2.7s (compile: 730ms, proxy.ts: 1329ms, render: 676ms)
+ GET / 200 in 1513ms (compile: 29ms, proxy.ts: 593ms, render: 891ms)
+ GET /login 200 in 1264ms (compile: 22ms, proxy.ts: 985ms, render: 256ms)
+ GET /dashboard 404 in 2.4s (compile: 225ms, proxy.ts: 1790ms, render: 362ms)
+ GET / 200 in 2.0s (compile: 24ms, proxy.ts: 835ms, render: 1179ms)
+ GET /register 200 in 1034ms (compile: 50ms, proxy.ts: 579ms, render: 405ms)
+ GET /auth/signout 404 in 703ms (compile: 27ms, proxy.ts: 571ms, render: 105ms)
+ GET / 200 in 2.1s (compile: 27ms, proxy.ts: 1279ms, render: 830ms)
+ GET /dashboard/investor 200 in 3.8s (compile: 2.1s, proxy.ts: 676ms, render: 1095ms)
+ GET / 200 in 2.0s (compile: 53ms, proxy.ts: 750ms, render: 1200ms)
+ GET /login 200 in 867ms (compile: 29ms, proxy.ts: 580ms, render: 257ms)
+ GET / 200 in 3.1s (compile: 80ms, proxy.ts: 1687ms, render: 1297ms)
+ GET /logout 404 in 887ms (compile: 90ms, proxy.ts: 579ms, render: 219ms)
+ GET /register 200 in 848ms (compile: 37ms, proxy.ts: 667ms, render: 144ms)
+ GET /dashboard/investor 200 in 1725ms (compile: 72ms, proxy.ts: 1457ms, render: 196ms)
+ GET /dashboard/investor 200 in 971ms (compile: 23ms, proxy.ts: 720ms, render: 228ms)
+ GET / 200 in 2.5s (compile: 23ms, proxy.ts: 1736ms, render: 735ms)
+✓ Compiled in 2.3s
+
+thread 'tokio-runtime-worker' (1917394) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for get_source_map_rope (TaskId 240240))
+
+Caused by:
+    0: Looking up data for TaskId 240240 from database failed
+    1: Unable to open static sorted file referenced from 00000788.meta
+    2: Unable to open static sorted file 00000784.sst
+    3: No such file or directory (os error 2)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+⨯ Error: ENOENT: no such file or directory, open '/Volumes/Samsung/investment-bridge/.next/dev/server/app/(auth)/login/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Volumes/Samsung/investment-bridge/.next/dev/server/app/(auth)/login/page/build-manifest.json'
+}
+
+thread 'tokio-runtime-worker' (1917394) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Data for PageEndpoint::output (TaskId 240246))
+
+Caused by:
+    0: Looking up data for TaskId 240246 from database failed
+    1: Unable to open static sorted file referenced from 00000738.meta
+    2: Unable to open static sorted file 00000737.sst
+    3: No such file or directory (os error 2)
+⨯ Error: ENOENT: no such file or directory, open '/Volumes/Samsung/investment-bridge/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Volumes/Samsung/investment-bridge/.next/dev/server/app/page/build-manifest.json'
+}
+○ Compiling /_error ...
+Persisting failed: Unable to open static sorted file referenced from 00000792.meta
+
+Caused by:
+    0: Unable to open static sorted file 00000791.sst
+    1: No such file or directory (os error 2)
+⨯ Error: ENOENT: no such file or directory, open '/Volumes/Samsung/investment-bridge/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Volumes/Samsung/investment-bridge/.next/dev/server/app/page/build-manifest.json'
+}
+⨯ Error: ENOENT: no such file or directory, open '/Volumes/Samsung/investment-bridge/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Volumes/Samsung/investment-bridge/.next/dev/server/app/page/build-manifest.json'
+}
+⨯ Error: ENOENT: no such file or directory, open '/Volumes/Samsung/investment-bridge/.next/dev/server/app/_not-found/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Volumes/Samsung/investment-bridge/.next/dev/server/app/_not-found/page/build-manifest.json'
+}
+
+thread 'tokio-runtime-worker' (2031277) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for ModuleBatchGroup::new (TaskId 240272))
+
+Caused by:
+    0: Looking up data for TaskId 240272 from database failed
+    1: Unable to open static sorted file referenced from 00000732.meta
+    2: Unable to open static sorted file 00000727.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2038917) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Data for <ModuleGraphImportTracer as ImportTracer>::get_traces (TaskId 240281))
+
+Caused by:
+    0: Looking up data for TaskId 240281 from database failed
+    1: Unable to open static sorted file referenced from 00000738.meta
+    2: Unable to open static sorted file 00000737.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2031286) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for batch_chunk_items_with_info (TaskId 240301))
+
+Caused by:
+    0: Looking up data for TaskId 240301 from database failed
+    1: Unable to open static sorted file referenced from 00000732.meta
+    2: Unable to open static sorted file 00000727.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2028935) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for chunk_items_with_info_with_type (TaskId 240322))
+
+Caused by:
+    0: Looking up data for TaskId 240322 from database failed
+    1: Unable to open static sorted file referenced from 00000776.meta
+    2: Unable to open static sorted file 00000772.sst
+    3: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (2031278) panicked at /Users/vercel/dev/actions-runner/_work/next.js/next.js/turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for chunk_items_with_info_with_type (TaskId 240338))
+
+Caused by:
+    0: Looking up data for TaskId 240338 from database failed
+    1: Unable to open static sorted file referenced from 00000748.meta
+    2: Unable to open static sorted file 00000744.sst
+    3: No such file or directory (os error 2)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)

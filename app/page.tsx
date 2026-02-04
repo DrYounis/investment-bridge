@@ -31,7 +31,7 @@ export default async function Home() {
         </div>
         <div className="flex gap-3">
           {user ? (
-            <Link href="/dashboard" className="px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold rounded-full hover:shadow-lg hover:shadow-blue-200 transition-all duration-300">
+            <Link href="/dashboard/hub" className="px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold rounded-full hover:shadow-lg hover:shadow-blue-200 transition-all duration-300">
               لوحة التحكم
             </Link>
           ) : (

@@ -86,7 +86,7 @@ export default function LoginPage() {
                         .maybeSingle();
 
                     if (investorProfile?.approval_status === 'approved') {
-                        router.push('/dashboard/investor');
+                        router.push('/dashboard/hub');
                     } else if (investorProfile?.approval_status === 'pending') {
                         // Sign out immediately and show clear message
                         await supabase.auth.signOut();
@@ -100,11 +100,11 @@ export default function LoginPage() {
                         return;
                     } else {
                         // If no investor profile found (rare), let them in or recreate
-                        router.push('/dashboard/investor');
+                        router.push('/dashboard/hub');
                     }
 
                 } else if (profile?.user_type === 'entrepreneur') {
-                    router.push('/dashboard/entrepreneur');
+                    router.push('/dashboard/hub');
                 } else {
                     router.push('/');
                 }

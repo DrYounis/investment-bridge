@@ -64,15 +64,7 @@ export default async function MeetingsPage() {
 
                 <MeetingsSchedule />
 
-                {/* Footer */}
-                <footer className="text-center text-slate-400 text-sm py-12 border-t border-slate-200 mt-16">
-                    <div className="flex items-center justify-center gap-2 mb-3">
-                        <div className="text-lg font-bold text-slate-700">مرفأ</div>
-                        <div className="w-1 h-1 bg-slate-400 rounded-full"></div>
-                        <span>Investment Bridge</span>
-                    </div>
-                    <p>© 2026 Marfa. جميع الحقوق محفوظة</p>
-                </footer>
+
 
             </main>
         </div>

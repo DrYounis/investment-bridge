@@ -130,13 +130,6 @@ export default function LoginPage() {
         <div className="min-h-screen bg-background flex items-center justify-center p-4">
             <div className="w-full max-w-md animate-fade-in-up">
                 <div className="text-center mb-8">
-                    <Image
-                        src="/images/logo-marfa.png"
-                        alt="Marfa Logo"
-                        width={120}
-                        height={160}
-                        className="mx-auto mb-4 h-32 w-auto object-contain"
-                    />
                     <p className="text-foreground/70">تسجيل الدخول</p>
                 </div>
 

@@ -11,7 +11,7 @@ export default function Header({ user }: HeaderProps) {
             <div className="max-w-7xl mx-auto flex justify-between items-center">
                 {/* Logo / Brand Name - Right Side (Arabic Only) */}
                 <div className="flex items-center gap-2">
-                    <Link href="/" className="hover:opacity-80 transition-opacity">
+                    <Link href="/" className="hover:opacity-80 transition-opacity border-2 border-gold/30 rounded-full p-1 bg-white/10 backdrop-blur-sm">
                         <Image
                             src="/images/logo-marfa.png"
                             alt="Marfa Logo"
@@ -24,19 +24,19 @@ export default function Header({ user }: HeaderProps) {
 
                 {/* Navigation items */}
                 <div className="flex items-center gap-6">
-                    <Link href="/meetings" className="text-slate-700/80 hover:text-blue-600 hover:scale-105 transition-all font-medium">
+                    <Link href="/meetings" className="text-slate-200/90 hover:text-gold hover:scale-105 transition-all font-bold tracking-wide">
                         لقاءات مرفأ
                     </Link>
                     {user ? (
-                        <Link href="/dashboard/hub" className="px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold rounded-full hover:shadow-lg hover:shadow-blue-200 transition-all duration-300">
+                        <Link href="/dashboard/hub" className="px-5 py-2 bg-gradient-to-r from-gold to-gold-dark text-deep-navy text-sm font-black rounded-full hover:shadow-lg hover:shadow-gold/20 transition-all duration-300">
                             لوحة التحكم
                         </Link>
                     ) : (
                         <div className="flex gap-3">
-                            <Link href="/register" className="px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold rounded-full hover:shadow-lg hover:shadow-blue-200 transition-all duration-300">
+                            <Link href="/register" className="px-6 py-2 bg-gradient-to-r from-gold to-gold-dark text-deep-navy text-sm font-black rounded-full hover:shadow-lg hover:shadow-gold/20 transition-all duration-300 border border-gold/50">
                                 تسجيل جديد
                             </Link>
-                            <Link href="/login" className="px-5 py-2 bg-white/90 backdrop-blur text-sm font-bold text-slate-700 rounded-full hover:bg-white hover:shadow-md transition-all duration-300 border border-slate-200">
+                            <Link href="/login" className="px-6 py-2 bg-white/5 backdrop-blur-md text-sm font-black text-gold rounded-full hover:bg-white/10 hover:shadow-md transition-all duration-300 border border-gold/30">
                                 دخول
                             </Link>
                         </div>

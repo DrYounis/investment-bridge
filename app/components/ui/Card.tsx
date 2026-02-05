@@ -22,7 +22,7 @@ export default function Card({
     ...rest
 }: CardProps) {
     const baseStyles = 'rounded-2xl p-6 transition-all duration-300';
-    const glassStyles = glass ? 'glass' : 'bg-background border-2 border-gray-200';
+    const glassStyles = glass ? 'glass' : 'bg-background border border-gold/20 shadow-sm';
     const gradientStyles = gradient !== 'none' ? `gradient-${gradient} text-white` : '';
     const hoverStyles = hover ? 'hover-lift cursor-pointer' : '';
     const clickableStyles = onClick ? 'cursor-pointer' : '';

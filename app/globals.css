@@ -6,8 +6,10 @@
 /* ===== CSS Variables ===== */
 :root {
   /* Colors - Light Mode - Luxury Palette */
-  --background: #FDFCF0; /* Cream background */
-  --foreground: #0A192F; /* Deep Navy foreground */
+  --background: #FDFCF0;
+  /* Cream background */
+  --foreground: #0A192F;
+  /* Deep Navy foreground */
   --deep-navy: #0A192F;
   --gold: #D4AF37;
   --gold-dark: #C5A028;
@@ -42,7 +44,8 @@
 
   /* Glass Effect */
   --glass-bg: rgba(255, 255, 255, 0.4);
-  --glass-border: rgba(212, 175, 55, 0.2); /* Gold-tinted border */
+  --glass-border: rgba(212, 175, 55, 0.2);
+  /* Gold-tinted border */
   --glass-blur: blur(16px);
 
   /* Shadows */
@@ -343,6 +346,10 @@ html[dir="rtl"] body {
 
 .gradient-gold {
   background: linear-gradient(135deg, #D4AF37 0%, #C5A028 100%);
+}
+
+.drop-shadow-luxury {
+  filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.4));
 }
 
 /* ===== Custom Scrollbar ===== */

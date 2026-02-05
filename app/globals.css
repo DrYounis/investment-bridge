@@ -5,18 +5,22 @@
 
 /* ===== CSS Variables ===== */
 :root {
-  /* Colors - Light Mode */
-  --background: #ffffff;
-  --foreground: #1a1a1a;
+  /* Colors - Light Mode - Luxury Palette */
+  --background: #FDFCF0; /* Cream background */
+  --foreground: #0A192F; /* Deep Navy foreground */
+  --deep-navy: #0A192F;
+  --gold: #D4AF37;
+  --gold-dark: #C5A028;
+  --gold-light: #F9E2AF;
 
   /* Brand Colors */
-  --primary: #2563eb;
-  --primary-dark: #1e40af;
-  --primary-light: #3b82f6;
-  --secondary: #10b981;
-  --secondary-dark: #059669;
-  --accent: #f59e0b;
-  --accent-dark: #d97706;
+  --primary: var(--deep-navy);
+  --primary-dark: #07101E;
+  --primary-light: #152C4E;
+  --secondary: var(--gold);
+  --secondary-dark: var(--gold-dark);
+  --accent: var(--gold);
+  --accent-dark: var(--gold-dark);
 
   /* Neutral Colors */
   --gray-50: #f9fafb;
@@ -37,9 +41,9 @@
   --info: #3b82f6;
 
   /* Glass Effect */
-  --glass-bg: rgba(255, 255, 255, 0.1);
-  --glass-border: rgba(255, 255, 255, 0.2);
-  --glass-blur: blur(12px);
+  --glass-bg: rgba(255, 255, 255, 0.4);
+  --glass-border: rgba(212, 175, 55, 0.2); /* Gold-tinted border */
+  --glass-blur: blur(16px);
 
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -102,6 +106,7 @@
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-arabic: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+  --font-luxury: 'Playfair Display', serif;
 
   /* Spacing (enhanced) */
   --spacing-xs: 0.5rem;
@@ -319,25 +324,25 @@ html[dir="rtl"] body {
   border: 1px solid var(--glass-border);
 }
 
-/* ===== Gradient Backgrounds ===== */
-.gradient-primary {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+/* ===== Luxury Utilities ===== */
+.text-luxury-gold {
+  background: linear-gradient(135deg, #D4AF37 0%, #F9E2AF 50%, #C5A028 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.gradient-secondary {
-  background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+.border-luxury {
+  border: 1px solid var(--gold);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
 }
 
-.gradient-sunset {
-  background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ee5a6f 100%);
+.gradient-luxury {
+  background: linear-gradient(135deg, var(--deep-navy) 0%, #152C4E 100%);
 }
 
-.gradient-ocean {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.gradient-forest {
-  background: linear-gradient(135deg, #134e5e 0%, #71b280 100%);
+.gradient-gold {
+  background: linear-gradient(135deg, #D4AF37 0%, #C5A028 100%);
 }
 
 /* ===== Custom Scrollbar ===== */

@@ -154,13 +154,6 @@ function RegisterForm() {
             <div className="min-h-screen bg-background flex items-center justify-center p-4" dir="rtl">
                 <div className="w-full max-w-md animate-fade-in-up">
                     <div className="text-center mb-8">
-                        <Image
-                            src="/images/logo-marfa.png"
-                            alt="Marfa Logo"
-                            width={120}
-                            height={160}
-                            className="mx-auto mb-4 h-32 w-auto object-contain"
-                        />
                         <h2 className="text-2xl font-bold text-foreground mb-2">اختر نوع الحساب</h2>
                         <p className="text-foreground/60 text-sm">ابدأ رحلتك في مجتمع مرفأ الاستثماري</p>
                     </div>
@@ -220,13 +213,6 @@ function RegisterForm() {
         <div className="min-h-screen bg-background flex items-center justify-center p-4" dir="rtl">
             <div className="w-full max-w-md animate-fade-in-up">
                 <div className="text-center mb-8">
-                    <Image
-                        src="/images/logo-marfa.png"
-                        alt="Marfa Logo"
-                        width={120}
-                        height={160}
-                        className="mx-auto mb-4 h-32 w-auto object-contain"
-                    />
                     <div className="flex items-center justify-center gap-2 mb-2">
                         <button
                             onClick={() => setFormData({ ...formData, userType: '', email: '', fullName: '', phone: '', password: '', confirmPassword: '', commercialRegister: '' })}

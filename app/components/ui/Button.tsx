@@ -1,7 +1,7 @@
 import React, { ButtonHTMLAttributes, forwardRef } from 'react';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+    variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'luxury';
     size?: 'sm' | 'md' | 'lg';
     isLoading?: boolean;
     fullWidth?: boolean;
@@ -24,11 +24,12 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         const baseStyles = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-300 hover-lift disabled:opacity-50 disabled:cursor-not-allowed';
 
         const variantStyles = {
-            primary: 'bg-primary text-white hover:bg-primary-dark shadow-glow',
-            secondary: 'bg-secondary text-white hover:bg-secondary-dark shadow-glow-secondary',
+            primary: 'bg-primary text-white hover:bg-primary-dark shadow-md',
+            secondary: 'bg-secondary text-foreground hover:bg-secondary-dark font-bold',
             outline: 'border-2 border-primary text-primary hover:bg-primary hover:text-white',
             ghost: 'text-primary hover:bg-primary/10',
             danger: 'bg-error text-white hover:bg-error/90',
+            luxury: 'bg-primary border border-gold text-gold hover:bg-primary-dark hover:border-gold-light shadow-glow shadow-gold/20 font-bold tracking-wide uppercase text-xs',
         };
 
         const sizeStyles = {

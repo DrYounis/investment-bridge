@@ -11,13 +11,13 @@ export default function Header({ user }: HeaderProps) {
             <div className="max-w-7xl mx-auto flex justify-between items-center">
                 {/* Logo / Brand Name - Right Side (Arabic Only) */}
                 <div className="flex items-center gap-2">
-                    <Link href="/" className="hover:opacity-80 transition-opacity border-2 border-gold/30 rounded-full p-1 bg-white/10 backdrop-blur-sm">
+                    <Link href="/" className="hover:opacity-80 transition-opacity">
                         <Image
                             src="/images/logo-marfa.png"
                             alt="Marfa Logo"
                             width={100}
                             height={100}
-                            className="object-contain h-24 w-auto"
+                            className="object-contain h-24 w-auto drop-shadow-luxury"
                         />
                     </Link>
                 </div>

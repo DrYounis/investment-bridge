@@ -97,8 +97,8 @@ export default async function Home() {
                 <div className="w-16 h-16 bg-gradient-to-br from-gold to-gold-dark text-deep-navy rounded-2xl flex items-center justify-center text-3xl mb-6 shadow-lg shadow-gold/20 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                   📈
                 </div>
-                <h2 className="text-4xl font-bold text-white mb-4 font-luxury">أنا مستثمر</h2>
-                <p className="text-white/80 text-lg leading-relaxed">
+                <h2 className="text-4xl font-bold text-luxury-gold mb-4 font-luxury">أنا مستثمر</h2>
+                <p className="text-gold-light/90 text-lg leading-relaxed">
                   اكتشف فرصاً استثمارية مدروسة ومفلترة بعناية
                   <br />
                   <span className="text-gold font-bold">لوحة تحكم ذكية لعرض العائد وتحليل المخاطر</span>

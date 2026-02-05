@@ -15,9 +15,9 @@ export default function Header({ user }: HeaderProps) {
                         <Image
                             src="/images/logo-marfa.png"
                             alt="Marfa Logo"
-                            width={42}
-                            height={60}
-                            className="object-contain h-12 w-auto"
+                            width={100}
+                            height={100}
+                            className="object-contain h-24 w-auto"
                         />
                     </Link>
                 </div>

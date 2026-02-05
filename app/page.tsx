@@ -43,7 +43,7 @@ export default async function Home() {
               أنا مستثمر
             </Link>
             <Link href="/register?type=entrepreneur"
-              className="px-10 py-5 bg-white text-gold border-2 border-gold/50 text-lg font-black rounded-2xl hover:bg-gold/5 hover:scale-105 hover:shadow-xl transition-all duration-300">
+              className="px-10 py-5 bg-white text-deep-navy border-2 border-gold/50 text-lg font-black rounded-2xl hover:bg-gold/5 hover:scale-105 hover:shadow-xl transition-all duration-300">
               لدي فكرة مشروع
             </Link>
           </div>
@@ -67,10 +67,10 @@ export default async function Home() {
                   💡
                 </div>
                 <h2 className="text-4xl font-bold text-deep-navy mb-4 font-luxury">لدي فكرة مشروع</h2>
-                <p className="text-deep-navy/70 text-lg leading-relaxed">
+                <p className="text-deep-navy/80 text-lg leading-relaxed">
                   هل تبحث عن تمويل؟ أو تريد التأكد من جدوى فكرتك؟
                   <br />
-                  <span className="text-gold font-bold">ابدأ رحلتك هنا لتحويل الفكرة إلى شركة ناشئة</span>
+                  <span className="text-gold-dark font-bold">ابدأ رحلتك هنا لتحويل الفكرة إلى شركة ناشئة</span>
                 </p>
               </div>
 
@@ -136,7 +136,7 @@ export default async function Home() {
                       صانع العروض الاستثمارية
                       <span className="text-gold-dark"> .AI</span>
                     </h3>
-                    <p className="text-deep-navy/70 text-lg mb-6 max-w-xl leading-relaxed">
+                    <p className="text-deep-navy/80 text-lg mb-6 max-w-xl leading-relaxed">
                       لا تملك الوقت لتصميم عرضك؟ دعنا نقوم بذلك نيابة عنك باستخدام أحدث تقنيات الذكاء الاصطناعي لتوليد محتوى احترافي ومقنع
                     </p>
                     <div className="flex items-center gap-6">

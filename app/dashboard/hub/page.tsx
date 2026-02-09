@@ -9,6 +9,7 @@ export default function HubTestPage() {
     // This state simulates the currently logged-in user.
     // In a real app, this would come from Supabase Auth & Database.
     const [currentUser, setCurrentUser] = useState({
+        id: "1",
         name: "د. يونس",
         role: "admin", // Try changing this to 'investor' or 'entrepreneur'
         projectName: "تطوير وادي مشار",

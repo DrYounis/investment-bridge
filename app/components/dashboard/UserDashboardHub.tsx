@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     User,
     Calendar,
@@ -17,8 +17,9 @@ import {
 import SmartNewsTicker from './SmartNewsTicker';
 import AdminNewsManager from './AdminNewsManager';
 import { NewsProvider, useNews } from '../../context/NewsContext';
+import { createClient } from '@/lib/supabase/client';
 
-// Notification Logic (Safe Implementation via User Instructions)
+// Notification Logic
 const requestNotificationPermission = async () => {
     if (typeof window !== 'undefined' && !("Notification" in window)) {
         console.warn("هذا المتصفح لا يدعم الإشعارات");
@@ -40,55 +41,21 @@ const requestNotificationPermission = async () => {
     return false;
 };
 
-// Mock Data
-const MOCK_MEETINGS = [
-    {
-        id: 1,
-        topic: "ورشة عمل: بناء النموذج المالي",
-        date: "2026-02-10",
-        time: "18:00",
-        duration: "2h",
-        link: "https://zoom.us/j/123456789",
-        status: "upcoming" // upcoming, live, ended
-    },
-    {
-        id: 2,
-        topic: "جلسة إرشادية مع المستثمر أحمد",
-        date: "2026-02-15",
-        time: "16:30",
-        duration: "45m",
-        link: "https://zoom.us/j/987654321",
-        status: "upcoming"
-    }
-];
-
-const MOCK_ANNOUNCEMENTS = [
-    {
-        id: 1,
-        title: "فرصة استثمارية جديدة",
-        content: "تم إضافة مشروع جديد في قطاع الفينتيك. اطلع عليه الآن!",
-        date: "2026-02-04",
-        type: "opportunity"
-    },
-    {
-        id: 2,
-        title: "تحديث الجدول",
-        content: "تم تعديل موعد ورشة العمل القادمة لتبدأ الساعة 6 مساءً.",
-        date: "2026-02-03",
-        type: "alert"
-    }
-];
-
 // Inner component to access context
 const DashboardContent = () => {
     const [activeTab, setActiveTab] = useState<'profile' | 'meetings'>('meetings');
     const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>('default');
     const { isAdminMode, toggleAdminMode } = useNews();
+    const [meetings, setMeetings] = useState<any[]>([]);
+    const [announcements, setAnnouncements] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const supabase = createClient();
 
-    // User State Mock
+    // User State Mock (In a real app, this comes from an Auth Context)
     const [user, setUser] = useState({
+        id: '',
         name: "عبدالله بن محمد",
-        role: "Innovator", // or Investor
+        role: "entrepreneur",
         email: "abdullah@example.com",
         phone: "+966 50 123 4567",
         bio: "رائد أعمال مهتم بالتقنية المالية والحلول الرقمية."
@@ -96,12 +63,87 @@ const DashboardContent = () => {
 
     const [isEditing, setIsEditing] = useState(false);
 
+    const fetchData = useCallback(async () => {
+        try {
+            setLoading(true);
+            const { data: { user: authUser } } = await supabase.auth.getUser();
+
+            if (authUser) {
+                // Fetch Profile
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', authUser.id)
+                    .single();
+
+                if (profile) {
+                    setUser({
+                        id: profile.id,
+                        name: profile.full_name || "المستخدم",
+                        role: profile.role || "entrepreneur",
+                        email: profile.email || "",
+                        phone: profile.phone || "",
+                        bio: "رائد أعمال مهتم بالتقنية المالية"
+                    });
+                }
+
+                // Fetch Meetings
+                const { data: meetingsData } = await supabase
+                    .from('meetings')
+                    .select('*')
+                    .or(`investor_id.eq.${authUser.id},entrepreneur_id.eq.${authUser.id}`)
+                    .order('scheduled_at', { ascending: true });
+
+                setMeetings(meetingsData || []);
+
+                // Fetch Announcements
+                const { data: announcementsData } = await supabase
+                    .from('announcements')
+                    .select('*')
+                    .or(`target_role.eq.all,target_role.eq.${profile?.role || 'all'}`)
+                    .order('created_at', { ascending: false });
+
+                setAnnouncements(announcementsData || []);
+            }
+        } catch (err) {
+            console.error("Failed to fetch dashboard data", err);
+        } finally {
+            setLoading(false);
+        }
+    }, [supabase]);
+
     useEffect(() => {
-        // Check initial permission status
+        fetchData();
+
+        // Realtime Subscription for Meetings
+        const meetingsChannel = supabase
+            .channel('public:meetings')
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'meetings' },
+                () => fetchData()
+            )
+            .subscribe();
+
+        // Realtime Subscription for Announcements
+        const announcementsChannel = supabase
+            .channel('public:announcements')
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'announcements' },
+                () => fetchData()
+            )
+            .subscribe();
+
         if (typeof window !== 'undefined' && 'Notification' in window) {
             setNotificationPermission(Notification.permission);
         }
-    }, []);
+
+        return () => {
+            supabase.removeChannel(meetingsChannel);
+            supabase.removeChannel(announcementsChannel);
+        };
+    }, [fetchData, supabase]);
 
     const handleEnableNotifications = async () => {
         const granted = await requestNotificationPermission();
@@ -110,13 +152,16 @@ const DashboardContent = () => {
         }
     };
 
-    const canJoinMeeting = (dateStr: string, timeStr: string) => {
-        return true;
+    const canJoinMeeting = (scheduledAt: string) => {
+        const now = new Date();
+        const meetingTime = new Date(scheduledAt);
+        const diff = meetingTime.getTime() - now.getTime();
+        // Allow joining 10 mins before and up to 2 hours after
+        return diff <= 10 * 60 * 1000 && diff >= -120 * 60 * 1000;
     };
 
     return (
         <div className="min-h-screen bg-slate-50 font-sans" dir="rtl">
-            {/* Smart News Ticker at the very top */}
             <SmartNewsTicker />
 
             <div className="p-4 md:p-8">
@@ -130,8 +175,8 @@ const DashboardContent = () => {
                             <button
                                 onClick={() => setActiveTab('meetings')}
                                 className={`px-6 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${activeTab === 'meetings'
-                                        ? 'bg-blue-600 text-white shadow-md'
-                                        : 'text-slate-600 hover:bg-slate-50'
+                                    ? 'bg-blue-600 text-white shadow-md'
+                                    : 'text-slate-600 hover:bg-slate-50'
                                     }`}
                             >
                                 <Calendar size={18} />
@@ -140,8 +185,8 @@ const DashboardContent = () => {
                             <button
                                 onClick={() => setActiveTab('profile')}
                                 className={`px-6 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${activeTab === 'profile'
-                                        ? 'bg-blue-600 text-white shadow-md'
-                                        : 'text-slate-600 hover:bg-slate-50'
+                                    ? 'bg-blue-600 text-white shadow-md'
+                                    : 'text-slate-600 hover:bg-slate-50'
                                     }`}
                             >
                                 <User size={18} />
@@ -150,12 +195,11 @@ const DashboardContent = () => {
                         </div>
                     </div>
 
-                    {/* Admin Toggle (Simulator) */}
                     <button
                         onClick={toggleAdminMode}
                         className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all border ${isAdminMode
-                                ? 'bg-purple-600 text-white border-purple-600 shadow-md'
-                                : 'bg-transparent text-slate-400 border-slate-200 hover:border-purple-300 hover:text-purple-600'
+                            ? 'bg-purple-600 text-white border-purple-600 shadow-md'
+                            : 'bg-transparent text-slate-400 border-slate-200 hover:border-purple-300 hover:text-purple-600'
                             }`}
                     >
                         <Shield size={14} />
@@ -163,10 +207,7 @@ const DashboardContent = () => {
                     </button>
                 </header>
 
-                {/* Content Area */}
                 <div className="max-w-5xl mx-auto">
-
-                    {/* Admin CMS Component - Only visible if admin mode is on */}
                     <AdminNewsManager />
 
                     {activeTab === 'profile' && (
@@ -201,7 +242,7 @@ const DashboardContent = () => {
                                         <label className="block text-sm text-slate-500 mb-1">البريد الإلكتروني</label>
                                         <input
                                             type="email"
-                                            disabled={true} // Email usually immutable
+                                            disabled={true}
                                             value={user.email}
                                             className="w-full p-3 rounded-xl border border-slate-200 bg-slate-100 text-slate-500 cursor-not-allowed"
                                         />
@@ -223,7 +264,7 @@ const DashboardContent = () => {
                                     <div>
                                         <label className="block text-sm text-slate-500 mb-1">نوع العضوية</label>
                                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-bold border border-blue-100">
-                                            {user.role === 'Innovator' ? '🚀 رائد أعمال' : '💎 مستثمر'}
+                                            {user.role === 'entrepreneur' ? '🚀 رائد أعمال' : user.role === 'investor' ? '💎 مستثمر' : '🛡️ أدمن'}
                                             <CheckCircle2 size={16} />
                                         </div>
                                     </div>
@@ -261,8 +302,6 @@ const DashboardContent = () => {
 
                     {activeTab === 'meetings' && (
                         <div className="space-y-6 animate-fade-in-up">
-
-                            {/* Notification Status Banner */}
                             <div className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl p-6 text-white flex flex-col md:flex-row justify-between items-center gap-4 shadow-lg relative overflow-hidden">
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
 
@@ -283,8 +322,8 @@ const DashboardContent = () => {
                                 <button
                                     onClick={handleEnableNotifications}
                                     className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg active:scale-95 whitespace-nowrap relative z-10 ${notificationPermission === 'granted'
-                                            ? 'bg-white/10 hover:bg-white/20 text-white border border-white/10 cursor-default'
-                                            : 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-900/20'
+                                        ? 'bg-white/10 hover:bg-white/20 text-white border border-white/10 cursor-default'
+                                        : 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-900/20'
                                         }`}
                                     disabled={notificationPermission === 'granted'}
                                 >
@@ -293,8 +332,6 @@ const DashboardContent = () => {
                             </div>
 
                             <div className="grid md:grid-cols-3 gap-6">
-
-                                {/* Announcements Sidebar */}
                                 <div className="md:col-span-1 space-y-4">
                                     <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 h-full">
                                         <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
@@ -302,23 +339,25 @@ const DashboardContent = () => {
                                             الإعلانات
                                         </h3>
                                         <div className="space-y-4">
-                                            {MOCK_ANNOUNCEMENTS.map(ann => (
+                                            {announcements.map(ann => (
                                                 <div key={ann.id} className="bg-slate-50 p-4 rounded-xl border border-slate-100 hover:bg-orange-50 hover:border-orange-100 transition-colors group cursor-pointer">
                                                     <div className="flex justify-between items-start mb-2">
                                                         <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${ann.type === 'alert' ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
-                                                            {ann.type === 'alert' ? 'تنبيه' : 'جديد'}
+                                                            {ann.type === 'academy' ? 'أكاديمية' : ann.type === 'system' ? 'نظام' : 'عام'}
                                                         </span>
-                                                        <span className="text-xs text-slate-400">{ann.date}</span>
+                                                        <span className="text-xs text-slate-400">{new Date(ann.created_at).toLocaleDateString('ar-SA')}</span>
                                                     </div>
                                                     <h4 className="font-bold text-slate-800 text-sm mb-1 group-hover:text-orange-600 transition-colors">{ann.title}</h4>
                                                     <p className="text-xs text-slate-500 leading-relaxed">{ann.content}</p>
                                                 </div>
                                             ))}
+                                            {announcements.length === 0 && (
+                                                <p className="text-xs text-slate-400 text-center py-4">لا توجد إعلانات حالياً</p>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Meetings List */}
                                 <div className="md:col-span-2">
                                     <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 min-h-[400px]">
                                         <div className="flex justify-between items-center mb-6">
@@ -327,50 +366,49 @@ const DashboardContent = () => {
                                                 الاجتماعات القادمة
                                             </h3>
                                             <span className="text-xs font-bold bg-blue-50 text-blue-600 px-3 py-1 rounded-full">
-                                                {MOCK_MEETINGS.length} اجتماعات
+                                                {meetings.length} اجتماعات
                                             </span>
                                         </div>
 
                                         <div className="space-y-4">
-                                            {MOCK_MEETINGS.map(meeting => (
+                                            {meetings.map(meeting => (
                                                 <div key={meeting.id} className="p-4 rounded-xl border border-slate-100 bg-white hover:shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 group">
                                                     <div className="flex items-start gap-4">
                                                         <div className="bg-blue-50 text-blue-600 p-3 rounded-xl flex flex-col items-center justify-center min-w-[70px]">
-                                                            <span className="text-xs font-bold">{meeting.date.split('-')[1]}/{meeting.date.split('-')[2]}</span>
-                                                            <span className="text-lg font-black">{meeting.time}</span>
+                                                            <span className="text-xs font-bold">{new Date(meeting.scheduled_at).toLocaleDateString('ar-SA', { month: 'numeric', day: 'numeric' })}</span>
+                                                            <span className="text-lg font-black">{new Date(meeting.scheduled_at).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}</span>
                                                         </div>
                                                         <div>
-                                                            <h4 className="font-bold text-slate-800 mb-1 group-hover:text-blue-600 transition-colors">{meeting.topic}</h4>
+                                                            <h4 className="font-bold text-slate-800 mb-1 group-hover:text-blue-600 transition-colors">{meeting.title}</h4>
                                                             <div className="flex items-center gap-3 text-xs text-slate-500 font-medium">
                                                                 <span className="flex items-center gap-1">
                                                                     <Clock size={12} />
-                                                                    {meeting.duration}
+                                                                    مجدول
                                                                 </span>
                                                                 <span className="w-1 h-1 bg-slate-300 rounded-full"></span>
-                                                                <span className="text-blue-500">Zoom Meeting</span>
+                                                                <span className="text-blue-500">فيديو مباشر</span>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <a
-                                                        href={meeting.link}
+                                                        href={meeting.meeting_link}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className={`px-6 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${canJoinMeeting(meeting.date, meeting.time)
-                                                                ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-blue-200'
-                                                                : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                                                        className={`px-6 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${canJoinMeeting(meeting.scheduled_at)
+                                                            ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-blue-200'
+                                                            : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                                                             }`}
-                                                        onClick={(e) => !canJoinMeeting(meeting.date, meeting.time) && e.preventDefault()}
+                                                        onClick={(e) => !canJoinMeeting(meeting.scheduled_at) && e.preventDefault()}
                                                     >
                                                         <Video size={16} />
-                                                        {canJoinMeeting(meeting.date, meeting.time) ? 'انضم الآن' : 'لم يبدأ بعد'}
+                                                        {canJoinMeeting(meeting.scheduled_at) ? 'انضم الآن' : 'لم يبدأ بعد'}
                                                     </a>
                                                 </div>
                                             ))}
                                         </div>
 
-                                        {/* Empty State Mock */}
-                                        {MOCK_MEETINGS.length === 0 && (
+                                        {meetings.length === 0 && (
                                             <div className="text-center py-12">
                                                 <div className="bg-slate-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                                                     <Calendar className="text-slate-300" size={32} />
@@ -379,7 +417,6 @@ const DashboardContent = () => {
                                                 <p className="text-slate-400 text-sm mt-1">استرح قليلاً، سنخبرك عند إضافة مواعيد جديدة.</p>
                                             </div>
                                         )}
-
                                     </div>
                                 </div>
                             </div>

@@ -155,6 +155,7 @@ export default function CSRPage() {
                             icon={<TrendingUp className="w-8 h-8" />}
                             title="استراتيجيات جلب الرعايات"
                             desc="نبني استراتيجيات شاملة لجذب المانحين الاستراتيجيين بناءً على دراسة عميقة للسوق المحلي."
+                            link="/csr/sponsorship-strategies"
                         />
                         <ServiceCard
                             icon={<Users className="w-8 h-8" />}
@@ -190,13 +191,13 @@ export default function CSRPage() {
                             name="مركز قدرات عزم"
                             focus="التأهيل الطبي لذوي الإعاقة"
                             result="استقطاب رعاة استراتيجيين وتوسيع نطاق الخدمات العلاجية المتقدمة."
-                            image="https://images.unsplash.com/photo-1576091160550-217359f4ecf8?auto=format&fit=crop&q=80&w=800"
+                            image="/images/csr/azm-center-logo.png"
                         />
                         <CaseStudyCard
                             name="جمعية نشاط الرياضية"
-                            focus="مجتمع هايكنج حائل (800+)"
+                            focus="تنمية الرياضة المجتمعية"
                             result="توقيع شراكات مع علامات تجارية رياضية وتنظيم فعاليات أكثر احترافية."
-                            image="https://images.unsplash.com/photo-1533240332313-0db49b459ad0?auto=format&fit=crop&q=80&w=800"
+                            image="/images/csr/nashat-logo.png"
                         />
                     </div>
                 </div>
@@ -293,9 +294,9 @@ export default function CSRPage() {
     );
 }
 
-function ServiceCard({ icon, title, desc }: any) {
-    return (
-        <div className="p-8 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-gold/30 hover:-translate-y-2 transition-all group">
+function ServiceCard({ icon, title, desc, link }: any) {
+    const content = (
+        <>
             <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-deep-navy mb-6 group-hover:bg-gold group-hover:text-white transition-all">
                 {icon}
             </div>
@@ -303,6 +304,20 @@ function ServiceCard({ icon, title, desc }: any) {
             <p className="text-gray-500 leading-relaxed text-sm">
                 {desc}
             </p>
+        </>
+    );
+
+    if (link) {
+        return (
+            <Link href={link} className="block p-8 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-gold/30 hover:-translate-y-2 transition-all group cursor-pointer">
+                {content}
+            </Link>
+        );
+    }
+
+    return (
+        <div className="p-8 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-gold/30 hover:-translate-y-2 transition-all group">
+            {content}
         </div>
     );
 }

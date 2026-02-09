@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     TrendingUp, Users, DollarSign, Activity,
     Briefcase, CheckCircle, Clock, AlertCircle,
     PieChart, BarChart
 } from 'lucide-react';
 import AdminNewsManager from './AdminNewsManager';
+import { createClient } from '@/lib/supabase/client';
 
 interface User {
+    id: string;
     name: string;
     role: 'admin' | 'investor' | 'entrepreneur' | string;
     projectName?: string;
@@ -144,25 +146,25 @@ const EntrepreneurView = ({ user }: { user: User }) => (
 );
 
 // --- 3. واجهة الأدمن (Management View) ---
-const AdminView = ({ user }: { user: User }) => (
+const AdminView = ({ user, stats }: { user: User, stats: any }) => (
     <div className="space-y-8 animate-fadeIn text-right" dir="rtl">
         {/* إحصائيات النظام */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-slate-800 text-white p-5 rounded-2xl">
                 <span className="text-slate-400 text-xs block">إجمالي المستخدمين</span>
-                <span className="text-2xl font-bold">1,240</span>
+                <span className="text-2xl font-bold">{stats.totalUsers}</span>
             </div>
             <div className="bg-white border border-slate-200 p-5 rounded-2xl">
                 <span className="text-slate-500 text-xs block">طلبات الانتظار</span>
-                <span className="text-2xl font-bold text-orange-600">15</span>
+                <span className="text-2xl font-bold text-orange-600">{stats.pendingInvestors}</span>
             </div>
             <div className="bg-white border border-slate-200 p-5 rounded-2xl">
                 <span className="text-slate-500 text-xs block">مشاريع نشطة</span>
-                <span className="text-2xl font-bold text-teal-600">42</span>
+                <span className="text-2xl font-bold text-teal-600">{stats.activeProjects}</span>
             </div>
             <div className="bg-white border border-slate-200 p-5 rounded-2xl">
                 <span className="text-slate-500 text-xs block">اجتماعات مجدولة</span>
-                <span className="text-2xl font-bold text-blue-600">8</span>
+                <span className="text-2xl font-bold text-blue-600">{stats.meetings}</span>
             </div>
         </div>
 
@@ -202,10 +204,44 @@ const AdminView = ({ user }: { user: User }) => (
 
 // --- المكون الرئيسي (Main Component) ---
 const DashboardHome = ({ user }: DashboardProps) => {
-    // هنا يتم تحديد أي واجهة تعرض بناءً على دور المستخدم
+    const [stats, setStats] = useState({
+        totalUsers: 0,
+        pendingInvestors: 0,
+        activeProjects: 0,
+        meetings: 0
+    });
+    const [loading, setLoading] = useState(true);
+    const supabase = createClient();
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                // Fetch stats concurrently
+                const [usersCount, pendingCount, projectsCount, meetingsCount] = await Promise.all([
+                    supabase.from('profiles').select('*', { count: 'exact', head: true }),
+                    supabase.from('investor_profiles').select('*', { count: 'exact', head: true }).eq('approval_status', 'pending'),
+                    supabase.from('investment_opportunities').select('*', { count: 'exact', head: true }).eq('status', 'published'),
+                    supabase.from('meetings').select('*', { count: 'exact', head: true }).eq('status', 'scheduled')
+                ]);
+
+                setStats({
+                    totalUsers: usersCount.count || 0,
+                    pendingInvestors: pendingCount.count || 0,
+                    activeProjects: projectsCount.count || 0,
+                    meetings: meetingsCount.count || 0
+                });
+            } catch (err) {
+                console.error("Failed to fetch dashboard stats", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchStats();
+    }, [supabase]);
 
     if (user.role === 'admin') {
-        return <AdminView user={user} />;
+        return <AdminView user={user} stats={stats} />;
     }
 
     if (user.role === 'investor') {

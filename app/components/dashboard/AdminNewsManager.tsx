@@ -15,11 +15,15 @@ const AdminNewsManager = () => {
 
     if (!isAdminMode) return null; // Invisible if not admin
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!formData.text) return;
-        addNews(formData);
-        setFormData({ text: '', source: 'local', category: '', link: '' }); // Reset
+        try {
+            await addNews(formData);
+            setFormData({ text: '', source: 'local', category: '', link: '' }); // Reset
+        } catch (err) {
+            alert("حدث خطأ أثناء إضافة الخبر");
+        }
     };
 
     return (

@@ -166,6 +166,7 @@ export default function CSRPage() {
                             icon={<BarChart3 className="w-8 h-8" />}
                             title="تقارير الأثر التقنية"
                             desc="نعد تقارير أثر احترافية مدعومة بالبيانات ومؤشرات الأداء القابلة للقياس لتعزيز ثقة المانحين."
+                            link="/csr/technical-reports"
                         />
                     </div>
                 </div>

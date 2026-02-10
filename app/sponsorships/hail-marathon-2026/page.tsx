@@ -48,7 +48,7 @@ export default function HailMarathon2026Page() {
                         <StatCard icon={<MapPin />} title="المكان" value="منطقة حائل التاريخية" />
                         <StatCard icon={<Users />} title="المشاركون" value="800+ عداء" />
                         <StatCard icon={<Eye />} title="الجمهور" value="3000+ زائر" />
-                        <StatCard icon={<Clock />} title="مدة الحملة" value="3 أشهر" />
+                        <StatCard icon={<Clock />} title="مدة الحملة" value="يوم واحد" />
                     </div>
                 </div>
             </section>
@@ -128,7 +128,7 @@ export default function HailMarathon2026Page() {
                             icon={<Trophy className="w-12 h-12" />}
                             title="الراعي الذهبي"
                             subtitle="حصري - راعي واحد فقط"
-                            price="150,000 - 200,000 ريال"
+                            price="50,000 ريال"
                             features={[
                                 { name: "الشعار على قميص المتسابقين", value: "شعار كبير في الأمام" },
                                 { name: "اللافتات والإعلانات", value: "10 لافتات في مواقع استراتيجية" },
@@ -149,7 +149,7 @@ export default function HailMarathon2026Page() {
                             icon={<Award className="w-12 h-12" />}
                             title="الراعي الفضي"
                             subtitle="2-3 رعاة"
-                            price="75,000 - 100,000 ريال"
+                            price="30,000 ريال"
                             features={[
                                 { name: "الشعار على قميص المتسابقين", value: "شعار متوسط على الكتف" },
                                 { name: "اللافتات والإعلانات", value: "5 لافتات في مواقع جيدة" },
@@ -169,7 +169,7 @@ export default function HailMarathon2026Page() {
                             icon={<Star className="w-12 h-12" />}
                             title="الراعي البرونزي"
                             subtitle="5-7 رعاة"
-                            price="30,000 - 50,000 ريال"
+                            price="20,000 ريال"
                             features={[
                                 { name: "الشعار على قميص المتسابقين", value: "شعار صغير على الظهر" },
                                 { name: "اللافتات والإعلانات", value: "2-3 لافتات" },
@@ -234,7 +234,7 @@ export default function HailMarathon2026Page() {
                         <ValueCard
                             icon={<Mail className="w-8 h-8" />}
                             title="قاعدة بيانات تسويقية"
-                            desc="الوصول لبيانات المشاركين (بموافقتهم) لحملات تسويقية مستقبلية"
+                            desc="بالاستهداف والوصل للمستفيدين والزوار في النشاط"
                         />
                         <ValueCard
                             icon={<Award className="w-8 h-8" />}

@@ -62,6 +62,37 @@ const DashboardContent = () => {
     });
 
     const [isEditing, setIsEditing] = useState(false);
+    const [saving, setSaving] = useState(false);
+
+    const handleSaveProfile = async () => {
+        try {
+            setSaving(true);
+            const { error } = await supabase
+                .from('profiles')
+                .update({
+                    full_name: user.name,
+                    phone: user.phone
+                })
+                .eq('id', user.id);
+
+            if (error) throw error;
+
+            // Show success notification
+            if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+                new Notification('تم الحفظ ✅', {
+                    body: 'تم حفظ التغييرات على ملفك الشخصي بنجاح.',
+                    icon: '/images/logo-marfa.png'
+                });
+            }
+
+            setIsEditing(false);
+        } catch (error) {
+            console.error('Failed to update profile', error);
+            alert('حدث خطأ أثناء حفظ التغييرات. يرجى المحاولة مرة أخرى.');
+        } finally {
+            setSaving(false);
+        }
+    };
 
     const fetchData = useCallback(async () => {
         try {
@@ -290,10 +321,11 @@ const DashboardContent = () => {
                                         إلغاء
                                     </button>
                                     <button
-                                        onClick={() => { setIsEditing(false); alert('تم حفظ التغييرات بنجاح!'); }}
-                                        className="px-6 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 font-bold shadow-md hover:shadow-lg transition-all"
+                                        onClick={handleSaveProfile}
+                                        disabled={saving}
+                                        className="px-6 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 font-bold shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
-                                        حفظ التغييرات
+                                        {saving ? 'جاري الحفظ...' : 'حفظ التغييرات'}
                                     </button>
                                 </div>
                             )}

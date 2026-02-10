@@ -238,6 +238,40 @@ const DashboardHome = ({ user }: DashboardProps) => {
         };
 
         fetchStats();
+
+        // Real-time subscriptions for admin statistics
+        const profilesChannel = supabase
+            .channel('public:profiles')
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'profiles' },
+                () => fetchStats()
+            )
+            .subscribe();
+
+        const investorChannel = supabase
+            .channel('public:investor_profiles')
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'investor_profiles' },
+                () => fetchStats()
+            )
+            .subscribe();
+
+        const meetingsChannel = supabase
+            .channel('public:meetings')
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'meetings' },
+                () => fetchStats()
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(profilesChannel);
+            supabase.removeChannel(investorChannel);
+            supabase.removeChannel(meetingsChannel);
+        };
     }, [supabase]);
 
     if (user.role === 'admin') {

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import MeetingsSchedule from '../components/marfa/MeetingsSchedule'; // Updated import
+import InvestorMeetingForm from '../components/marfa/InvestorMeetingForm';
 import { createClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
@@ -32,6 +33,8 @@ export default async function MeetingsPage() {
                 </div>
 
                 <MeetingsSchedule />
+
+                <InvestorMeetingForm />
 
 
 

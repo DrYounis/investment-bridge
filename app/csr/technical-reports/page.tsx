@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
     Activity,
     Users,
@@ -10,26 +8,14 @@ import {
     ArrowLeft,
     Trophy,
     Award,
-    Calendar,
     BarChart3
 } from 'lucide-react';
 import Link from 'next/link';
-import { getNikeRunStats, NikeRunStats } from '@/lib/services/nike-service';
+import { getStravaStats } from '@/lib/services/strava-service';
+import StravaConnectButton from '@/components/StravaConnectButton';
 
-export default function TechnicalReportsPage() {
-    const [stats, setStats] = useState<NikeRunStats | null>(null);
-
-    useEffect(() => {
-        getNikeRunStats().then(setStats);
-    }, []);
-
-    if (!stats) {
-        return (
-            <div className="min-h-screen bg-[#FDFCF0] flex items-center justify-center" dir="rtl">
-                <div className="text-deep-navy animate-pulse font-arabic">جاري تحميل البيانات...</div>
-            </div>
-        );
-    }
+export default async function TechnicalReportsPage() {
+    const stats = await getStravaStats();
 
     return (
         <div className="min-h-screen bg-[#FDFCF0] text-right font-arabic" dir="rtl">
@@ -42,7 +28,10 @@ export default function TechnicalReportsPage() {
                             <span>العودة للخدمات</span>
                         </Link>
                         <h1 className="text-3xl font-black">تقارير الأثر التقنية</h1>
-                        <p className="text-blue-200 mt-2">بيانات حية متصلة بـ Nike Run Club - ماراثون حائل 2026</p>
+                        <p className="text-blue-200 mt-2">بيانات حية متصلة بـ Strava API - ماراثون حائل 2026</p>
+                        <div className="mt-4">
+                            <StravaConnectButton />
+                        </div>
                     </div>
                     <div className="hidden md:block">
                         <div className="bg-white/10 p-4 rounded-2xl border border-white/20">
@@ -52,7 +41,7 @@ export default function TechnicalReportsPage() {
                                 </div>
                                 <div>
                                     <p className="text-xs opacity-60">النظام المتصل</p>
-                                    <p className="font-bold">Nike Run API</p>
+                                    <p className="font-bold">Strava API</p>
                                 </div>
                             </div>
                         </div>
@@ -72,7 +61,7 @@ export default function TechnicalReportsPage() {
                     <ImpactStatCard
                         icon={<Users className="w-8 h-8" />}
                         label="المشاركون النشطون"
-                        value={`${stats.activeParticipants}`}
+                        value={`${stats.activeParticipants.toString()}`}
                         color="text-blue-600"
                     />
                     <ImpactStatCard

@@ -1,8 +1,7 @@
-'use client';
-
 import React from 'react';
 import Link from 'next/link';
 import InvestorDashboard from '../../components/marfa/InvestorDashboard';
+import FounderShowcase from './components/FounderShowcase';
 
 export default function InvestorPage() {
     return (
@@ -17,6 +16,10 @@ export default function InvestorPage() {
             </nav>
 
             <InvestorDashboard />
+
+            <div className="mt-12 max-w-7xl mx-auto px-6 pb-12">
+                <FounderShowcase />
+            </div>
         </div>
     );
 }

@@ -87,13 +87,7 @@ create policy "Announcements are viewable by target roles"
   );
 
 -- Enable Real-time for these tables
-begin;
-  -- Remove existing if any to avoid duplicates
-  alter publication supabase_realtime disable table public.news_feed, public.meetings, public.announcements;
-  -- Append to publication
-  alter publication supabase_realtime add table public.news_feed;
-  alter publication supabase_realtime add table public.meetings;
-  alter publication supabase_realtime add table public.announcements;
+  alter publication supabase_realtime set table public.news_feed, public.meetings, public.announcements;
 commit;
 
 -- Insert INITIAL MOCK DATA for news_feed

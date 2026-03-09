@@ -21,7 +21,8 @@ const AdminNewsManager = () => {
         try {
             await addNews(formData);
             setFormData({ text: '', source: 'local', category: '', link: '' }); // Reset
-        } catch (err) {
+        } catch {
+            // In production, log to Sentry
             alert("حدث خطأ أثناء إضافة الخبر");
         }
     };

@@ -45,14 +45,13 @@ function RegisterForm() {
         else if (userType && (userType === 'investor' || userType === 'entrepreneur')) {
             setFormData(prev => ({ ...prev, userType: userType as any }));
         }
-        // If no type is set yet, user will see role selection screen
 
         if (storedAnswers) {
             try {
                 const parsedAnswers = JSON.parse(storedAnswers);
                 setQuestionnaireData(parsedAnswers);
-            } catch (e) {
-                console.error("Error parsing questionnaire data", e);
+            } catch {
+                // In production, log to Sentry
             }
         }
     }, [searchParams]);
@@ -117,7 +116,8 @@ function RegisterForm() {
             if (authError) throw authError;
 
             if (authData.user) {
-                console.log("✅ User created successfully:", authData.user.id);
+                // In production, log to Sentry
+                // User created successfully
 
                 // Clear localStorage
                 localStorage.removeItem('investmentAnswers');

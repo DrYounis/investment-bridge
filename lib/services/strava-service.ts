@@ -231,9 +231,9 @@ export async function getStravaStats(): Promise<StravaStats> {
                         expires_at: tokenData.expires_at,
                     })
                     .eq('id', connection.id);
-            } catch (error) {
-                console.error('Failed to refresh token:', error);
-                continue;
+            } catch {
+                // In production, log to Sentry
+                continue; // Skip this athlete and continue with others
             }
         }
 

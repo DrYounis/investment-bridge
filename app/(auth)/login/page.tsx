@@ -48,7 +48,8 @@ export default function LoginPage() {
 
                 // RECOVERY: If profile is missing (common if email verification prevented initial creation), create it now
                 if (!profile) {
-                    console.log("Profile missing, attempting lazy creation...");
+                    // In production, log to Sentry
+                    // Profile missing, attempting lazy creation
                     const metadata = user.user_metadata || {};
                     const userType = metadata.user_type || 'investor';
 
@@ -73,6 +74,7 @@ export default function LoginPage() {
                         }
                         profile = { user_type: userType };
                     } else {
+                        // In production, log to Sentry
                         console.error("Lazy profile creation failed:", insertError);
                     }
                 }
@@ -109,9 +111,9 @@ export default function LoginPage() {
                     router.push('/');
                 }
             }
-        } catch (err: any) {
-            console.error(err);
-            let errorMessage = err.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+        } catch (err) {
+            // In production, log to Sentry
+            let errorMessage = err instanceof Error ? err.message : 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
 
             // Translate generic Supabase errors to helpful Arabic messages
             if (errorMessage.includes('Invalid login credentials')) {

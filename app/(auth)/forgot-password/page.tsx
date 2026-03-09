@@ -31,9 +31,10 @@ export default function ForgotPasswordPage() {
 
             setSuccess('✅ تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني. يرجى التحقق من صندوق الوارد.');
             setEmail('');
-        } catch (err: any) {
-            console.error(err);
-            setError(err.message || 'حدث خطأ أثناء إرسال البريد. يرجى المحاولة مرة أخرى.');
+        } catch (err) {
+            // In production, log to Sentry
+            const errorMessage = err instanceof Error ? err.message : 'حدث خطأ أثناء إرسال البريد. يرجى المحاولة مرة أخرى.';
+            setError(errorMessage);
         } finally {
             setIsLoading(false);
         }

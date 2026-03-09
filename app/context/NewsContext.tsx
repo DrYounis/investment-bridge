@@ -64,8 +64,8 @@ export const NewsProvider = ({ children }: { children: ReactNode }) => {
             }));
 
             setNewsFeed(formattedNews);
-        } catch (err) {
-            console.error("Failed to fetch news feed", err);
+        } catch {
+            // In production, log to Sentry
         } finally {
             setLoading(false);
         }
@@ -103,9 +103,9 @@ export const NewsProvider = ({ children }: { children: ReactNode }) => {
                 }]);
 
             if (error) throw error;
-        } catch (err) {
-            console.error("Failed to add news", err);
-            throw err;
+        } catch {
+            // In production, log to Sentry
+            throw new Error('Failed to add news');
         }
     };
 
@@ -117,9 +117,9 @@ export const NewsProvider = ({ children }: { children: ReactNode }) => {
                 .eq('id', id);
 
             if (error) throw error;
-        } catch (err) {
-            console.error("Failed to remove news", err);
-            throw err;
+        } catch {
+            // In production, log to Sentry
+            throw new Error('Failed to remove news');
         }
     };
 

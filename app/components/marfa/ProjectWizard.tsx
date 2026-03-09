@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { saveDraft } from '../../actions/marfa';
 
-export default function ProjectWizard() {
+const ProjectWizard = () => {
     const [step, setStep] = useState(1);
     const [projectId, setProjectId] = useState<string | null>(null);
     const [isSaving, setIsSaving] = useState(false);
@@ -334,4 +334,6 @@ export default function ProjectWizard() {
 
         </div>
     );
-}
+};
+
+export default React.memo(ProjectWizard);

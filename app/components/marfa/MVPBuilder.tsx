@@ -12,7 +12,7 @@ interface Feature {
     category: 'core' | 'strategic' | 'later' | 'kill';
 }
 
-export default function MVPBuilder() {
+const MVPBuilder = () => {
     const [features, setFeatures] = useState<Feature[]>([]);
     const [newFeature, setNewFeature] = useState({ name: '', value: 5, complexity: 5 });
     const [showResult, setShowResult] = useState(false);
@@ -298,4 +298,6 @@ export default function MVPBuilder() {
 
         </div>
     );
-}
+};
+
+export default React.memo(MVPBuilder);

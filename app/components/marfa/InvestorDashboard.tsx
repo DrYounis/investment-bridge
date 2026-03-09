@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Mock Data for "Filtered" Opportunities
@@ -43,10 +43,23 @@ const deals = [
     }
 ];
 
-export default function InvestorDashboard() {
+interface Deal {
+    id: number;
+    name: string;
+    sector: string;
+    location: string;
+    brief: string;
+    fundingNeeded: number;
+    roi: number;
+    paybackMonths: number;
+    marfaScore: { market: number; tech: number; team: number };
+    tags: string[];
+}
+
+const InvestorDashboard = () => {
     const [filter, setFilter] = useState({ minROI: 0, maxFunding: 5000000, sector: 'All' });
     const [watchlist, setWatchlist] = useState<number[]>([]);
-    const [selectedDeal, setSelectedDeal] = useState<any>(null);
+    const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
 
     const filteredDeals = deals.filter(deal =>
         (filter.sector === 'All' || deal.sector === filter.sector) &&
@@ -321,7 +334,9 @@ export default function InvestorDashboard() {
             )}
         </div>
     );
-}
+};
+
+export default React.memo(InvestorDashboard);
 
 function InvestorProfileSettings() {
     return (
@@ -389,7 +404,12 @@ function InvestorProfileSettings() {
     )
 }
 
-function MarfaScoreBar({ label, score }: any) {
+interface MarfaScoreBarProps {
+    label: string;
+    score: number;
+}
+
+const MarfaScoreBar = React.memo(({ label, score }: MarfaScoreBarProps) => {
     return (
         <div className="flex items-center gap-2 text-xs">
             <span className="w-12 text-gray-400">{label}</span>
@@ -402,4 +422,4 @@ function MarfaScoreBar({ label, score }: any) {
             <span className="font-bold text-gray-600">{score}</span>
         </div>
     );
-}
+});

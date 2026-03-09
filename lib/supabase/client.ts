@@ -1,9 +1,16 @@
 
 import { createBrowserClient } from '@supabase/ssr'
+import { getEnv } from '../env'
 
+/**
+ * Create a Supabase browser client for use in Client Components
+ * Uses validated environment variables
+ */
 export function createClient() {
+    const env = getEnv()
+    
     return createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        env.NEXT_PUBLIC_SUPABASE_URL,
+        env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     )
 }

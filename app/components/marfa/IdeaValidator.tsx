@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { submitIdea } from '../../actions/marfa';
 import ValidationPulse from './ValidationPulse';
@@ -98,7 +98,7 @@ interface Feedback {
     tip: string;
 }
 
-export default function IdeaValidator() {
+const IdeaValidator = () => {
     const [step, setStep] = useState(0);
     const [answers, setAnswers] = useState<Record<string, any>>({});
     const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -300,13 +300,21 @@ export default function IdeaValidator() {
             </AnimatePresence>
         </div>
     );
+};
+
+export default React.memo(IdeaValidator);
+
+interface ScoreCardProps {
+    label: string;
+    value: string | number;
+    color: string;
 }
 
-function ScoreCard({ label, value, color }: any) {
+const ScoreCard = React.memo(({ label, value, color }: ScoreCardProps) => {
     return (
         <div className="bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
             <div className="text-xs text-gray-400 mb-1">{label}</div>
             <div className={`font-bold ${color}`}>{value}</div>
         </div>
-    )
-}
+    );
+});

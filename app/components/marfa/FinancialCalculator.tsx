@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 
 interface FinancialMetrics {
@@ -18,7 +18,7 @@ interface FinancialMetrics {
     };
 }
 
-export default function FinancialCalculator() {
+const FinancialCalculator = () => {
     const [activeTab, setActiveTab] = useState<'inputs' | 'results'>('inputs');
 
     // --- Inputs State ---
@@ -291,16 +291,29 @@ export default function FinancialCalculator() {
             )}
         </div>
     );
+};
+
+export default React.memo(FinancialCalculator);
+
+interface MetricCardProps {
+    title: string;
+    value: string | number;
+    unit: string;
+    icon: string;
+    bg: string;
+    textColor?: string;
 }
 
-const MetricCard = ({ title, value, unit, icon, bg, textColor = "text-gray-900" }: any) => (
-    <div className={`${bg} p-4 rounded-2xl`}>
-        <div className="flex justify-between items-start mb-2">
-            <span className="text-xs text-gray-500 font-bold">{title}</span>
-            <span className="text-xl">{icon}</span>
+const MetricCard = React.memo(({ title, value, unit, icon, bg, textColor = "text-gray-900" }: MetricCardProps) => {
+    return (
+        <div className={`${bg} p-4 rounded-2xl`}>
+            <div className="flex justify-between items-start mb-2">
+                <span className="text-xs text-gray-500 font-bold">{title}</span>
+                <span className="text-xl">{icon}</span>
+            </div>
+            <div className={`text-2xl font-bold ${textColor}`}>
+                {value} <span className="text-xs font-normal text-gray-500">{unit}</span>
+            </div>
         </div>
-        <div className={`text-2xl font-bold ${textColor}`}>
-            {value} <span className="text-xs font-normal text-gray-500">{unit}</span>
-        </div>
-    </div>
-);
+    );
+});

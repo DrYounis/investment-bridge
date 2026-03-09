@@ -1,7 +1,12 @@
 
-import { createClient } from '@supabase/supabase-js'
+/**
+ * @deprecated Use `import { createClient } from '@/lib/supabase/server'` for server actions
+ * or `import { createClient } from '@/lib/supabase/client'` for client components
+ * 
+ * This file is kept for backward compatibility only.
+ */
+export { createClient } from '@/lib/supabase/client'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Legacy named export for backward compatibility
+import { createClient as createBrowserClient } from '@/lib/supabase/client'
+export const supabase = createBrowserClient()

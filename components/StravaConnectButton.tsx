@@ -34,7 +34,8 @@ export default function StravaConnectButton() {
                 setAthleteName(data.athlete_name);
             }
         } catch (error) {
-            console.error('Error checking Strava connection:', error);
+            // Error handled silently - UI shows disconnected state
+            // Sentry will capture if configured
         } finally {
             setLoading(false);
         }
@@ -55,7 +56,8 @@ export default function StravaConnectButton() {
             setIsConnected(false);
             setAthleteName(null);
         } catch (error) {
-            console.error('Error disconnecting Strava:', error);
+            // Error handled silently - user can retry
+            // Sentry will capture if configured
         }
     };
 

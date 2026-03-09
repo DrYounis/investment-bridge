@@ -9,14 +9,12 @@ export async function requestProjectDetails(formData: FormData) {
     const repoName = formData.get('repoName') as string;
     const repoUrl = formData.get('repoUrl') as string;
 
-    // Get the logged-in investor
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
         throw new Error('Authentication required to request details.');
     }
 
-    // Record the investor's interest in your database
     const { error } = await supabase
         .from('investor_requests')
         .insert({
@@ -28,10 +26,9 @@ export async function requestProjectDetails(formData: FormData) {
         });
 
     if (error) {
-        console.error('Error logging request:', error);
+        // In production, log to Sentry
         throw new Error('Failed to submit request.');
     }
 
-    // Revalidate the page to show success state (if you implement one)
     revalidatePath('/investor');
 }

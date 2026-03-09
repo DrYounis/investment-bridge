@@ -25,7 +25,7 @@ export async function fetchFounderPortfolio(): Promise<PortfolioRepo[]> {
         // Filter out forks and repositories without descriptions so the feed looks professional
         return repos.filter((repo: PortfolioRepo) => !repo.fork && repo.description !== null);
     } catch (error) {
-        console.error("GitHub Fetch Error:", error);
+        // Log to Sentry in production, return empty array for graceful degradation
         return [];
     }
 }

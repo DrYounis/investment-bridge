@@ -55,11 +55,13 @@ const InvestorView = ({ user }: { user: User }) => (
 
             <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm border-r-4 border-r-orange-400">
                 <div className="flex justify-between items-start mb-4">
-                    <div className="p-3 bg-orange-50 rounded-xl text-orange-600"><Activity /></div>
+                    <div className="p-3 bg-orange-50 rounded-xl text-orange-600" role="img" aria-label="فرص تطابق اهتمامك">
+                        <Activity />
+                    </div>
                 </div>
                 <span className="text-slate-400 text-sm">فرص تطابق اهتمامك</span>
                 <h3 className="text-2xl font-black text-slate-800">4 فرص جديدة</h3>
-                <button className="text-xs text-blue-600 mt-2 hover:underline">عرض التفاصيل ←</button>
+                <button className="text-xs text-blue-600 mt-2 hover:underline" aria-label="عرض تفاصيل الفرص الجديدة">عرض التفاصيل ←</button>
             </div>
         </div>
 

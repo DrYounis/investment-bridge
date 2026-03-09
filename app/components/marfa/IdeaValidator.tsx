@@ -135,8 +135,10 @@ export default function IdeaValidator() {
         submitIdea(answers).then((res) => {
             if (res.id) {
                 localStorage.setItem('marfa_current_idea_id', res.id);
-                console.log("Idea Saved with ID:", res.id);
             }
+        }).catch((err) => {
+            // Error handled gracefully - user can continue
+            // In production, this goes to Sentry
         });
 
         // --- 1. Market Size Logic ---

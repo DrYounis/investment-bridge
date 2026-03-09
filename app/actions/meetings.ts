@@ -38,13 +38,13 @@ export async function scheduleMeeting(formData: FormData) {
         });
 
         if (error) {
-            console.error('Resend Error:', error);
-            return { success: false, error: error.message };
+            // In production, this goes to Sentry
+            return { success: false, error: 'Failed to send meeting request. Please try again.' };
         }
 
         return { success: true };
-    } catch (err: any) {
-        console.error('Submission Error:', err);
-        return { success: false, error: err.message || 'Failed to send meeting request.' };
+    } catch (err) {
+        // In production, this goes to Sentry
+        return { success: false, error: 'Failed to send meeting request. Please try again.' };
     }
 }

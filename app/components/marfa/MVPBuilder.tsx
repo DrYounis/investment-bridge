@@ -270,13 +270,19 @@ export default function MVPBuilder() {
                                 تعديل المدخلات ✏️
                             </button>
                             <button
-                                onClick={() => {
+                                onClick={async () => {
                                     const ideaId = localStorage.getItem('marfa_current_idea_id');
                                     if (ideaId) {
-                                        submitMVP(ideaId, features).then(res => {
-                                            if (res.success) alert("تم حفظ وثيقة الـ MVP بنجاح في ملفك!");
-                                            else alert("حدث خطأ أثناء الحفظ. يرجى المحاولة لاحقاً.");
-                                        });
+                                        try {
+                                            const res = await submitMVP(ideaId, features);
+                                            if (res.success) {
+                                                alert("تم حفظ وثيقة الـ MVP بنجاح في ملفك!");
+                                            } else {
+                                                alert("حدث خطأ أثناء الحفظ. يرجى المحاولة لاحقاً.");
+                                            }
+                                        } catch {
+                                            alert("حدث خطأ أثناء الحفظ. يرجى المحاولة لاحقاً.");
+                                        }
                                     } else {
                                         alert("لم يتم العثور على ملف فكرة مفتوح. يرجى البدء من صفحة التحليل.");
                                     }

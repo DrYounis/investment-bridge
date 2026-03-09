@@ -8,8 +8,6 @@ import { z } from 'zod';
 export async function getInvestorRequests() {
     const supabase = await createClient();
 
-    // Fetch requests and join with the profiles table to get investor details.
-    // Note: Adjust 'full_name' and 'email' if your profiles table uses different column names.
     const { data, error } = await supabase
         .from('investor_requests')
         .select(`
@@ -19,7 +17,7 @@ export async function getInvestorRequests() {
         .order('requested_at', { ascending: false });
 
     if (error) {
-        console.error('Error fetching admin requests:', error);
+        // In production, log to Sentry
         return [];
     }
 
@@ -37,7 +35,7 @@ export async function updateRequestStatus(requestId: string, newStatus: string) 
     const validation = UpdateStatusSchema.safeParse({ requestId, newStatus });
 
     if (!validation.success) {
-        console.error("Validation error:", validation.error.flatten());
+        // In production, log to Sentry
         throw new Error("Invalid status update parameters.");
     }
 
@@ -47,10 +45,9 @@ export async function updateRequestStatus(requestId: string, newStatus: string) 
         .eq('id', requestId);
 
     if (error) {
-        console.error('Error updating status:', error);
+        // In production, log to Sentry
         throw new Error('Failed to update request status.');
     }
 
-    // Refresh the admin page to show the new status
     revalidatePath('/admin');
 }

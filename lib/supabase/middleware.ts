@@ -29,7 +29,7 @@ export async function updateSession(request: NextRequest) {
     )
 
     // Skip auth.getUser() entirely for public pages to avoid timeout
-    const publicPaths = ['/login', '/auth', '/', '/marfa']
+    const publicPaths = ['/login', '/auth', '/', '/marfa', '/meetings']
     const isPublicPath = publicPaths.some(p => request.nextUrl.pathname === p || request.nextUrl.pathname.startsWith(p + '/'))
 
     if (isPublicPath) {

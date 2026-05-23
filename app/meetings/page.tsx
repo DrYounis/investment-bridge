@@ -1,15 +1,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import MeetingsSchedule from '../components/marfa/MeetingsSchedule'; // Updated import
+import MeetingsSchedule from '../components/marfa/MeetingsSchedule';
 import InvestorMeetingForm from '../components/marfa/InvestorMeetingForm';
-import { createClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function MeetingsPage() {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-
     return (
         <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 font-sans relative overflow-hidden" dir="rtl">
 

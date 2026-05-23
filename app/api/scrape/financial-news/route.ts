@@ -24,7 +24,7 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
       const meta = readMarkdownFrontmatter(f.filename);
       return {
         filename: f.filename,
-        created: f.created,
+        created: meta?.date || f.created,
         title: meta?.title || f.filename,
         original_title: meta?.original_title || '',
         source_url: meta?.source_url || '',

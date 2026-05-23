@@ -45,23 +45,27 @@ function buildTitlePrompt(originalTitle: string): string {
 العنوان المحسّن:`;
 }
 
-function getClient(): Anthropic {
+function getClient(): Anthropic | null {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    throw new Error(
-      '❌ ANTHROPIC_API_KEY is not set. Please add it to your .env.local file.'
-    );
+    console.warn('⚠️ ANTHROPIC_API_KEY not set — using raw content without AI summarization');
+    return null;
   }
   return new Anthropic({ apiKey });
 }
 
 async function generateSummary(
-  client: Anthropic,
+  client: Anthropic | null,
   article: RawArticle
 ): Promise<string> {
   const content = article.full_content || article.summary;
   if (!content || content.trim().length < 50) {
     return article.summary || article.title;
+  }
+
+  if (!client) {
+    console.log('   ⚠️ No Claude client — using original content as summary');
+    return content.slice(0, 500);
   }
 
   console.log('   🤖 Requesting summary from Claude...');
@@ -81,11 +85,15 @@ async function generateSummary(
 }
 
 async function generateSEOTitle(
-  client: Anthropic,
+  client: Anthropic | null,
   originalTitle: string
 ): Promise<string> {
   if (!originalTitle || originalTitle.trim().length === 0) {
     return 'أخبار مالية سعودية من marfa.sa';
+  }
+
+  if (!client) {
+    return originalTitle.length > 60 ? originalTitle.slice(0, 60) : originalTitle;
   }
 
   const message = await client.messages.create({

@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Cairo:wght@400;600;700&display=swap');
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 245, 240, 232;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 15, 23, 42;
+    --background-end-rgb: 30, 41, 59;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      rgb(var(--background-start-rgb)),
+      rgb(var(--background-end-rgb))
+    );
+  min-height: 100vh;
+  font-family: 'Tajawal', 'Cairo', sans-serif;
+}
+
+/* RTL support */
+[dir='rtl'] {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Saudi theme utilities */
+.border-saudi-gold {
+  border-color: #C49A2B;
+}
+
+.text-saudi-gold {
+  color: #C49A2B;
+}
+
+.bg-saudi-blue {
+  background-color: #0057B7;
+}
+
+.bg-saudi-dark {
+  background-color: #1B3A5C;
+}

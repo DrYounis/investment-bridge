@@ -1,9 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/client';
 import ArticleCard from '@/app/components/financial-news/ArticleCard';
 import ScraperStatus from '@/app/components/financial-news/ScraperStatus';
 
@@ -43,8 +41,6 @@ interface StatusResponse {
 }
 
 export default function AdminNewsPage() {
-  const router = useRouter();
-  const [user, setUser] = useState<any>(undefined);
   const [maxArticles, setMaxArticles] = useState(5);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<StatusResponse | null>(null);
@@ -53,24 +49,6 @@ export default function AdminNewsPage() {
   const [error, setError] = useState('');
   const [jobStatus, setJobStatus] = useState<'ready' | 'running' | 'error'>('ready');
   const [lastRun, setLastRun] = useState<string | undefined>();
-
-  // Auth check with timeout
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
-      if (!data.user) {
-        router.push('/login');
-        return;
-      }
-      setUser(data.user);
-    });
-    timeout = setTimeout(() => {
-      setError('تعذر الاتصال بالخادم. حاول مرة أخرى.');
-      setUser(null);
-    }, 8000);
-    return () => clearTimeout(timeout);
-  }, [router]);
 
   const fetchStatus = useCallback(async () => {
     try {
@@ -82,9 +60,10 @@ export default function AdminNewsPage() {
     }
   }, []);
 
+  // Load status on mount
   useEffect(() => {
-    if (user) fetchStatus();
-  }, [user, fetchStatus]);
+    fetchStatus();
+  }, [fetchStatus]);
 
   useEffect(() => {
     if (!loading) return;
@@ -149,26 +128,6 @@ export default function AdminNewsPage() {
       setError('تعذر تحميل الملف');
     }
   };
-
-  if (user === undefined) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <div className="animate-spin h-8 w-8 border-2 border-gold border-t-transparent rounded-full" />
-        <p className="text-slate-400 text-sm">جاري التحقق من الصلاحية...</p>
-      </div>
-    );
-  }
-
-  if (user === null) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <p className="text-red-400 text-lg">❌ {error || 'تعذر الاتصال'}</p>
-        <button onClick={() => window.location.reload()} className="px-4 py-2 bg-gold/20 text-gold rounded-xl">
-          إعادة المحاولة
-        </button>
-      </div>
-    );
-  }
 
   return (
     <main className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8" dir="rtl">

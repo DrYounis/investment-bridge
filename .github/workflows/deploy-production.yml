@@ -44,17 +44,4 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
 
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
-          working-directory: ./
-
-      - name: Health check
-        run: |
-          echo "Waiting for deployment to propagate..."
-          sleep 30
-          curl -f ${{ secrets.PRODUCTION_URL }}/api/health || exit 1
+      # Deploy is handled automatically by Vercel's Git integration (vercel.json)

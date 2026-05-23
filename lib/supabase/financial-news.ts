@@ -1,14 +1,15 @@
 import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://tkokgarmxcgvsedtgben.supabase.co';
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 // Service-role client for write operations (scraper, cron)
+// Must read env var at runtime, not module scope (Next.js inlines at build time)
 function getServiceClient() {
-  if (!SERVICE_KEY) {
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!serviceKey) {
     throw new Error('SUPABASE_SERVICE_ROLE_KEY not configured');
   }
-  return createClient(SUPABASE_URL, SERVICE_KEY);
+  return createClient(SUPABASE_URL, serviceKey);
 }
 
 // Anon client for read operations (public pages)

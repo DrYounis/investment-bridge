@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function MeetingsPage() {
     return (
-        <div className="min-h-screen bg-cream font-sans relative overflow-hidden" dir="rtl">
+        <div className="min-h-screen bg-[#FDFCF0] font-sans relative overflow-hidden" dir="rtl">
 
             {/* Subtle Background Patterns - Luxury Gold Dust Effect */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.03),transparent_70%)] pointer-events-none"></div>

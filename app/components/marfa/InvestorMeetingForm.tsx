@@ -36,18 +36,18 @@ export default function InvestorMeetingForm() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95 }}
-                        className="mx-auto max-w-2xl overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl sm:p-12"
+                        className="mx-auto max-w-2xl overflow-hidden rounded-3xl border border-gold/20 bg-white/80 p-8 shadow-xl backdrop-blur-xl sm:p-12"
                     >
                         <div className="mb-8 text-center">
-                            <h2 className="text-3xl font-black text-white">جدولة اجتماع مستثمر</h2>
-                            <p className="mt-2 text-slate-400">اترك بياناتك وسنتواصل معك لتنسيق الاجتماع</p>
+                            <h2 className="text-3xl font-black text-deep-navy">جدولة اجتماع مستثمر</h2>
+                            <p className="mt-2 text-deep-navy/60">اترك بياناتك وسنتواصل معك لتنسيق الاجتماع</p>
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="grid gap-6 sm:grid-cols-2">
                                 <div className="space-y-2">
-                                    <label className="flex items-center gap-2 text-sm font-bold text-slate-300">
-                                        <User size={16} className="text-blue-400" />
+                                    <label className="flex items-center gap-2 text-sm font-bold text-deep-navy/80">
+                                        <User size={16} className="text-gold" />
                                         الاسم الكامل
                                     </label>
                                     <input
@@ -55,12 +55,12 @@ export default function InvestorMeetingForm() {
                                         name="name"
                                         type="text"
                                         placeholder="مثلاً: محمد العتيبي"
-                                        className="w-full rounded-xl border border-white/10 bg-white/10 p-3.5 text-white placeholder-slate-500 outline-none transition focus:border-blue-500/50 focus:bg-white/15"
+                                        className="w-full rounded-xl border border-gold/20 bg-white p-3.5 text-deep-navy placeholder-deep-navy/40 outline-none transition focus:border-gold/50 focus:shadow-lg focus:shadow-gold/5"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="flex items-center gap-2 text-sm font-bold text-slate-300">
-                                        <Building size={16} className="text-blue-400" />
+                                    <label className="flex items-center gap-2 text-sm font-bold text-deep-navy/80">
+                                        <Building size={16} className="text-gold" />
                                         الجهة / الشركة
                                     </label>
                                     <input
@@ -68,14 +68,14 @@ export default function InvestorMeetingForm() {
                                         name="company"
                                         type="text"
                                         placeholder="مثلاً: صندوق استثماري"
-                                        className="w-full rounded-xl border border-white/10 bg-white/10 p-3.5 text-white placeholder-slate-500 outline-none transition focus:border-blue-500/50 focus:bg-white/15"
+                                        className="w-full rounded-xl border border-gold/20 bg-white p-3.5 text-deep-navy placeholder-deep-navy/40 outline-none transition focus:border-gold/50 focus:shadow-lg focus:shadow-gold/5"
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <label className="flex items-center gap-2 text-sm font-bold text-slate-300">
-                                    <Mail size={16} className="text-blue-400" />
+                                <label className="flex items-center gap-2 text-sm font-bold text-deep-navy/80">
+                                    <Mail size={16} className="text-gold" />
                                     البريد الإلكتروني
                                 </label>
                                 <input
@@ -83,13 +83,13 @@ export default function InvestorMeetingForm() {
                                     name="email"
                                     type="email"
                                     placeholder="your@email.com"
-                                    className="w-full rounded-xl border border-white/10 bg-white/10 p-3.5 text-white placeholder-slate-500 outline-none transition focus:border-blue-500/50 focus:bg-white/15"
+                                    className="w-full rounded-xl border border-gold/20 bg-white p-3.5 text-deep-navy placeholder-deep-navy/40 outline-none transition focus:border-gold/50 focus:shadow-lg focus:shadow-gold/5"
                                 />
                             </div>
 
                             <div className="space-y-2">
-                                <label className="flex items-center gap-2 text-sm font-bold text-slate-300">
-                                    <Calendar size={16} className="text-blue-400" />
+                                <label className="flex items-center gap-2 text-sm font-bold text-deep-navy/80">
+                                    <Calendar size={16} className="text-gold" />
                                     الوقت المفضل للاجتماع
                                 </label>
                                 <input
@@ -97,20 +97,20 @@ export default function InvestorMeetingForm() {
                                     name="preferredTime"
                                     type="text"
                                     placeholder="مثلاً: الأسبوع القادم - الفترة المسائية"
-                                    className="w-full rounded-xl border border-white/10 bg-white/10 p-3.5 text-white placeholder-slate-500 outline-none transition focus:border-blue-500/50 focus:bg-white/15"
+                                    className="w-full rounded-xl border border-gold/20 bg-white p-3.5 text-deep-navy placeholder-deep-navy/40 outline-none transition focus:border-gold/50 focus:shadow-lg focus:shadow-gold/5"
                                 />
                             </div>
 
                             <div className="space-y-2">
-                                <label className="flex items-center gap-2 text-sm font-bold text-slate-300">
-                                    <MessageSquare size={16} className="text-blue-400" />
+                                <label className="flex items-center gap-2 text-sm font-bold text-deep-navy/80">
+                                    <MessageSquare size={16} className="text-gold" />
                                     رسالة إضافية أو مجالات الاهتمام
                                 </label>
                                 <textarea
                                     name="message"
                                     rows={4}
                                     placeholder="كيف يمكننا مساعدتك؟"
-                                    className="w-full resize-none rounded-xl border border-white/10 bg-white/10 p-3.5 text-white placeholder-slate-500 outline-none transition focus:border-blue-500/50 focus:bg-white/15"
+                                    className="w-full resize-none rounded-xl border border-gold/20 bg-white p-3.5 text-deep-navy placeholder-deep-navy/40 outline-none transition focus:border-gold/50 focus:shadow-lg focus:shadow-gold/5"
                                 />
                             </div>
 
@@ -118,7 +118,7 @@ export default function InvestorMeetingForm() {
                                 <motion.p
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
-                                    className="text-center text-sm font-bold text-red-400"
+                                    className="text-center text-sm font-bold text-red-500"
                                 >
                                     {error}
                                 </motion.p>
@@ -127,7 +127,7 @@ export default function InvestorMeetingForm() {
                             <button
                                 disabled={isSubmitting}
                                 type="submit"
-                                className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-4 text-lg font-black text-white shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+                                className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-r from-gold to-gold-dark px-8 py-4 text-lg font-black text-white shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
                             >
                                 {isSubmitting ? (
                                     <span className="flex items-center gap-2">
@@ -152,23 +152,23 @@ export default function InvestorMeetingForm() {
                         key="success"
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="mx-auto max-w-xl rounded-3xl border border-emerald-500/20 bg-emerald-500/5 p-12 text-center backdrop-blur-xl"
+                        className="mx-auto max-w-xl rounded-3xl border border-gold/20 bg-gold/5 p-12 text-center"
                     >
                         <motion.div
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                            className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-500"
+                            className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gold/20 text-gold"
                         >
                             <CheckCircle2 size={40} />
                         </motion.div>
-                        <h2 className="text-3xl font-black text-white">تم استلام طلبك!</h2>
-                        <p className="mt-4 text-emerald-100/80">
+                        <h2 className="text-3xl font-black text-deep-navy">تم استلام طلبك!</h2>
+                        <p className="mt-4 text-deep-navy/60">
                             شكراً لاهتمامك. تم إرسال بياناتك بنجاح وسنتواصل معك عبر البريد الإلكتروني في أقرب وقت ممكن.
                         </p>
                         <button
                             onClick={() => setIsSuccess(false)}
-                            className="mt-8 text-sm font-bold text-slate-400 underline decoration-slate-400/30 underline-offset-4 transition hover:text-white hover:decoration-white"
+                            className="mt-8 text-sm font-bold text-gold underline decoration-gold/30 underline-offset-4 transition hover:text-gold-dark hover:decoration-gold-dark"
                         >
                             إرسال طلب آخر
                         </button>

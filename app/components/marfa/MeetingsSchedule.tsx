@@ -106,10 +106,10 @@ export default function MeetingsSchedule() {
         <div className="space-y-12">
             {/* Intro / Philosophy */}
             <div className="text-center space-y-4 max-w-3xl mx-auto">
-                <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+                <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gold to-gold-dark">
                     منهج دراسة الحالة - The Case Study Method
                 </h2>
-                <p className="text-foreground/80 leading-relaxed text-lg">
+                <p className="text-deep-navy/70 leading-relaxed text-lg">
                     تحويل اللقاءات إلى دراسات حالة هو الأسلوب المتبع في الجامعات العريقة، وهو الأنسب لبيئة "مرفأ" لتعزيز تبادل الخبرات.
                     في كل لقاء، سنناقش مشروعاً واقعياً وتحديات حقيقية.
                 </p>
@@ -118,27 +118,27 @@ export default function MeetingsSchedule() {
             {/* Steps Cards */}
             <div className="grid md:grid-cols-4 gap-4">
                 {METHOD_STEPS.map((item, idx) => (
-                    <Card key={idx} glass className="p-6 relative overflow-hidden group hover:bg-white/5 transition-colors">
-                        <div className="absolute top-0 right-0 p-4 opacity-10 font-black text-6xl text-primary">
+                    <Card key={idx} className="p-6 relative overflow-hidden group bg-white/70 border border-gold/10 transition-colors hover:bg-white/90">
+                        <div className="absolute top-0 right-0 p-4 opacity-[0.04] font-black text-6xl text-gold">
                             {idx + 1}
                         </div>
-                        <h3 className="font-bold text-lg mb-2 text-primary">{item.step.split(':')[0]}</h3>
-                        <p className="text-sm text-foreground/70">{item.description}</p>
+                        <h3 className="font-bold text-lg mb-2 text-gold-dark">{item.step.split(':')[0]}</h3>
+                        <p className="text-sm text-deep-navy/60">{item.description}</p>
                     </Card>
                 ))}
             </div>
 
             {/* Schedule Table */}
-            <Card glass className="overflow-hidden">
-                <div className="p-6 border-b border-white/10">
-                    <h3 className="text-xl font-bold">جدول لقاءات مرفأ (3 أشهر)</h3>
-                    <p className="text-sm text-foreground/60 mt-1">
+            <Card className="overflow-hidden bg-white/70 border border-gold/10">
+                <div className="p-6 border-b border-gold/10">
+                    <h3 className="text-xl font-bold text-deep-navy">جدول لقاءات مرفأ (3 أشهر)</h3>
+                    <p className="text-sm text-deep-navy/50 mt-1">
                         تبدأ من {formatDate(scheduleDates[0])} | كل يوم خميس (مرة كل أسبوعين)
                     </p>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-right">
-                        <thead className="bg-white/5 text-primary">
+                        <thead className="bg-gold/10 text-gold-dark">
                             <tr>
                                 <th className="p-4 whitespace-nowrap">اللقاء</th>
                                 <th className="p-4 whitespace-nowrap">التاريخ</th>
@@ -147,16 +147,16 @@ export default function MeetingsSchedule() {
                                 <th className="p-4 min-w-[300px]">التحدي الذي سنناقشه</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/5">
+                        <tbody className="divide-y divide-gold/10">
                             {SCHEDULE_DATA.map((row, idx) => (
-                                <tr key={idx} className="hover:bg-white/5 transition-colors">
-                                    <td className="p-4 font-medium text-foreground/80">{row.encounter}</td>
-                                    <td className="p-4 text-emerald-400 font-bold whitespace-nowrap" dir="ltr">
+                                <tr key={idx} className="hover:bg-gold/5 transition-colors">
+                                    <td className="p-4 font-medium text-deep-navy/70">{row.encounter}</td>
+                                    <td className="p-4 text-gold-dark font-bold whitespace-nowrap" dir="ltr">
                                         {formatDate(scheduleDates[idx])}
                                     </td>
-                                    <td className="p-4 text-accent font-bold">{row.topic}</td>
-                                    <td className="p-4 font-semibold">{row.case}</td>
-                                    <td className="p-4 text-sm text-foreground/70 leading-relaxed">{row.challenge}</td>
+                                    <td className="p-4 text-gold font-bold">{row.topic}</td>
+                                    <td className="p-4 font-semibold text-deep-navy/80">{row.case}</td>
+                                    <td className="p-4 text-sm text-deep-navy/60 leading-relaxed">{row.challenge}</td>
                                 </tr>
                             ))}
                         </tbody>

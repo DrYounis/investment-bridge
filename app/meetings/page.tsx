@@ -7,24 +7,29 @@ export const dynamic = 'force-dynamic';
 
 export default async function MeetingsPage() {
     return (
-        <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 font-sans relative overflow-hidden" dir="rtl">
+        <div className="min-h-screen bg-cream font-sans relative overflow-hidden" dir="rtl">
 
-            {/* Subtle Background Patterns */}
-            <div className="absolute inset-0 bg-grid-pattern opacity-[0.02] pointer-events-none"></div>
-            <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-blue-100/20 to-transparent rounded-full blur-3xl pointer-events-none"></div>
-            <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-indigo-100/20 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+            {/* Subtle Background Patterns - Luxury Gold Dust Effect */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.03),transparent_70%)] pointer-events-none"></div>
 
             {/* Main Content */}
             <main className="relative min-h-screen flex flex-col pt-32 pb-16 px-4 max-w-7xl mx-auto">
 
-                <div className="text-center mb-16">
-                    <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
-                        لقاءات <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">مرفأ</span>
+                <div className="text-center mb-16 space-y-8 animate-fade-in-up relative">
+                    {/* Animated Glow - Warm Gold */}
+                    <div className="absolute -top-[50%] left-1/2 -translate-x-1/2 w-[60%] h-[60%] bg-gold/5 blur-[120px] rounded-full animate-pulse pointer-events-none"></div>
+
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/10 border border-gold/20 text-gold text-sm font-bold mb-4">
+                        📅 <span className="tracking-wide uppercase">لقاءات مرفأ</span>
+                    </div>
+
+                    <h1 className="text-5xl md:text-7xl font-black text-deep-navy tracking-tight leading-tight">
+                        لقاءات <span className="text-luxury-gold">مرفأ</span>
                     </h1>
-                    <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+                    <p className="text-lg text-deep-navy/70 max-w-2xl mx-auto leading-relaxed">
                         منصة حصرية لربط رواد الأعمال بالمستثمرين من خلال لقاءات مجدولة ومنظمة.
                         <br />
-                        <span className="font-medium text-blue-600">تصفح الجدول</span> واحجز موعدك الآن.
+                        <span className="font-medium text-gold">تصفح الجدول</span> واحجز موعدك الآن.
                     </p>
                 </div>
 

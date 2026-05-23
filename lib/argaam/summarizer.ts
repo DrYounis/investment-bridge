@@ -85,7 +85,7 @@ async function generateSEOTitle(
   originalTitle: string
 ): Promise<string> {
   if (!originalTitle || originalTitle.trim().length === 0) {
-    return 'أخبار مالية سعودية من أرقام';
+    return 'أخبار مالية سعودية من marfa.sa';
   }
 
   const message = await client.messages.create({

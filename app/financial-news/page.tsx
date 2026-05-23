@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import ArticleCard from '@/app/components/argaam/ArticleCard';
-import ScraperStatus from '@/app/components/argaam/ScraperStatus';
+import ArticleCard from '@/app/components/financial-news/ArticleCard';
+import ScraperStatus from '@/app/components/financial-news/ScraperStatus';
 
 interface ScrapeResultItem {
   success: boolean;
@@ -39,7 +39,7 @@ interface StatusResponse {
   cron_secret_configured: boolean;
 }
 
-export default function ArgaamNewsPage() {
+export default function FinancialNewsPage() {
   const [maxArticles, setMaxArticles] = useState(5);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<StatusResponse | null>(null);
@@ -51,7 +51,7 @@ export default function ArgaamNewsPage() {
 
   const fetchStatus = useCallback(async () => {
     try {
-      const res = await fetch('/api/scrape/argaam');
+      const res = await fetch('/api/scrape/financial-news');
       const data: StatusResponse = await res.json();
       setStatus(data);
     } catch {
@@ -77,7 +77,7 @@ export default function ArgaamNewsPage() {
     setResults(null);
 
     try {
-      const res = await fetch('/api/scrape/argaam', {
+      const res = await fetch('/api/scrape/financial-news', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ maxArticles }),
@@ -113,7 +113,7 @@ export default function ArgaamNewsPage() {
 
   const handleDownload = async (filename: string) => {
     try {
-      const res = await fetch(`/content/news/argaam/${filename}`);
+      const res = await fetch(`/content/news/financial-news/${filename}`);
       if (!res.ok) throw new Error('File not found');
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);

@@ -38,7 +38,7 @@ export default function Header() {
                     <Link href="/meetings" className="text-slate-200/90 hover:text-gold hover:scale-105 transition-all font-bold tracking-wide">
                         لقاءات مرفأ
                     </Link>
-                    <Link href="/argaam-news" className="text-slate-200/90 hover:text-gold hover:scale-105 transition-all font-bold tracking-wide">
+                    <Link href="/financial-news" className="text-slate-200/90 hover:text-gold hover:scale-105 transition-all font-bold tracking-wide">
                         📰 الأخبار المالية
                     </Link>
                     {loading ? (

@@ -14,7 +14,7 @@ export interface MarkdownResult {
 
 // ── Constants ──────────────────────────────────────────────────────
 
-const CONTENT_DIR = path.join(process.cwd(), 'content', 'news', 'argaam');
+const CONTENT_DIR = path.join(process.cwd(), 'content', 'news', 'financial-news');
 
 // ── Helpers ────────────────────────────────────────────────────────
 
@@ -44,7 +44,7 @@ export function generateMarkdownContent(
   const frontmatterData = {
     title: summary.seo_title,
     original_title: summary.original_title,
-    source: 'السوق المالية السعودية',
+    source: 'marfa.sa الأخبار المالية',
     source_url: summary.source_url,
     date: summary.article_date,
     scraped_at: article.scraped_at,

@@ -34,7 +34,7 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({
       status: 'ready',
       total_articles: files.length,
-      content_dir: 'content/news/argaam',
+      content_dir: 'content/news/financial-news',
       latest_files: filesWithMeta,
       api_key_configured: !!process.env.ANTHROPIC_API_KEY,
       cron_secret_configured: !!process.env.CRON_SECRET,
@@ -49,7 +49,7 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  console.log('\n🚀 ── Argaam Scrape Job Started ──\n');
+  console.log('\n🚀 ── Financial News Scrape Job Started ──\n');
 
   try {
     let maxArticles = 5;
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     console.log(`📋 Target: ${maxArticles} articles\n`);
 
-    console.log('🔍 Step 1/3: Scraping Argaam...');
+    console.log('🔍 Step 1/3: Scraping financial news...');
     const articles = await scrapeArgaamNews(maxArticles);
     console.log(`   Scraped ${articles.length} articles\n`);
 
@@ -77,7 +77,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         saved: 0,
         failed: 0,
         results: [],
-        message: 'No articles found on Argaam.',
+        message: 'No articles found.',
       });
     }
 

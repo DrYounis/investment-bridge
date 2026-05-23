@@ -1,6 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import IdeaValidator from '../components/marfa/IdeaValidator';
+import MeetingScheduler from '../components/marfa/MeetingScheduler';
 
 export const dynamic = 'force-dynamic';
 
@@ -93,7 +95,7 @@ export default async function MarfaLandingPage() {
                 </div>
 
                 {/* Sample Dashboard Teaser */}
-                <div className="bg-slate-900 rounded-3xl p-8 md:p-16 text-white text-center relative overflow-hidden">
+                <div className="bg-slate-900 rounded-3xl p-8 md:p-16 text-white text-center relative overflow-hidden mb-24">
                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
                     <div className="relative z-10 max-w-2xl mx-auto">
                         <h2 className="text-3xl font-bold mb-6">جاهز لاختبار فكرتك؟</h2>
@@ -107,6 +109,36 @@ export default async function MarfaLandingPage() {
                         </div>
                         <p className="mt-4 text-xs text-slate-400 opacity-60">* لا يتطلب اشتراك مدفوع لهذه المرحلة</p>
                     </div>
+                </div>
+
+                {/* Idea Validator Section */}
+                <div className="mb-24">
+                    <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
+                        <h2 className="text-3xl font-bold text-slate-900">
+                            Submit Your Idea for{' '}
+                            <span className="text-amber-600">Validation</span>
+                        </h2>
+                        <p className="text-gray-500">
+                            Get expert feedback on your startup idea. Our team evaluates market potential,
+                            technical feasibility, and investment readiness.
+                        </p>
+                    </div>
+                    <IdeaValidator />
+                </div>
+
+                {/* Meeting Scheduler Section */}
+                <div className="mb-24">
+                    <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
+                        <h2 className="text-3xl font-bold text-slate-900">
+                            Book a{' '}
+                            <span className="text-blue-600">Meeting</span> with Our Team
+                        </h2>
+                        <p className="text-gray-500">
+                            Schedule a one-on-one session to discuss your project, funding needs, or
+                            partnership opportunities with our investment team.
+                        </p>
+                    </div>
+                    <MeetingScheduler />
                 </div>
 
             </main>

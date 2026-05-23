@@ -47,9 +47,16 @@ export function validateEnv(): Env {
       `${err.path.join('.')}: ${err.message}`
     ).join('\n  - ');
 
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
     throw new Error(
       `❌ Environment validation failed:\n  - ${errors}\n\n` +
-      `Please check your .env.local file and ensure all required variables are set.`
+      (isProduction
+        ? `Please set these environment variables in your Vercel dashboard:\n` +
+          `  1. Go to: Vercel → Project Settings → Environment Variables\n` +
+          `  2. Add the missing variables listed above\n` +
+          `  3. Redeploy your project`
+        : `Please check your .env.local file and ensure all required variables are set.`
+      )
     );
   }
 

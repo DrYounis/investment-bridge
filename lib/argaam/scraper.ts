@@ -177,7 +177,8 @@ export async function scrapeArgaamNews(
   let browser: Browser | null = null;
 
   try {
-    browser = await puppeteer.launch({
+    // Use @sparticuz/chromium in production (Vercel serverless), default puppeteer locally
+    let launchArgs: Record<string, unknown> = {
       headless: true,
       args: [
         '--no-sandbox',
@@ -185,7 +186,21 @@ export async function scrapeArgaamNews(
         '--disable-dev-shm-usage',
         '--disable-gpu',
       ],
-    });
+    };
+
+    try {
+      const chromium = await import('@sparticuz/chromium');
+      launchArgs = {
+        args: chromium.default.args,
+        executablePath: await chromium.default.executablePath(),
+        headless: true,
+      };
+      console.log('🚀 Using @sparticuz/chromium (Vercel serverless)');
+    } catch {
+      console.log('🚀 Using default puppeteer chromium (local)');
+    }
+
+    browser = await puppeteer.launch(launchArgs);
 
     const page = await browser.newPage();
     await page.setUserAgent(

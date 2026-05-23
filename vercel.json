@@ -7,5 +7,11 @@
     "deploymentEnabled": {
       "main": true
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/daily?token=marfa-daily-news-299713e0d16f",
+      "schedule": "0 6 * * *"
+    }
+  ]
 }

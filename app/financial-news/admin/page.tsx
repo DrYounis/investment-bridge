@@ -54,8 +54,9 @@ export default function AdminNewsPage() {
   const [jobStatus, setJobStatus] = useState<'ready' | 'running' | 'error'>('ready');
   const [lastRun, setLastRun] = useState<string | undefined>();
 
-  // Auth check
+  // Auth check with timeout
   useEffect(() => {
+    let timeout: NodeJS.Timeout;
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => {
       if (!data.user) {
@@ -64,6 +65,11 @@ export default function AdminNewsPage() {
       }
       setUser(data.user);
     });
+    timeout = setTimeout(() => {
+      setError('تعذر الاتصال بالخادم. حاول مرة أخرى.');
+      setUser(null);
+    }, 8000);
+    return () => clearTimeout(timeout);
   }, [router]);
 
   const fetchStatus = useCallback(async () => {
@@ -146,8 +152,20 @@ export default function AdminNewsPage() {
 
   if (user === undefined) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
         <div className="animate-spin h-8 w-8 border-2 border-gold border-t-transparent rounded-full" />
+        <p className="text-slate-400 text-sm">جاري التحقق من الصلاحية...</p>
+      </div>
+    );
+  }
+
+  if (user === null) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+        <p className="text-red-400 text-lg">❌ {error || 'تعذر الاتصال'}</p>
+        <button onClick={() => window.location.reload()} className="px-4 py-2 bg-gold/20 text-gold rounded-xl">
+          إعادة المحاولة
+        </button>
       </div>
     );
   }

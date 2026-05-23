@@ -117,7 +117,7 @@ export default function ArticleCard({
             rel="noopener noreferrer"
             className="hover:text-gold transition-colors"
           >
-            أرقام
+            المصدر
           </a>
         </span>
         <button onClick={handleDownload} className="hover:text-gold transition-colors">

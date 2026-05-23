@@ -39,7 +39,7 @@ export default function Header() {
                         لقاءات مرفأ
                     </Link>
                     <Link href="/argaam-news" className="text-slate-200/90 hover:text-gold hover:scale-105 transition-all font-bold tracking-wide">
-                        📰 أخبار أرقام
+                        📰 الأخبار المالية
                     </Link>
                     {loading ? (
                         <div className="flex gap-3">

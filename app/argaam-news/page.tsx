@@ -133,10 +133,10 @@ export default function ArgaamNewsPage() {
         {/* Header */}
         <header className="mb-10 text-center">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-gold mb-3">
-            🚀 أخبار أرقام المالية
+            📰 الأخبار المالية السعودية
           </h1>
           <p className="text-lg text-slate-300">
-            مجمع الأخبار المالية السعودية مع تلخيص بالذكاء الاصطناعي — marfa.sa
+            تحليلات مالية ذكية للسوق السعودي — من marfa.sa
           </p>
         </header>
 

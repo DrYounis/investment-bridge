@@ -44,7 +44,7 @@ export function generateMarkdownContent(
   const frontmatterData = {
     title: summary.seo_title,
     original_title: summary.original_title,
-    source: 'Argaam',
+    source: 'السوق المالية السعودية',
     source_url: summary.source_url,
     date: summary.article_date,
     scraped_at: article.scraped_at,
@@ -68,7 +68,7 @@ ${summary.seo_summary}
 
 **العنوان:** ${summary.original_title}
 
-**المصدر:** [أرقام - Argaam](${summary.source_url})
+**المصدر:** [الرابط الأصلي](${summary.source_url})
 
 **تاريخ النشر:** ${summary.article_date}
 

@@ -13,15 +13,18 @@
     "test:ci": "jest --ci --coverage --reporters=default --reporters=jest-junit"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.98.0",
     "@sentry/nextjs": "^10.42.0",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.94.0",
     "dotenv": "^17.2.3",
     "framer-motion": "^12.29.2",
+    "gray-matter": "^4.0.3",
     "jspdf": "^4.0.0",
     "lucide-react": "^0.563.0",
     "next": "16.1.6",
     "pptxgenjs": "^4.0.1",
+    "puppeteer": "^25.0.4",
     "rate-limiter-flexible": "^9.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",

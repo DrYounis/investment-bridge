@@ -38,6 +38,9 @@ export default function Header() {
                     <Link href="/meetings" className="text-slate-200/90 hover:text-gold hover:scale-105 transition-all font-bold tracking-wide">
                         لقاءات مرفأ
                     </Link>
+                    <Link href="/argaam-news" className="text-slate-200/90 hover:text-gold hover:scale-105 transition-all font-bold tracking-wide">
+                        📰 أخبار أرقام
+                    </Link>
                     {loading ? (
                         <div className="flex gap-3">
                             <div className="px-6 py-2 bg-white/10 rounded-full animate-pulse h-10 w-24" />

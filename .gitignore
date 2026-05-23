@@ -47,6 +47,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# argaam scraped content (keep example only)
+/content/news/argaam/*.md
+!/content/news/argaam/EXAMPLE.md
+
 # python
 scripts/.env
 scripts/venv/

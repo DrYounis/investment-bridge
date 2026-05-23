@@ -32,6 +32,7 @@
   ],
   "exclude": [
     "node_modules",
+    "marfa-argaam-scraper",
     "**/*.test.ts",
     "**/*.test.tsx",
     "**/__tests__/**",

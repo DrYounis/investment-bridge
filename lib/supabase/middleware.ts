@@ -28,6 +28,14 @@ export async function updateSession(request: NextRequest) {
         }
     )
 
+    // Skip auth.getUser() entirely for public pages to avoid timeout
+    const publicPaths = ['/login', '/auth', '/', '/marfa']
+    const isPublicPath = publicPaths.some(p => request.nextUrl.pathname === p || request.nextUrl.pathname.startsWith(p + '/'))
+
+    if (isPublicPath) {
+        return supabaseResponse
+    }
+
     // IMPORTANT: Avoid writing any logic between createServerClient and
     // supabase.auth.getUser(). A simple mistake could make it very hard to debug
     // issues with users being randomly logged out.
@@ -36,13 +44,8 @@ export async function updateSession(request: NextRequest) {
         data: { user },
     } = await supabase.auth.getUser()
 
-    // Skip auth check for public pages
-    const publicPaths = ['/login', '/auth', '/', '/marfa']
-    const isPublicPath = publicPaths.some(p => request.nextUrl.pathname === p || request.nextUrl.pathname.startsWith(p + '/'))
-
     if (
         !user &&
-        !isPublicPath &&
         request.nextUrl.pathname.startsWith('/dashboard')
     ) {
         // no user, potentially respond by redirecting the user to the login page

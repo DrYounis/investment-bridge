@@ -1,15 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
 import IdeaValidator from '../components/marfa/IdeaValidator';
 import MeetingScheduler from '../components/marfa/MeetingScheduler';
 
-export const dynamic = 'force-dynamic';
-
 export default async function MarfaLandingPage() {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 text-right pt-32" dir="rtl">
             <main className="max-w-7xl mx-auto px-6 py-12 md:py-20">

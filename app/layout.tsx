@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
-import { createClient } from "@/lib/supabase/server";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -21,7 +20,7 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://marfa.sa'), // Ensuring absolute URLs
   icons: {
     icon: "/icon.png",
-    shortcut: "/favicon.ico",
+    shortcut: "/favicon.png",
     apple: "/apple-icon.png",
   },
   openGraph: {
@@ -37,20 +36,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header user={user} />
+        <Header />
         {children}
         <Footer />
 

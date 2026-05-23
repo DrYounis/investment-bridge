@@ -1,11 +1,22 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/client';
 
-interface HeaderProps {
-    user?: any;
-}
+export default function Header() {
+    const [user, setUser] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
 
-export default function Header({ user }: HeaderProps) {
+    useEffect(() => {
+        const supabase = createClient();
+        supabase.auth.getUser().then(({ data }) => {
+            setUser(data.user);
+            setLoading(false);
+        });
+    }, []);
+
     return (
         <header className="absolute top-0 left-0 w-full z-50 p-6" dir="rtl">
             <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -27,7 +38,12 @@ export default function Header({ user }: HeaderProps) {
                     <Link href="/meetings" className="text-slate-200/90 hover:text-gold hover:scale-105 transition-all font-bold tracking-wide">
                         لقاءات مرفأ
                     </Link>
-                    {user ? (
+                    {loading ? (
+                        <div className="flex gap-3">
+                            <div className="px-6 py-2 bg-white/10 rounded-full animate-pulse h-10 w-24" />
+                            <div className="px-6 py-2 bg-white/10 rounded-full animate-pulse h-10 w-20" />
+                        </div>
+                    ) : user ? (
                         <Link href="/dashboard/hub" className="px-5 py-2 bg-gradient-to-r from-gold to-gold-dark text-deep-navy text-sm font-black rounded-full hover:shadow-lg hover:shadow-gold/20 transition-all duration-300">
                             لوحة التحكم
                         </Link>

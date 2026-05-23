@@ -3,6 +3,16 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
+    // Skip Supabase entirely for public pages — no client creation, no cookie parsing
+    const publicPaths = ['/login', '/auth', '/', '/marfa', '/meetings']
+    const isPublicPath = publicPaths.some(p => request.nextUrl.pathname === p || request.nextUrl.pathname.startsWith(p + '/'))
+
+    if (isPublicPath) {
+        return NextResponse.next({
+            request,
+        })
+    }
+
     let supabaseResponse = NextResponse.next({
         request,
     })
@@ -27,14 +37,6 @@ export async function updateSession(request: NextRequest) {
             },
         }
     )
-
-    // Skip auth.getUser() entirely for public pages to avoid timeout
-    const publicPaths = ['/login', '/auth', '/', '/marfa', '/meetings']
-    const isPublicPath = publicPaths.some(p => request.nextUrl.pathname === p || request.nextUrl.pathname.startsWith(p + '/'))
-
-    if (isPublicPath) {
-        return supabaseResponse
-    }
 
     // IMPORTANT: Avoid writing any logic between createServerClient and
     // supabase.auth.getUser(). A simple mistake could make it very hard to debug

@@ -52,3 +52,4 @@ scripts/.env
 scripts/venv/
 scripts/__pycache__/
 *.pyc
+.qwen/

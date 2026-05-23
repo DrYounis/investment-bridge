@@ -1,7 +1,45 @@
 "use client";
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import Card from '../ui/Card';
+
+function getNextMonthSchedule() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth(); // 0-indexed
+
+    // Start from next month
+    let startYear = year;
+    let startMonth = month + 1;
+    if (startMonth > 11) {
+        startMonth = 0;
+        startYear = year + 1;
+    }
+
+    // First Thursday of next month
+    const firstDay = new Date(startYear, startMonth, 1);
+    const dayOfWeek = firstDay.getDay(); // 0=Sun, 4=Thu
+    let daysUntilThursday = (4 - dayOfWeek + 7) % 7;
+    if (daysUntilThursday === 0) daysUntilThursday = 7; // If 1st is Thursday, use it
+    const firstThursday = new Date(startYear, startMonth, 1 + daysUntilThursday);
+
+    // Generate 6 bi-weekly dates (every 2 weeks on Thursday)
+    const dates: Date[] = [];
+    for (let i = 0; i < 6; i++) {
+        const d = new Date(firstThursday);
+        d.setDate(d.getDate() + i * 14);
+        dates.push(d);
+    }
+    return dates;
+}
+
+function formatDate(date: Date): string {
+    const months = [
+        'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+        'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
+    ];
+    return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+}
 
 const SCHEDULE_DATA = [
     {
@@ -62,6 +100,8 @@ const METHOD_STEPS = [
 ];
 
 export default function MeetingsSchedule() {
+    const scheduleDates = useMemo(() => getNextMonthSchedule(), []);
+
     return (
         <div className="space-y-12">
             {/* Intro / Philosophy */}
@@ -92,12 +132,16 @@ export default function MeetingsSchedule() {
             <Card glass className="overflow-hidden">
                 <div className="p-6 border-b border-white/10">
                     <h3 className="text-xl font-bold">جدول لقاءات مرفأ (3 أشهر)</h3>
+                    <p className="text-sm text-foreground/60 mt-1">
+                        تبدأ من {formatDate(scheduleDates[0])} | كل يوم خميس (مرة كل أسبوعين)
+                    </p>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-right">
                         <thead className="bg-white/5 text-primary">
                             <tr>
                                 <th className="p-4 whitespace-nowrap">اللقاء</th>
+                                <th className="p-4 whitespace-nowrap">التاريخ</th>
                                 <th className="p-4 whitespace-nowrap">موضوع الـ MBA</th>
                                 <th className="p-4 whitespace-nowrap">دراسة الحالة (The Case)</th>
                                 <th className="p-4 min-w-[300px]">التحدي الذي سنناقشه</th>
@@ -107,6 +151,9 @@ export default function MeetingsSchedule() {
                             {SCHEDULE_DATA.map((row, idx) => (
                                 <tr key={idx} className="hover:bg-white/5 transition-colors">
                                     <td className="p-4 font-medium text-foreground/80">{row.encounter}</td>
+                                    <td className="p-4 text-emerald-400 font-bold whitespace-nowrap" dir="ltr">
+                                        {formatDate(scheduleDates[idx])}
+                                    </td>
                                     <td className="p-4 text-accent font-bold">{row.topic}</td>
                                     <td className="p-4 font-semibold">{row.case}</td>
                                     <td className="p-4 text-sm text-foreground/70 leading-relaxed">{row.challenge}</td>

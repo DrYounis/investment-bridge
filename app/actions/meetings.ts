@@ -1,6 +1,7 @@
 'use server'
 
 import { Resend } from 'resend';
+import { createClient } from '@/lib/supabase/server';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -14,10 +15,29 @@ export async function scheduleMeeting(formData: FormData) {
     const adminEmail = process.env.ADMIN_EMAIL || 'op.younis@gmail.com';
 
     try {
-        const { error } = await resend.emails.send({
+        // 1. Save to Supabase database
+        const supabase = await createClient();
+        const { error: dbError } = await supabase
+            .from('meetings')
+            .insert({
+                name,
+                email,
+                company,
+                preferred_time: preferredTime,
+                message: message || '',
+                status: 'pending',
+            });
+
+        if (dbError) {
+            console.error('Database insert error:', dbError);
+            return { success: false, error: 'فشل حفظ الطلب. يرجى المحاولة مرة أخرى.' };
+        }
+
+        // 2. Send email notification via Resend
+        const { error: emailError } = await resend.emails.send({
             from: 'Marfa.sa Meetings <onboarding@resend.dev>',
             to: adminEmail,
-            subject: `New Investor Meeting Request: ${name}`,
+            subject: `طلب اجتماع مستثمر جديد: ${name}`,
             html: `
                 <div style="font-family: sans-serif; direction: rtl; text-align: right; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; max-width: 600px; margin: auto;">
                     <h2 style="color: #1e40af; border-bottom: 2px solid #1e40af; padding-bottom: 10px;">طلب اجتماع مستثمر جديد</h2>
@@ -37,14 +57,14 @@ export async function scheduleMeeting(formData: FormData) {
             `,
         });
 
-        if (error) {
-            // In production, this goes to Sentry
-            return { success: false, error: 'Failed to send meeting request. Please try again.' };
+        if (emailError) {
+            console.error('Email send error:', emailError);
+            // Request is already saved in DB, so still return success
         }
 
         return { success: true };
     } catch (err) {
-        // In production, this goes to Sentry
-        return { success: false, error: 'Failed to send meeting request. Please try again.' };
+        console.error('scheduleMeeting error:', err);
+        return { success: false, error: 'حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.' };
     }
 }

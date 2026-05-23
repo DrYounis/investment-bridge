@@ -18,7 +18,7 @@ export default async function MeetingsPage() {
             <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-blue-100/20 to-transparent rounded-full blur-3xl pointer-events-none"></div>
             <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-indigo-100/20 to-transparent rounded-full blur-3xl pointer-events-none"></div>
 
-            // Main Content
+            {/* Main Content */}
             <main className="relative min-h-screen flex flex-col pt-32 pb-16 px-4 max-w-7xl mx-auto">
 
                 <div className="text-center mb-16">
@@ -28,7 +28,7 @@ export default async function MeetingsPage() {
                     <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
                         منصة حصرية لربط رواد الأعمال بالمستثمرين من خلال لقاءات مجدولة ومنظمة.
                         <br />
-                        <span className="font-medium text-blue-600">سجل دخولك</span> للاطلاع على الجدول وحجز موعدك.
+                        <span className="font-medium text-blue-600">تصفح الجدول</span> واحجز موعدك الآن.
                     </p>
                 </div>
 

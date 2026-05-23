@@ -1,7 +1,9 @@
 
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
-import { getEnv } from '../env'
+
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://tkokgarmxcgvsedtgben.supabase.co'
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRrb2tnYXJteGNndnNlZHRnYmVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk4NTU1NjcsImV4cCI6MjA4NTQzMTU2N30.vr_eNpSUfSwODDt8t9EFQlN1rKwiIRhCj0JBsSrnwnE'
 
 /**
  * Create a Supabase server client for use in Server Components and Server Actions
@@ -9,11 +11,10 @@ import { getEnv } from '../env'
  */
 export async function createClient() {
     const cookieStore = await cookies()
-    const env = getEnv()
 
     return createServerClient(
-        env.NEXT_PUBLIC_SUPABASE_URL,
-        env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY,
         {
             cookies: {
                 get(name: string) {

@@ -36,10 +36,13 @@ export async function updateSession(request: NextRequest) {
         data: { user },
     } = await supabase.auth.getUser()
 
+    // Skip auth check for public pages
+    const publicPaths = ['/login', '/auth', '/', '/marfa']
+    const isPublicPath = publicPaths.some(p => request.nextUrl.pathname === p || request.nextUrl.pathname.startsWith(p + '/'))
+
     if (
         !user &&
-        !request.nextUrl.pathname.startsWith('/login') &&
-        !request.nextUrl.pathname.startsWith('/auth') &&
+        !isPublicPath &&
         request.nextUrl.pathname.startsWith('/dashboard')
     ) {
         // no user, potentially respond by redirecting the user to the login page

@@ -56,8 +56,11 @@ async function applyRateLimit(request: NextRequest): Promise<NextResponse | null
     // General API endpoints
     limiter = apiRateLimiter
     points = 10
+  } else if (path.startsWith('/marfa')) {
+    // No rate limiting for Marfa landing page
+    return null
   } else {
-    // No rate limiting for non-API routes
+    // No rate limiting for other non-API routes
     return null
   }
 
@@ -103,12 +106,9 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - static files
+     * Only run middleware on pages and API routes that need it.
+     * Skip all static assets, icons, and Next.js internals.
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon\\.ico|apple-icon\\.png|icon\\.png|opengraph-image\\.png|twitter-image\\.png|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }

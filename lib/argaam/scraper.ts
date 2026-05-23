@@ -1,4 +1,4 @@
-import puppeteer, { Browser, Page } from 'puppeteer';
+import * as cheerio from 'cheerio';
 
 // ── Types ──────────────────────────────────────────────────────────
 
@@ -14,30 +14,10 @@ export interface RawArticle {
 // ── Constants ──────────────────────────────────────────────────────
 
 const ARGAAM_NEWS_URL = 'https://www.argaam.com/ar/news';
-const DEFAULT_DELAY_MS = 2500;
+const ARGAAM_BASE = 'https://www.argaam.com';
+const REQUEST_TIMEOUT_MS = 8000;
 
 // ── Helpers ────────────────────────────────────────────────────────
-
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function autoScroll(page: Page): Promise<void> {
-  await page.evaluate(async () => {
-    await new Promise<void>((resolve) => {
-      let totalHeight = 0;
-      const distance = 300;
-      const timer = setInterval(() => {
-        window.scrollBy(0, distance);
-        totalHeight += distance;
-        if (totalHeight >= 2000) {
-          clearInterval(timer);
-          resolve();
-        }
-      }, 200);
-    });
-  });
-}
 
 function formatDate(text: string | null | undefined): string {
   if (!text) return new Date().toISOString().slice(0, 10);
@@ -57,15 +37,36 @@ function formatDate(text: string | null | undefined): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-// ── Core Scraping Logic ────────────────────────────────────────────
+async function fetchWithTimeout(url: string): Promise<string> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
-async function scrapeArticleCards(
-  page: Page,
+  try {
+    const res = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        'User-Agent':
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+        'Accept-Language': 'ar-SA,ar;q=0.9,en;q=0.8',
+        Accept: 'text/html,application/xhtml+xml',
+      },
+    });
+    return await res.text();
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+// ── Article Extraction from Listing Page ───────────────────────────
+
+function extractArticleCards(
+  html: string,
   max: number
-): Promise<{ title: string; url: string; date: string; summary: string }[]> {
-  await autoScroll(page);
-  await delay(1500);
+): { title: string; url: string; date: string; summary: string }[] {
+  const $ = cheerio.load(html);
+  const cards: { title: string; url: string; date: string; summary: string }[] = [];
 
+  // Try multiple selector strategies for the Argaam news listing
   const cardSelectors = [
     'article.news-item',
     '.article-card',
@@ -73,94 +74,118 @@ async function scrapeArticleCards(
     '.news-list > div',
     '.news-list-item',
     'li[class*="news"]',
+    '.news-item',
+    '.news-row',
   ];
 
-  let cards: { title: string; url: string; date: string; summary: string }[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let $cards: any = cheerio.load('')('body'); // empty collection
 
   for (const selector of cardSelectors) {
-    try {
-      cards = await page.evaluate(
-        (sel: string, limit: number) => {
-          const elements = Array.from(document.querySelectorAll(sel));
-          return elements.slice(0, limit).map((el) => {
-            const titleEl =
-              el.querySelector('h2') ||
-              el.querySelector('h3') ||
-              el.querySelector('.title') ||
-              el.querySelector('[class*="title"]');
-            const title = titleEl?.textContent?.trim() || '';
-
-            const linkEl =
-              el.querySelector('a[href*="/article/"]') ||
-              el.querySelector('a[href*="/news/"]') ||
-              el.querySelector('a');
-            let url = linkEl?.getAttribute('href') || '';
-            if (url && !url.startsWith('http')) {
-              url = 'https://www.argaam.com' + url;
-            }
-
-            const dateEl =
-              el.querySelector('time') ||
-              el.querySelector('.date') ||
-              el.querySelector('[class*="date"]');
-            const date = dateEl?.textContent?.trim() || '';
-
-            const summaryEl =
-              el.querySelector('.description') ||
-              el.querySelector('.excerpt') ||
-              el.querySelector('.summary') ||
-              el.querySelector('p');
-            const summary = summaryEl?.textContent?.trim() || '';
-
-            return { title, url, date, summary };
-          });
-        },
-        selector,
-        max
-      );
-
-      if (cards.length > 0) {
-        console.log(`🔍 Found ${cards.length} articles using selector: ${selector}`);
-        break;
-      }
-    } catch {
-      continue;
+    $cards = $(selector);
+    if ($cards.length > 0) {
+      console.log(`🔍 Found ${$cards.length} cards using selector: ${selector}`);
+      break;
     }
   }
+
+  // Fallback: look for any links that look like article URLs
+  if ($cards.length === 0) {
+    console.log('⚠️ No article cards found with standard selectors — trying link-based fallback');
+    const links = $('a[href*="/article/"], a[href*="/news/"]');
+    links.each((_, el) => {
+      if (cards.length >= max) return false;
+      const $el = $(el);
+      const url = $el.attr('href') || '';
+      const title = $el.text().trim();
+      if (url && title && title.length > 10) {
+        cards.push({
+          title,
+          url: url.startsWith('http') ? url : ARGAAM_BASE + url,
+          date: '',
+          summary: '',
+        });
+      }
+    });
+    return cards;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  $cards.slice(0, max).each((_: number, el: any) => {
+    if (cards.length >= max) return false;
+    const $el = $(el);
+
+    const titleEl =
+      $el.find('h2').first() ||
+      $el.find('h3').first() ||
+      $el.find('.title').first() ||
+      $el.find('[class*="title"]').first();
+    const title = titleEl.text().trim();
+
+    const linkEl =
+      $el.find('a[href*="/article/"]').first() ||
+      $el.find('a[href*="/news/"]').first() ||
+      $el.find('a[href]').first();
+    let url = linkEl.attr('href') || '';
+    if (url && !url.startsWith('http')) {
+      url = ARGAAM_BASE + url;
+    }
+
+    const dateEl =
+      $el.find('time').first() ||
+      $el.find('.date').first() ||
+      $el.find('[class*="date"]').first();
+    const date = dateEl.text().trim();
+
+    const summaryEl =
+      $el.find('.description').first() ||
+      $el.find('.excerpt').first() ||
+      $el.find('.summary').first() ||
+      $el.find('p').first();
+    const summary = summaryEl.text().trim();
+
+    if (title) {
+      cards.push({ title, url, date, summary });
+    }
+  });
 
   return cards;
 }
 
-async function scrapeArticleContent(page: Page, url: string): Promise<string> {
+// ── Full Article Content Extraction ────────────────────────────────
+
+async function scrapeArticleContent(url: string): Promise<string> {
   if (!url) return '';
 
   try {
     console.log(`📄 Fetching full content: ${url}`);
-    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
-    await delay(1500);
+    const html = await fetchWithTimeout(url);
+    const $ = cheerio.load(html);
 
-    const content = await page.evaluate(() => {
-      const selectors = [
-        '.article-body',
-        '.article-content',
-        '.article-details',
-        'article .content',
-        'article .body',
-        '.post-content',
-        '[class*="article-content"]',
-        'article',
-      ];
+    const contentSelectors = [
+      '.article-body',
+      '.article-content',
+      '.article-details',
+      'article .content',
+      'article .body',
+      '.post-content',
+      '[class*="article-content"]',
+      'article',
+    ];
 
-      for (const sel of selectors) {
-        const el = document.querySelector(sel);
-        if (el && (el.textContent?.length || 0) > 100) {
-          return el.textContent?.trim() || '';
+    for (const sel of contentSelectors) {
+      const el = $(sel);
+      if (el.length > 0) {
+        const text = el.text().trim();
+        if (text.length > 100) {
+          return text;
         }
       }
-      return '';
-    });
+    }
 
-    return content || '';
+    // Fallback: grab body text
+    const bodyText = $('body').text().trim();
+    return bodyText.length > 100 ? bodyText.slice(0, 3000) : '';
   } catch (err) {
     console.error(`❌ Failed to fetch content from ${url}:`, err);
     return '';
@@ -172,90 +197,59 @@ async function scrapeArticleContent(page: Page, url: string): Promise<string> {
 export async function scrapeArgaamNews(
   maxArticles: number = 5
 ): Promise<RawArticle[]> {
-  console.log(`🔍 Starting Argaam scraper — targeting up to ${maxArticles} articles...`);
+  console.log(`🔍 Starting Argaam scraper (cheerio) — targeting up to ${maxArticles} articles...`);
 
-  let browser: Browser | null = null;
-
+  console.log(`📰 Fetching ${ARGAAM_NEWS_URL}...`);
+  let html: string;
   try {
-    // Use @sparticuz/chromium in production (Vercel serverless), default puppeteer locally
-    let launchArgs: Record<string, unknown> = {
-      headless: true,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-      ],
-    };
-
-    try {
-      const chromium = await import('@sparticuz/chromium');
-      launchArgs = {
-        args: chromium.default.args,
-        executablePath: await chromium.default.executablePath(),
-        headless: true,
-      };
-      console.log('🚀 Using @sparticuz/chromium (Vercel serverless)');
-    } catch {
-      console.log('🚀 Using default puppeteer chromium (local)');
-    }
-
-    browser = await puppeteer.launch(launchArgs);
-
-    const page = await browser.newPage();
-    await page.setUserAgent(
-      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
-    );
-    await page.setExtraHTTPHeaders({
-      'Accept-Language': 'ar-SA,ar;q=0.9,en;q=0.8',
-    });
-
-    console.log(`📰 Navigating to ${ARGAAM_NEWS_URL}...`);
-    await page.goto(ARGAAM_NEWS_URL, {
-      waitUntil: 'networkidle2',
-      timeout: 30000,
-    });
-
-    const cards = await scrapeArticleCards(page, maxArticles);
-
-    if (cards.length === 0) {
-      console.log('⚠️ No articles found on the page.');
-      return [];
-    }
-
-    const articles: RawArticle[] = [];
-    const scrapedAt = new Date().toISOString();
-
-    for (let i = 0; i < cards.length; i++) {
-      const card = cards[i];
-      console.log(`📰 [${i + 1}/${cards.length}] Processing: ${card.title}`);
-
-      let fullContent = '';
-      if (card.url) {
-        fullContent = await scrapeArticleContent(page, card.url);
-        await delay(DEFAULT_DELAY_MS);
-      }
-
-      articles.push({
-        title: card.title,
-        url: card.url,
-        date: formatDate(card.date),
-        summary: card.summary,
-        full_content: fullContent,
-        scraped_at: scrapedAt,
-      });
-
-      console.log(`   ✅ "${card.title.slice(0, 60)}..."`);
-    }
-
-    console.log(`\n✅ Scraping complete — ${articles.length} articles collected.`);
-    return articles;
+    html = await fetchWithTimeout(ARGAAM_NEWS_URL);
   } catch (err) {
-    console.error('❌ Scraper error:', err);
-    throw err;
-  } finally {
-    if (browser) {
-      await browser.close();
-    }
+    console.error('❌ Failed to fetch Argaam homepage:', err);
+    throw new Error('Could not reach Argaam — the site may be blocking requests or is unreachable');
   }
+
+  if (!html || html.length < 500) {
+    console.error(`❌ Received ${html?.length || 0} bytes from Argaam — likely blocked or JS-rendered page`);
+    throw new Error('Argaam returned insufficient content — the page may require JavaScript rendering');
+  }
+
+  const cards = extractArticleCards(html, maxArticles);
+
+  if (cards.length === 0) {
+    console.log('⚠️ No articles found — Argaam may be using client-side rendering.');
+    return [];
+  }
+
+  console.log(`✅ Found ${cards.length} article cards on listing page`);
+
+  const articles: RawArticle[] = [];
+  const scrapedAt = new Date().toISOString();
+
+  for (let i = 0; i < cards.length; i++) {
+    const card = cards[i];
+    console.log(`📰 [${i + 1}/${cards.length}] Processing: ${card.title.slice(0, 60)}`);
+
+    let fullContent = '';
+    if (card.url) {
+      try {
+        fullContent = await scrapeArticleContent(card.url);
+      } catch {
+        // Individual article fetch failure is non-fatal
+      }
+    }
+
+    articles.push({
+      title: card.title,
+      url: card.url,
+      date: formatDate(card.date),
+      summary: card.summary,
+      full_content: fullContent,
+      scraped_at: scrapedAt,
+    });
+
+    console.log(`   ✅ "${card.title.slice(0, 60)}..."`);
+  }
+
+  console.log(`\n✅ Scraping complete — ${articles.length} articles collected.`);
+  return articles;
 }

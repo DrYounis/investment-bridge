@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { scrapeArgaamNews } from '@/lib/argaam/scraper';
 import { summarizeArticle } from '@/lib/argaam/summarizer';
-import { saveToMarkdown, listMarkdownFiles, readMarkdownFrontmatter } from '@/lib/argaam/markdown';
+import { saveArticle, listArticles, getArticlesCount } from '@/lib/supabase/financial-news';
 
 export const dynamic = 'force-dynamic';
 
 interface ScrapeResult {
   success: boolean;
-  filename?: string;
-  filepath?: string;
+  slug?: string;
   title?: string;
   original_title?: string;
   source_url?: string;
@@ -17,24 +16,21 @@ interface ScrapeResult {
 
 export async function GET(_req: NextRequest): Promise<NextResponse> {
   try {
-    const files = listMarkdownFiles();
-    const latestFiles = files.slice(0, 10);
+    const files = await listArticles();
+    const total = await getArticlesCount();
 
-    const filesWithMeta = latestFiles.map((f) => {
-      const meta = readMarkdownFrontmatter(f.filename);
-      return {
-        filename: f.filename,
-        created: meta?.date || f.created,
-        title: meta?.title || f.filename,
-        original_title: meta?.original_title || '',
-        source_url: meta?.source_url || '',
-      };
-    });
+    const filesWithMeta = files.map((f) => ({
+      filename: f.slug,
+      created: f.article_date || f.created_at?.slice(0, 10) || '',
+      title: f.title,
+      original_title: f.original_title,
+      source_url: f.source_url,
+    }));
 
     return NextResponse.json({
       status: 'ready',
-      total_articles: files.length,
-      content_dir: 'content/news/financial-news',
+      total_articles: total,
+      content_dir: 'Supabase: financial_news_articles',
       latest_files: filesWithMeta,
       api_key_configured: !!process.env.ANTHROPIC_API_KEY,
       cron_secret_configured: !!process.env.CRON_SECRET,
@@ -77,7 +73,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         saved: 0,
         failed: 0,
         results: [],
-        message: 'No articles found.',
+        message: 'No articles found — Argaam may require JavaScript rendering. Try again later.',
       });
     }
 
@@ -93,14 +89,22 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         console.log('   🤖 Step 2/3: Summarizing...');
         const summary = await summarizeArticle(article);
 
-        console.log('   💾 Step 3/3: Saving to markdown...');
-        const saved = await saveToMarkdown(article, summary);
+        console.log('   💾 Step 3/3: Saving to Supabase...');
+        const saved = await saveArticle({
+          title: summary.seo_title,
+          original_title: summary.original_title,
+          summary: summary.seo_summary,
+          full_content: article.full_content,
+          source_url: summary.source_url,
+          article_date: summary.article_date,
+          tags: summary.tags,
+          scraped_at: article.scraped_at,
+        });
 
         savedCount++;
         results.push({
           success: true,
-          filename: saved.filename,
-          filepath: saved.filepath,
+          slug: saved.slug,
           title: summary.seo_title,
           original_title: article.title,
           source_url: article.url,

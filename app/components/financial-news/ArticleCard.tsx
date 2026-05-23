@@ -1,28 +1,24 @@
 'use client';
 
+import Link from 'next/link';
+
 interface ArticleCardProps {
-  filename: string;
+  slug: string;
   title: string;
   originalTitle: string;
   sourceUrl: string;
   date: string;
   tags?: string[];
-  onDownload?: (filename: string) => void;
 }
 
 export default function ArticleCard({
-  filename,
+  slug,
   title,
   originalTitle,
   sourceUrl,
   date,
   tags = ['استثمار', 'أخبار مالية'],
-  onDownload,
 }: ArticleCardProps) {
-  const handleDownload = () => {
-    if (onDownload) onDownload(filename);
-  };
-
   return (
     <div
       className="
@@ -32,46 +28,19 @@ export default function ArticleCard({
         hover:border-gold/30 hover:shadow-lg hover:shadow-gold/5
         transition-all duration-300
         flex flex-col gap-3
-        cursor-pointer
       "
       dir="rtl"
     >
       {/* Title row */}
       <div className="flex items-start justify-between gap-2">
         <h3 className="text-lg font-bold text-slate-100 leading-tight flex-1">
-          <a
-            href={sourceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href={`/financial-news/${slug}`}
             className="hover:text-gold transition-colors"
-            onClick={(e) => e.stopPropagation()}
           >
             {title}
-          </a>
+          </Link>
         </h3>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleDownload();
-          }}
-          className="shrink-0 p-2 rounded-lg bg-gold/10 hover:bg-gold/20 text-gold transition-colors"
-          title="تحميل الملف"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-            />
-          </svg>
-        </button>
       </div>
 
       {/* Original title */}
@@ -96,33 +65,36 @@ export default function ArticleCard({
           </svg>
           {date}
         </span>
-        <span className="flex items-center gap-1">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
-            />
-          </svg>
+        {sourceUrl && (
           <a
             href={sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-gold transition-colors"
+            className="hover:text-gold transition-colors flex items-center gap-1"
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+              />
+            </svg>
             المصدر
           </a>
-        </span>
-        <button onClick={handleDownload} className="hover:text-gold transition-colors">
-          {filename.length > 40 ? filename.slice(0, 37) + '...' : filename}
-        </button>
+        )}
+        <Link
+          href={`/financial-news/${slug}`}
+          className="hover:text-gold transition-colors"
+        >
+          عرض ←
+        </Link>
       </div>
 
       {/* Tags */}

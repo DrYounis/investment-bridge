@@ -1,38 +1,17 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
+import { getArticleBySlug } from '@/lib/supabase/financial-news';
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-function getArticle(slug: string) {
-  const filepath = path.join(
-    process.cwd(),
-    'content',
-    'news',
-    'financial-news',
-    `${slug}.md`
-  );
+function renderContent(summary: string, fullContent?: string | null): string {
+  const body = fullContent || summary;
 
-  if (!fs.existsSync(filepath)) return null;
-
-  const raw = fs.readFileSync(filepath, 'utf-8');
-  const { data, content } = matter(raw);
-
-  return {
-    frontmatter: data as Record<string, any>,
-    content: renderMarkdownToHTML(content),
-    rawContent: content,
-  };
-}
-
-function renderMarkdownToHTML(md: string): string {
   return (
-    md
+    body
       // Headers
       .replace(/^### (.+)$/gm, '<h3 class="text-xl font-bold text-slate-100 mt-8 mb-3">$1</h3>')
       .replace(/^## (.+)$/gm, '<h2 class="text-2xl font-bold text-slate-100 mt-10 mb-4">$1</h2>')
@@ -48,7 +27,7 @@ function renderMarkdownToHTML(md: string): string {
       )
       // Horizontal rules
       .replace(/^---$/gm, '<hr class="my-8 border-white/10" />')
-      // Paragraphs (blank-line separated blocks)
+      // Paragraphs
       .split(/\n\n+/)
       .map((block) => {
         const trimmed = block.trim();
@@ -62,21 +41,14 @@ function renderMarkdownToHTML(md: string): string {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const article = getArticle(slug);
+  const article = await getArticleBySlug(slug);
 
   if (!article) {
     return { title: 'المقال غير موجود | marfa.sa' };
   }
 
-  const fm = article.frontmatter;
-  const title = fm.title || fm.original_title || 'مقال مالي';
-  const description =
-    article.rawContent
-      .replace(/^#.*$/gm, '')
-      .replace(/[*_`#>\[\]|-]/g, '')
-      .replace(/\n+/g, ' ')
-      .trim()
-      .slice(0, 160) || 'تحليل مالي من marfa.sa';
+  const title = article.title || article.original_title || 'مقال مالي';
+  const description = (article.summary || '').slice(0, 160) || 'تحليل مالي من marfa.sa';
 
   return {
     title: `${title} | marfa.sa`,
@@ -85,19 +57,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${title} | marfa.sa`,
       description,
       type: 'article',
-      publishedTime: fm.date,
-      tags: fm.tags || [],
+      publishedTime: article.article_date || undefined,
+      tags: article.tags || [],
     },
   };
 }
 
 export default async function ArticlePage({ params }: Props) {
   const { slug } = await params;
-  const article = getArticle(slug);
+  const article = await getArticleBySlug(slug);
 
   if (!article) notFound();
-
-  const fm = article.frontmatter;
 
   return (
     <main className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8" dir="rtl">
@@ -115,19 +85,17 @@ export default async function ArticlePage({ params }: Props) {
         {/* Article Header */}
         <header className="mb-10">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-gold mb-4 leading-snug">
-            {fm.title || fm.original_title}
+            {article.title || article.original_title}
           </h1>
           <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
-            {fm.date && <time>{fm.date}</time>}
-            {fm.source && (
-              <span className="px-2 py-1 bg-white/5 rounded-full text-xs">
-                {fm.source}
-              </span>
-            )}
+            {article.article_date && <time>{article.article_date}</time>}
+            <span className="px-2 py-1 bg-white/5 rounded-full text-xs">
+              marfa.sa الأخبار المالية
+            </span>
           </div>
-          {fm.tags && fm.tags.length > 0 && (
+          {article.tags && article.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-4">
-              {fm.tags.map((tag: string) => (
+              {article.tags.map((tag: string) => (
                 <span
                   key={tag}
                   className="px-2 py-1 bg-gold/10 text-gold/80 rounded-full text-xs"
@@ -139,17 +107,28 @@ export default async function ArticlePage({ params }: Props) {
           )}
         </header>
 
-        {/* Article Content */}
-        <div
-          className="prose prose-invert max-w-none"
-          dangerouslySetInnerHTML={{ __html: article.content }}
-        />
+        {/* Article Summary */}
+        <div className="mb-10 p-6 bg-gold/5 border border-gold/10 rounded-2xl">
+          <p className="text-slate-200 leading-loose text-lg">
+            {article.summary}
+          </p>
+        </div>
+
+        {/* Full Content */}
+        {article.full_content && (
+          <div
+            className="prose prose-invert max-w-none"
+            dangerouslySetInnerHTML={{
+              __html: renderContent(article.summary, article.full_content),
+            }}
+          />
+        )}
 
         {/* Source Link */}
-        {fm.source_url && (
+        {article.source_url && (
           <div className="mt-12 p-6 bg-white/5 rounded-2xl border border-white/10 text-center">
             <a
-              href={fm.source_url}
+              href={article.source_url}
               target="_blank"
               rel="noopener noreferrer"
               className="text-gold hover:underline font-bold"

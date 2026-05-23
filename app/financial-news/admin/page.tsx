@@ -7,8 +7,7 @@ import ScraperStatus from '@/app/components/financial-news/ScraperStatus';
 
 interface ScrapeResultItem {
   success: boolean;
-  filename?: string;
-  filepath?: string;
+  slug?: string;
   title?: string;
   original_title?: string;
   source_url?: string;
@@ -110,22 +109,6 @@ export default function AdminNewsPage() {
       console.error('Scrape error:', err);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleDownload = async (filename: string) => {
-    try {
-      const res = await fetch(`/content/news/financial-news/${filename}`);
-      if (!res.ok) throw new Error('File not found');
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch {
-      setError('تعذر تحميل الملف');
     }
   };
 
@@ -259,7 +242,7 @@ export default function AdminNewsPage() {
                     <th className="p-4 text-right">الحالة</th>
                     <th className="p-4 text-right">عنوان المقال</th>
                     <th className="p-4 text-right">المصدر</th>
-                    <th className="p-4 text-right">الملف</th>
+                    <th className="p-4 text-right">رابط</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -293,15 +276,13 @@ export default function AdminNewsPage() {
                         )}
                       </td>
                       <td className="p-4 text-sm text-slate-400">
-                        {r.filename ? (
-                          <button
-                            onClick={() => handleDownload(r.filename!)}
+                        {r.slug ? (
+                          <Link
+                            href={`/financial-news/${r.slug}`}
                             className="text-gold hover:underline text-xs"
                           >
-                            {r.filename.length > 40
-                              ? r.filename.slice(0, 37) + '...'
-                              : r.filename}
-                          </button>
+                            عرض المقال ←
+                          </Link>
                         ) : (
                           '—'
                         )}
@@ -340,19 +321,18 @@ export default function AdminNewsPage() {
 
         {/* Saved Files Browser */}
         <section>
-          <h2 className="text-xl font-bold text-slate-100 mb-4">📂 الملفات المحفوظة</h2>
+          <h2 className="text-xl font-bold text-slate-100 mb-4">📂 المقالات المحفوظة</h2>
 
           {status && status.latest_files && status.latest_files.length > 0 ? (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {status.latest_files.map((file) => (
                 <ArticleCard
                   key={file.filename}
-                  filename={file.filename}
+                  slug={file.filename}
                   title={file.title}
                   originalTitle={file.original_title}
                   sourceUrl={file.source_url}
-                  date={file.created.slice(0, 10)}
-                  onDownload={handleDownload}
+                  date={file.created}
                 />
               ))}
             </div>

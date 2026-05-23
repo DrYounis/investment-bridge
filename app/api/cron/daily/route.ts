@@ -1,6 +1,6 @@
 import { scrapeArgaamNews } from '@/lib/argaam/scraper';
 import { summarizeArticle } from '@/lib/argaam/summarizer';
-import { saveToMarkdown } from '@/lib/argaam/markdown';
+import { saveArticle } from '@/lib/supabase/financial-news';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,7 +37,16 @@ async function handleCronTrigger(req: Request): Promise<Response> {
     for (const article of articles) {
       try {
         const summary = await summarizeArticle(article);
-        await saveToMarkdown(article, summary);
+        await saveArticle({
+          title: summary.seo_title,
+          original_title: summary.original_title,
+          summary: summary.seo_summary,
+          full_content: article.full_content,
+          source_url: summary.source_url,
+          article_date: summary.article_date,
+          tags: summary.tags,
+          scraped_at: article.scraped_at,
+        });
         savedCount++;
       } catch (err) {
         console.error(`❌ Cron: failed to process article:`, err);

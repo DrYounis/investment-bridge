@@ -111,10 +111,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         });
       } catch (err) {
         failedCount++;
-        console.error(`   ❌ Failed:`, err);
+        const errMsg = String(err);
+        console.error(`   ❌ Failed:`, errMsg);
         results.push({
           success: false,
-          error: String(err),
+          error: errMsg,
+          title: `❌ ${errMsg.slice(0, 80)}`,
           original_title: article.title,
           source_url: article.url,
         });

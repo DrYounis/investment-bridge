@@ -104,12 +104,7 @@ export async function getArticleBySlug(
 ): Promise<FinancialNewsArticle | null> {
   const url = getSupabaseUrl();
   const anonKey = getSupabaseAnonKey();
-
-  // Normalize to NFC — macOS vs Linux can produce different Unicode forms
   const normalized = slug.normalize('NFC');
-  const query = `${url}/rest/v1/financial_news_articles?select=*&slug=eq.${encodeURIComponent(normalized)}`;
-
-  console.log('🔍 gABS slug_end=', normalized.slice(-20), 'query_len=', query.length);
 
   const headers = {
     apikey: anonKey,
@@ -118,6 +113,11 @@ export async function getArticleBySlug(
   };
 
   try {
+    // Fetch all articles (no slug filter — same pattern as getArticles which works)
+    // and filter in JS to avoid PostgREST encoding issues with Arabic slugs.
+    const query = `${url}/rest/v1/financial_news_articles?select=*&order=article_date.desc&limit=100`;
+    console.log('🔍 gABS fetching all, target_slug_end=', normalized.slice(-25));
+
     const response = await fetch(query, { headers });
 
     console.log('🔍 gABS status=', response.status);
@@ -128,42 +128,20 @@ export async function getArticleBySlug(
       return null;
     }
 
-    const data = await response.json();
-    console.log('🔍 gABS arr_len=', Array.isArray(data) ? data.length : 'non-array');
+    const data: any[] = await response.json();
+    console.log('🔍 gABS got', data.length, 'rows');
 
-    if (Array.isArray(data) && data.length > 0) {
-      return data[0] as FinancialNewsArticle;
-    }
-
-    // ── Diagnostic fallback: scan all slugs with NFC normalization on both sides ──
-    console.log('🔍 gABS fallback: scanning all slugs...');
-    const allRes = await fetch(
-      `${url}/rest/v1/financial_news_articles?select=id,slug&limit=100`,
-      { headers }
+    // Match by normalized slug — handles NFC vs NFD mismatches
+    const match = data.find(
+      (row: any) => (row.slug || '').normalize('NFC') === normalized
     );
-    if (allRes.ok) {
-      const allRows: any[] = await allRes.json();
-      // Normalize BOTH sides for comparison — DB may have NFD, URL gives NFC
-      const match = allRows.find((r: any) =>
-        (r.slug || '').normalize('NFC') === normalized
-      );
-      if (match) {
-        console.log('🔍 gABS fallback: FOUND! id=', match.id?.slice(0, 8), 'slug_end=', (match.slug || '').slice(-30));
-        // Re-fetch by `id` (UUID, no encoding issues) instead of slug
-        const retryQuery = `${url}/rest/v1/financial_news_articles?select=*&id=eq.${encodeURIComponent(match.id)}`;
-        const retryRes = await fetch(retryQuery, { headers });
-        if (retryRes.ok) {
-          const retryData = await retryRes.json();
-          if (Array.isArray(retryData) && retryData.length > 0) {
-            console.log('🔍 gABS fallback: retry by id SUCCESS');
-            return retryData[0] as FinancialNewsArticle;
-          }
-        }
-        console.log('🔍 gABS fallback: match found but retry by id FAILED');
-      } else {
-        console.log('🔍 gABS fallback: slug NOT in DB. Sample:', allRows.slice(0, 3).map((r: any) => (r.slug || '').slice(-25)));
-      }
+
+    if (match) {
+      console.log('🔍 gABS MATCHED:', match.title?.slice(0, 40));
+      return match as FinancialNewsArticle;
     }
+
+    console.log('🔍 gABS NO MATCH. DB sample:', data.slice(0, 3).map((r: any) => (r.slug || '').slice(-25)));
     return null;
   } catch (e: any) {
     console.error('❌ getArticleBySlug exception:', e.message, e.stack?.slice(0, 200));

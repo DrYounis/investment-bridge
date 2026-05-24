@@ -135,30 +135,33 @@ export async function getArticleBySlug(
       return data[0] as FinancialNewsArticle;
     }
 
-    // ── Diagnostic fallback: scan all slugs to see if the article exists ──
+    // ── Diagnostic fallback: scan all slugs with NFC normalization on both sides ──
     console.log('🔍 gABS fallback: scanning all slugs...');
     const allRes = await fetch(
-      `${url}/rest/v1/financial_news_articles?select=slug&limit=100`,
+      `${url}/rest/v1/financial_news_articles?select=id,slug&limit=100`,
       { headers }
     );
     if (allRes.ok) {
       const allRows: any[] = await allRes.json();
-      const match = allRows.find((r: any) => r.slug === normalized);
+      // Normalize BOTH sides for comparison — DB may have NFD, URL gives NFC
+      const match = allRows.find((r: any) =>
+        (r.slug || '').normalize('NFC') === normalized
+      );
       if (match) {
-        console.log('🔍 gABS fallback: FOUND match! slug=', match.slug?.slice(-30));
-        // Re-fetch with the DB-confirmed slug
-        const retryQuery = `${url}/rest/v1/financial_news_articles?select=*&slug=eq.${encodeURIComponent(match.slug)}`;
+        console.log('🔍 gABS fallback: FOUND! id=', match.id?.slice(0, 8), 'slug_end=', (match.slug || '').slice(-30));
+        // Re-fetch by `id` (UUID, no encoding issues) instead of slug
+        const retryQuery = `${url}/rest/v1/financial_news_articles?select=*&id=eq.${encodeURIComponent(match.id)}`;
         const retryRes = await fetch(retryQuery, { headers });
         if (retryRes.ok) {
           const retryData = await retryRes.json();
           if (Array.isArray(retryData) && retryData.length > 0) {
-            console.log('🔍 gABS fallback: retry SUCCESS');
+            console.log('🔍 gABS fallback: retry by id SUCCESS');
             return retryData[0] as FinancialNewsArticle;
           }
         }
-        console.log('🔍 gABS fallback: match found but retry FAILED — encoding mismatch confirmed!');
+        console.log('🔍 gABS fallback: match found but retry by id FAILED');
       } else {
-        console.log('🔍 gABS fallback: slug NOT in DB. Sample:', allRows.slice(0, 3).map((r: any) => r.slug?.slice(-25)));
+        console.log('🔍 gABS fallback: slug NOT in DB. Sample:', allRows.slice(0, 3).map((r: any) => (r.slug || '').slice(-25)));
       }
     }
     return null;

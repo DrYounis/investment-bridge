@@ -6,7 +6,7 @@ export async function GET() {
   const url = getSupabaseUrl();
   const keyPrefix = getSupabaseAnonKey().slice(0, 10) + '...';
 
-  let articles;
+  let articles: Awaited<ReturnType<typeof getArticles>> | undefined;
   let error: string | null = null;
   try {
     articles = await getArticles();

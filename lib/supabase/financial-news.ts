@@ -1,4 +1,3 @@
-import { createClient } from '@supabase/supabase-js';
 import { getSupabaseUrl, getSupabaseAnonKey } from './config';
 import { createServiceClient } from './service';
 
@@ -33,10 +32,6 @@ export interface ArticleListingItem {
 
 // ── Helpers ────────────────────────────────────────────────────────
 
-function getAnonClient() {
-  return createClient(getSupabaseUrl(), getSupabaseAnonKey());
-}
-
 function generateSlug(title: string, date: string): string {
   const clean = title
     .replace(/[^\u0600-\u06FF\w\s-]/g, '')
@@ -52,40 +47,47 @@ function generateSlug(title: string, date: string): string {
 
 export async function getArticles(): Promise<ArticleListingItem[]> {
   const url = getSupabaseUrl();
-  const key = getSupabaseAnonKey().slice(0, 10) + '...';
-  console.log('🔍 getArticles: url=', url, 'key_prefix=', key);
+  const anonKey = getSupabaseAnonKey();
+  const keyPrefix = anonKey.slice(0, 10) + '...';
+  console.log('🔍 getArticles: url=', url, 'key_prefix=', keyPrefix);
 
-  const supabase = getAnonClient();
+  // Build PostgREST query directly to bypass any @supabase/supabase-js
+  // client-side issues in the Next.js serverless runtime.
+  const select = 'slug,title,original_title,source_url,article_date,tags,summary,created_at';
+  const query = `${url}/rest/v1/financial_news_articles?select=${encodeURIComponent(select)}&order=article_date.desc&order=created_at.desc&limit=50`;
 
   let data: any[] | null = null;
-  let error: any = null;
 
   try {
-    const result = await supabase
-      .from('financial_news_articles')
-      .select('slug, title, original_title, source_url, article_date, tags, summary, created_at')
-      .order('article_date', { ascending: false })
-      .order('created_at', { ascending: false })
-      .limit(50);
-    data = result.data;
-    error = result.error;
+    const response = await fetch(query, {
+      headers: {
+        apikey: anonKey,
+        Authorization: `Bearer ${anonKey}`,
+        Accept: 'application/json',
+      },
+      // Next.js extends fetch with this option; ensures fresh data
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ getArticles fetch error:', response.status, errorText.slice(0, 500));
+      return [];
+    }
+
+    data = await response.json();
   } catch (e: any) {
     console.error('❌ getArticles EXCEPTION:', e.message, e.stack);
-    return [];
-  }
-
-  if (error) {
-    console.error('❌ getArticles error:', JSON.stringify(error));
     return [];
   }
 
   console.log('✅ getArticles: got', data?.length ?? 0, 'rows');
 
   if (!data || data.length === 0) {
-    console.warn('⚠️ getArticles: data is empty or null');
+    console.warn('⚠️ getArticles: data is empty or null, raw type:', typeof data, 'isArray:', Array.isArray(data));
   }
 
-  return (data || []).map((row) => ({
+  return (data || []).map((row: any) => ({
     slug: row.slug,
     title: row.title,
     original_title: row.original_title || '',
@@ -99,16 +101,25 @@ export async function getArticles(): Promise<ArticleListingItem[]> {
 export async function getArticleBySlug(
   slug: string
 ): Promise<FinancialNewsArticle | null> {
-  const supabase = getAnonClient();
+  const url = getSupabaseUrl();
+  const anonKey = getSupabaseAnonKey();
+  const query = `${url}/rest/v1/financial_news_articles?select=*&slug=eq.${encodeURIComponent(slug)}`;
 
-  const { data, error } = await supabase
-    .from('financial_news_articles')
-    .select('*')
-    .eq('slug', slug)
-    .single();
+  try {
+    const response = await fetch(query, {
+      headers: {
+        apikey: anonKey,
+        Authorization: `Bearer ${anonKey}`,
+        Accept: 'application/vnd.pgrst.object+json', // Return single object, not array
+      },
+      cache: 'no-store',
+    });
 
-  if (error || !data) return null;
-  return data as FinancialNewsArticle;
+    if (!response.ok) return null;
+    return await response.json();
+  } catch {
+    return null;
+  }
 }
 
 // ── Write Operations (Service Role) ────────────────────────────────
@@ -176,12 +187,31 @@ export async function listArticles(): Promise<
 }
 
 export async function getArticlesCount(): Promise<number> {
-  const supabase = getAnonClient();
+  const url = getSupabaseUrl();
+  const anonKey = getSupabaseAnonKey();
+  const query = `${url}/rest/v1/financial_news_articles?select=id&limit=0`;
 
-  const { count, error } = await supabase
-    .from('financial_news_articles')
-    .select('*', { count: 'exact', head: true });
+  try {
+    const response = await fetch(query, {
+      headers: {
+        apikey: anonKey,
+        Authorization: `Bearer ${anonKey}`,
+        Accept: 'application/json',
+        Prefer: 'count=exact',
+      },
+      cache: 'no-store',
+    });
 
-  if (error) return 0;
-  return count || 0;
+    if (!response.ok) return 0;
+
+    // PostgREST returns count in content-range header: "0-0/40"
+    const contentRange = response.headers.get('content-range');
+    if (contentRange) {
+      const match = contentRange.match(/\/(\d+)$/);
+      if (match) return parseInt(match[1], 10);
+    }
+    return 0;
+  } catch {
+    return 0;
+  }
 }

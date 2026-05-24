@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { createClient } from '@/lib/supabase/server';
 
 // --- Advanced Marfa Scoring Algorithm Types ---
 
@@ -262,6 +262,7 @@ export async function processIdeaValidation(submission: IdeaSubmission): Promise
     const { answers } = submission;
     let totalScore = 0;
     const feedback: string[] = [];
+    const supabase = await createClient();
 
     // Basic scoring (Legacy)
     Object.values(answers).forEach((ans: any) => {
@@ -322,11 +323,13 @@ export async function saveMVPBlueprint(ideaId: string, features: any[]) {
         complexity_score: f.complexity,
         category: f.category
     }));
+    const supabase = await createClient();
     const { error } = await supabase.from('marfa_mvp_features').insert(records);
     return { success: !error, error };
 }
 
 export async function triggerInvestorMatch(ideaId: string) {
+    const supabase = await createClient();
     const { data: idea } = await supabase.from('marfa_ideas').select('total_score').eq('id', ideaId).single();
     if (idea && idea.total_score > 80) {
         return { matched: true, message: "Idea sent to matching investors" };

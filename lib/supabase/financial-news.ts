@@ -1,24 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
-
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://wxvkzutexitcllyewbnw.supabase.co';
-
-// Service-role client for write operations (scraper, cron)
-// Must read env var at runtime, not module scope (Next.js inlines at build time)
-function getServiceClient() {
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!serviceKey) {
-    throw new Error('SUPABASE_SERVICE_ROLE_KEY not configured');
-  }
-  return createClient(SUPABASE_URL, serviceKey);
-}
-
-// Anon client for read operations (public pages)
-function getAnonClient() {
-  return createClient(
-    SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-  );
-}
+import { getSupabaseUrl, getSupabaseAnonKey } from './config';
+import { createServiceClient } from './service';
 
 // ── Types ──────────────────────────────────────────────────────────
 
@@ -47,6 +29,23 @@ export interface ArticleListingItem {
   date: string;
   tags: string[];
   excerpt: string;
+}
+
+// ── Helpers ────────────────────────────────────────────────────────
+
+function getAnonClient() {
+  return createClient(getSupabaseUrl(), getSupabaseAnonKey());
+}
+
+function generateSlug(title: string, date: string): string {
+  const clean = title
+    .replace(/[^\u0600-\u06FF\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .toLowerCase()
+    .slice(0, 60);
+  const timestamp = Date.now().toString().slice(-6);
+  return `${date}-${clean}-${timestamp}`;
 }
 
 // ── Read Operations (Public) ───────────────────────────────────────
@@ -94,17 +93,6 @@ export async function getArticleBySlug(
 
 // ── Write Operations (Service Role) ────────────────────────────────
 
-function generateSlug(title: string, date: string): string {
-  const clean = title
-    .replace(/[^\u0600-\u06FF\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .toLowerCase()
-    .slice(0, 60);
-  const timestamp = Date.now().toString().slice(-6);
-  return `${date}-${clean}-${timestamp}`;
-}
-
 export async function saveArticle(article: {
   title: string;
   original_title: string;
@@ -115,7 +103,7 @@ export async function saveArticle(article: {
   tags?: string[];
   scraped_at: string;
 }): Promise<{ slug: string }> {
-  const supabase = getServiceClient();
+  const supabase = createServiceClient();
 
   const slug = generateSlug(article.original_title || article.title, article.article_date);
 
@@ -144,7 +132,7 @@ export async function saveArticle(article: {
 export async function listArticles(): Promise<
   { slug: string; created_at: string; title: string; original_title: string; source_url: string; article_date: string }[]
 > {
-  const supabase = getServiceClient();
+  const supabase = createServiceClient();
 
   const { data, error } = await supabase
     .from('financial_news_articles')

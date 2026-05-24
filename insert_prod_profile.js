@@ -1,30 +1,41 @@
 const { createClient } = require('@supabase/supabase-js');
+const path = require('path');
 
-const supabaseUrl = 'https://wxvkzutexitcllyewbnw.supabase.co';
-const supabaseServiceKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind4dmt6dXRleGl0Y2xseWV3Ym53Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTU0ODkyNSwiZXhwIjoyMDk1MTI0OTI1fQ.M7JIrOd68G92NBnzRat7rkZycVmIxV-I62sTEBOXB88';
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+// Load env vars from .env.local
+require('dotenv').config({ path: path.resolve(__dirname, '.env.local') });
+
+function getServiceClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) {
+    throw new Error(
+      'Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY.\n' +
+      'Set them in .env.local at the project root.'
+    );
+  }
+  return createClient(url, key);
+}
 
 async function insertProfile() {
-    const userId = '67d6abf5-05df-44bd-95e7-c44f6fbcbe34'; // From previous log
-    console.log(`Inserting profile for user ${userId}...`);
+  const supabase = getServiceClient();
+  const userId = '67d6abf5-05df-44bd-95e7-c44f6fbcbe34';
+  console.log(`Inserting profile for user ${userId}...`);
 
-    const { data, error } = await supabase
-        .from('profiles')
-        .insert([
-            {
-                id: userId,
-                email: 'op.younis@gmail.com',
-                user_type: 'admin',
-                created_at: new Date().toISOString()
-            }
-        ])
-        .select();
+  const { data, error } = await supabase
+    .from('profiles')
+    .insert([{
+      id: userId,
+      email: 'op.younis@gmail.com',
+      user_type: 'admin',
+      created_at: new Date().toISOString(),
+    }])
+    .select();
 
-    if (error) {
-        console.error('Error inserting profile:', error);
-    } else {
-        console.log('Profile inserted successfully:', data);
-    }
+  if (error) {
+    console.error('Error inserting profile:', error);
+  } else {
+    console.log('Profile inserted successfully:', data);
+  }
 }
 
 insertProfile();

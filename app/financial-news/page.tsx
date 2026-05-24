@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
+import { getArticles } from '@/lib/supabase/financial-news';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'الأخبار المالية السعودية | marfa.sa',
@@ -16,54 +16,8 @@ export const metadata: Metadata = {
   },
 };
 
-interface NewsArticle {
-  slug: string;
-  title: string;
-  original_title: string;
-  source_url: string;
-  date: string;
-  tags: string[];
-  excerpt: string;
-}
-
-function getArticles(): NewsArticle[] {
-  const dir = path.join(process.cwd(), 'content', 'news', 'financial-news');
-
-  if (!fs.existsSync(dir)) return [];
-
-  return fs
-    .readdirSync(dir)
-    .filter((f) => f.endsWith('.md') && f !== 'EXAMPLE.md')
-    .map((filename) => {
-      const filepath = path.join(dir, filename);
-      const raw = fs.readFileSync(filepath, 'utf-8');
-      const { data, content } = matter(raw);
-
-      const excerpt = content
-        .replace(/^#.*$/gm, '')
-        .replace(/[*_`#>\[\]|-]/g, '')
-        .replace(/\n+/g, ' ')
-        .trim()
-        .slice(0, 160);
-
-      return {
-        slug: filename.replace(/\.md$/, ''),
-        title: data.title || data.original_title || filename,
-        original_title: data.original_title || '',
-        source_url: data.source_url || '',
-        date: data.date || '',
-        tags: data.tags || [],
-        excerpt: excerpt || 'اقرأ التحليل الكامل على marfa.sa',
-      };
-    })
-    .sort(
-      (a, b) =>
-        new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime()
-    );
-}
-
-export default function FinancialNewsPage() {
-  const articles = getArticles();
+export default async function FinancialNewsPage() {
+  const articles = await getArticles();
 
   return (
     <main className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8" dir="rtl">

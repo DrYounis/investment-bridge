@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { scrapeArgaamNews } from '@/lib/argaam/scraper';
 import { summarizeArticle } from '@/lib/argaam/summarizer';
+import { sanitizeContent } from '@/lib/sanitize';
 import { saveArticle, listArticles, getArticlesCount } from '@/lib/supabase/financial-news';
 
 export const dynamic = 'force-dynamic';
@@ -91,10 +92,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
         console.log('   💾 Step 3/3: Saving to Supabase...');
         const saved = await saveArticle({
-          title: summary.seo_title,
-          original_title: summary.original_title,
-          summary: summary.seo_summary,
-          full_content: article.full_content,
+          title: sanitizeContent(summary.seo_title),
+          original_title: sanitizeContent(summary.original_title),
+          summary: sanitizeContent(summary.seo_summary),
+          full_content: sanitizeContent(article.full_content || ''),
           source_url: summary.source_url,
           article_date: summary.article_date,
           tags: summary.tags,

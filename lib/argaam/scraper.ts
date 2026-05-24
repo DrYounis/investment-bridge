@@ -112,6 +112,9 @@ async function scrapeArticleContent(
     const html = await fetchWithTimeout(url);
     const $ = cheerio.load(html);
 
+    // Strip <script>, <style>, <noscript> before any text extraction
+    $('script, style, noscript').remove();
+
     // Extract date from the article detail page
     const dateEl = $('.article-details').find('time, .date, [class*="date"]').first();
     const dateText = dateEl.text().trim();
@@ -131,7 +134,19 @@ async function scrapeArticleContent(
         !text.startsWith('function') &&
         !text.startsWith('var ') &&
         !text.includes('getCommentCount') &&
-        !text.includes('Comments.indexOf')
+        !text.includes('Comments.indexOf') &&
+        !text.includes('document,') &&
+        !text.includes('jssdk') &&
+        !text.includes('FB.ui') &&
+        !text.includes('recordSharing') &&
+        !text.includes('copyToClipboard') &&
+        !text.includes('setTwitterShortURL') &&
+        !text.includes('setFacebookShortURL') &&
+        !text.includes('setLinkedInShortURL') &&
+        !text.includes('setWhatsAppShortURL') &&
+        !text.includes('setCopyShortURL') &&
+        !text.includes('document.execCommand') &&
+        !text.match(/^\s*\(function\s*\(/)
       ) {
         contentParts.push(text);
       }

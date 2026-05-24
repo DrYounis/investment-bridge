@@ -1,10 +1,56 @@
 /**
- * Content sanitization — strip ALL third-party source references
- * and leaked Claude prompt artifacts.
+ * Content sanitization — strip ALL third-party source references,
+ * leaked Claude prompt artifacts, and JavaScript code.
  *
  * All content on marfa.sa must appear as original marfa.sa content.
  * Never expose the scraping source (Argaam or any other) to visitors.
  */
+
+/**
+ * Strip JavaScript code artifacts that get scraped along with article text.
+ * Argaam pages embed share-button scripts inline — remove them aggressively.
+ */
+function stripJavaScript(text: string): string {
+  if (!text) return text;
+
+  let cleaned = text;
+
+  // Remove lines that are entirely or primarily JavaScript
+  const lines = cleaned.split('\n');
+  const filtered = lines.filter((line) => {
+    const trimmed = line.trim();
+    if (!trimmed) return false; // drop blank lines (handled later)
+
+    // Pure JS indicators — drop the whole line
+    if (/^\s*\(function\s*\(/.test(trimmed)) return false;
+    if (/^\s*(function|var|const|let)\s/.test(trimmed)) return false;
+    if (/\b(document|window|console)\./.test(trimmed)) return false;
+    if (/\b(FB\.ui|FB\.init|facebook|jssdk|recordSharing|copyToClipboard|setTwitter|setFacebook|setLinkedIn|setWhatsApp|setCopy)/i.test(trimmed)) return false;
+    if (/\$\.ajax|\$\.getJSON|\$\.post|document\.execCommand/.test(trimmed)) return false;
+    if (/^\s*\}\s*\)\s*;?\s*$/.test(trimmed)) return false; // closing }); patterns
+    if (/^\s*else\s*\{?\s*$/.test(trimmed)) return false;
+    if (/^\s*,\s*(function|error|success)\s*:/.test(trimmed)) return false; // AJAX callback params
+    if (/^\s*\}\s*$/.test(trimmed) && filtered.length > 0) {
+      // Single closing brace — likely JS block end
+      return false;
+    }
+
+    return true;
+  });
+
+  cleaned = filtered.join('\n');
+
+  // Remove inline JS patterns (everything from "((document" to the next line break)
+  cleaned = cleaned.replace(/\(\(document[^\n]*/g, '');
+
+  // Remove URL-like patterns that are really Argaam share links
+  cleaned = cleaned.replace(/https?:\/\/arg\.am\/[^\s]*/gi, '');
+
+  // Clean up multiple blank lines
+  cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
+
+  return cleaned.trim();
+}
 
 /**
  * Strip ALL references to Argaam/أرقام from any text.
@@ -82,6 +128,9 @@ export function sanitizeContent(text: string): string {
   // Remove markdown headings that are just prompt instructions
   cleaned = cleaned.replace(/^#+\s*العنوان المحسّن.*$/gm, '');
   cleaned = cleaned.replace(/^#+\s*تحليل العنوان.*$/gm, '');
+
+  // Strip any JavaScript code that leaked through
+  cleaned = stripJavaScript(cleaned);
 
   // Clean up whitespace
   cleaned = cleaned.replace(/\n{3,}/g, '\n\n');

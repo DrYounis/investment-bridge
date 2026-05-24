@@ -67,6 +67,7 @@ export async function getArticles(): Promise<ArticleListingItem[]> {
         Authorization: `Bearer ${anonKey}`,
         Accept: 'application/json',
       },
+      cache: 'no-store',
     });
 
     if (!response.ok) {
@@ -116,7 +117,7 @@ export async function getArticleBySlug(
     // and filter in JS to avoid PostgREST encoding issues with Arabic slugs.
     const query = `${url}/rest/v1/financial_news_articles?select=*&order=article_date.desc&limit=100`;
 
-    const response = await fetch(query, { headers });
+    const response = await fetch(query, { headers, cache: 'no-store' });
 
     if (!response.ok) {
       const errorText = await response.text();

@@ -27,9 +27,11 @@ CREATE INDEX IF NOT EXISTS idx_financial_news_date ON public.financial_news_arti
 ALTER TABLE public.financial_news_articles ENABLE ROW LEVEL SECURITY;
 
 -- Allow public read access
+DROP POLICY IF EXISTS "Allow public read" ON public.financial_news_articles;
 CREATE POLICY "Allow public read" ON public.financial_news_articles
   FOR SELECT USING (true);
 
 -- Allow service_role full access
+DROP POLICY IF EXISTS "Allow service_role write" ON public.financial_news_articles;
 CREATE POLICY "Allow service_role write" ON public.financial_news_articles
   FOR ALL USING (true) WITH CHECK (true);

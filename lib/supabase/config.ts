@@ -23,11 +23,27 @@ function requireEnv(key: string): string {
 // ── Supabase Project ────────────────────────────────────────────────
 
 export function getSupabaseUrl(): string {
-  return requireEnv('NEXT_PUBLIC_SUPABASE_URL');
+  // MUST use dot notation — Next.js inlines NEXT_PUBLIC_ vars at build time
+  // via string replacement. Bracket notation (process.env[key]) is NOT replaced.
+  const value = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!value) {
+    throw new Error(
+      `Missing required environment variable: NEXT_PUBLIC_SUPABASE_URL\n` +
+        `Set it in .env.local (local dev) or Vercel dashboard (production).`
+    );
+  }
+  return value;
 }
 
 export function getSupabaseAnonKey(): string {
-  return requireEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+  const value = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!value) {
+    throw new Error(
+      `Missing required environment variable: NEXT_PUBLIC_SUPABASE_ANON_KEY\n` +
+        `Set it in .env.local (local dev) or Vercel dashboard (production).`
+    );
+  }
+  return value;
 }
 
 export function getSupabaseServiceKey(): string {

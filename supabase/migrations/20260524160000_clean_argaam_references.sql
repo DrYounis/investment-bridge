@@ -26,23 +26,39 @@ SET
   summary      = REGEXP_REPLACE(summary,      'محللون لـ marfa\.sa\s*[:\-]?\s*', '', 'gi'),
   full_content = REGEXP_REPLACE(full_content, 'محللون لـ marfa\.sa\s*[:\-]?\s*', '', 'gi');
 
--- Step 4: Strip leaked Claude prompt artifacts from titles
+-- Step 4: Strip leaked Claude prompt artifacts from titles (nested to avoid multi-assignment error)
 UPDATE financial_news_articles
 SET
-  title = REGEXP_REPLACE(title, '\*\*العنوان المحسّن[：:]\s*\*\*\s*', '', 'g'),
-  title = REGEXP_REPLACE(title, '^العنوان المحسّن[：:]\s*', '', 'g'),
-  title = REGEXP_REPLACE(title, '^تحليل العنوان[：:]\s*', '', 'g');
+  title = REGEXP_REPLACE(
+            REGEXP_REPLACE(
+              REGEXP_REPLACE(title, '\*\*العنوان المحسّن[：:]\s*\*\*\s*', '', 'g'),
+              '^العنوان المحسّن[：:]\s*', '', 'g'
+            ),
+            '^تحليل العنوان[：:]\s*', '', 'g'
+          );
 
--- Step 5: Strip leaked Claude prompt artifacts from summaries
+-- Step 5: Strip leaked Claude prompt artifacts from summaries (nested)
 UPDATE financial_news_articles
 SET
-  summary = REGEXP_REPLACE(summary, '\*\*العنوان المحسّن[：:]\s*\*\*[^.]*\.', '', 'g'),
-  summary = REGEXP_REPLACE(summary, '\*\*تحليل العنوان[：:]\s*\*\*[^.]*\.', '', 'g'),
-  summary = REGEXP_REPLACE(summary, '- عدد الأحرف[：:][^\n]*', '', 'g'),
-  summary = REGEXP_REPLACE(summary, '- يتضمن الكلمة المفتاحية[^\n]*', '', 'g'),
-  summary = REGEXP_REPLACE(summary, '- الكلمة المفتاحية المستخدمة[：:][^\n]*', '', 'g'),
-  summary = REGEXP_REPLACE(summary, '- يحافظ على[^\n]*', '', 'g'),
-  summary = REGEXP_REPLACE(summary, '- مزايا هذا العنوان[：:][^\n]*', '', 'g');
+  summary = REGEXP_REPLACE(
+              REGEXP_REPLACE(
+                REGEXP_REPLACE(
+                  REGEXP_REPLACE(
+                    REGEXP_REPLACE(
+                      REGEXP_REPLACE(
+                        REGEXP_REPLACE(summary, '\*\*العنوان المحسّن[：:]\s*\*\*[^.]*\.', '', 'g'),
+                        '\*\*تحليل العنوان[：:]\s*\*\*[^.]*\.', '', 'g'
+                      ),
+                      '- عدد الأحرف[：:][^\n]*', '', 'g'
+                    ),
+                    '- يتضمن الكلمة المفتاحية[^\n]*', '', 'g'
+                  ),
+                  '- الكلمة المفتاحية المستخدمة[：:][^\n]*', '', 'g'
+                ),
+                '- يحافظ على[^\n]*', '', 'g'
+              ),
+              '- مزايا هذا العنوان[：:][^\n]*', '', 'g'
+            );
 
 -- Step 6: Strip "شاشة تداول السوق السعودي ترصد" patterns
 UPDATE financial_news_articles

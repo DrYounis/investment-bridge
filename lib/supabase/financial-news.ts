@@ -67,9 +67,9 @@ export async function getArticles(): Promise<ArticleListingItem[]> {
         Authorization: `Bearer ${anonKey}`,
         Accept: 'application/json',
       },
-      // Next.js extends fetch with this option; ensures fresh data
-      cache: 'no-store',
     });
+
+    console.log('🔍 getArticles response status:', response.status);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -77,7 +77,15 @@ export async function getArticles(): Promise<ArticleListingItem[]> {
       return [];
     }
 
-    data = await response.json();
+    const rawText = await response.text();
+    console.log('🔍 getArticles raw response (first 300 chars):', rawText.slice(0, 300));
+
+    try {
+      data = JSON.parse(rawText);
+    } catch (parseErr: any) {
+      console.error('❌ getArticles JSON parse error:', parseErr.message);
+      return [];
+    }
   } catch (e: any) {
     console.error('❌ getArticles EXCEPTION:', e.message, e.stack);
     return [];

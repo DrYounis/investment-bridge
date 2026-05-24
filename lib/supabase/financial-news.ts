@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://tkokgarmxcgvsedtgben.supabase.co';
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://wxvkzutexitcllyewbnw.supabase.co';
 
 // Service-role client for write operations (scraper, cron)
 // Must read env var at runtime, not module scope (Next.js inlines at build time)

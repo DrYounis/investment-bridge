@@ -1,7 +1,7 @@
 const { createClient } = require('@supabase/supabase-js');
 
-const supabaseUrl = 'https://tkokgarmxcgvsedtgben.supabase.co';
-const supabaseServiceKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRrb2tnYXJteGNndnNlZHRnYmVuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2OTg1NTU2NywiZXhwIjoyMDg1NDMxNTY3fQ.0yxz8dFL3J1AwjOWTIhZ2QLtAF_aZEJ3wbVQAksqCkM';
+const supabaseUrl = 'https://wxvkzutexitcllyewbnw.supabase.co';
+const supabaseServiceKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind4dmt6dXRleGl0Y2xseWV3Ym53Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTU0ODkyNSwiZXhwIjoyMDk1MTI0OTI1fQ.M7JIrOd68G92NBnzRat7rkZycVmIxV-I62sTEBOXB88';
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 async function fixOriginalAdmin() {

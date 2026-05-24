@@ -130,20 +130,6 @@ export default async function ArticlePage({ params }: Props) {
           />
         )}
 
-        {/* Source Link */}
-        {article.source_url && (
-          <div className="mt-12 p-6 bg-white/5 rounded-2xl border border-white/10 text-center">
-            <a
-              href={article.source_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gold hover:underline font-bold"
-            >
-              اقرأ المقال الأصلي ←
-            </a>
-          </div>
-        )}
-
         {/* Back Link */}
         <div className="mt-10 text-center">
           <Link

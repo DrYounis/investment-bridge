@@ -53,8 +53,10 @@ export async function getArticles(): Promise<ArticleListingItem[]> {
 
   // Build PostgREST query directly to bypass any @supabase/supabase-js
   // client-side issues in the Next.js serverless runtime.
+  // NOTE: do NOT encodeURIComponent the select string — commas are PostgREST
+  // column separators and must remain literal.
   const select = 'slug,title,original_title,source_url,article_date,tags,summary,created_at';
-  const query = `${url}/rest/v1/financial_news_articles?select=${encodeURIComponent(select)}&order=article_date.desc&order=created_at.desc&limit=50`;
+  const query = `${url}/rest/v1/financial_news_articles?select=${select}&order=article_date.desc&order=created_at.desc&limit=50`;
 
   let data: any[] | null = null;
 

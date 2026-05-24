@@ -51,23 +51,39 @@ function generateSlug(title: string, date: string): string {
 // ── Read Operations (Public) ───────────────────────────────────────
 
 export async function getArticles(): Promise<ArticleListingItem[]> {
+  const url = getSupabaseUrl();
+  const key = getSupabaseAnonKey().slice(0, 10) + '...';
+  console.log('🔍 getArticles: url=', url, 'key_prefix=', key);
+
   const supabase = getAnonClient();
 
-  console.log('🔍 getArticles: fetching from', getSupabaseUrl());
+  let data: any[] | null = null;
+  let error: any = null;
 
-  const { data, error } = await supabase
-    .from('financial_news_articles')
-    .select('slug, title, original_title, source_url, article_date, tags, summary, created_at')
-    .order('article_date', { ascending: false })
-    .order('created_at', { ascending: false })
-    .limit(50);
+  try {
+    const result = await supabase
+      .from('financial_news_articles')
+      .select('slug, title, original_title, source_url, article_date, tags, summary, created_at')
+      .order('article_date', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(50);
+    data = result.data;
+    error = result.error;
+  } catch (e: any) {
+    console.error('❌ getArticles EXCEPTION:', e.message, e.stack);
+    return [];
+  }
 
   if (error) {
-    console.error('❌ Failed to fetch articles:', JSON.stringify(error));
+    console.error('❌ getArticles error:', JSON.stringify(error));
     return [];
   }
 
   console.log('✅ getArticles: got', data?.length ?? 0, 'rows');
+
+  if (!data || data.length === 0) {
+    console.warn('⚠️ getArticles: data is empty or null');
+  }
 
   return (data || []).map((row) => ({
     slug: row.slug,

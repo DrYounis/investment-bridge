@@ -38,7 +38,8 @@ function generateSlug(title: string, date: string): string {
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
     .toLowerCase()
-    .slice(0, 60);
+    .slice(0, 60)
+    .normalize('NFC'); // Ensure consistent Unicode normalization across platforms
   const timestamp = Date.now().toString().slice(-6);
   return `${date}-${clean}-${timestamp}`;
 }
@@ -103,21 +104,23 @@ export async function getArticleBySlug(
 ): Promise<FinancialNewsArticle | null> {
   const url = getSupabaseUrl();
   const anonKey = getSupabaseAnonKey();
-  const keyPrefix = anonKey.slice(0, 10) + '...';
-  const query = `${url}/rest/v1/financial_news_articles?select=*&slug=eq.${encodeURIComponent(slug)}`;
 
-  console.log('🔍 getArticleBySlug: slug=', slug, 'url_prefix=', url?.slice(0, 50), 'key_prefix=', keyPrefix);
+  // Normalize to NFC — macOS vs Linux can produce different Unicode forms
+  const normalized = slug.normalize('NFC');
+  const query = `${url}/rest/v1/financial_news_articles?select=*&slug=eq.${encodeURIComponent(normalized)}`;
+
+  console.log('🔍 gABS slug_end=', normalized.slice(-20), 'query_len=', query.length);
+
+  const headers = {
+    apikey: anonKey,
+    Authorization: `Bearer ${anonKey}`,
+    Accept: 'application/json',
+  };
 
   try {
-    const response = await fetch(query, {
-      headers: {
-        apikey: anonKey,
-        Authorization: `Bearer ${anonKey}`,
-        Accept: 'application/json',
-      },
-    });
+    const response = await fetch(query, { headers });
 
-    console.log('🔍 getArticleBySlug: response.status=', response.status, 'ok=', response.ok);
+    console.log('🔍 gABS status=', response.status);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -125,11 +128,40 @@ export async function getArticleBySlug(
       return null;
     }
 
-    // PostgREST returns an array; take the first (and only) element
     const data = await response.json();
-    console.log('🔍 getArticleBySlug: data type=', typeof data, 'isArray=', Array.isArray(data), 'length=', Array.isArray(data) ? data.length : 'N/A');
-    if (!Array.isArray(data) || data.length === 0) return null;
-    return data[0] as FinancialNewsArticle;
+    console.log('🔍 gABS arr_len=', Array.isArray(data) ? data.length : 'non-array');
+
+    if (Array.isArray(data) && data.length > 0) {
+      return data[0] as FinancialNewsArticle;
+    }
+
+    // ── Diagnostic fallback: scan all slugs to see if the article exists ──
+    console.log('🔍 gABS fallback: scanning all slugs...');
+    const allRes = await fetch(
+      `${url}/rest/v1/financial_news_articles?select=slug&limit=100`,
+      { headers }
+    );
+    if (allRes.ok) {
+      const allRows: any[] = await allRes.json();
+      const match = allRows.find((r: any) => r.slug === normalized);
+      if (match) {
+        console.log('🔍 gABS fallback: FOUND match! slug=', match.slug?.slice(-30));
+        // Re-fetch with the DB-confirmed slug
+        const retryQuery = `${url}/rest/v1/financial_news_articles?select=*&slug=eq.${encodeURIComponent(match.slug)}`;
+        const retryRes = await fetch(retryQuery, { headers });
+        if (retryRes.ok) {
+          const retryData = await retryRes.json();
+          if (Array.isArray(retryData) && retryData.length > 0) {
+            console.log('🔍 gABS fallback: retry SUCCESS');
+            return retryData[0] as FinancialNewsArticle;
+          }
+        }
+        console.log('🔍 gABS fallback: match found but retry FAILED — encoding mismatch confirmed!');
+      } else {
+        console.log('🔍 gABS fallback: slug NOT in DB. Sample:', allRows.slice(0, 3).map((r: any) => r.slug?.slice(-25)));
+      }
+    }
+    return null;
   } catch (e: any) {
     console.error('❌ getArticleBySlug exception:', e.message, e.stack?.slice(0, 200));
     return null;

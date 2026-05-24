@@ -30,10 +30,30 @@ function stripJavaScript(text: string): string {
     if (/^\s*\}\s*\)\s*;?\s*$/.test(trimmed)) return false; // closing }); patterns
     if (/^\s*else\s*\{?\s*$/.test(trimmed)) return false;
     if (/^\s*,\s*(function|error|success)\s*:/.test(trimmed)) return false; // AJAX callback params
-    if (/^\s*\}\s*$/.test(trimmed) && filtered.length > 0) {
-      // Single closing brace — likely JS block end
-      return false;
-    }
+
+    // Argaam-specific JS variable names and share-button code
+    if (/\b(cmtnrd|cmntrd|_us|burl|asyncVal|turl)\b/.test(trimmed)) return false;
+    if (/\$temp\./.test(trimmed)) return false; // jQuery $temp assignments
+    if (/^\s*\$\(/.test(trimmed)) return false; // jQuery selectors e.g. $("body")
+    if (/^\s*(type|url|data|success|error|dataType|async)\s*:\s*/.test(trimmed)) return false;
+    if (/'\/ar\/record/.test(trimmed)) return false;
+    if (/shareToFacebook|openInNewTab|setToolTip/.test(trimmed)) return false;
+    if (/'block'|'none'|'json'/.test(trimmed) && /display|dataType/.test(trimmed)) return false;
+    if (/#copy_url|#facebookbtn|data-href/.test(trimmed)) return false;
+
+    // Lines that are just JS punctuation/syntax in a code block
+    if (/^\s*\}\)?\s*;?\s*$/.test(trimmed)) return false;
+    if (/^\s*\);\s*$/.test(trimmed)) return false;
+    if (/^\s*\}\)?\s*\)?\s*;?\s*$/.test(trimmed)) return false;
+
+    // Lines that look like object properties (key: value, with JS-like values)
+    if (/^\s*\w+\s*:\s*['"]\/ar\//.test(trimmed)) return false;
+
+    // JS-only statements that can never be Arabic content
+    if (/^\s*return false;\s*$/.test(trimmed)) return false;
+    if (/^\s*\)\.fail\(\);\s*$/.test(trimmed)) return false;
+    if (/^\s*if\s*\(cmntrd/.test(trimmed)) return false;
+    if (/^\s*\{\s*$/.test(trimmed)) return false;
 
     return true;
   });
@@ -45,6 +65,10 @@ function stripJavaScript(text: string): string {
 
   // Remove URL-like patterns that are really Argaam share links
   cleaned = cleaned.replace(/https?:\/\/arg\.am\/[^\s]*/gi, '');
+
+  // Remove Argaam date/attribution stamps embedded in content
+  cleaned = cleaned.replace(/\b\d{4}\/\d{2}\/\d{2}\s+marfa\.sa\s*-\s*خاص\s*/g, '');
+  cleaned = cleaned.replace(/\b\d{4}\/\d{2}\/\d{2}\s*\n\s*marfa\.sa\s*-\s*خاص\s*/g, '');
 
   // Clean up multiple blank lines
   cleaned = cleaned.replace(/\n{3,}/g, '\n\n');

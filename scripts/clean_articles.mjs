@@ -1,19 +1,8 @@
-import { config } from 'dotenv';
 import { readFileSync } from 'fs';
 
-// Manually parse .env.local to avoid dotenv URL issues
-const envContent = readFileSync('.env.local', 'utf-8');
 const env = {};
-for (const line of envContent.split('\n')) {
-  const trimmed = line.trim();
-  if (!trimmed || trimmed.startsWith('#')) continue;
-  const eqIdx = trimmed.indexOf('=');
-  if (eqIdx === -1) continue;
-  env[trimmed.slice(0, eqIdx)] = trimmed.slice(eqIdx + 1);
-}
-
-const URL = env.NEXT_PUBLIC_SUPABASE_URL;
-const KEY = env.SUPABASE_SERVICE_ROLE_KEY;
+readFileSync('.env.local','utf8').split('\n').forEach(l => { const m = l.match(/^([^=]+)=(.*)/); if(m) env[m[1]]=m[2]; });
+const URL = env.NEXT_PUBLIC_SUPABASE_URL, KEY = env.SUPABASE_SERVICE_ROLE_KEY;
 
 function stripJavaScript(text) {
   if (!text) return text;
@@ -30,11 +19,29 @@ function stripJavaScript(text) {
     if (/^\s*\}\s*\)\s*;?\s*$/.test(trimmed)) return false;
     if (/^\s*else\s*\{?\s*$/.test(trimmed)) return false;
     if (/^\s*,\s*(function|error|success)\s*:/.test(trimmed)) return false;
+    if (/\b(cmtnrd|cmntrd|_us|burl|asyncVal|turl)\b/.test(trimmed)) return false;
+    if (/\$temp\./.test(trimmed)) return false;
+    if (/^\s*\$\(/.test(trimmed)) return false;
+    if (/^\s*(type|url|data|success|error|dataType|async)\s*:\s*/.test(trimmed)) return false;
+    if (/'\/ar\/record/.test(trimmed)) return false;
+    if (/shareToFacebook|openInNewTab|setToolTip/.test(trimmed)) return false;
+    if (/'block'|'none'|'json'/.test(trimmed) && /display|dataType/.test(trimmed)) return false;
+    if (/#copy_url|#facebookbtn|data-href/.test(trimmed)) return false;
+    if (/^\s*\}\)?\s*;?\s*$/.test(trimmed)) return false;
+    if (/^\s*\);\s*$/.test(trimmed)) return false;
+    if (/^\s*\}\)?\s*\)?\s*;?\s*$/.test(trimmed)) return false;
+    if (/^\s*\w+\s*:\s*['"]\/ar\//.test(trimmed)) return false;
+    if (/^\s*return false;\s*$/.test(trimmed)) return false;
+    if (/^\s*\)\.fail\(\);\s*$/.test(trimmed)) return false;
+    if (/^\s*if\s*\(cmntrd/.test(trimmed)) return false;
+    if (/^\s*\{\s*$/.test(trimmed)) return false;
     return true;
   });
   cleaned = filtered.join('\n');
   cleaned = cleaned.replace(/\(\(document[^\n]*/g, '');
   cleaned = cleaned.replace(/https?:\/\/arg\.am\/[^\s]*/gi, '');
+  cleaned = cleaned.replace(/\b\d{4}\/\d{2}\/\d{2}\s+marfa\.sa\s*-\s*خاص\s*/g, '');
+  cleaned = cleaned.replace(/\b\d{4}\/\d{2}\/\d{2}\s*\n\s*marfa\.sa\s*-\s*خاص\s*/g, '');
   cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
   return cleaned.trim();
 }
@@ -55,9 +62,17 @@ async function main() {
   const baseUrl = URL + '/rest/v1/financial_news_articles';
   const headers = { apikey: KEY, Authorization: 'Bearer ' + KEY, Accept: 'application/json' };
 
-  const res = await fetch(baseUrl + '?select=id,slug,title,summary,full_content&order=created_at.desc', { headers });
+  const res = await fetch(baseUrl + '?select=id,slug,summary,full_content&order=created_at.desc', { headers });
   const articles = await res.json();
   console.log('Fetched', articles.length, 'articles');
+
+  let polluted = 0;
+  for (const a of articles) {
+    const ns = sanitizeContent(a.summary || '');
+    const nf = sanitizeContent(a.full_content || '');
+    if (ns !== (a.summary || '') || nf !== (a.full_content || '')) polluted++;
+  }
+  console.log('Articles needing cleaning:', polluted);
 
   let cleaned = 0, skipped = 0;
   for (const article of articles) {
@@ -76,9 +91,9 @@ async function main() {
 
     if (patchRes.ok) {
       cleaned++;
-      if (cleaned <= 5 || cleaned % 10 === 0) console.log('CLEANED:', article.slug.slice(0, 60));
+      console.log('CLEANED:', article.slug.slice(0, 60));
     } else {
-      console.error('FAILED:', article.slug.slice(0, 50), patchRes.status, await patchRes.text());
+      console.error('FAILED:', article.slug.slice(0, 50), patchRes.status);
     }
   }
   console.log('\nDone. Cleaned:', cleaned, 'Skipped:', skipped);

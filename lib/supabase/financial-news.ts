@@ -50,7 +50,6 @@ export async function getArticles(): Promise<ArticleListingItem[]> {
   const url = getSupabaseUrl();
   const anonKey = getSupabaseAnonKey();
   const keyPrefix = anonKey.slice(0, 10) + '...';
-  console.log('🔍 getArticles: url=', url, 'key_prefix=', keyPrefix);
 
   // Build PostgREST query directly to bypass any @supabase/supabase-js
   // client-side issues in the Next.js serverless runtime.
@@ -82,10 +81,8 @@ export async function getArticles(): Promise<ArticleListingItem[]> {
     return [];
   }
 
-  console.log('✅ getArticles: got', data?.length ?? 0, 'rows');
-
   if (!data || data.length === 0) {
-    console.warn('⚠️ getArticles: data is empty or null, raw type:', typeof data, 'isArray:', Array.isArray(data));
+    return [];
   }
 
   return (data || []).map((row: any) => ({
@@ -104,7 +101,9 @@ export async function getArticleBySlug(
 ): Promise<FinancialNewsArticle | null> {
   const url = getSupabaseUrl();
   const anonKey = getSupabaseAnonKey();
-  const normalized = slug.normalize('NFC');
+  // Guard against URL-encoded slugs (Next.js may pass them encoded)
+  const decoded = decodeURIComponent(slug);
+  const normalized = decoded.normalize('NFC');
 
   const headers = {
     apikey: anonKey,
@@ -116,11 +115,8 @@ export async function getArticleBySlug(
     // Fetch all articles (no slug filter — same pattern as getArticles which works)
     // and filter in JS to avoid PostgREST encoding issues with Arabic slugs.
     const query = `${url}/rest/v1/financial_news_articles?select=*&order=article_date.desc&limit=100`;
-    console.log('🔍 gABS fetching all, target_slug_end=', normalized.slice(-25));
 
     const response = await fetch(query, { headers });
-
-    console.log('🔍 gABS status=', response.status);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -129,7 +125,6 @@ export async function getArticleBySlug(
     }
 
     const data: any[] = await response.json();
-    console.log('🔍 gABS got', data.length, 'rows');
 
     // Match by normalized slug — handles NFC vs NFD mismatches
     const match = data.find(
@@ -137,11 +132,9 @@ export async function getArticleBySlug(
     );
 
     if (match) {
-      console.log('🔍 gABS MATCHED:', match.title?.slice(0, 40));
       return match as FinancialNewsArticle;
     }
 
-    console.log('🔍 gABS NO MATCH. DB sample:', data.slice(0, 3).map((r: any) => (r.slug || '').slice(-25)));
     return null;
   } catch (e: any) {
     console.error('❌ getArticleBySlug exception:', e.message, e.stack?.slice(0, 200));

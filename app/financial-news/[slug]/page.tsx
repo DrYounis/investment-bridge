@@ -43,7 +43,8 @@ function renderContent(summary: string, fullContent?: string | null): string {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const article = await getArticleBySlug(slug);
+  const decodedSlug = decodeURIComponent(slug);
+  const article = await getArticleBySlug(decodedSlug);
 
   if (!article) {
     return { title: 'المقال غير موجود | marfa.sa' };
@@ -67,13 +68,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ArticlePage({ params }: Props) {
   const { slug } = await params;
+  // Next.js may pass URL-encoded Arabic slugs — decode before lookup
+  const decodedSlug = decodeURIComponent(slug);
 
-  // TEMP DEBUG: log slug resolution
-  console.log('🔍 [ArticlePage] slug:', slug);
-
-  const article = await getArticleBySlug(slug);
-
-  console.log('🔍 [ArticlePage] article found:', !!article, article?.title?.slice(0, 40));
+  const article = await getArticleBySlug(decodedSlug);
 
   if (!article) notFound();
 

@@ -38,24 +38,28 @@ export async function GET() {
     rawError = e.message;
   }
 
-  // Test 3: try with apikey only, no Authorization header
-  let raw2Status = 0;
-  let raw2Text = '';
+  // Test 3: getArticleBySlug with first article's slug
+  let slugStatus = 0;
+  let slugResult: any = null;
   try {
-    const select = 'slug,title';
-    const raw2Res = await fetch(
-      `${url}/rest/v1/financial_news_articles?select=${select}&limit=5`,
-      {
-        headers: {
-          apikey: anonKey,
-          Accept: 'application/json',
-        },
-      }
-    );
-    raw2Status = raw2Res.status;
-    raw2Text = await raw2Res.text();
+    const firstSlug = articles?.[0]?.slug;
+    if (firstSlug) {
+      const slugQuery = `${url}/rest/v1/financial_news_articles?select=slug,title&slug=eq.${encodeURIComponent(firstSlug)}`;
+      const slugRes = await fetch(slugQuery, {
+        headers: { apikey: anonKey, Authorization: `Bearer ${anonKey}`, Accept: 'application/json' },
+      });
+      slugStatus = slugRes.status;
+      const slugData = await slugRes.json();
+      slugResult = {
+        status: slugStatus,
+        found: Array.isArray(slugData) ? slugData.length : 'not-array',
+        firstTitle: Array.isArray(slugData) ? slugData[0]?.title?.slice(0, 60) : null,
+      };
+    } else {
+      slugResult = { error: 'no first article slug available' };
+    }
   } catch (e: any) {
-    raw2Text = e.message;
+    slugResult = { error: e.message };
   }
 
   return NextResponse.json({
@@ -72,10 +76,8 @@ export async function GET() {
       textLength: rawText.length,
       error: rawError || null,
     },
-    rawFetchApikeyOnly: {
-      status: raw2Status,
-      textPreview: raw2Text.slice(0, 500),
-    },
+    // by-slug fetch test
+    slugFetch: slugResult,
     // key diagnostics
     keyDiagnostics: {
       length: anonKey.length,

@@ -38,6 +38,26 @@ export async function GET() {
     rawError = e.message;
   }
 
+  // Test 3: try with apikey only, no Authorization header
+  let raw2Status = 0;
+  let raw2Text = '';
+  try {
+    const select = 'slug,title';
+    const raw2Res = await fetch(
+      `${url}/rest/v1/financial_news_articles?select=${select}&limit=5`,
+      {
+        headers: {
+          apikey: anonKey,
+          Accept: 'application/json',
+        },
+      }
+    );
+    raw2Status = raw2Res.status;
+    raw2Text = await raw2Res.text();
+  } catch (e: any) {
+    raw2Text = e.message;
+  }
+
   return NextResponse.json({
     supabaseUrl: url,
     anonKeyPrefix: keyPrefix,
@@ -51,6 +71,18 @@ export async function GET() {
       textPreview: rawText.slice(0, 1000),
       textLength: rawText.length,
       error: rawError || null,
+    },
+    rawFetchApikeyOnly: {
+      status: raw2Status,
+      textPreview: raw2Text.slice(0, 500),
+    },
+    // key diagnostics
+    keyDiagnostics: {
+      length: anonKey.length,
+      startsWith: anonKey.slice(0, 20),
+      endsWith: anonKey.slice(-10),
+      hasWhitespace: anonKey.trim().length !== anonKey.length,
+      isJWT: anonKey.startsWith('eyJ'),
     },
   });
 }

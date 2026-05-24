@@ -110,13 +110,21 @@ export async function getArticleBySlug(
       headers: {
         apikey: anonKey,
         Authorization: `Bearer ${anonKey}`,
-        Accept: 'application/vnd.pgrst.object+json', // Return single object, not array
+        Accept: 'application/json',
       },
     });
 
-    if (!response.ok) return null;
-    return await response.json();
-  } catch {
+    if (!response.ok) {
+      console.error('❌ getArticleBySlug error:', response.status);
+      return null;
+    }
+
+    // PostgREST returns an array; take the first (and only) element
+    const data = await response.json();
+    if (!Array.isArray(data) || data.length === 0) return null;
+    return data[0] as FinancialNewsArticle;
+  } catch (e: any) {
+    console.error('❌ getArticleBySlug exception:', e.message);
     return null;
   }
 }

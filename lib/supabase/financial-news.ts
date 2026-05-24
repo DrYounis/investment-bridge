@@ -103,7 +103,10 @@ export async function getArticleBySlug(
 ): Promise<FinancialNewsArticle | null> {
   const url = getSupabaseUrl();
   const anonKey = getSupabaseAnonKey();
+  const keyPrefix = anonKey.slice(0, 10) + '...';
   const query = `${url}/rest/v1/financial_news_articles?select=*&slug=eq.${encodeURIComponent(slug)}`;
+
+  console.log('🔍 getArticleBySlug: slug=', slug, 'url_prefix=', url?.slice(0, 50), 'key_prefix=', keyPrefix);
 
   try {
     const response = await fetch(query, {
@@ -114,17 +117,21 @@ export async function getArticleBySlug(
       },
     });
 
+    console.log('🔍 getArticleBySlug: response.status=', response.status, 'ok=', response.ok);
+
     if (!response.ok) {
-      console.error('❌ getArticleBySlug error:', response.status);
+      const errorText = await response.text();
+      console.error('❌ getArticleBySlug error:', response.status, errorText.slice(0, 500));
       return null;
     }
 
     // PostgREST returns an array; take the first (and only) element
     const data = await response.json();
+    console.log('🔍 getArticleBySlug: data type=', typeof data, 'isArray=', Array.isArray(data), 'length=', Array.isArray(data) ? data.length : 'N/A');
     if (!Array.isArray(data) || data.length === 0) return null;
     return data[0] as FinancialNewsArticle;
   } catch (e: any) {
-    console.error('❌ getArticleBySlug exception:', e.message);
+    console.error('❌ getArticleBySlug exception:', e.message, e.stack?.slice(0, 200));
     return null;
   }
 }

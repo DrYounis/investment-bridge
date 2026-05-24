@@ -67,7 +67,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ArticlePage({ params }: Props) {
   const { slug } = await params;
+
+  // TEMP DEBUG: log slug resolution
+  console.log('🔍 [ArticlePage] slug:', slug);
+
   const article = await getArticleBySlug(slug);
+
+  console.log('🔍 [ArticlePage] article found:', !!article, article?.title?.slice(0, 40));
 
   if (!article) notFound();
 

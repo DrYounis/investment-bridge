@@ -1,5 +1,6 @@
 /**
- * Content sanitization — strip ALL third-party source references.
+ * Content sanitization — strip ALL third-party source references
+ * and leaked Claude prompt artifacts.
  *
  * All content on marfa.sa must appear as original marfa.sa content.
  * Never expose the scraping source (Argaam or any other) to visitors.
@@ -16,46 +17,101 @@ export function sanitizeContent(text: string): string {
 
   // ── Source brand references ──────────────────────────────────────
 
-  // Argaam references (Arabic + English + encoded variants)
   cleaned = cleaned.replace(/أرقام/gi, 'marfa.sa');
   cleaned = cleaned.replace(/أرقـام/gi, 'marfa.sa');
   cleaned = cleaned.replace(/argaam/gi, 'marfa.sa');
   cleaned = cleaned.replace(/Argaam/gi, 'marfa.sa');
 
-  // Remove source attribution patterns
   cleaned = cleaned.replace(/ـ خاص\s*/g, '');
   cleaned = cleaned.replace(/\s*خاص\s*$/g, '');
   cleaned = cleaned.replace(/\bخاص\b/g, '');
   cleaned = cleaned.replace(/لـ\s*marfa\.sa\s*[:\-]?\s*/g, '');
 
-  // Remove Argaam-specific URLs
   cleaned = cleaned.replace(/https?:\/\/[^\s]*argaam[^\s]*/gi, '');
-
-  // Remove "شاشة تداول السوق السعودي ترصد "أرقـام"" pattern
   cleaned = cleaned.replace(/شاشة تداول.*?ترصد.*?[""][^""]*[""]\s*/g, '');
   cleaned = cleaned.replace(/[""]أرقـام[""]/g, '');
 
-  // ── Claude prompt artifacts (in case they leak) ──────────────────
+  // ── Claude "here's your SEO title" preamble ─────────────────────
 
+  cleaned = cleaned.replace(/^إليك عنوان SEO محسّن[：:]\s*/gim, '');
+  cleaned = cleaned.replace(/^إليك عنواناً محسّناً[：:]\s*/gim, '');
+
+  // ── Strip trailing analysis from titles ──────────────────────────
+  // The real title is everything before these markers:
+
+  // "--- **تحليل العنوان:** ..." (and everything after)
+  cleaned = cleaned.replace(/\s*---+\s*\*\*تحليل العنوان[：:]\*\*[\s\S]*$/gim, '');
+  cleaned = cleaned.replace(/\s*---+\s*\*\*البدائل[：:]\*\*[\s\S]*$/gim, '');
+
+  // " **عدد الأحرف:** XX حرف ..." (and everything after)
+  cleaned = cleaned.replace(/\s*\*\*عدد الأحرف[：:]\*\*[\s\S]*$/gim, '');
+  cleaned = cleaned.replace(/\s*\*\*الكلمة المفتاحية[：:]\*\*[\s\S]*$/gim, '');
+  cleaned = cleaned.replace(/\s*\*\*مزايا هذا العنوان[：:]\*\*[\s\S]*$/gim, '');
+  cleaned = cleaned.replace(/\s*\*\*تحليل العنوان[：:]\*\*[\s\S]*$/gim, '');
+
+  // "الكلمات المفتاحية المستخدمة: ..." (and everything after)
+  cleaned = cleaned.replace(/\s*الكلمات المفتاحية المستخدمة[：:][\s\S]*$/gim, '');
+
+  // "هذا العنوان:" / "هذا العنوان محسّن" followed by analysis
+  cleaned = cleaned.replace(/\s*هذا العنوان[：:]\s*[\s\S]*$/gim, '');
+  cleaned = cleaned.replace(/\s*العنوان محسّن لمحركات البحث[\s\S]*$/gim, '');
+
+  // "**(XX حرف ...)**" and "*(XX حرف ...)*" trailing metadata
+  cleaned = cleaned.replace(/\s*\*{1,2}\(\d{2}\s*حرف[^)]*\)\*{1,2}\s*$/g, '');
+  cleaned = cleaned.replace(/\s*\(\d{2}\s*حرف[^)]*\)\s*$/g, '');
+
+  // "**(XX حرف بالضبط)**" variants
+  cleaned = cleaned.replace(/\s*\*{1,2}\d{2}\s*حرف[^*]*\*{1,2}\s*$/g, '');
+
+  // Strip bullet-point analysis lines that follow a title on the same line
+  cleaned = cleaned.replace(/\s*-\s*عدد الأحرف[：:][^\n]*/g, '');
+  cleaned = cleaned.replace(/\s*-\s*يتضمن (?:الكلمة|كلمتين) المفتاحية[^\n]*/g, '');
+  cleaned = cleaned.replace(/\s*-\s*الكلمة المفتاحية المستخدمة[：:][^\n]*/g, '');
+  cleaned = cleaned.replace(/\s*-\s*يحافظ على[^\n]*/g, '');
+  cleaned = cleaned.replace(/\s*-\s*واضح ومباشر[^\n]*/g, '');
+  cleaned = cleaned.replace(/\s*-\s*مزايا هذا العنوان[：:][^\n]*/g, '');
+  cleaned = cleaned.replace(/\s*-\s*✅\s*[^\n]*/g, '');
+  cleaned = cleaned.replace(/\s*-\s*✓\s*[^\n]*/g, '');
+
+  // Remove standalone bold prompt artifacts
   cleaned = cleaned.replace(/^\*\*العنوان المحسّن[：:]\s*\*\*\s*/gm, '');
-  cleaned = cleaned.replace(/^\*\*تحليل العنوان[：:]\s*\*\*[\s\S]*?(?=\n|$)/gm, '');
-  cleaned = cleaned.replace(/^\*\*عدد الأحرف[：:]\s*\*\*[\s\S]*?(?=\n|$)/gm, '');
-  cleaned = cleaned.replace(/^\*\*الكلمة المفتاحية[：:]\s*\*\*[\s\S]*?(?=\n|$)/gm, '');
-  cleaned = cleaned.replace(/^\*\*مزايا هذا العنوان[：:]\s*\*\*[\s\S]*?(?=\n|$)/gm, '');
   cleaned = cleaned.replace(/^العنوان المحسّن[：:]\s*/gm, '');
   cleaned = cleaned.replace(/^تحليل العنوان[：:]\s*/gm, '');
   cleaned = cleaned.replace(/^التحليل[：:]\s*/gm, '');
+
+  // Remove markdown headings that are just prompt instructions
   cleaned = cleaned.replace(/^#+\s*العنوان المحسّن.*$/gm, '');
   cleaned = cleaned.replace(/^#+\s*تحليل العنوان.*$/gm, '');
-  cleaned = cleaned.replace(/^-\s*عدد الأحرف[：:].*$/gm, '');
-  cleaned = cleaned.replace(/^-\s*يتضمن الكلمة المفتاحية.*$/gm, '');
-  cleaned = cleaned.replace(/^-\s*الكلمة المفتاحية المستخدمة[：:].*$/gm, '');
-  cleaned = cleaned.replace(/^-\s*يحافظ على.*$/gm, '');
-  cleaned = cleaned.replace(/^-\s*واضح ومباشر.*$/gm, '');
-  cleaned = cleaned.replace(/^-\s*مزايا هذا العنوان[：:].*$/gm, '');
 
-  // Remove consecutive blank lines
+  // Clean up whitespace
   cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
+  cleaned = cleaned.trim();
 
-  return cleaned.trim();
+  return cleaned;
+}
+
+/**
+ * Sanitize a title specifically — more aggressive stripping.
+ * If the title has leaked Claude analysis, extract just the actual title.
+ */
+export function sanitizeTitle(title: string): string {
+  if (!title) return title;
+
+  let cleaned = sanitizeContent(title);
+
+  // If after sanitization the title is still very long (>120 chars),
+  // it's likely still an analysis blob. Extract the first sentence/line.
+  if (cleaned.length > 120) {
+    // Take first line that looks like a title (30+ chars, no bullet)
+    const lines = cleaned.split(/[\n\r]+/).filter(l => l.trim().length >= 30 && !l.trim().startsWith('-') && !l.trim().startsWith('*'));
+    if (lines.length > 0) {
+      cleaned = lines[0].trim();
+    }
+  }
+
+  // Strip any remaining ** markers around the title
+  cleaned = cleaned.replace(/^\*{1,2}\s*/g, '');
+  cleaned = cleaned.replace(/\s*\*{1,2}$/g, '');
+
+  return cleaned;
 }

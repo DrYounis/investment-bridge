@@ -69,23 +69,13 @@ export async function getArticles(): Promise<ArticleListingItem[]> {
       },
     });
 
-    console.log('🔍 getArticles response status:', response.status);
-
     if (!response.ok) {
       const errorText = await response.text();
       console.error('❌ getArticles fetch error:', response.status, errorText.slice(0, 500));
       return [];
     }
 
-    const rawText = await response.text();
-    console.log('🔍 getArticles raw response (first 300 chars):', rawText.slice(0, 300));
-
-    try {
-      data = JSON.parse(rawText);
-    } catch (parseErr: any) {
-      console.error('❌ getArticles JSON parse error:', parseErr.message);
-      return [];
-    }
+    data = await response.json();
   } catch (e: any) {
     console.error('❌ getArticles EXCEPTION:', e.message, e.stack);
     return [];
@@ -122,7 +112,6 @@ export async function getArticleBySlug(
         Authorization: `Bearer ${anonKey}`,
         Accept: 'application/vnd.pgrst.object+json', // Return single object, not array
       },
-      cache: 'no-store',
     });
 
     if (!response.ok) return null;
@@ -209,7 +198,6 @@ export async function getArticlesCount(): Promise<number> {
         Accept: 'application/json',
         Prefer: 'count=exact',
       },
-      cache: 'no-store',
     });
 
     if (!response.ok) return 0;

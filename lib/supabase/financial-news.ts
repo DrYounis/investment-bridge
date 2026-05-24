@@ -53,6 +53,8 @@ function generateSlug(title: string, date: string): string {
 export async function getArticles(): Promise<ArticleListingItem[]> {
   const supabase = getAnonClient();
 
+  console.log('🔍 getArticles: fetching from', getSupabaseUrl());
+
   const { data, error } = await supabase
     .from('financial_news_articles')
     .select('slug, title, original_title, source_url, article_date, tags, summary, created_at')
@@ -61,9 +63,11 @@ export async function getArticles(): Promise<ArticleListingItem[]> {
     .limit(50);
 
   if (error) {
-    console.error('❌ Failed to fetch articles:', error);
+    console.error('❌ Failed to fetch articles:', JSON.stringify(error));
     return [];
   }
+
+  console.log('✅ getArticles: got', data?.length ?? 0, 'rows');
 
   return (data || []).map((row) => ({
     slug: row.slug,

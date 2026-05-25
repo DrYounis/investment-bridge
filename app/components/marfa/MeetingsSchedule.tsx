@@ -23,9 +23,9 @@ function getNextMonthSchedule() {
     if (daysUntilThursday === 0) daysUntilThursday = 7; // If 1st is Thursday, use it
     const firstThursday = new Date(startYear, startMonth, 1 + daysUntilThursday);
 
-    // Generate 6 bi-weekly dates (every 2 weeks on Thursday)
+    // Generate 7 bi-weekly dates (every 2 weeks on Thursday)
     const dates: Date[] = [];
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 7; i++) {
         const d = new Date(firstThursday);
         d.setDate(d.getDate() + i * 14);
         dates.push(d);
@@ -77,6 +77,12 @@ const SCHEDULE_DATA = [
         topic: "التفاوض",
         case: "حالة \"Shark Tank\" (نماذج حقيقية)",
         challenge: "تحليل صفقات حقيقية: لماذا رفض المستثمر فكرة عبقرية؟ ولماذا قبل فكرة بسيطة؟"
+    },
+    {
+        encounter: "اللقاء 7",
+        topic: "حوكمة الشركات",
+        case: "حالة Saudi German Health (تداول: 4009)",
+        challenge: "إدانة 11 عضو مجلس إدارة ولجنة مراجعة بتضخيم إيرادات بـ 358 مليون ريال رغم علمهم بعدم إمكانية تحصيلها. غرامات 18 مليون ريال فقط (5%). هل العقوبات رادعة؟ وماذا يعني هذا لمصداقية السوق المالي السعودي؟"
     }
 ];
 

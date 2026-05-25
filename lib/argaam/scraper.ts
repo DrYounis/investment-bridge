@@ -8,6 +8,7 @@ export interface RawArticle {
   date: string;
   summary: string;
   full_content: string;
+  video_url?: string;
   scraped_at: string;
 }
 
@@ -100,11 +101,49 @@ function extractArticleCards(
   return cards;
 }
 
+// ── YouTube URL Extraction ──────────────────────────────────────────
+
+/**
+ * Extract the first YouTube video URL from raw HTML.
+ * Detects youtube.com/watch?v=, youtu.be/, and youtube.com/embed/ formats
+ * as well as iframe embeds.
+ */
+function extractYouTubeUrl(html: string, $: cheerio.CheerioAPI): string | undefined {
+  // Check iframe embeds first
+  const iframeSrc = $('iframe[src*="youtube.com"], iframe[src*="youtu.be"]').first().attr('src');
+  if (iframeSrc) {
+    const iframeMatch = iframeSrc.match(
+      /(?:youtube\.com\/embed\/|youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+    );
+    if (iframeMatch) return `https://www.youtube.com/watch?v=${iframeMatch[1]}`;
+    return iframeSrc;
+  }
+
+  // Check all links for YouTube URLs
+  const ytLinks = $('a[href*="youtube.com/watch"], a[href*="youtu.be/"]');
+  const foundHref = ytLinks.first().attr('href');
+  if (foundHref) {
+    const linkMatch = foundHref.match(
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+    );
+    if (linkMatch) return `https://www.youtube.com/watch?v=${linkMatch[1]}`;
+    return foundHref;
+  }
+
+  // Fallback: search raw HTML for YouTube URLs
+  const regexMatch = html.match(
+    /https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/
+  );
+  if (regexMatch) return `https://www.youtube.com/watch?v=${regexMatch[1]}`;
+
+  return undefined;
+}
+
 // ── Article Content Extraction ─────────────────────────────────────
 
 async function scrapeArticleContent(
   url: string
-): Promise<{ content: string; date: string }> {
+): Promise<{ content: string; date: string; video_url?: string }> {
   if (!url) return { content: '', date: '' };
 
   try {
@@ -152,6 +191,9 @@ async function scrapeArticleContent(
       }
     });
 
+    // Extract YouTube video URL from the raw HTML
+    const video_url = extractYouTubeUrl(html, $);
+
     const content = contentParts.join('\n\n');
 
     if (content.length < 50) {
@@ -164,10 +206,10 @@ async function scrapeArticleContent(
         .replace(/\{\{[^}]+\}\}/g, '')
         .replace(/\n{3,}/g, '\n\n')
         .trim();
-      return { content: cleaned.slice(0, 5000), date };
+      return { content: cleaned.slice(0, 5000), date, video_url };
     }
 
-    return { content, date };
+    return { content, date, video_url };
   } catch (err) {
     console.error(`❌ Failed to fetch content from ${url}:`, err);
     return { content: '', date: '' };
@@ -203,7 +245,7 @@ export async function scrapeArgaamNews(
     console.log(`📰 [${i + 1}/${cards.length}] ${card.title.slice(0, 60)}`);
 
     // Fetch full article content and date from detail page
-    const { content, date } = await scrapeArticleContent(card.url);
+    const { content, date, video_url } = await scrapeArticleContent(card.url);
 
     articles.push({
       title: card.title,
@@ -211,6 +253,7 @@ export async function scrapeArgaamNews(
       date: date || formatDate(card.date),
       summary: content.slice(0, 300),
       full_content: content,
+      video_url,
       scraped_at: scrapedAt,
     });
 

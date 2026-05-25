@@ -11,6 +11,7 @@ export interface SummarizedArticle {
   source_url: string;
   article_date: string;
   tags: string[];
+  video_url?: string;
 }
 
 // ── Constants ──────────────────────────────────────────────────────
@@ -190,6 +191,7 @@ export async function summarizeArticle(
     source_url: article.url,
     article_date: article.date,
     tags: ['استثمار', 'الاقتصاد السعودي', 'أسواق مالية', 'أخبار مالية'],
+    video_url: article.video_url,
   };
 
   console.log(`   ✅ Summarized: "${seoTitle.slice(0, 50)}..."`);

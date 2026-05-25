@@ -9,6 +9,13 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
+function extractYouTubeId(url: string): string | null {
+  const match = url.match(
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/
+  );
+  return match ? match[1] : null;
+}
+
 function renderContent(summary: string, fullContent?: string | null): string {
   const body = fullContent || summary;
 
@@ -119,6 +126,21 @@ export default async function ArticlePage({ params }: Props) {
             {article.summary}
           </p>
         </div>
+
+        {/* YouTube Video Embed */}
+        {article.video_url && extractYouTubeId(article.video_url) && (
+          <div className="mb-10">
+            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+              <iframe
+                src={`https://www.youtube.com/embed/${extractYouTubeId(article.video_url!)}`}
+                title="YouTube video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full rounded-2xl border border-white/10"
+              />
+            </div>
+          </div>
+        )}
 
         {/* Full Content */}
         {article.full_content && (

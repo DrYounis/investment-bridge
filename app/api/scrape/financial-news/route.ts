@@ -100,6 +100,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           article_date: summary.article_date,
           tags: summary.tags,
           scraped_at: article.scraped_at,
+          video_url: summary.video_url,
         });
 
         savedCount++;

@@ -47,6 +47,7 @@ async function handleCronTrigger(req: Request): Promise<Response> {
           article_date: summary.article_date,
           tags: summary.tags,
           scraped_at: article.scraped_at,
+          video_url: summary.video_url,
         });
         savedCount++;
       } catch (err) {

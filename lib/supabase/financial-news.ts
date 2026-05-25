@@ -11,6 +11,7 @@ export interface FinancialNewsArticle {
   summary: string;
   full_content: string | null;
   source_url: string | null;
+  video_url: string | null;
   article_date: string | null;
   tags: string[];
   category: string;
@@ -28,6 +29,7 @@ export interface ArticleListingItem {
   date: string;
   tags: string[];
   excerpt: string;
+  video_url: string | null;
 }
 
 // ── Helpers ────────────────────────────────────────────────────────
@@ -55,7 +57,7 @@ export async function getArticles(): Promise<ArticleListingItem[]> {
   // client-side issues in the Next.js serverless runtime.
   // NOTE: do NOT encodeURIComponent the select string — commas are PostgREST
   // column separators and must remain literal.
-  const select = 'slug,title,original_title,source_url,article_date,tags,summary,created_at';
+  const select = 'slug,title,original_title,source_url,article_date,tags,summary,created_at,video_url';
   const query = `${url}/rest/v1/financial_news_articles?select=${select}&order=article_date.desc&order=created_at.desc&limit=50`;
 
   let data: any[] | null = null;
@@ -94,6 +96,7 @@ export async function getArticles(): Promise<ArticleListingItem[]> {
     date: row.article_date || row.created_at?.slice(0, 10) || '',
     tags: row.tags || [],
     excerpt: (row.summary || '').slice(0, 160) || 'اقرأ التحليل الكامل على marfa.sa',
+    video_url: row.video_url || null,
   }));
 }
 
@@ -154,6 +157,7 @@ export async function saveArticle(article: {
   article_date: string;
   tags?: string[];
   scraped_at: string;
+  video_url?: string;
 }): Promise<{ slug: string }> {
   const supabase = createServiceClient();
 
@@ -166,6 +170,7 @@ export async function saveArticle(article: {
     summary: article.summary,
     full_content: article.full_content || null,
     source_url: article.source_url,
+    video_url: article.video_url || null,
     article_date: article.article_date,
     tags: article.tags || ['استثمار', 'الاقتصاد السعودي', 'أسواق مالية', 'أخبار مالية'],
     category: 'financial-news',

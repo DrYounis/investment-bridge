@@ -36,6 +36,19 @@ export default async function FinancialNewsPage() {
           </p>
         </header>
 
+        {/* Featured Video */}
+        <div className="mb-12 max-w-3xl mx-auto">
+          <div className="relative w-full rounded-2xl overflow-hidden border border-white/10" style={{ paddingBottom: '56.25%' }}>
+            <iframe
+              src="https://www.youtube.com/embed/Gz1jc3nFuFs"
+              title="Featured financial video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="absolute inset-0 w-full h-full"
+            />
+          </div>
+        </div>
+
         {/* Articles Grid */}
         {articles.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -45,8 +58,12 @@ export default async function FinancialNewsPage() {
                 href={`/financial-news/${article.slug}`}
                 className="group block bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10
                            hover:border-gold/30 hover:bg-white/10 transition-all duration-300
-                           hover:shadow-lg hover:shadow-gold/5"
+                           hover:shadow-lg hover:shadow-gold/5 relative"
               >
+                {article.video_url && (
+                  <span className="absolute top-3 right-3 text-lg" title="يحتوي على فيديو">🎬</span>
+                )}
+
                 {article.date && (
                   <time className="text-xs text-slate-500 mb-3 block">
                     {article.date}

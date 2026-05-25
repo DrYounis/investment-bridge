@@ -57,7 +57,7 @@ export async function getArticles(): Promise<ArticleListingItem[]> {
   // client-side issues in the Next.js serverless runtime.
   // NOTE: do NOT encodeURIComponent the select string — commas are PostgREST
   // column separators and must remain literal.
-  const select = 'slug,title,original_title,source_url,article_date,tags,summary,created_at,video_url';
+  const select = 'slug,title,original_title,source_url,article_date,tags,summary,created_at';
   const query = `${url}/rest/v1/financial_news_articles?select=${select}&order=article_date.desc&order=created_at.desc&limit=50`;
 
   let data: any[] | null = null;
@@ -163,20 +163,26 @@ export async function saveArticle(article: {
 
   const slug = generateSlug(article.original_title || article.title, article.article_date);
 
-  const { error } = await supabase.from('financial_news_articles').insert({
+  const insertData: Record<string, unknown> = {
     slug,
     title: article.title,
     original_title: article.original_title,
     summary: article.summary,
     full_content: article.full_content || null,
     source_url: article.source_url,
-    video_url: article.video_url || null,
     article_date: article.article_date,
     tags: article.tags || ['استثمار', 'الاقتصاد السعودي', 'أسواق مالية', 'أخبار مالية'],
     category: 'financial-news',
     seo_keywords: 'الاستثمار السعودي، السوق المالية، الاقتصاد السعودي',
     scraped_at: article.scraped_at,
-  });
+  };
+
+  // Only include video_url if the column exists (migration may not have run yet)
+  if (article.video_url) {
+    insertData.video_url = article.video_url;
+  }
+
+  const { error } = await supabase.from('financial_news_articles').insert(insertData);
 
   if (error) {
     console.error('❌ Failed to save article:', error);

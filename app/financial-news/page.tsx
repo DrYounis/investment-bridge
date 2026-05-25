@@ -36,19 +36,6 @@ export default async function FinancialNewsPage() {
           </p>
         </header>
 
-        {/* Featured Video */}
-        <div className="mb-12 max-w-3xl mx-auto">
-          <div className="relative w-full rounded-2xl overflow-hidden border border-white/10" style={{ paddingBottom: '56.25%' }}>
-            <iframe
-              src="https://www.youtube.com/embed/Gz1jc3nFuFs"
-              title="Featured financial video"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="absolute inset-0 w-full h-full"
-            />
-          </div>
-        </div>
-
         {/* Articles Grid */}
         {articles.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

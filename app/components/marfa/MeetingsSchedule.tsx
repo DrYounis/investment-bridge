@@ -46,43 +46,50 @@ const SCHEDULE_DATA = [
         encounter: "اللقاء 1",
         topic: "الاستراتيجية",
         case: "حالة \"Airbnb\" في البدايات",
-        challenge: "كيف تقنع المستثمر بفكرة \"تأجير خيام أو غرف\" بينما يوجد فنادق؟ (إسقاط على سياحة حائل)."
+        challenge: "كيف تقنع المستثمر بفكرة \"تأجير خيام أو غرف\" بينما يوجد فنادق؟ (إسقاط على سياحة حائل).",
+        pdf: "/case-studies/Airbnb_Strategy_Case_Study.pdf",
     },
     {
         encounter: "اللقاء 2",
         topic: "القيادة",
         case: "حالة \"Zappos\" في خدمة العملاء",
-        challenge: "هل يمكن بناء ثقافة مؤسسية تجعل الموظف يضحي من أجل العميل؟ وكيف نطبق ذلك في مشاريعنا؟"
+        challenge: "هل يمكن بناء ثقافة مؤسسية تجعل الموظف يضحي من أجل العميل؟ وكيف نطبق ذلك في مشاريعنا؟",
+        pdf: "/case-studies/Zappos_Leadership_Case_Study.pdf",
     },
     {
         encounter: "اللقاء 3",
         topic: "المالية",
         case: "حالة \"WeWork\" (الفشل المالي)",
-        challenge: "كيف تحولت شركة بمليارات الدولارات إلى الإفلاس؟ فهم الفرق بين \"النمو\" و\"الربحية\"."
+        challenge: "كيف تحولت شركة بمليارات الدولارات إلى الإفلاس؟ فهم الفرق بين \"النمو\" و\"الربحية\".",
+        pdf: "/case-studies/WeWork_Finance_Case_Study.pdf",
     },
     {
         encounter: "اللقاء 4",
         topic: "التسويق",
         case: "حالة \"Liquid Death\" (تسويق المياه)",
-        challenge: "كيف تبيع منتجاً عادياً جداً (ماء) ببراند عبقري؟ درس في التميز البصري."
+        challenge: "كيف تبيع منتجاً عادياً جداً (ماء) ببراند عبقري؟ درس في التميز البصري.",
+        pdf: "/case-studies/Liquid_Death_Marketing_Case_Study.pdf",
     },
     {
         encounter: "اللقاء 5",
         topic: "العمليات",
         case: "حالة \"Amazon Logistics\"",
-        challenge: "كيف تدار العمليات لتقليل الهدر؟ (مناقشة تطبيقها في توريد الأغذية والمشروبات لسلسلة مقاهي)."
+        challenge: "كيف تدار العمليات لتقليل الهدر؟ (مناقشة تطبيقها في توريد الأغذية والمشروبات لسلسلة مقاهي).",
+        pdf: "/case-studies/Amazon_Operations_Case_Study.pdf",
     },
     {
         encounter: "اللقاء 6",
         topic: "التفاوض",
         case: "حالة \"Shark Tank\" (نماذج حقيقية)",
-        challenge: "تحليل صفقات حقيقية: لماذا رفض المستثمر فكرة عبقرية؟ ولماذا قبل فكرة بسيطة؟"
+        challenge: "تحليل صفقات حقيقية: لماذا رفض المستثمر فكرة عبقرية؟ ولماذا قبل فكرة بسيطة؟",
+        pdf: "/case-studies/SharkTank_Negotiation_Case_Study.pdf",
     },
     {
         encounter: "اللقاء 7",
         topic: "حوكمة الشركات",
         case: "حالة Saudi German Health (تداول: 4009)",
-        challenge: "إدانة 11 عضو مجلس إدارة ولجنة مراجعة بتضخيم إيرادات بـ 358 مليون ريال رغم علمهم بعدم إمكانية تحصيلها. غرامات 18 مليون ريال فقط (5%). هل العقوبات رادعة؟ وماذا يعني هذا لمصداقية السوق المالي السعودي؟"
+        challenge: "إدانة 11 عضو مجلس إدارة ولجنة مراجعة بتضخيم إيرادات بـ 358 مليون ريال رغم علمهم بعدم إمكانية تحصيلها. غرامات 18 مليون ريال فقط (5%). هل العقوبات رادعة؟ وماذا يعني هذا لمصداقية السوق المالي السعودي؟",
+        pdf: "/case-studies/Saudi_German_Health_Case_Study.pdf",
     }
 ];
 
@@ -151,6 +158,7 @@ export default function MeetingsSchedule() {
                                 <th className="p-4 whitespace-nowrap">موضوع الـ MBA</th>
                                 <th className="p-4 whitespace-nowrap">دراسة الحالة (The Case)</th>
                                 <th className="p-4 min-w-[300px]">التحدي الذي سنناقشه</th>
+                                <th className="p-4 whitespace-nowrap">ملف PDF</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gold/10">
@@ -163,6 +171,16 @@ export default function MeetingsSchedule() {
                                     <td className="p-4 text-gold font-bold">{row.topic}</td>
                                     <td className="p-4 font-semibold text-deep-navy/80">{row.case}</td>
                                     <td className="p-4 text-sm text-deep-navy/60 leading-relaxed">{row.challenge}</td>
+                                    <td className="p-4">
+                                        <a
+                                            href={row.pdf}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-1 px-3 py-2 bg-gold/10 border border-gold/20 rounded-lg text-gold-dark text-sm font-bold hover:bg-gold/20 transition-colors"
+                                        >
+                                            📄 PDF
+                                        </a>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

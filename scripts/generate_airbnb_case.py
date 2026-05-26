@@ -4,7 +4,7 @@ generate_airbnb_case.py
 Generate a 2-page Harvard Business School-style case study PDF for Airbnb.
 Uses ReportLab platypus for layout.
 
-Output: /Volumes/Samsung/investment-bridge/docs/case-studies/Airbnb_Strategy_Case_Study.pdf
+Output: /Volumes/Samsung/investment-bridge/public/case-studies/Airbnb_Strategy_Case_Study.pdf
 """
 
 import os
@@ -19,7 +19,7 @@ from reportlab.platypus import (
 )
 
 # ── Paths ────────────────────────────────────────────────────────────────────
-OUTPUT_DIR = "/Volumes/Samsung/investment-bridge/docs/case-studies"
+OUTPUT_DIR = "/Volumes/Samsung/investment-bridge/public/case-studies"
 OUTPUT_FILE = os.path.join(OUTPUT_DIR, "Airbnb_Strategy_Case_Study.pdf")
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)

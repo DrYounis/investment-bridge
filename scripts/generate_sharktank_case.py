@@ -4,7 +4,7 @@ generate_sharktank_case.py
 Generates a 2-page Harvard Business School-style case study PDF about
 Shark Tank negotiation dynamics, using ReportLab.
 
-Output: docs/case-studies/SharkTank_Negotiation_Case_Study.pdf
+Output: public/case-studies/SharkTank_Negotiation_Case_Study.pdf
 """
 
 import os

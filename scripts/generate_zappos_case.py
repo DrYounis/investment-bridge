@@ -9,7 +9,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak, 
 from reportlab.lib import colors
 
 def create_case_study():
-    pdf_path = "/Volumes/Samsung/investment-bridge/docs/case-studies/Zappos_Leadership_Case_Study.pdf"
+    pdf_path = "/Volumes/Samsung/investment-bridge/public/case-studies/Zappos_Leadership_Case_Study.pdf"
     doc = SimpleDocTemplate(pdf_path, pagesize=letter, rightMargin=0.75*inch, leftMargin=0.75*inch, topMargin=0.6*inch, bottomMargin=0.6*inch)
     story = []
     styles = getSampleStyleSheet()

@@ -4,7 +4,7 @@ generate_amazon_case.py
 Generates a 2-page Harvard Business School-style case study PDF
 for Amazon Logistics using ReportLab.
 
-Output: /Volumes/Samsung/investment-bridge/docs/case-studies/Amazon_Operations_Case_Study.pdf
+Output: /Volumes/Samsung/investment-bridge/public/case-studies/Amazon_Operations_Case_Study.pdf
 """
 
 import os
@@ -22,7 +22,7 @@ from reportlab.platypus.flowables import HRFlowable
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
-OUTPUT_DIR = "/Volumes/Samsung/investment-bridge/docs/case-studies"
+OUTPUT_DIR = "/Volumes/Samsung/investment-bridge/public/case-studies"
 OUTPUT_FILE = os.path.join(OUTPUT_DIR, "Amazon_Operations_Case_Study.pdf")
 
 PAGE_W, PAGE_H = letter  # 8.5 x 11 inches

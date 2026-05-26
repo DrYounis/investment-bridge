@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Generate a 2-page Harvard Business School-style case study PDF for Liquid Death.
-Output: /Volumes/Samsung/investment-bridge/docs/case-studies/Liquid_Death_Marketing_Case_Study.pdf
+Output: /Volumes/Samsung/investment-bridge/public/case-studies/Liquid_Death_Marketing_Case_Study.pdf
 
 Requires: reportlab (pip install reportlab)
 """
@@ -20,7 +20,7 @@ from reportlab.platypus import (
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
-OUTPUT_DIR = "/Volumes/Samsung/investment-bridge/docs/case-studies"
+OUTPUT_DIR = "/Volumes/Samsung/investment-bridge/public/case-studies"
 OUTPUT_PATH = os.path.join(OUTPUT_DIR, "Liquid_Death_Marketing_Case_Study.pdf")
 
 DARK_RED = HexColor("#8B0000")

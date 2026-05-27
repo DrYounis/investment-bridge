@@ -130,8 +130,9 @@ function extractYouTubeUrl(html: string, $: cheerio.CheerioAPI): string | undefi
     return foundHref;
   }
 
-  // Fallback: search raw HTML for YouTube URLs
-  const regexMatch = html.match(
+  // Fallback: search only article content for YouTube URLs (never full page)
+  const articleHtml = $('.article-details').html() || '';
+  const regexMatch = articleHtml.match(
     /https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/
   );
   if (regexMatch) return `https://www.youtube.com/watch?v=${regexMatch[1]}`;
@@ -191,10 +192,14 @@ async function scrapeArticleContent(
       }
     });
 
-    // Extract YouTube video URL from the raw HTML
-    const video_url = extractYouTubeUrl(html, $);
-
     const content = contentParts.join('\n\n');
+
+    // Only extract YouTube URL if the article has minimal text (it IS a video article).
+    // If there's substantial text, any YouTube embed on the page is incidental (sidebar, etc.)
+    let video_url: string | undefined;
+    if (content.length < 100) {
+      video_url = extractYouTubeUrl(html, $);
+    }
 
     if (content.length < 50) {
       // Fallback: try broader extraction

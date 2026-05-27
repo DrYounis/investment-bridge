@@ -101,6 +101,86 @@ export default async function Home() {
           </Link>
         </div>
 
+        {/* Elevator Speech Trainer — 20-Second Challenge */}
+        <div className="max-w-6xl mx-auto w-full mb-24 animate-fade-in-up">
+          <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-gray-900 border border-gold/10 shadow-xl">
+            {/* Background animated timer rings */}
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-[0.03]">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full border-[60px] border-deep-navy"></div>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full border-[30px] border-gold"></div>
+            </div>
+
+            <div className="relative z-10 p-8 md:p-12">
+              <div className="flex flex-col lg:flex-row items-center gap-10">
+                {/* Left: Visual Timer Display */}
+                <div className="shrink-0">
+                  <div className="relative w-48 h-48 md:w-56 md:h-56">
+                    {/* Outer ring */}
+                    <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
+                      <circle cx="60" cy="60" r="54" fill="none" stroke="#f0f0ec" strokeWidth="8" />
+                      <circle cx="60" cy="60" r="54" fill="none" stroke="url(#goldGradient)" strokeWidth="8"
+                        strokeDasharray="339.292" strokeDashoffset="0" strokeLinecap="round"
+                        className="transition-all duration-1000" />
+                      <defs>
+                        <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#D4AF37" />
+                          <stop offset="100%" stopColor="#B8941F" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    {/* Center text */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <span className="text-5xl md:text-6xl font-black text-deep-navy dark:text-white tabular-nums">20</span>
+                      <span className="text-sm font-bold text-gold-dark mt-1">ثانية</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right: Content */}
+                <div className="flex-1 text-right">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-green-50 border border-green-200 text-green-700 rounded-full text-sm font-bold mb-4">
+                    🎙️ <span className="uppercase tracking-widest">مجاني تماماً — Free</span>
+                  </div>
+
+                  <h3 className="text-3xl md:text-4xl font-black text-deep-navy dark:text-white mb-4 leading-tight">
+                    خطاب المصعد في
+                    <span className="text-gold-dark"> 20 ثانية</span>
+                  </h3>
+
+                  <p className="text-deep-navy/70 dark:text-gray-300 text-lg mb-4 max-w-xl leading-relaxed">
+                    تدرّب على تقديم نفسك أو مشروعك في 20 ثانية فقط. ذكاء اصطناعي يكتب خطابك، يوقّتك، ويقيّم أداءك — مجاناً.
+                  </p>
+
+                  {/* Mini feature bullets */}
+                  <div className="flex flex-wrap gap-3 mb-6">
+                    {[
+                      { icon: '✨', text: 'توليد الخطاب بالذكاء الاصطناعي' },
+                      { icon: '⏱️', text: 'مؤقت 20 ثانية للتدريب' },
+                      { icon: '📊', text: 'تقييم فوري ونصائح تحسين' },
+                      { icon: '📋', text: 'أمثلة جاهزة للممارسة' },
+                    ].map((f, i) => (
+                      <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-cream dark:bg-gray-800 rounded-lg text-sm font-medium text-deep-navy/80 dark:text-gray-200 border border-gold/5">
+                        {f.icon} {f.text}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* CTA */}
+                  <a
+                    href="/marfa/elevator-speech.html"
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-deep-navy to-[#1a2a4a] text-gold rounded-xl font-bold text-lg hover:from-gold hover:to-gold-dark hover:text-deep-navy transition-all duration-300 shadow-lg hover:shadow-gold/20 border border-gold/10 group"
+                  >
+                    <span>جرّبها الآن مجاناً</span>
+                    <svg className="w-5 h-5 transition-transform group-hover:-translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Featured Service: Pitch Deck */}
         <div className="max-w-6xl mx-auto w-full mb-24 animate-fade-in-up">
           <div className="text-center mb-10">

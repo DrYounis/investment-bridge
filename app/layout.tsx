@@ -50,6 +50,98 @@ export default function RootLayout({
         {children}
         <Footer />
 
+        {/* JSON-LD Structured Data for GEO/SEO — Elevator Speech Trainer */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "HowTo",
+                "name": "كيف تبني خطاب مصعد احترافي في 20 ثانية",
+                "description": "تعلم كيفية تقديم نفسك أو مشروعك في 20 ثانية باستخدام أداة marfa.sa المجانية المدعومة بالذكاء الاصطناعي",
+                "inLanguage": "ar",
+                "totalTime": "PT20S",
+                "step": [
+                  {
+                    "@type": "HowToStep",
+                    "position": 1,
+                    "name": "اختر مجالك وجمهورك",
+                    "text": "حدد مجالك (شركة ناشئة، عمل حر، مبيعات، استشارات، تقنية، صحة) وجمهورك المستهدف (مستثمر، عميل، شريك، جهة توظيف)"
+                  },
+                  {
+                    "@type": "HowToStep",
+                    "position": 2,
+                    "name": "أدخل معلوماتك الأساسية",
+                    "text": "أدخل اسمك أو اسم مشروعك، المشكلة التي تحلها، ما يميزك، والدعوة إلى الإجراء (CTA)"
+                  },
+                  {
+                    "@type": "HowToStep",
+                    "position": 3,
+                    "name": "تدرّب مع المؤقت",
+                    "text": "استخدم مؤقت الـ 20 ثانية للتدرب على إلقاء خطابك. المؤقت يتغير لونه من الأخضر إلى الأصفر إلى الأحمر لمساعدتك على ضبط السرعة"
+                  },
+                  {
+                    "@type": "HowToStep",
+                    "position": 4,
+                    "name": "احصل على تقييم ذكي",
+                    "text": "الذكاء الاصطناعي يقيّم خطابك من 10، ويحدد أقوى نقطة ونقطة تحتاج تحسين، ويعطيك نسخة محسّنة"
+                  }
+                ]
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "mainEntity": [
+                  {
+                    "@type": "Question",
+                    "name": "ما هو خطاب المصعد (Elevator Pitch)؟",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "خطاب المصعد هو عرض موجز لا يتجاوز 20-30 ثانية تقدم فيه نفسك أو مشروعك أو فكرتك بطريقة مقنعة. سمي بهذا الاسم لأنه يفترض أن تقدّم فكرتك لشخص مهم خلال رحلة مصعد قصيرة."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "كيف أكتب خطاب مصعد احترافي؟",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "ابدأ باسمك، ثم المشكلة التي تحلها وحلك في جملة واحدة، أضف رقم دليل واحد يثبت نجاحك، واختم بدعوة للإجراء (CTA). يجب أن يكون الخطاب بين 35-45 كلمة."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "ما هي أداة marfa.sa لخطاب المصعد؟",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "أداة مجانية بالكامل من منصة marfa.sa تساعدك في بناء خطاب مصعد احترافي باللغة العربية. توفر توليد الخطاب بالذكاء الاصطناعي، ومؤقت 20 ثانية للتدريب، وتقييم فوري مع نصائح للتحسين."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "هل الأداة مجانية؟",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "نعم، الأداة مجانية تماماً ولا تتطلب تسجيل دخول. يمكنك استخدامها مباشرة من متصفحك."
+                    }
+                  }
+                ]
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "WebApplication",
+                "name": "مدرب خطاب المصعد | marfa.sa",
+                "description": "أداة مجانية بالذكاء الاصطناعي لبناء وتدريب خطاب المصعد في 20 ثانية باللغة العربية",
+                "url": "https://marfa.sa/marfa/elevator-speech.html",
+                "applicationCategory": "EducationalApplication",
+                "operatingSystem": "Web",
+                "inLanguage": "ar",
+                "offers": { "@type": "Offer", "price": "0", "priceCurrency": "SAR" }
+              }
+            ])
+          }}
+        />
+
         {/* Floating WhatsApp Button */}
         <a
           href="https://wa.me/966555056545"

@@ -3,22 +3,19 @@ import { NextRequest, NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  if (req.method !== 'POST') {
+    return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
+  }
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    return NextResponse.json({ error: 'AI service not configured' }, { status: 503 });
+  }
+
   try {
-    const apiKey = process.env.ANTHROPIC_API_KEY;
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: 'AI service not configured' },
-        { status: 503 }
-      );
-    }
-
-    const { system, content } = await req.json();
-
-    if (!system || !content) {
-      return NextResponse.json(
-        { error: 'Missing system or content' },
-        { status: 400 }
-      );
+    const { prompt } = await req.json();
+    if (!prompt || typeof prompt !== 'string') {
+      return NextResponse.json({ error: 'Missing prompt' }, { status: 400 });
     }
 
     const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -31,8 +28,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
-        system,
-        messages: [{ role: 'user', content }],
+        messages: [{ role: 'user', content: prompt }],
       }),
     });
 
@@ -47,9 +43,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const data = await res.json();
     return NextResponse.json({ text: data.content[0].text });
   } catch (err) {
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

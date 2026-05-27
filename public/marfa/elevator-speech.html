@@ -115,14 +115,6 @@ textarea{resize:vertical;min-height:90px}
 .ex-icon{font-size:22px;margin-bottom:8px}
 .ex-card h4{font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:5px}
 .ex-card p{font-size:12px;color:var(--text-muted);line-height:1.6}
-/* API KEY SECTION */
-.api-section{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
-.api-section .api-info{flex:1;min-width:200px}
-.api-section .api-info p:first-child{font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:3px}
-.api-section .api-info p:last-child{font-size:12px;color:var(--text-muted)}
-.api-section .api-input-wrap{display:flex;gap:8px;align-items:center}
-.api-section input{width:220px;padding:9px 14px;font-size:13px}
-#key-status{font-size:12px;color:var(--text-muted);width:100%}
 /* LOADING */
 .loading::after{content:'...';animation:dots 1s infinite}
 @keyframes dots{0%,100%{content:'.'}40%{content:'..'}80%{content:'...'}}
@@ -344,20 +336,6 @@ footer a{color:var(--gold);text-decoration:none}
     </div>
   </div>
 
-  <!-- API KEY SECTION -->
-  <hr class="section-divider">
-  <div class="api-section">
-    <div class="api-info">
-      <p>🔑 مفتاح API</p>
-      <p>أدخل مفتاح Claude API الخاص بك. لا نخزّن هذا المفتاح على خوادمنا.</p>
-    </div>
-    <div class="api-input-wrap">
-      <input type="password" id="api-key-input" placeholder="sk-ant-...">
-      <button class="btn-primary btn-sm" onclick="saveKey()">حفظ</button>
-      <button class="btn-ghost btn-sm" onclick="clearKey()">إلغاء</button>
-    </div>
-    <div id="key-status"></div>
-  </div>
 </div>
 
 <!-- FOOTER -->
@@ -376,23 +354,12 @@ const EXAMPLES = [
 let timerInterval=null, timeLeft=20, timerRunning=false, timerDone=false;
 let selectedExample=null;
 
-function getKey(){return localStorage.getItem('marfa_claude_key')||'';}
-function saveKey(){const k=document.getElementById('api-key-input').value.trim();if(!k)return;localStorage.setItem('marfa_claude_key',k);document.getElementById('key-status').textContent='✅ تم حفظ المفتاح';document.getElementById('api-key-input').value='';}
-function clearKey(){localStorage.removeItem('marfa_claude_key');document.getElementById('key-status').textContent='🗑️ تم حذف المفتاح';}
-window.onload=()=>{if(getKey())document.getElementById('key-status').textContent='✅ المفتاح محفوظ';};
-
 async function callClaude(prompt){
-  const key=getKey();
-  if(!key){alert('من فضلك أدخل مفتاح Claude API أولاً في الأسفل');return null;}
   try{
-    const r=await fetch("https://api.anthropic.com/v1/messages",{
-      method:"POST",
-      headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},
-      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})
-    });
+    const r=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt})});
     const d=await r.json();
-    if(d.error)throw new Error(d.error.message);
-    return d.content?.map(c=>c.text||'').join('')||'';
+    if(d.error)throw new Error(d.error);
+    return d.text||'';
   }catch(e){return 'حدث خطأ: '+e.message;}
 }
 

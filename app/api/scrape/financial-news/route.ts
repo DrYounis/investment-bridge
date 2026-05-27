@@ -3,6 +3,7 @@ import { scrapeArgaamNews } from '@/lib/argaam/scraper';
 import { summarizeArticle } from '@/lib/argaam/summarizer';
 import { sanitizeContent, sanitizeTitle } from '@/lib/sanitize';
 import { saveArticle, listArticles, getArticlesCount } from '@/lib/supabase/financial-news';
+import { rateLimit, getClientIP } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,7 +34,6 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
       total_articles: total,
       content_dir: 'Supabase: financial_news_articles',
       latest_files: filesWithMeta,
-      api_key_configured: !!process.env.ANTHROPIC_API_KEY,
       cron_secret_configured: !!process.env.CRON_SECRET,
     });
   } catch (err) {
@@ -46,6 +46,23 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  // Auth: require CRON_SECRET or allow from Vercel cron (sends Authorization header)
+  const cronSecret = process.env.CRON_SECRET;
+  if (cronSecret) {
+    const authHeader = req.headers.get('authorization');
+    const expectedAuth = `Bearer ${cronSecret}`;
+    if (authHeader !== expectedAuth) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+  }
+
+  // Rate limit: 1 scrape per 30 seconds per IP
+  const ip = getClientIP(req);
+  const limit = rateLimit(ip, { maxRequests: 1, windowMs: 30_000 });
+  if (!limit.allowed) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
+
   console.log('\n🚀 ── Financial News Scrape Job Started ──\n');
 
   try {

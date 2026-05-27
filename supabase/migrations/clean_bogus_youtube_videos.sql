@@ -12,10 +12,10 @@ UPDATE financial_news_articles
 SET video_url = NULL 
 WHERE video_url IS NOT NULL 
   AND video_url != '' 
-  AND content IS NOT NULL 
-  AND length(content) > 100;
+  AND full_content IS NOT NULL 
+  AND length(full_content) > 100;
 
 -- Verify
-SELECT id, title, video_url, length(content) as content_len
+SELECT id, title, video_url, length(full_content) as content_len
 FROM financial_news_articles 
 WHERE video_url IS NOT NULL;

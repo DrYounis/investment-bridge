@@ -1,322 +1,566 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="تعلم خطاب المصعد في 20 ثانية مجاناً - marfa.sa">
-    <title>خطاب المصعد في 20 ثانية | marfa.sa</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'deep-navy': '#0A192F', 'gold': '#D4AF37',
-                        'gold-dark': '#C5A028', 'gold-light': '#F9E2AF', 'cream': '#FDFCF0',
-                    },
-                    fontFamily: {
-                        'arabic': ['Cairo', 'Tajawal', 'sans-serif'],
-                        'luxury': ['Playfair Display', 'serif'],
-                    },
-                    animation: {
-                        'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    },
-                    keyframes: {
-                        pulse: { '0%,100%': { opacity: '1' }, '50%': { opacity: '0.5' } },
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        :root { --deep-navy: #0A192F; --gold: #D4AF37; --gold-dark: #C5A028; --cream: #FDFCF0; }
-        body { font-family: 'Cairo', 'Tajawal', sans-serif; min-width: 320px; background: var(--cream); color: var(--deep-navy); }
-        .text-luxury-gold {
-            background: linear-gradient(135deg, #D4AF37 0%, #F9E2AF 50%, #C5A028 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
-        .tab-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .tab-btn.active { background: var(--deep-navy); color: var(--gold); box-shadow: 0 8px 24px rgba(10,25,47,0.2); }
-        .timer-bar { height: 8px; border-radius: 4px; transition: width 0.1s linear, background-color 0.3s ease; background: #10b981; }
-        .timer-bar.yellow { background: #f59e0b; }
-        .timer-bar.red    { background: #ef4444; }
-        .timer-bar.done   { background: var(--gold); box-shadow: 0 0 12px rgba(212,175,55,0.4); }
-        .loader-dots::after { content: ''; animation: dots 1.4s infinite; }
-        @keyframes dots { 0%,20%{content:'.'} 40%,60%{content:'..'} 80%,100%{content:'...'} }
-        @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-        .anim-in { animation: fadeInUp 0.6s ease-out; }
-        textarea, input, select { font-family: 'Cairo', 'Tajawal', sans-serif; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>خطاب المصعد في 20 ثانية | marfa.sa</title>
+<meta name="description" content="تعلم خطاب المصعد في 20 ثانية مجاناً - marfa.sa">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0a0f1e;
+  --bg-dark: #0d1426;
+  --bg-card: #111827;
+  --bg-card-hover: #1a2235;
+  --bg-input: #1a2235;
+  --gold: #c9a84c;
+  --gold-light: #e6c76a;
+  --gold-dark: #a07830;
+  --gold-glow: rgba(201,168,76,0.12);
+  --gold-border: rgba(201,168,76,0.25);
+  --gold-border-strong: rgba(201,168,76,0.6);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255,255,255,0.7);
+  --text-muted: rgba(255,255,255,0.4);
+  --border: rgba(255,255,255,0.08);
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Tajawal',sans-serif;background:var(--bg-deep);color:var(--text-primary);direction:rtl;min-height:100vh;background-image:radial-gradient(ellipse at 20% 30%,rgba(201,168,76,0.05) 0%,transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(59,130,246,0.04) 0%,transparent 50%)}
+/* NAV */
+nav{background:rgba(10,15,30,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:.9rem 0;position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:20px;font-weight:800;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:8px}
+.logo span{color:var(--text-primary);font-weight:400;font-size:14px}
+.nav-links{display:flex;gap:1.5rem}
+.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;transition:color .2s}
+.nav-links a:hover{color:var(--gold)}
+/* HERO */
+.hero{text-align:center;padding:5rem 1.5rem 3.5rem;position:relative}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,0.07) 0%,transparent 65%);pointer-events:none}
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(201,168,76,0.1);border:1px solid var(--gold-border);color:var(--gold);padding:7px 18px;border-radius:999px;font-size:13px;font-weight:600;margin-bottom:1.5rem}
+.hero h1{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;line-height:1.2;margin-bottom:1.2rem;color:var(--text-primary)}
+.hero h1 .gold{color:var(--gold)}
+.hero p{font-size:1.1rem;color:var(--text-secondary);max-width:560px;margin:0 auto 2rem;line-height:1.8}
+/* FEATURE TAGS */
+.features-row{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:2.5rem}
+.ftag{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--text-secondary);padding:9px 16px;border-radius:10px;font-size:13px}
+/* TIMER CIRCLE */
+.timer-hero-circle{width:110px;height:110px;border-radius:50%;border:3px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(201,168,76,0.06);box-shadow:0 0 40px rgba(201,168,76,0.18),inset 0 0 20px rgba(201,168,76,0.04);margin:0 auto 2rem}
+.timer-hero-circle .num{font-size:42px;font-weight:900;color:var(--text-primary);line-height:1}
+.timer-hero-circle .lbl{font-size:12px;color:var(--gold);margin-top:2px}
+/* BTN */
+.btn-primary{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dark) 100%);color:#0a0f1e;border:none;padding:15px 36px;border-radius:12px;font-size:16px;font-weight:800;font-family:'Tajawal',sans-serif;cursor:pointer;transition:all .25s;text-decoration:none;display:inline-block}
+.btn-primary:hover{background:linear-gradient(135deg,var(--gold-light) 0%,var(--gold) 100%);transform:translateY(-2px);box-shadow:0 10px 28px rgba(201,168,76,0.35)}
+.btn-secondary{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);color:var(--text-primary);padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;font-family:'Tajawal',sans-serif;cursor:pointer;transition:all .2s}
+.btn-secondary:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.25)}
+.btn-ghost{background:transparent;border:1px solid var(--gold-border);color:var(--gold);padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;font-family:'Tajawal',sans-serif;cursor:pointer;transition:all .2s}
+.btn-ghost:hover{background:var(--gold-glow);border-color:var(--gold-border-strong)}
+.btn-sm{padding:9px 18px;font-size:13px;border-radius:8px}
+/* STEPS */
+.steps{max-width:900px;margin:0 auto;padding:2rem 1.5rem 3rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.step-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;text-align:center;transition:all .25s}
+.step-card:hover{border-color:var(--gold-border);transform:translateY(-3px)}
+.step-num{width:42px;height:42px;border-radius:50%;background:var(--gold-glow);border:1px solid var(--gold-border);color:var(--gold);font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.step-card h3{font-size:15px;font-weight:700;color:var(--text-primary);margin-bottom:6px}
+.step-card p{font-size:13px;color:var(--text-muted);line-height:1.6}
+/* CONTAINER */
+.container{max-width:860px;margin:0 auto;padding:0 1.5rem 4rem}
+/* TABS */
+.tabs-wrap{display:flex;justify-content:center;margin-bottom:2rem}
+.tabs{display:flex;gap:6px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:14px;padding:5px}
+.tab{padding:11px 22px;border-radius:10px;font-size:14px;font-weight:600;font-family:'Tajawal',sans-serif;cursor:pointer;border:none;background:transparent;color:var(--text-muted);transition:all .2s;white-space:nowrap}
+.tab.active{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#0a0f1e;font-weight:800}
+.tab:hover:not(.active){color:var(--text-secondary);background:rgba(255,255,255,0.05)}
+/* TAB PANEL */
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+/* CARD */
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:2rem}
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-group{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.form-group label{font-size:13px;color:var(--text-secondary);font-weight:600}
+input,select,textarea{background:var(--bg-input);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:var(--text-primary);padding:12px 14px;font-size:14px;font-family:'Tajawal',sans-serif;width:100%;direction:rtl;transition:border-color .2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold-border-strong);box-shadow:0 0 0 3px rgba(201,168,76,0.1)}
+select option{background:var(--bg-card)}
+textarea{resize:vertical;min-height:90px}
+/* SPEECH OUTPUT */
+.speech-output{background:rgba(201,168,76,0.05);border:1px solid var(--gold-border);border-radius:12px;padding:1.25rem 1.5rem;font-size:15px;line-height:1.9;color:var(--text-primary);min-height:80px}
+/* AI BOX */
+.ai-box{background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.18);border-radius:12px;padding:1.25rem 1.5rem;margin-top:1rem}
+.ai-label{color:var(--gold);font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.ai-content{color:var(--text-secondary);font-size:14px;line-height:1.85}
+/* TIMER SECTION */
+.timer-section{display:flex;align-items:center;gap:2rem;margin-bottom:1.5rem;padding:1.5rem;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:14px}
+.timer-circle{width:90px;height:90px;border-radius:50%;border:3px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(201,168,76,0.06);box-shadow:0 0 24px rgba(201,168,76,0.15);flex-shrink:0;transition:border-color .4s,box-shadow .4s}
+.timer-circle.warn{border-color:var(--warning);box-shadow:0 0 24px rgba(245,158,11,0.2)}
+.timer-circle.danger{border-color:var(--danger);box-shadow:0 0 24px rgba(239,68,68,0.25)}
+.timer-circle .t-num{font-size:34px;font-weight:900;line-height:1}
+.timer-circle .t-lbl{font-size:11px;color:var(--gold);margin-top:1px}
+.timer-info{flex:1}
+.timer-status{font-size:13px;color:var(--text-muted);margin-bottom:.75rem}
+.progress-wrap{background:rgba(255,255,255,0.07);border-radius:999px;height:7px;overflow:hidden}
+.progress-bar{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--gold-dark),var(--gold));transition:width .5s,background .4s;width:100%}
+.progress-bar.warn{background:linear-gradient(90deg,#b45309,var(--warning))}
+.progress-bar.danger{background:linear-gradient(90deg,#991b1b,var(--danger))}
+/* EXAMPLE CARDS */
+.example-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem}
+.ex-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.25rem;cursor:pointer;transition:all .25s}
+.ex-card:hover{border-color:var(--gold-border);background:var(--bg-card-hover);transform:translateY(-2px)}
+.ex-card.selected{border-color:var(--gold-border-strong);background:rgba(201,168,76,0.06)}
+.ex-icon{font-size:22px;margin-bottom:8px}
+.ex-card h4{font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:5px}
+.ex-card p{font-size:12px;color:var(--text-muted);line-height:1.6}
+/* API KEY SECTION */
+.api-section{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.api-section .api-info{flex:1;min-width:200px}
+.api-section .api-info p:first-child{font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:3px}
+.api-section .api-info p:last-child{font-size:12px;color:var(--text-muted)}
+.api-section .api-input-wrap{display:flex;gap:8px;align-items:center}
+.api-section input{width:220px;padding:9px 14px;font-size:13px}
+#key-status{font-size:12px;color:var(--text-muted);width:100%}
+/* LOADING */
+.loading::after{content:'...';animation:dots 1s infinite}
+@keyframes dots{0%,100%{content:'.'}40%{content:'..'}80%{content:'...'}}
+/* SECTION DIVIDER */
+.section-divider{border:none;border-top:1px solid var(--border);margin:2.5rem 0}
+/* BTN ROW */
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:1.25rem}
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:2rem 0;text-align:center;color:var(--text-muted);font-size:13px}
+footer a{color:var(--gold);text-decoration:none}
+/* RESPONSIVE */
+@media(max-width:700px){
+  .steps{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .example-grid{grid-template-columns:1fr}
+  .tabs{flex-direction:column;width:100%}
+  .timer-section{flex-direction:column;text-align:center}
+  .nav-links{display:none}
+  .hero h1{font-size:1.9rem}
+}
+</style>
 </head>
-<body class="min-h-screen relative overflow-hidden">
+<body>
 
-    <!-- Gold dust background (exact match homepage) -->
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.03),transparent_70%)] pointer-events-none"></div>
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="https://marfa.sa">مرفأ <span>Investment Bridge</span></a>
+    <div class="nav-links">
+      <a href="https://www.marfa.sa/meetings">لقاءات مرفأ</a>
+      <a href="https://www.marfa.sa/financial-news">📰 الأخبار المالية</a>
+    </div>
+  </div>
+</nav>
 
-    <!-- Main content -->
-    <main class="relative min-h-screen flex flex-col pt-32 pb-16 px-4 max-w-6xl mx-auto">
+<!-- HERO -->
+<section class="hero">
+  <div class="badge">🎙️ مجاني تماماً — FREE</div>
+  <div class="timer-hero-circle">
+    <span class="num">20</span>
+    <span class="lbl">ثانية</span>
+  </div>
+  <h1>خطاب المصعد في <span class="gold">20 ثانية</span></h1>
+  <p>تدرّب على تقديم نفسك أو مشروعك في 20 ثانية فقط. ذكاء اصطناعي يكتب خطابك، يوقّتك، ويقيّم أداءك — مجاناً.</p>
+  <div class="features-row">
+    <span class="ftag">✨ توليد الخطاب بالذكاء الاصطناعي</span>
+    <span class="ftag">⏱️ مؤقت 20 ثانية للتدريب</span>
+    <span class="ftag">📊 تقييم فوري ونصائح تحسين</span>
+    <span class="ftag">📋 أمثلة جاهزة للممارسة</span>
+  </div>
+  <button class="btn-primary" onclick="document.getElementById('app').scrollIntoView({behavior:'smooth'})">جرّبها الآن مجاناً ›</button>
+</section>
 
-        <!-- ===== HERO (exact homepage pattern) ===== -->
-        <div class="text-center mb-20 space-y-8 animate-pulse relative">
-            <div class="absolute -top-[50%] left-1/2 -translate-x-1/2 w-[60%] h-[60%] bg-gold/5 blur-[120px] rounded-full animate-pulse pointer-events-none"></div>
+<!-- STEPS -->
+<div class="steps">
+  <div class="step-card">
+    <div class="step-num">١</div>
+    <h3>اختر نموذجاً</h3>
+    <p>حدد مجالك وجمهورك لبناء خطاب مخصص يناسب احتياجاتك</p>
+  </div>
+  <div class="step-card">
+    <div class="step-num">٢</div>
+    <h3>سجّل أو اكتب</h3>
+    <p>اكتب خطابك أو درّب نفسك بالمؤقت الذكي لضبط الإلقاء</p>
+  </div>
+  <div class="step-card">
+    <div class="step-num">٣</div>
+    <h3>احصل على تقييم</h3>
+    <p>ذكاء اصطناعي يقيّم أداءك ويعطيك نصائح فورية للتطوير</p>
+  </div>
+</div>
 
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/10 border border-gold/20 text-gold text-sm font-bold mb-4">
-                🎙️ <span class="tracking-wide uppercase">مجاني تماماً — Free Service</span>
-            </div>
+<!-- APP -->
+<div class="container" id="app">
+  <div class="tabs-wrap">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('build',this)">✨ بناء الخطاب</button>
+      <button class="tab" onclick="switchTab('practice',this)">⏱️ التدريب والتوقيت</button>
+      <button class="tab" onclick="switchTab('examples',this)">📋 أمثلة جاهزة</button>
+    </div>
+  </div>
 
-            <h1 class="text-5xl md:text-7xl font-black text-deep-navy dark:text-white tracking-tight leading-tight">
-                خطاب المصعد في
-                <br />
-                <span class="text-luxury-gold inline-block mt-2">20 ثانية</span>
-            </h1>
-
-            <p class="text-lg md:text-xl text-deep-navy/70 dark:text-white/80 max-w-2xl mx-auto leading-relaxed font-medium">
-                تعلم كيف تقدم نفسك أو مشروعك في 20 ثانية مع تدريب فوري بالذكاء الاصطناعي
-            </p>
+  <!-- BUILD TAB -->
+  <div id="tab-build" class="tab-panel active">
+    <div class="card">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>المجال</label>
+          <select id="industry">
+            <option value="">اختر المجال...</option>
+            <option value="startup">شركة ناشئة (Startup)</option>
+            <option value="freelance">عمل حر (Freelance)</option>
+            <option value="sales">مبيعات (Sales)</option>
+            <option value="consulting">استشارات (Consulting)</option>
+            <option value="tech">تقنية (Tech)</option>
+            <option value="health">صحة (Health)</option>
+          </select>
         </div>
-
-        <!-- ===== HOW IT WORKS — 3 Steps (matching homepage card style) ===== -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl mx-auto mb-20">
-            <div class="bg-white dark:bg-gray-900 rounded-3xl p-8 text-center shadow-xl border border-gold/10 relative overflow-hidden group">
-                <div class="absolute inset-0 bg-gradient-to-br from-gold/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                <div class="relative z-10">
-                    <div class="w-16 h-16 bg-gradient-to-br from-gold to-gold-dark text-deep-navy rounded-2xl flex items-center justify-center text-3xl font-black mx-auto mb-6 shadow-lg shadow-gold/20">1</div>
-                    <h3 class="text-2xl font-bold text-deep-navy dark:text-white mb-3 font-luxury">اختر نموذجاً</h3>
-                    <p class="text-deep-navy/60 dark:text-white/70 text-base leading-relaxed">حدد مجالك وجمهورك لبناء خطاب مخصص يناسب احتياجاتك</p>
-                </div>
-            </div>
-            <div class="bg-white dark:bg-gray-900 rounded-3xl p-8 text-center shadow-xl border border-gold/10 relative overflow-hidden group">
-                <div class="absolute inset-0 bg-gradient-to-br from-gold/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                <div class="relative z-10">
-                    <div class="w-16 h-16 bg-gradient-to-br from-gold to-gold-dark text-deep-navy rounded-2xl flex items-center justify-center text-3xl font-black mx-auto mb-6 shadow-lg shadow-gold/20">2</div>
-                    <h3 class="text-2xl font-bold text-deep-navy dark:text-white mb-3 font-luxury">سجّل أو اكتب</h3>
-                    <p class="text-deep-navy/60 dark:text-white/70 text-base leading-relaxed">اكتب خطابك أو درّب نفسك بالمؤقت الذكي لضبط الإلقاء</p>
-                </div>
-            </div>
-            <div class="bg-white dark:bg-gray-900 rounded-3xl p-8 text-center shadow-xl border border-gold/10 relative overflow-hidden group">
-                <div class="absolute inset-0 bg-gradient-to-br from-gold/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                <div class="relative z-10">
-                    <div class="w-16 h-16 bg-gradient-to-br from-gold to-gold-dark text-deep-navy rounded-2xl flex items-center justify-center text-3xl font-black mx-auto mb-6 shadow-lg shadow-gold/20">3</div>
-                    <h3 class="text-2xl font-bold text-deep-navy dark:text-white mb-3 font-luxury">احصل على تقييم</h3>
-                    <p class="text-deep-navy/60 dark:text-white/70 text-base leading-relaxed">ذكاء اصطناعي يقيّم أداءك ويعطيك نصائح فورية للتطوير</p>
-                </div>
-            </div>
+        <div class="form-group">
+          <label>الجمهور المستهدف</label>
+          <select id="audience">
+            <option value="">اختر الجمهور...</option>
+            <option value="investor">مستثمر (Investor)</option>
+            <option value="client">عميل (Client)</option>
+            <option value="partner">شريك (Partner)</option>
+            <option value="employer">جهة توظيف (Employer)</option>
+          </select>
         </div>
-
-        <!-- ===== TABS (gradient border trick matching pitch deck card) ===== -->
-        <div class="max-w-6xl mx-auto w-full mb-10">
-            <div class="bg-gradient-to-r from-gold via-gold-dark to-gold rounded-3xl p-[1.5px] shadow-2xl">
-                <div class="bg-white dark:bg-gray-900 rounded-[calc(1.5rem-2px)] p-6 md:p-10 relative overflow-hidden">
-                    <!-- Decorative floating elements -->
-                    <div class="absolute top-8 right-8 w-20 h-20 bg-gold/5 rounded-2xl rotate-12 pointer-events-none"></div>
-                    <div class="absolute bottom-12 left-8 w-16 h-16 bg-gold/5 rounded-full pointer-events-none"></div>
-
-                    <div class="relative z-10">
-                        <!-- Tab buttons -->
-                        <div class="flex gap-2 mb-8 bg-cream dark:bg-gray-800 p-1.5 rounded-2xl border border-gold/10">
-                            <button class="tab-btn active flex-1 py-4 px-6 rounded-xl font-bold text-base text-center" data-tab="build">✨ بناء الخطاب</button>
-                            <button class="tab-btn flex-1 py-4 px-6 rounded-xl font-bold text-base text-center text-deep-navy/40" data-tab="practice">⏱️ التدريب والتوقيت</button>
-                            <button class="tab-btn flex-1 py-4 px-6 rounded-xl font-bold text-base text-center text-deep-navy/40" data-tab="examples">📋 أمثلة جاهزة</button>
-                        </div>
-
-                        <!-- TAB 1: BUILD -->
-                        <div id="tab-build" class="tab-content space-y-5">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                <div>
-                                    <label class="block text-sm font-bold text-deep-navy mb-2">المجال</label>
-                                    <select id="industry" class="w-full p-4 rounded-2xl border border-gold/10 bg-cream dark:bg-gray-800 text-base text-deep-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all">
-                                        <option value="">اختر المجال...</option>
-                                        <option value="شركة ناشئة">شركة ناشئة (Startup)</option>
-                                        <option value="عمل حر">عمل حر (Freelance)</option>
-                                        <option value="مبيعات">مبيعات (Sales)</option>
-                                        <option value="استشارات">استشارات (Consulting)</option>
-                                        <option value="تقنية">تقنية (Tech)</option>
-                                        <option value="صحة">صحة (Health)</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-bold text-deep-navy mb-2">الجمهور المستهدف</label>
-                                    <select id="audience" class="w-full p-4 rounded-2xl border border-gold/10 bg-cream dark:bg-gray-800 text-base text-deep-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all">
-                                        <option value="">اختر الجمهور...</option>
-                                        <option value="مستثمر">مستثمر (Investor)</option>
-                                        <option value="عميل">عميل (Client)</option>
-                                        <option value="شريك">شريك (Partner)</option>
-                                        <option value="جهة توظيف">جهة توظيف (Employer)</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div><label class="block text-sm font-bold text-deep-navy mb-2">الاسم / اسم المشروع</label><input type="text" id="name" placeholder="مثال: أحمد / منصة مرفأ" class="w-full p-4 rounded-2xl border border-gold/10 bg-cream dark:bg-gray-800 text-base text-deep-navy dark:text-white placeholder:text-deep-navy/25 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all"></div>
-                            <div><label class="block text-sm font-bold text-deep-navy mb-2">المشكلة التي تحلها</label><input type="text" id="problem" placeholder="مثال: صعوبة وصول الشركات الناشئة للمستثمرين" class="w-full p-4 rounded-2xl border border-gold/10 bg-cream dark:bg-gray-800 text-base text-deep-navy dark:text-white placeholder:text-deep-navy/25 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all"></div>
-                            <div><label class="block text-sm font-bold text-deep-navy mb-2">ما يميزك / يميز مشروعك</label><input type="text" id="unique" placeholder="مثال: منصة ذكاء اصطناعي تربط المستثمرين بالفرص" class="w-full p-4 rounded-2xl border border-gold/10 bg-cream dark:bg-gray-800 text-base text-deep-navy dark:text-white placeholder:text-deep-navy/25 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all"></div>
-                            <div><label class="block text-sm font-bold text-deep-navy mb-2">الدعوة إلى الإجراء (CTA)</label><input type="text" id="cta" placeholder="مثال: لنحدد لقاءً الأسبوع القادم" class="w-full p-4 rounded-2xl border border-gold/10 bg-cream dark:bg-gray-800 text-base text-deep-navy dark:text-white placeholder:text-deep-navy/25 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all"></div>
-                            <button id="generate-btn" onclick="generateSpeech()" class="w-full py-5 bg-deep-navy text-gold font-bold rounded-2xl hover:bg-gold hover:text-deep-navy transition-all duration-300 shadow-xl hover:shadow-gold/20 text-lg border border-gold/10">
-                                🚀 توليد الخطاب بالذكاء الاصطناعي
-                            </button>
-                            <div id="generated-speech" class="hidden anim-in bg-cream dark:bg-gray-800 rounded-2xl p-6 border border-gold/10 mt-4">
-                                <h4 class="font-bold text-lg text-deep-navy dark:text-white mb-3">📝 الخطاب المُولَّد:</h4>
-                                <p id="speech-text" class="text-deep-navy/70 dark:text-white/70 leading-relaxed whitespace-pre-wrap text-base"></p>
-                            </div>
-                            <div id="build-feedback" class="hidden anim-in bg-gold/5 rounded-2xl p-5 border border-gold/10"></div>
-                        </div>
-
-                        <!-- TAB 2: PRACTICE -->
-                        <div id="tab-practice" class="tab-content hidden space-y-5">
-                            <div><label class="block text-sm font-bold text-deep-navy mb-2">خطابك</label><textarea id="practice-speech" rows="5" placeholder="الصق خطابك هنا للتدريب..." class="w-full p-4 rounded-2xl border border-gold/10 bg-cream dark:bg-gray-800 text-base text-deep-navy dark:text-white placeholder:text-deep-navy/25 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all resize-none"></textarea></div>
-                            <div class="text-center py-8 bg-cream dark:bg-gray-800 rounded-2xl border border-gold/10">
-                                <div id="timer-display" class="text-7xl font-black mb-4" style="color:#10b981;">0:20</div>
-                                <div class="timer-bar mx-auto max-w-lg" id="timer-bar" style="width:100%"></div>
-                                <p id="timer-status" class="text-base text-deep-navy/30 mt-4">جاهز للبدء</p>
-                            </div>
-                            <div class="flex flex-col sm:flex-row gap-4">
-                                <button id="timer-start" onclick="startTimer()" class="flex-1 py-4 font-bold rounded-2xl transition-all duration-300 shadow-lg text-white hover:opacity-90 text-base" style="background:#10b981;">▶️ ابدأ</button>
-                                <button onclick="resetTimer()" class="flex-1 py-4 bg-cream dark:bg-gray-800 text-deep-navy dark:text-white font-bold rounded-2xl hover:bg-gold/10 transition-all duration-300 border border-gold/10 text-base">↩️ إعادة</button>
-                                <button id="practice-evaluate-btn" onclick="evaluateSpeech()" class="flex-1 py-4 bg-deep-navy text-gold font-bold rounded-2xl hover:bg-gold hover:text-deep-navy transition-all duration-300 shadow-xl hover:shadow-gold/20 border border-gold/10 text-base">🧠 تقييم بالذكاء الاصطناعي</button>
-                            </div>
-                            <div id="practice-feedback" class="hidden anim-in bg-gold/5 rounded-2xl p-5 border border-gold/10"></div>
-                        </div>
-
-                        <!-- TAB 3: EXAMPLES -->
-                        <div id="tab-examples" class="tab-content hidden">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
-                                <div class="bg-cream dark:bg-gray-800 rounded-3xl p-6 cursor-pointer border border-gold/10 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group relative overflow-hidden" onclick="showExample('entrepreneur')">
-                                    <div class="absolute inset-0 bg-gradient-to-br from-gold/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                                    <div class="relative z-10"><div class="text-5xl mb-4">🚀</div><h4 class="font-bold text-xl text-deep-navy dark:text-white mb-2">رائد أعمال</h4><p class="text-base text-deep-navy/50 dark:text-white/50">عرض شركة ناشئة أمام مستثمر</p></div>
-                                </div>
-                                <div class="bg-cream dark:bg-gray-800 rounded-3xl p-6 cursor-pointer border border-gold/10 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group relative overflow-hidden" onclick="showExample('consultant')">
-                                    <div class="absolute inset-0 bg-gradient-to-br from-gold/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                                    <div class="relative z-10"><div class="text-5xl mb-4">💼</div><h4 class="font-bold text-xl text-deep-navy dark:text-white mb-2">مستشار</h4><p class="text-base text-deep-navy/50 dark:text-white/50">تقديم خدمات استشارية لعميل</p></div>
-                                </div>
-                                <div class="bg-cream dark:bg-gray-800 rounded-3xl p-6 cursor-pointer border border-gold/10 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group relative overflow-hidden" onclick="showExample('jobseeker')">
-                                    <div class="absolute inset-0 bg-gradient-to-br from-gold/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                                    <div class="relative z-10"><div class="text-5xl mb-4">🎯</div><h4 class="font-bold text-xl text-deep-navy dark:text-white mb-2">باحث عن عمل</h4><p class="text-base text-deep-navy/50 dark:text-white/50">عرض نفسك أمام جهة توظيف</p></div>
-                                </div>
-                                <div class="bg-cream dark:bg-gray-800 rounded-3xl p-6 cursor-pointer border border-gold/10 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group relative overflow-hidden" onclick="showExample('sales')">
-                                    <div class="absolute inset-0 bg-gradient-to-br from-gold/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                                    <div class="relative z-10"><div class="text-5xl mb-4">💎</div><h4 class="font-bold text-xl text-deep-navy dark:text-white mb-2">مندوب مبيعات</h4><p class="text-base text-deep-navy/50 dark:text-white/50">تقديم منتج أو خدمة لعميل محتمل</p></div>
-                                </div>
-                            </div>
-                            <div id="example-detail" class="hidden anim-in">
-                                <div class="bg-cream dark:bg-gray-800 rounded-2xl p-6 border border-gold/10 mb-4">
-                                    <h4 id="example-title" class="font-bold text-xl text-deep-navy dark:text-white mb-3"></h4>
-                                    <p id="example-text" class="text-deep-navy/70 dark:text-white/70 leading-relaxed whitespace-pre-wrap text-base"></p>
-                                </div>
-                                <button onclick="analyzeExample()" class="w-full py-5 bg-deep-navy text-gold font-bold rounded-2xl hover:bg-gold hover:text-deep-navy transition-all duration-300 shadow-xl hover:shadow-gold/20 text-lg border border-gold/10">🧠 تحليل هذا المثال بالذكاء الاصطناعي</button>
-                                <div id="example-feedback" class="hidden anim-in bg-gold/5 rounded-2xl p-5 border border-gold/10 mt-4"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      </div>
+      <div class="form-group">
+        <label>الاسم / اسم المشروع</label>
+        <input type="text" id="name" placeholder="مثال: أنا سارة، مؤسسة تطبيق Marfa...">
+      </div>
+      <div class="form-group">
+        <label>المشكلة التي تحلها</label>
+        <textarea id="problem" placeholder="مثال: نساعد الشركات الصغيرة على إدارة مبيعاتها..."></textarea>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>ما يميزك / يميز مشروعك</label>
+          <input type="text" id="unique" placeholder="مثال: الوحيدون في السوق السعودي...">
         </div>
-
-        <!-- ===== FOOTER ===== -->
-        <div class="text-center text-deep-navy/30">
-            <p>جزء من منصة <a href="https://marfa.sa" class="text-gold font-bold hover:underline">marfa.sa</a> — مجاني بالكامل</p>
+        <div class="form-group">
+          <label>الدعوة إلى الإجراء (CTA)</label>
+          <input type="text" id="cta" placeholder="مثال: هل نحدد موعداً هذا الأسبوع؟">
         </div>
-    </main>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="generateSpeech()">🚀 توليد الخطاب بالذكاء الاصطناعي</button>
+        <button class="btn-ghost btn-sm" onclick="clearBuild()">مسح</button>
+      </div>
+      <div id="build-output" style="display:none;margin-top:1.5rem">
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:8px;font-weight:600">📝 الخطاب المُولَّد:</p>
+        <div id="build-speech" class="speech-output"></div>
+        <div id="build-ai" class="ai-box" style="display:none">
+          <div class="ai-label">✨ تقييم الذكاء الاصطناعي</div>
+          <div id="build-ai-text" class="ai-content"></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-ghost btn-sm" onclick="copyToClipboard('build-speech')">📋 نسخ الخطاب</button>
+          <button class="btn-ghost btn-sm" onclick="sendToPractice()">⏱️ تدرّب عليه</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICE TAB -->
+  <div id="tab-practice" class="tab-panel">
+    <div class="card">
+      <div class="form-group">
+        <label>الصق خطابك هنا وابدأ التدريب</label>
+        <textarea id="practice-text" rows="4" placeholder="اكتب أو الصق خطابك هنا..."></textarea>
+      </div>
+      <div class="timer-section">
+        <div class="timer-circle" id="timer-circle">
+          <span class="t-num" id="timer-num">20</span>
+          <span class="t-lbl">ثانية</span>
+        </div>
+        <div class="timer-info">
+          <div class="timer-status" id="timer-status">جاهز للبدء</div>
+          <div class="progress-wrap">
+            <div class="progress-bar" id="progress-bar" style="width:100%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary btn-sm" id="btn-start" onclick="startTimer()">▶️ ابدأ</button>
+        <button class="btn-secondary btn-sm" onclick="resetTimer()">↩️ إعادة</button>
+        <button class="btn-ghost btn-sm" id="btn-eval" onclick="evaluateSpeech()">🧠 تقييم بالذكاء الاصطناعي</button>
+      </div>
+      <div id="practice-ai" style="display:none;margin-top:1.25rem">
+        <div class="ai-box">
+          <div class="ai-label">🧠 تقييم الذكاء الاصطناعي</div>
+          <div id="practice-ai-text" class="ai-content"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXAMPLES TAB -->
+  <div id="tab-examples" class="tab-panel">
+    <div class="example-grid">
+      <div class="ex-card" onclick="selectExample(0,this)">
+        <div class="ex-icon">🚀</div>
+        <h4>رائد أعمال</h4>
+        <p>عرض شركة ناشئة أمام مستثمر</p>
+      </div>
+      <div class="ex-card" onclick="selectExample(1,this)">
+        <div class="ex-icon">💼</div>
+        <h4>مستشار</h4>
+        <p>تقديم خدمات استشارية لعميل</p>
+      </div>
+      <div class="ex-card" onclick="selectExample(2,this)">
+        <div class="ex-icon">🎯</div>
+        <h4>باحث عن عمل</h4>
+        <p>عرض نفسك أمام جهة توظيف</p>
+      </div>
+      <div class="ex-card" onclick="selectExample(3,this)">
+        <div class="ex-icon">💎</div>
+        <h4>مندوب مبيعات</h4>
+        <p>تقديم منتج أو خدمة لعميل محتمل</p>
+      </div>
+    </div>
+    <div id="example-view" style="display:none">
+      <div class="card">
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;font-weight:600">📝 المثال:</p>
+        <div id="example-text" class="speech-output" style="margin-bottom:1.25rem"></div>
+        <div class="btn-row">
+          <button class="btn-primary btn-sm" onclick="analyzeExample()">🧠 تحليل هذا المثال بالذكاء الاصطناعي</button>
+          <button class="btn-ghost btn-sm" onclick="useExampleInPractice()">⏱️ تدرّب عليه</button>
+        </div>
+        <div id="example-ai" style="display:none;margin-top:1rem">
+          <div class="ai-box">
+            <div class="ai-label">✨ تحليل الذكاء الاصطناعي</div>
+            <div id="example-ai-text" class="ai-content"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- API KEY SECTION -->
+  <hr class="section-divider">
+  <div class="api-section">
+    <div class="api-info">
+      <p>🔑 مفتاح API</p>
+      <p>أدخل مفتاح Claude API الخاص بك. لا نخزّن هذا المفتاح على خوادمنا.</p>
+    </div>
+    <div class="api-input-wrap">
+      <input type="password" id="api-key-input" placeholder="sk-ant-...">
+      <button class="btn-primary btn-sm" onclick="saveKey()">حفظ</button>
+      <button class="btn-ghost btn-sm" onclick="clearKey()">إلغاء</button>
+    </div>
+    <div id="key-status"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>جزء من منصة <a href="https://marfa.sa">marfa.sa</a> — مجاني بالكامل</p>
+  <p style="margin-top:6px;font-size:12px">صُنع بحب في حائل ❤️</p>
+</footer>
 
 <script>
-let timerInterval = null, timerSeconds = 20, timerRunning = false, currentExample = null;
+const EXAMPLES = [
+  "أنا أحمد، مؤسس منصة Wasly. نوصل المنتجات الطازجة من المزارعين للمستهلكين خلال ساعتين. وفّرنا 30% على أسعار السوق. لدينا 500 عميل نشط الشهر الماضي. هل لديك 10 دقائق لنتحدث؟",
+  "أنا سارة، مستشارة تحول رقمي. أساعد الشركات السعودية على رفع كفاءتها 40% خلال 90 يوماً. عملت مع أكثر من 20 شركة بنتائج موثقة ومضمونة. هل نحدد موعداً هذا الأسبوع؟",
+  "أنا خالد، مهندس برمجيات بخبرة 5 سنوات في تطبيقات الجوال. آخر مشروع رفع تقييم التطبيق من 3.2 إلى 4.8 في ثلاثة أشهر. أود الانضمام لفريقكم والمساهمة في نموه.",
+  "أنا نورة من TechFlow. نقدم حلول إدارة المخزون للمطاعم وخفّضنا الهدر الغذائي 35% لعملائنا. شراكتنا ستفيد 500 مطعم في المملكة. هل نبدأ بتجربة مجانية هذا الشهر؟"
+];
+let timerInterval=null, timeLeft=20, timerRunning=false, timerDone=false;
+let selectedExample=null;
 
-const EXAMPLES = {
-    entrepreneur: { title: 'رائد أعمال — عرض شركة ناشئة أمام مستثمر', text: 'اسمي خالد، مؤسس "تقنية". ٧٠٪ من المتاجر الصغيرة تفقد عملاءها بسبب ضعف التحليل. منصتنا تستخدم الذكاء الاصطناعي لتحويل بياناتهم لقرارات فورية، وقد زدنا مبيعات أول ١٠ عملاء بمتوسط ٣٥٪. أبحث عن شريك استثماري لنصل إلى ١٠٠٠ متجر. هل نلتقي الأسبوع القادم؟' },
-    consultant: { title: 'مستشار — تقديم خدمات استشارية لعميل', text: 'أنا سارة، مستشارة تحول رقمي. معظم الشركات العائلية تنفق ٤٠٪ من ميزانيتها التقنية بلا عائد. خلال ٣ سنوات، ساعدت ١٥ شركة على خفض التكاليف ٢٥٪ وزيادة الإيرادات ٣٠٪. لديّ منهجية جاهزة للتطبيق خلال ٩٠ يوماً. هل تفضل جلسة تشخيص مجانية؟' },
-    jobseeker: { title: 'باحث عن عمل — عرض نفسك أمام جهة توظيف', text: 'أنا محمد، متخصص تسويق محتوى. ٨ من كل ١٠ شركات ناشئة تعاني من ضعف ظهورها الرقمي. خلال سنتين، بنيت استراتيجيات محتوى لـ ٥ علامات تجارية وحققت نمواً في التفاعل بنسبة ٢٠٠٪. أطمح لنقل هذه الخبرة لفريقكم. هل يمكنني الانضمام للمقابلة القادمة؟' },
-    sales: { title: 'مندوب مبيعات — تقديم منتج أو خدمة لعميل محتمل', text: 'أنا ليلى من "حلول". ٦٠٪ من المطاعم تخسر ١٥٪ من إيراداتها بسبب سوء إدارة المخزون. نظامنا الذكي خفّض الهدر لـ ٥٠ مطعماً بنسبة ٤٠٪ في ٣ شهور فقط. أقدم لكم تجربة مجانية لمدة أسبوعين. متى يناسبكم تركيب النظام؟' }
-};
+function getKey(){return localStorage.getItem('marfa_claude_key')||'';}
+function saveKey(){const k=document.getElementById('api-key-input').value.trim();if(!k)return;localStorage.setItem('marfa_claude_key',k);document.getElementById('key-status').textContent='✅ تم حفظ المفتاح';document.getElementById('api-key-input').value='';}
+function clearKey(){localStorage.removeItem('marfa_claude_key');document.getElementById('key-status').textContent='🗑️ تم حذف المفتاح';}
+window.onload=()=>{if(getKey())document.getElementById('key-status').textContent='✅ المفتاح محفوظ';};
 
-document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(x => { x.classList.remove('active'); x.classList.add('text-deep-navy/40'); });
-    b.classList.add('active'); b.classList.remove('text-deep-navy/40');
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-    document.getElementById('tab-' + b.dataset.tab).classList.remove('hidden');
-}));
-
-async function callClaude(system, content) {
-    const r = await fetch('/api/elevator-speech', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ system, content }) });
-    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.error || 'حدث خطأ، تأكد من الاتصال وحاول مرة أخرى'); }
-    return (await r.json()).text;
+async function callClaude(prompt){
+  const key=getKey();
+  if(!key){alert('من فضلك أدخل مفتاح Claude API أولاً في الأسفل');return null;}
+  try{
+    const r=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})
+    });
+    const d=await r.json();
+    if(d.error)throw new Error(d.error.message);
+    return d.content?.map(c=>c.text||'').join('')||'';
+  }catch(e){return 'حدث خطأ: '+e.message;}
 }
 
-async function generateSpeech() {
-    const ind = document.getElementById('industry').value, aud = document.getElementById('audience').value;
-    const name = document.getElementById('name').value.trim(), prob = document.getElementById('problem').value.trim();
-    const uniq = document.getElementById('unique').value.trim(), cta = document.getElementById('cta').value.trim();
-    if (!name || !prob) { alert('من فضلك أدخل على الأقل اسمك ومشكلة تحلها'); return; }
-    const btn = document.getElementById('generate-btn'), orig = btn.textContent;
-    btn.textContent = '⏳ جارٍ التوليد...'; btn.disabled = true;
-    try {
-        const prompt = 'المجال: ' + (ind || 'غير محدد') + ', الجمهور: ' + (aud || 'غير محدد') + ', الاسم: ' + name + ', المشكلة: ' + prob + ', ما يميزه: ' + (uniq || 'غير محدد') + ', CTA: ' + (cta || 'غير محدد');
-        const res = await callClaude('أنت خبير تدريب على خطاب المصعد. اكتب خطاب مصعد احترافي في 20 ثانية (35-45 كلمة) باللغة العربية. قواعد: 1.يبدأ بالاسم 2.مشكلة+حل في جملة 3.رقم دليل واحد 4.ينتهي بـCTA 5.35-45 كلمة. اكتب الخطاب ثم 3 نصائح تحسين.', prompt);
-        document.getElementById('speech-text').textContent = res;
-        document.getElementById('generated-speech').classList.remove('hidden');
-        document.getElementById('build-feedback').classList.remove('hidden');
-        document.getElementById('build-feedback').innerHTML = '<p class="text-sm text-deep-navy/60 dark:text-white/50">✅ تم توليد الخطاب بنجاح. يمكنك نسخه والانتقال إلى تبويب التدريب لتجربته مع المؤقت.</p>';
-        document.getElementById('generated-speech').scrollIntoView({ behavior: 'smooth' });
-    } catch (e) { alert(e.message); }
-    finally { btn.textContent = orig; btn.disabled = false; }
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
 }
 
-function updateTimerUI() {
-    const d = document.getElementById('timer-display'), b = document.getElementById('timer-bar'), s = document.getElementById('timer-status');
-    const m = Math.floor(timerSeconds / 60), sec = timerSeconds % 60;
-    d.textContent = m + ':' + String(sec).padStart(2, '0');
-    b.style.width = ((timerSeconds / 20) * 100) + '%';
-    b.classList.remove('yellow', 'red', 'done');
-    if (!timerRunning && timerSeconds === 0) { b.classList.add('done'); d.textContent = '✓'; d.style.color = '#D4AF37'; s.textContent = 'أحسنت! أنهيت الخطاب في الوقت'; }
-    else if (timerSeconds > 10) { d.style.color = '#10b981'; s.textContent = 'وقت كافٍ — تحدث بوضوح'; }
-    else if (timerSeconds > 5) { b.classList.add('yellow'); d.style.color = '#f59e0b'; s.textContent = 'أنت في منتصف الوقت — اختصر'; }
-    else { b.classList.add('red'); d.style.color = '#ef4444'; s.textContent = 'أنهِ الخطاب فوراً!'; }
+async function generateSpeech(){
+  const industry=document.getElementById('industry').value;
+  const audience=document.getElementById('audience').value;
+  const name=document.getElementById('name').value.trim();
+  const problem=document.getElementById('problem').value.trim();
+  const unique=document.getElementById('unique').value.trim();
+  const cta=document.getElementById('cta').value.trim();
+  if(!name&&!problem){alert('من فضلك أدخل على الأقل اسمك ومشكلة تحلها');return;}
+  const out=document.getElementById('build-output');
+  const speech=document.getElementById('build-speech');
+  const aiBox=document.getElementById('build-ai');
+  const aiText=document.getElementById('build-ai-text');
+  out.style.display='block';
+  speech.innerHTML='<span style="color:var(--text-muted)" class="loading">جارٍ التوليد</span>';
+  aiBox.style.display='none';
+  const prompt=`أنت خبير تدريب على خطاب المصعد (Elevator Pitch).
+اكتب خطاب مصعد احترافي باللغة العربية لا يتجاوز 20 ثانية (35-45 كلمة).
+
+المعلومات:
+- المجال: ${industry||'غير محدد'}
+- الجمهور: ${audience||'عام'}
+- الاسم والمشروع: ${name||'غير محدد'}
+- المشكلة التي يحلها: ${problem||'غير محدد'}
+- ما يميزه: ${unique||'غير محدد'}
+- دعوة للتصرف: ${cta||'غير محدد'}
+
+القواعد الصارمة:
+1. يبدأ بالاسم والدور فوراً
+2. مشكلة + حل في جملة واحدة
+3. رقم أو دليل ملموس واحد على الأقل
+4. ينتهي بدعوة واضحة للتصرف
+5. 35-45 كلمة فقط — لا أكثر
+
+أجب بهذا الشكل بالضبط:
+الخطاب:
+[الخطاب هنا فقط بدون تعليقات]
+
+نصائح التحسين:
+[3 نقاط قصيرة وعملية]`;
+  const result=await callClaude(prompt);
+  if(!result){speech.innerHTML='<span style="color:var(--danger)">تعذّر التوليد.</span>';return;}
+  const m1=result.match(/الخطاب:\s*([\s\S]*?)(?:نصائح التحسين:|$)/);
+  const m2=result.match(/نصائح التحسين:\s*([\s\S]*)/);
+  speech.textContent=(m1?m1[1].trim():result).substring(0,300);
+  if(m2){aiBox.style.display='block';aiText.innerHTML=m2[1].trim().replace(/\n/g,'<br>');}
 }
 
-function startTimer() {
-    if (timerRunning) return; if (timerSeconds <= 0) resetTimerSilent();
-    if (!document.getElementById('practice-speech').value.trim()) { alert('من فضلك الصق خطابك أولاً في حقل النص أعلاه'); return; }
-    timerRunning = true; document.getElementById('timer-start').textContent = '⏸️ ...جاري'; document.getElementById('timer-start').disabled = true;
-    timerInterval = setInterval(() => { timerSeconds--; updateTimerUI(); if (timerSeconds <= 0) { clearInterval(timerInterval); timerInterval = null; timerRunning = false; document.getElementById('timer-start').textContent = '▶️ ابدأ'; document.getElementById('timer-start').disabled = false; updateTimerUI(); } }, 1000);
+function clearBuild(){
+  ['name','problem','unique','cta'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('industry').value='';
+  document.getElementById('audience').value='';
+  document.getElementById('build-output').style.display='none';
 }
 
-function resetTimerSilent() { clearInterval(timerInterval); timerInterval = null; timerRunning = false; timerSeconds = 20; document.getElementById('timer-start').textContent = '▶️ ابدأ'; document.getElementById('timer-start').disabled = false; document.getElementById('timer-display').style.color = '#10b981'; updateTimerUI(); }
-function resetTimer() { resetTimerSilent(); }
-
-async function evaluateSpeech() {
-    const s = document.getElementById('practice-speech').value.trim();
-    if (!s) { alert('من فضلك الصق خطابك أولاً في حقل النص أعلاه'); return; }
-    const btn = document.getElementById('practice-evaluate-btn'), orig = btn.textContent;
-    btn.textContent = '⏳ جارٍ التقييم...'; btn.disabled = true;
-    try {
-        const r = await callClaude('أنت مدرب خطاب مصعد. قيّم هذا الخطاب. قدم: 1.تقييم من 10 2.أقوى نقطة 3.نقطة تحتاج تحسين 4.خطاب معدّل محسّن. استخدم تنسيقاً واضحاً مع عناوين.', s);
-        document.getElementById('practice-feedback').innerHTML = '<h4 class="font-bold text-lg text-deep-navy dark:text-white mb-3">📊 تقييم الخطاب</h4><div class="text-base text-deep-navy/70 dark:text-white/70 leading-relaxed whitespace-pre-wrap">' + escapeHtml(r) + '</div>';
-        document.getElementById('practice-feedback').classList.remove('hidden');
-        document.getElementById('practice-feedback').scrollIntoView({ behavior: 'smooth' });
-    } catch (e) { alert(e.message); }
-    finally { btn.textContent = orig; btn.disabled = false; }
+function copyToClipboard(id){
+  const txt=document.getElementById(id).textContent;
+  navigator.clipboard.writeText(txt).then(()=>alert('✅ تم النسخ'));
 }
 
-function showExample(k) {
-    currentExample = k; const ex = EXAMPLES[k];
-    document.getElementById('example-title').textContent = ex.title;
-    document.getElementById('example-text').textContent = ex.text;
-    document.getElementById('example-detail').classList.remove('hidden');
-    document.getElementById('example-feedback').classList.add('hidden');
-    document.getElementById('example-detail').scrollIntoView({ behavior: 'smooth' });
+function sendToPractice(){
+  const txt=document.getElementById('build-speech').textContent;
+  document.getElementById('practice-text').value=txt;
+  switchTab('practice',document.querySelectorAll('.tab')[1]);
+  document.getElementById('app').scrollIntoView({behavior:'smooth'});
 }
 
-async function analyzeExample() {
-    if (!currentExample) return;
-    const btn = document.querySelector('#example-detail button'), orig = btn.textContent;
-    btn.textContent = '⏳ جارٍ التحليل...'; btn.disabled = true;
-    try {
-        const r = await callClaude('حلّل هذا المثال على خطاب المصعد. وضّح لماذا هو فعال؟ ما العناصر الرئيسية؟ كيف يُطبَّق في مجالات أخرى؟', EXAMPLES[currentExample].text);
-        document.getElementById('example-feedback').innerHTML = '<h4 class="font-bold text-lg text-deep-navy dark:text-white mb-3">🔍 تحليل المثال</h4><div class="text-base text-deep-navy/70 dark:text-white/70 leading-relaxed whitespace-pre-wrap">' + escapeHtml(r) + '</div>';
-        document.getElementById('example-feedback').classList.remove('hidden');
-        document.getElementById('example-feedback').scrollIntoView({ behavior: 'smooth' });
-    } catch (e) { alert(e.message); }
-    finally { btn.textContent = orig; btn.disabled = false; }
+function startTimer(){
+  if(timerRunning)return;
+  timerRunning=true;timerDone=false;
+  document.getElementById('btn-start').disabled=true;
+  document.getElementById('timer-status').textContent='🎤 تحدث الآن!';
+  timerInterval=setInterval(()=>{
+    timeLeft--;
+    const n=document.getElementById('timer-num');
+    const bar=document.getElementById('progress-bar');
+    const circle=document.getElementById('timer-circle');
+    n.textContent=timeLeft;
+    bar.style.width=(timeLeft/20*100)+'%';
+    if(timeLeft<=5){circle.className='timer-circle danger';bar.className='progress-bar danger';}
+    else if(timeLeft<=10){circle.className='timer-circle warn';bar.className='progress-bar warn';}
+    if(timeLeft<=0){
+      clearInterval(timerInterval);timerRunning=false;timerDone=true;
+      n.textContent='✓';
+      document.getElementById('timer-status').textContent='انتهى الوقت! يمكنك تقييم خطابك الآن.';
+      document.getElementById('btn-eval').disabled=false;
+      document.getElementById('btn-start').disabled=false;
+    }
+  },1000);
 }
 
-function escapeHtml(s) { const d = document.createElement('div'); d.appendChild(document.createTextNode(s)); return d.innerHTML.replace(/\n/g, '<br>'); }
+function resetTimer(){
+  clearInterval(timerInterval);timerRunning=false;timerDone=false;timeLeft=20;
+  document.getElementById('timer-num').textContent='20';
+  document.getElementById('timer-circle').className='timer-circle';
+  document.getElementById('progress-bar').className='progress-bar';
+  document.getElementById('progress-bar').style.width='100%';
+  document.getElementById('timer-status').textContent='جاهز للبدء';
+  document.getElementById('btn-start').disabled=false;
+  document.getElementById('btn-eval').disabled=true;
+  document.getElementById('practice-ai').style.display='none';
+}
+
+async function evaluateSpeech(){
+  const text=document.getElementById('practice-text').value.trim();
+  if(!text){alert('أدخل نص الخطاب أولاً');return;}
+  const box=document.getElementById('practice-ai');
+  const txt=document.getElementById('practice-ai-text');
+  box.style.display='block';
+  txt.innerHTML='<span class="loading">يقيّم الذكاء الاصطناعي خطابك</span>';
+  const prompt=`أنت مدرب متخصص في خطاب المصعد. قيّم هذا الخطاب المصمّم لـ 20 ثانية:
+
+"${text}"
+
+قدّم تقييماً عملياً ومختصراً يشمل:
+1. التقييم الإجمالي: [رقم]/10
+2. أقوى نقطة: [نقطة واحدة فقط]
+3. نقطة تحتاج تحسين: [نقطة واحدة فقط]
+4. الخطاب بعد التحسين: [النص المحسّن، 35-40 كلمة]
+
+اجعل ردك عملياً ومباشراً وبالعربية.`;
+  const result=await callClaude(prompt);
+  txt.innerHTML=result?result.replace(/\n/g,'<br>'):'تعذّر التقييم، حاول مجدداً.';
+}
+
+function selectExample(i,el){
+  document.querySelectorAll('.ex-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedExample=i;
+  document.getElementById('example-text').textContent=EXAMPLES[i];
+  document.getElementById('example-view').style.display='block';
+  document.getElementById('example-ai').style.display='none';
+}
+
+async function analyzeExample(){
+  if(selectedExample===null)return;
+  const box=document.getElementById('example-ai');
+  const txt=document.getElementById('example-ai-text');
+  box.style.display='block';
+  txt.innerHTML='<span class="loading">يحلّل الذكاء الاصطناعي المثال</span>';
+  const prompt=`حلّل هذا المثال على خطاب المصعد بأسلوب تعليمي ومفيد للمبتدئين:
+
+"${EXAMPLES[selectedExample]}"
+
+وضّح:
+1. لماذا هذا الخطاب فعّال؟ (نقطتان محددتان)
+2. ما العناصر الرئيسية المستخدمة؟
+3. كيف يمكن تطبيق نفس الهيكل في مجال آخر؟
+
+اجعل الإجابة عملية ومباشرة باللغة العربية.`;
+  const result=await callClaude(prompt);
+  txt.innerHTML=result?result.replace(/\n/g,'<br>'):'تعذّر التحليل، حاول مجدداً.';
+}
+
+function useExampleInPractice(){
+  if(selectedExample===null)return;
+  document.getElementById('practice-text').value=EXAMPLES[selectedExample];
+  switchTab('practice',document.querySelectorAll('.tab')[1]);
+}
 </script>
 </body>
 </html>

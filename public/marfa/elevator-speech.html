@@ -6,37 +6,66 @@
     <meta name="description" content="تعلم خطاب المصعد في 20 ثانية مجاناً - marfa.sa">
     <title>خطاب المصعد في 20 ثانية | marfa.sa</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'deep-navy': '#0A192F',
+                        'gold': '#D4AF37',
+                        'gold-dark': '#C5A028',
+                        'gold-light': '#F9E2AF',
+                        'cream': '#FDFCF0',
+                    },
+                    fontFamily: {
+                        'arabic': ['Cairo', 'Tajawal', 'sans-serif'],
+                        'luxury': ['Playfair Display', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #1a1a1a;
-            --success: #0F6E56;
-            --info-bg: #E6F1FB;
-            --warning: #BA7517;
-            --danger: #E24B4A;
-            --border: rgba(0,0,0,0.12);
-            --bg-secondary: #f5f5f3;
+            --deep-navy: #0A192F;
+            --gold: #D4AF37;
+            --gold-dark: #C5A028;
+            --gold-light: #F9E2AF;
+            --cream: #FDFCF0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
         }
         body {
-            font-family: 'Tajawal', sans-serif;
-            background: linear-gradient(180deg, #fafaf9 0%, #f0f0ee 100%);
+            font-family: 'Cairo', 'Tajawal', sans-serif;
             min-width: 320px;
+            background: var(--cream);
+            color: var(--deep-navy);
         }
-        .tab-btn { transition: all 0.25s ease; }
+        .text-luxury-gold {
+            background: linear-gradient(135deg, #D4AF37 0%, #F9E2AF 50%, #C5A028 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .tab-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
         .tab-btn.active {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            background: var(--deep-navy);
+            color: var(--gold);
+            box-shadow: 0 8px 24px rgba(10, 25, 47, 0.2);
         }
         .timer-bar {
-            height: 8px;
-            border-radius: 4px;
+            height: 10px;
+            border-radius: 5px;
             transition: width 0.1s linear, background-color 0.3s ease;
+            background: var(--success);
         }
-        .timer-bar.green  { background: var(--success); }
         .timer-bar.yellow { background: var(--warning); }
         .timer-bar.red    { background: var(--danger); }
-        .timer-bar.done   { background: var(--success); }
+        .timer-bar.done   { background: var(--gold); }
         .loader-dots::after {
             content: '';
             animation: dots 1.4s infinite;
@@ -48,71 +77,72 @@
         }
         .fade-in { animation: fadeIn 0.35s ease-out; }
         @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-        .pulse-dot { animation: pulse 2s infinite; }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-        textarea, input, select { font-family: 'Tajawal', sans-serif; }
-        .card-hover { transition: all 0.2s ease; }
-        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+        .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(10, 25, 47, 0.12); }
+        textarea, input, select { font-family: 'Cairo', 'Tajawal', sans-serif; }
+        .glass { background: rgba(255,255,255,0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(212,175,55,0.15); }
     </style>
 </head>
 <body class="min-h-screen">
 
     <!-- ========== HERO ========== -->
-    <header class="max-w-3xl mx-auto px-4 pt-12 pb-8 text-center">
-        <span class="inline-block bg-[var(--info-bg)] text-[#1a56db] text-sm font-bold px-4 py-1.5 rounded-full mb-4">
-            🎙️ مجاني تماماً — Free Service
-        </span>
-        <h1 class="text-4xl md:text-5xl font-black text-[var(--primary)] mb-3 leading-tight">
-            خطاب المصعد في 20 ثانية
-        </h1>
-        <p class="text-lg text-gray-500 max-w-xl mx-auto">
-            تعلم كيف تقدم نفسك أو مشروعك في 20 ثانية مع تدريب فوري بالذكاء الاصطناعي
-        </p>
+    <header class="max-w-3xl mx-auto px-4 pt-16 pb-10 text-center relative">
+        <div class="absolute -top-[40%] left-1/2 -translate-x-1/2 w-[70%] h-[70%] bg-gold/5 blur-[120px] rounded-full pointer-events-none"></div>
+        <div class="relative z-10 space-y-6">
+            <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold/10 border border-gold/20 text-gold-dark text-sm font-bold">
+                🎙️ <span class="tracking-wide">مجاني تماماً — Free Service</span>
+            </span>
+            <h1 class="text-4xl md:text-6xl font-black text-deep-navy leading-tight">
+                خطاب المصعد في
+                <span class="text-luxury-gold">20 ثانية</span>
+            </h1>
+            <p class="text-lg md:text-xl text-deep-navy/60 max-w-xl mx-auto leading-relaxed font-medium">
+                تعلم كيف تقدم نفسك أو مشروعك في 20 ثانية مع تدريب فوري بالذكاء الاصطناعي
+            </p>
+            <div class="flex items-center justify-center gap-3 pt-2">
+                <div class="h-px w-12 bg-gold/30"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-gold"></div>
+                <div class="h-px w-12 bg-gold/30"></div>
+            </div>
+        </div>
     </header>
 
     <!-- ========== HOW IT WORKS ========== -->
-    <section class="max-w-3xl mx-auto px-4 pb-10">
+    <section class="max-w-3xl mx-auto px-4 pb-12">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-white rounded-2xl p-5 text-center border border-[var(--border)] shadow-sm">
-                <div class="w-12 h-12 bg-[var(--info-bg)] text-[#1a56db] rounded-full flex items-center justify-center text-xl font-black mx-auto mb-3">1</div>
-                <h3 class="font-bold text-[var(--primary)] mb-1">اختر نموذجاً</h3>
-                <p class="text-sm text-gray-500">حدد مجالك وجمهورك لبناء خطاب مخصص</p>
+            <div class="bg-white rounded-3xl p-6 text-center border border-gold/10 shadow-lg hover:shadow-xl transition-shadow">
+                <div class="w-14 h-14 bg-gold/10 rounded-2xl flex items-center justify-center text-2xl font-black text-gold-dark mx-auto mb-4">1</div>
+                <h3 class="font-bold text-lg text-deep-navy mb-1">اختر نموذجاً</h3>
+                <p class="text-sm text-deep-navy/50">حدد مجالك وجمهورك لبناء خطاب مخصص</p>
             </div>
-            <div class="bg-white rounded-2xl p-5 text-center border border-[var(--border)] shadow-sm">
-                <div class="w-12 h-12 bg-[var(--info-bg)] text-[#1a56db] rounded-full flex items-center justify-center text-xl font-black mx-auto mb-3">2</div>
-                <h3 class="font-bold text-[var(--primary)] mb-1">سجّل أو اكتب</h3>
-                <p class="text-sm text-gray-500">اكتب خطابك أو درّب نفسك بالمؤقت</p>
+            <div class="bg-white rounded-3xl p-6 text-center border border-gold/10 shadow-lg hover:shadow-xl transition-shadow">
+                <div class="w-14 h-14 bg-gold/10 rounded-2xl flex items-center justify-center text-2xl font-black text-gold-dark mx-auto mb-4">2</div>
+                <h3 class="font-bold text-lg text-deep-navy mb-1">سجّل أو اكتب</h3>
+                <p class="text-sm text-deep-navy/50">اكتب خطابك أو درّب نفسك بالمؤقت</p>
             </div>
-            <div class="bg-white rounded-2xl p-5 text-center border border-[var(--border)] shadow-sm">
-                <div class="w-12 h-12 bg-[var(--info-bg)] text-[#1a56db] rounded-full flex items-center justify-center text-xl font-black mx-auto mb-3">3</div>
-                <h3 class="font-bold text-[var(--primary)] mb-1">احصل على تقييم</h3>
-                <p class="text-sm text-gray-500">ذكاء اصطناعي يقيّم أداءك ويعطيك نصائح فورية</p>
+            <div class="bg-white rounded-3xl p-6 text-center border border-gold/10 shadow-lg hover:shadow-xl transition-shadow">
+                <div class="w-14 h-14 bg-gold/10 rounded-2xl flex items-center justify-center text-2xl font-black text-gold-dark mx-auto mb-4">3</div>
+                <h3 class="font-bold text-lg text-deep-navy mb-1">احصل على تقييم</h3>
+                <p class="text-sm text-deep-navy/50">ذكاء اصطناعي يقيّم أداءك ويعطيك نصائح فورية</p>
             </div>
         </div>
     </section>
 
     <!-- ========== TABS ========== -->
-    <section class="max-w-3xl mx-auto px-4 pb-16">
-        <!-- Tab buttons -->
-        <div class="flex gap-2 mb-6 bg-white p-1.5 rounded-2xl border border-[var(--border)] shadow-sm">
-            <button class="tab-btn active flex-1 py-3 px-4 rounded-xl font-bold text-sm text-center transition-all" data-tab="build">
-                ✨ بناء الخطاب
-            </button>
-            <button class="tab-btn flex-1 py-3 px-4 rounded-xl font-bold text-sm text-center text-gray-500 transition-all" data-tab="practice">
-                ⏱️ التدريب والتوقيت
-            </button>
-            <button class="tab-btn flex-1 py-3 px-4 rounded-xl font-bold text-sm text-center text-gray-500 transition-all" data-tab="examples">
-                📋 أمثلة جاهزة
-            </button>
+    <section class="max-w-3xl mx-auto px-4 pb-20">
+        <div class="flex gap-2 mb-6 bg-white p-1.5 rounded-2xl border border-gold/10 shadow-lg">
+            <button class="tab-btn active flex-1 py-3 px-4 rounded-xl font-bold text-sm text-center" data-tab="build">✨ بناء الخطاب</button>
+            <button class="tab-btn flex-1 py-3 px-4 rounded-xl font-bold text-sm text-center text-deep-navy/50" data-tab="practice">⏱️ التدريب والتوقيت</button>
+            <button class="tab-btn flex-1 py-3 px-4 rounded-xl font-bold text-sm text-center text-deep-navy/50" data-tab="examples">📋 أمثلة جاهزة</button>
         </div>
 
         <!-- ========== TAB 1: BUILD ========== -->
         <div id="tab-build" class="tab-content">
-            <div class="bg-white rounded-2xl border border-[var(--border)] p-6 shadow-sm space-y-5">
+            <div class="bg-white rounded-3xl border border-gold/10 p-6 md:p-8 shadow-xl space-y-5">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-bold text-[var(--primary)] mb-1.5">المجال</label>
-                        <select id="industry" class="w-full p-3 rounded-xl border border-[var(--border)] bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
+                        <label class="block text-sm font-bold text-deep-navy mb-1.5">المجال</label>
+                        <select id="industry" class="w-full p-3.5 rounded-2xl border border-gold/10 bg-cream text-sm text-deep-navy focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all">
                             <option value="">اختر المجال...</option>
                             <option value="شركة ناشئة">شركة ناشئة (Startup)</option>
                             <option value="عمل حر">عمل حر (Freelance)</option>
@@ -123,8 +153,8 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-[var(--primary)] mb-1.5">الجمهور المستهدف</label>
-                        <select id="audience" class="w-full p-3 rounded-xl border border-[var(--border)] bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
+                        <label class="block text-sm font-bold text-deep-navy mb-1.5">الجمهور المستهدف</label>
+                        <select id="audience" class="w-full p-3.5 rounded-2xl border border-gold/10 bg-cream text-sm text-deep-navy focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all">
                             <option value="">اختر الجمهور...</option>
                             <option value="مستثمر">مستثمر (Investor)</option>
                             <option value="عميل">عميل (Client)</option>
@@ -134,115 +164,106 @@
                     </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-[var(--primary)] mb-1.5">الاسم / اسم المشروع</label>
-                    <input type="text" id="name" placeholder="مثال: أحمد / منصة مرفأ" class="w-full p-3 rounded-xl border border-[var(--border)] bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
+                    <label class="block text-sm font-bold text-deep-navy mb-1.5">الاسم / اسم المشروع</label>
+                    <input type="text" id="name" placeholder="مثال: أحمد / منصة مرفأ" class="w-full p-3.5 rounded-2xl border border-gold/10 bg-cream text-sm text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all">
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-[var(--primary)] mb-1.5">المشكلة التي تحلها</label>
-                    <input type="text" id="problem" placeholder="مثال: صعوبة وصول الشركات الناشئة للمستثمرين" class="w-full p-3 rounded-xl border border-[var(--border)] bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
+                    <label class="block text-sm font-bold text-deep-navy mb-1.5">المشكلة التي تحلها</label>
+                    <input type="text" id="problem" placeholder="مثال: صعوبة وصول الشركات الناشئة للمستثمرين" class="w-full p-3.5 rounded-2xl border border-gold/10 bg-cream text-sm text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all">
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-[var(--primary)] mb-1.5">ما يميزك / يميز مشروعك</label>
-                    <input type="text" id="unique" placeholder="مثال: منصة ذكاء اصطناعي تربط المستثمرين بالفرص" class="w-full p-3 rounded-xl border border-[var(--border)] bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
+                    <label class="block text-sm font-bold text-deep-navy mb-1.5">ما يميزك / يميز مشروعك</label>
+                    <input type="text" id="unique" placeholder="مثال: منصة ذكاء اصطناعي تربط المستثمرين بالفرص" class="w-full p-3.5 rounded-2xl border border-gold/10 bg-cream text-sm text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all">
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-[var(--primary)] mb-1.5">الدعوة إلى الإجراء (CTA)</label>
-                    <input type="text" id="cta" placeholder="مثال: لنحدد لقاءً الأسبوع القادم" class="w-full p-3 rounded-xl border border-[var(--border)] bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
+                    <label class="block text-sm font-bold text-deep-navy mb-1.5">الدعوة إلى الإجراء (CTA)</label>
+                    <input type="text" id="cta" placeholder="مثال: لنحدد لقاءً الأسبوع القادم" class="w-full p-3.5 rounded-2xl border border-gold/10 bg-cream text-sm text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all">
                 </div>
-                <button id="generate-btn" onclick="generateSpeech()" class="w-full py-3.5 bg-[var(--primary)] text-white font-bold rounded-xl hover:opacity-90 transition-opacity text-base">
+                <button id="generate-btn" onclick="generateSpeech()" class="w-full py-4 bg-deep-navy text-gold font-bold rounded-2xl hover:bg-gold hover:text-deep-navy transition-all duration-300 shadow-lg hover:shadow-gold/20 text-base border border-gold/10">
                     🚀 توليد الخطاب بالذكاء الاصطناعي
                 </button>
-                <div id="generated-speech" class="hidden fade-in bg-[var(--bg-secondary)] rounded-xl p-5 border border-[var(--border)] mt-4">
-                    <h4 class="font-bold text-[var(--primary)] mb-2">📝 الخطاب المُولَّد:</h4>
-                    <p id="speech-text" class="text-gray-700 leading-relaxed whitespace-pre-wrap"></p>
+                <div id="generated-speech" class="hidden fade-in bg-cream rounded-2xl p-5 border border-gold/10 mt-4">
+                    <h4 class="font-bold text-deep-navy mb-2">📝 الخطاب المُولَّد:</h4>
+                    <p id="speech-text" class="text-deep-navy/70 leading-relaxed whitespace-pre-wrap"></p>
                 </div>
-                <div id="build-feedback" class="hidden fade-in bg-[var(--info-bg)] rounded-xl p-5 border border-blue-200"></div>
+                <div id="build-feedback" class="hidden fade-in bg-gold/5 rounded-2xl p-5 border border-gold/10"></div>
             </div>
         </div>
 
         <!-- ========== TAB 2: PRACTICE ========== -->
         <div id="tab-practice" class="tab-content hidden">
-            <div class="bg-white rounded-2xl border border-[var(--border)] p-6 shadow-sm space-y-5">
+            <div class="bg-white rounded-3xl border border-gold/10 p-6 md:p-8 shadow-xl space-y-5">
                 <div>
-                    <label class="block text-sm font-bold text-[var(--primary)] mb-1.5">خطابك</label>
-                    <textarea id="practice-speech" rows="4" placeholder="الصق خطابك هنا للتدريب..." class="w-full p-3 rounded-xl border border-[var(--border)] bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent resize-none"></textarea>
+                    <label class="block text-sm font-bold text-deep-navy mb-1.5">خطابك</label>
+                    <textarea id="practice-speech" rows="4" placeholder="الصق خطابك هنا للتدريب..." class="w-full p-3.5 rounded-2xl border border-gold/10 bg-cream text-sm text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all resize-none"></textarea>
                 </div>
-                <!-- Timer display -->
-                <div class="text-center py-4 bg-[var(--bg-secondary)] rounded-2xl border border-[var(--border)]">
-                    <div id="timer-display" class="text-5xl font-black text-[var(--success)] mb-2">0:20</div>
-                    <div class="timer-bar green mx-auto max-w-md" id="timer-bar" style="width:100%"></div>
-                    <p id="timer-status" class="text-sm text-gray-400 mt-2">جاهز للبدء</p>
+                <div class="text-center py-6 bg-cream rounded-2xl border border-gold/10">
+                    <div id="timer-display" class="text-6xl font-black mb-3" style="color: var(--success);">0:20</div>
+                    <div class="timer-bar mx-auto max-w-md" id="timer-bar" style="width:100%"></div>
+                    <p id="timer-status" class="text-sm text-deep-navy/30 mt-3">جاهز للبدء</p>
                 </div>
-                <div class="flex gap-3">
-                    <button id="timer-start" onclick="startTimer()" class="flex-1 py-3 bg-[var(--success)] text-white font-bold rounded-xl hover:opacity-90 transition-opacity">
-                        ▶️ ابدأ
-                    </button>
-                    <button onclick="resetTimer()" class="flex-1 py-3 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300 transition-colors">
-                        ↩️ إعادة
-                    </button>
-                    <button id="practice-evaluate-btn" onclick="evaluateSpeech()" class="flex-1 py-3 bg-[var(--primary)] text-white font-bold rounded-xl hover:opacity-90 transition-opacity">
-                        🧠 تقييم بالذكاء الاصطناعي
-                    </button>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button id="timer-start" onclick="startTimer()" class="flex-1 py-3.5 font-bold rounded-2xl transition-all duration-300 shadow-lg text-white hover:opacity-90" style="background: var(--success);">▶️ ابدأ</button>
+                    <button onclick="resetTimer()" class="flex-1 py-3.5 bg-cream text-deep-navy font-bold rounded-2xl hover:bg-gold/10 transition-all duration-300 border border-gold/10">↩️ إعادة</button>
+                    <button id="practice-evaluate-btn" onclick="evaluateSpeech()" class="flex-1 py-3.5 bg-deep-navy text-gold font-bold rounded-2xl hover:bg-gold hover:text-deep-navy transition-all duration-300 shadow-lg hover:shadow-gold/20 border border-gold/10">🧠 تقييم بالذكاء الاصطناعي</button>
                 </div>
-                <div id="practice-feedback" class="hidden fade-in bg-[var(--info-bg)] rounded-xl p-5 border border-blue-200"></div>
+                <div id="practice-feedback" class="hidden fade-in bg-gold/5 rounded-2xl p-5 border border-gold/10"></div>
             </div>
         </div>
 
         <!-- ========== TAB 3: EXAMPLES ========== -->
         <div id="tab-examples" class="tab-content hidden">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div class="card-hover bg-white rounded-2xl border border-[var(--border)] p-5 shadow-sm cursor-pointer" onclick="showExample('entrepreneur')">
-                    <div class="text-3xl mb-2">🚀</div>
-                    <h4 class="font-bold text-[var(--primary)] mb-1">رائد أعمال</h4>
-                    <p class="text-sm text-gray-500">عرض شركة ناشئة أمام مستثمر</p>
+                <div class="card-hover bg-white rounded-3xl border border-gold/10 p-6 shadow-lg cursor-pointer" onclick="showExample('entrepreneur')">
+                    <div class="text-4xl mb-3">🚀</div>
+                    <h4 class="font-bold text-lg text-deep-navy mb-1">رائد أعمال</h4>
+                    <p class="text-sm text-deep-navy/50">عرض شركة ناشئة أمام مستثمر</p>
                 </div>
-                <div class="card-hover bg-white rounded-2xl border border-[var(--border)] p-5 shadow-sm cursor-pointer" onclick="showExample('consultant')">
-                    <div class="text-3xl mb-2">💼</div>
-                    <h4 class="font-bold text-[var(--primary)] mb-1">مستشار</h4>
-                    <p class="text-sm text-gray-500">تقديم خدمات استشارية لعميل</p>
+                <div class="card-hover bg-white rounded-3xl border border-gold/10 p-6 shadow-lg cursor-pointer" onclick="showExample('consultant')">
+                    <div class="text-4xl mb-3">💼</div>
+                    <h4 class="font-bold text-lg text-deep-navy mb-1">مستشار</h4>
+                    <p class="text-sm text-deep-navy/50">تقديم خدمات استشارية لعميل</p>
                 </div>
-                <div class="card-hover bg-white rounded-2xl border border-[var(--border)] p-5 shadow-sm cursor-pointer" onclick="showExample('jobseeker')">
-                    <div class="text-3xl mb-2">🎯</div>
-                    <h4 class="font-bold text-[var(--primary)] mb-1">باحث عن عمل</h4>
-                    <p class="text-sm text-gray-500">عرض نفسك أمام جهة توظيف</p>
+                <div class="card-hover bg-white rounded-3xl border border-gold/10 p-6 shadow-lg cursor-pointer" onclick="showExample('jobseeker')">
+                    <div class="text-4xl mb-3">🎯</div>
+                    <h4 class="font-bold text-lg text-deep-navy mb-1">باحث عن عمل</h4>
+                    <p class="text-sm text-deep-navy/50">عرض نفسك أمام جهة توظيف</p>
                 </div>
-                <div class="card-hover bg-white rounded-2xl border border-[var(--border)] p-5 shadow-sm cursor-pointer" onclick="showExample('sales')">
-                    <div class="text-3xl mb-2">💎</div>
-                    <h4 class="font-bold text-[var(--primary)] mb-1">مندوب مبيعات</h4>
-                    <p class="text-sm text-gray-500">تقديم منتج أو خدمة لعميل محتمل</p>
+                <div class="card-hover bg-white rounded-3xl border border-gold/10 p-6 shadow-lg cursor-pointer" onclick="showExample('sales')">
+                    <div class="text-4xl mb-3">💎</div>
+                    <h4 class="font-bold text-lg text-deep-navy mb-1">مندوب مبيعات</h4>
+                    <p class="text-sm text-deep-navy/50">تقديم منتج أو خدمة لعميل محتمل</p>
                 </div>
             </div>
-            <div id="example-detail" class="hidden fade-in bg-white rounded-2xl border border-[var(--border)] p-6 shadow-sm">
-                <h4 id="example-title" class="font-bold text-lg text-[var(--primary)] mb-3"></h4>
-                <p id="example-text" class="text-gray-700 leading-relaxed whitespace-pre-wrap mb-4 bg-[var(--bg-secondary)] p-4 rounded-xl"></p>
-                <button onclick="analyzeExample()" class="w-full py-3 bg-[var(--primary)] text-white font-bold rounded-xl hover:opacity-90 transition-opacity">
-                    🧠 تحليل هذا المثال بالذكاء الاصطناعي
-                </button>
-                <div id="example-feedback" class="hidden fade-in bg-[var(--info-bg)] rounded-xl p-5 border border-blue-200 mt-4"></div>
+            <div id="example-detail" class="hidden fade-in bg-white rounded-3xl border border-gold/10 p-6 md:p-8 shadow-xl">
+                <h4 id="example-title" class="font-bold text-xl text-deep-navy mb-3"></h4>
+                <div class="text-deep-navy/70 leading-relaxed whitespace-pre-wrap mb-5 bg-cream p-5 rounded-2xl border border-gold/10" id="example-text"></div>
+                <button onclick="analyzeExample()" class="w-full py-4 bg-deep-navy text-gold font-bold rounded-2xl hover:bg-gold hover:text-deep-navy transition-all duration-300 shadow-lg hover:shadow-gold/20 border border-gold/10">🧠 تحليل هذا المثال بالذكاء الاصطناعي</button>
+                <div id="example-feedback" class="hidden fade-in bg-gold/5 rounded-2xl p-5 border border-gold/10 mt-4"></div>
             </div>
         </div>
     </section>
 
     <!-- ========== API KEY MODAL ========== -->
-    <div id="api-key-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
-            <h3 class="font-black text-lg text-[var(--primary)] mb-2">🔑 مفتاح API</h3>
-            <p class="text-sm text-gray-500 mb-4">أدخل مفتاح Claude API الخاص بك. لا نخزّن هذا المفتاح.</p>
-            <input type="password" id="api-key-input" placeholder="sk-ant-api..." class="w-full p-3 rounded-xl border border-[var(--border)] bg-gray-50 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent mb-4">
+    <div id="api-key-modal" class="hidden fixed inset-0 bg-deep-navy/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 md:p-8 shadow-2xl border border-gold/20">
+            <div class="w-14 h-14 bg-gold/10 rounded-2xl flex items-center justify-center text-2xl mb-4 mx-auto">🔑</div>
+            <h3 class="font-black text-xl text-deep-navy mb-2 text-center">مفتاح API</h3>
+            <p class="text-sm text-deep-navy/50 mb-5 text-center">أدخل مفتاح Claude API الخاص بك. لا نخزّن هذا المفتاح.</p>
+            <input type="password" id="api-key-input" placeholder="sk-ant-api..." class="w-full p-3.5 rounded-2xl border border-gold/10 bg-cream text-sm font-mono text-deep-navy focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all mb-4">
             <div class="flex gap-3">
-                <button onclick="saveApiKey()" class="flex-1 py-2.5 bg-[var(--primary)] text-white font-bold rounded-xl hover:opacity-90 transition-opacity">حفظ</button>
-                <button onclick="closeApiModal()" class="flex-1 py-2.5 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300 transition-colors">إلغاء</button>
+                <button onclick="saveApiKey()" class="flex-1 py-3 bg-deep-navy text-gold font-bold rounded-2xl hover:bg-gold hover:text-deep-navy transition-all duration-300 shadow-lg border border-gold/10">حفظ</button>
+                <button onclick="closeApiModal()" class="flex-1 py-3 bg-cream text-deep-navy font-bold rounded-2xl hover:bg-gold/10 transition-all duration-300 border border-gold/10">إلغاء</button>
             </div>
         </div>
     </div>
 
     <!-- ========== FOOTER ========== -->
-    <footer class="text-center pb-8 text-sm text-gray-400">
-        جزء من منصة <a href="https://marfa.sa" class="text-[var(--primary)] font-bold hover:underline">marfa.sa</a> — مجاني بالكامل
+    <footer class="text-center pb-10 text-sm text-deep-navy/30">
+        <p>جزء من منصة <a href="https://marfa.sa" class="text-gold-dark font-bold hover:underline">marfa.sa</a> — مجاني بالكامل</p>
     </footer>
 
 <script>
-// ==================== STATE ====================
 let apiKey = '';
 let timerInterval = null;
 let timerSeconds = 20;
@@ -271,8 +292,12 @@ const EXAMPLES = {
 // ==================== TAB SWITCHING ====================
 document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => {
+            b.classList.remove('active');
+            b.classList.add('text-deep-navy/50');
+        });
         btn.classList.add('active');
+        btn.classList.remove('text-deep-navy/50');
         document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
         document.getElementById('tab-' + btn.dataset.tab).classList.remove('hidden');
     });
@@ -340,9 +365,8 @@ async function generateSpeech() {
     if (!ensureApiKey()) return;
 
     const btn = document.getElementById('generate-btn');
-    const origText = btn.textContent;
-    btn.textContent = '⏳ جارٍ التوليد';
-    btn.classList.add('loader-dots');
+    const origHTML = btn.innerHTML;
+    btn.innerHTML = '⏳ جارٍ التوليد<span class="loader-dots"></span>';
     btn.disabled = true;
 
     try {
@@ -354,13 +378,12 @@ async function generateSpeech() {
         document.getElementById('speech-text').textContent = result;
         document.getElementById('generated-speech').classList.remove('hidden');
         document.getElementById('build-feedback').classList.remove('hidden');
-        document.getElementById('build-feedback').innerHTML = '<p class="text-sm text-gray-700">✅ تم توليد الخطاب بنجاح. يمكنك نسخه والانتقال إلى تبويب التدريب لتجربته مع المؤقت.</p>';
+        document.getElementById('build-feedback').innerHTML = '<p class="text-sm text-deep-navy/60">✅ تم توليد الخطاب بنجاح. يمكنك نسخه والانتقال إلى تبويب التدريب لتجربته مع المؤقت.</p>';
         document.getElementById('generated-speech').scrollIntoView({ behavior: 'smooth' });
     } catch (err) {
         alert('حدث خطأ، تأكد من الاتصال وحاول مرة أخرى\n' + err.message);
     } finally {
-        btn.textContent = origText;
-        btn.classList.remove('loader-dots');
+        btn.innerHTML = origHTML;
         btn.disabled = false;
     }
 }
@@ -370,6 +393,7 @@ function updateTimerUI() {
     const display = document.getElementById('timer-display');
     const bar = document.getElementById('timer-bar');
     const status = document.getElementById('timer-status');
+    const goldColor = '#D4AF37';
 
     const mins = Math.floor(timerSeconds / 60);
     const secs = timerSeconds % 60;
@@ -378,26 +402,22 @@ function updateTimerUI() {
     const pct = (timerSeconds / 20) * 100;
     bar.style.width = pct + '%';
 
-    bar.classList.remove('green', 'yellow', 'red', 'done');
+    bar.classList.remove('yellow', 'red', 'done');
     if (!timerRunning && timerSeconds === 0) {
         bar.classList.add('done');
         display.textContent = '✓';
-        display.classList.add('text-[var(--success)]');
+        display.style.color = goldColor;
         status.textContent = 'أحسنت! أنهيت الخطاب في الوقت';
     } else if (timerSeconds > 10) {
-        bar.classList.add('green');
-        display.classList.remove('text-[var(--warning)]', 'text-[var(--danger)]');
-        display.classList.add('text-[var(--success)]');
+        display.style.color = '#10b981';
         status.textContent = 'وقت كافٍ — تحدث بوضوح';
     } else if (timerSeconds > 5) {
         bar.classList.add('yellow');
-        display.classList.remove('text-[var(--success)]', 'text-[var(--danger)]');
-        display.classList.add('text-[var(--warning)]');
+        display.style.color = '#f59e0b';
         status.textContent = 'أنت في منتصف الوقت — اختصر';
     } else {
         bar.classList.add('red');
-        display.classList.remove('text-[var(--success)]', 'text-[var(--warning)]');
-        display.classList.add('text-[var(--danger)]');
+        display.style.color = '#ef4444';
         status.textContent = 'أنهِ الخطاب فوراً!';
     }
 }
@@ -438,14 +458,11 @@ function resetTimerSilent() {
     document.getElementById('timer-start').textContent = '▶️ ابدأ';
     document.getElementById('timer-start').disabled = false;
     const display = document.getElementById('timer-display');
-    display.classList.remove('text-[var(--warning)]', 'text-[var(--danger)]', 'text-[var(--success)]');
-    display.classList.add('text-[var(--success)]');
+    display.style.color = '#10b981';
     updateTimerUI();
 }
 
-function resetTimer() {
-    resetTimerSilent();
-}
+function resetTimer() { resetTimerSilent(); }
 
 async function evaluateSpeech() {
     const speech = document.getElementById('practice-speech').value.trim();
@@ -456,9 +473,8 @@ async function evaluateSpeech() {
     if (!ensureApiKey()) return;
 
     const btn = document.getElementById('practice-evaluate-btn');
-    const origText = btn.textContent;
-    btn.textContent = '⏳ جارٍ التقييم';
-    btn.classList.add('loader-dots');
+    const origHTML = btn.innerHTML;
+    btn.innerHTML = '⏳ جارٍ التقييم<span class="loader-dots"></span>';
     btn.disabled = true;
 
     try {
@@ -467,15 +483,13 @@ async function evaluateSpeech() {
             speech
         );
         const fb = document.getElementById('practice-feedback');
-        fb.innerHTML = '<h4 class="font-bold text-[var(--primary)] mb-3">📊 تقييم الخطاب</h4>' +
-            '<div class="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">' + escapeHtml(result) + '</div>';
+        fb.innerHTML = '<h4 class="font-bold text-deep-navy mb-3">📊 تقييم الخطاب</h4><div class="text-sm text-deep-navy/70 leading-relaxed whitespace-pre-wrap">' + escapeHtml(result) + '</div>';
         fb.classList.remove('hidden');
         fb.scrollIntoView({ behavior: 'smooth' });
     } catch (err) {
         alert('حدث خطأ، تأكد من الاتصال وحاول مرة أخرى\n' + err.message);
     } finally {
-        btn.textContent = origText;
-        btn.classList.remove('loader-dots');
+        btn.innerHTML = origHTML;
         btn.disabled = false;
     }
 }
@@ -497,9 +511,8 @@ async function analyzeExample() {
 
     const speech = EXAMPLES[currentExample].text;
     const btn = document.querySelector('#example-detail button');
-    const origText = btn.textContent;
-    btn.textContent = '⏳ جارٍ التحليل';
-    btn.classList.add('loader-dots');
+    const origHTML = btn.innerHTML;
+    btn.innerHTML = '⏳ جارٍ التحليل<span class="loader-dots"></span>';
     btn.disabled = true;
 
     try {
@@ -508,20 +521,17 @@ async function analyzeExample() {
             speech
         );
         const fb = document.getElementById('example-feedback');
-        fb.innerHTML = '<h4 class="font-bold text-[var(--primary)] mb-3">🔍 تحليل المثال</h4>' +
-            '<div class="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">' + escapeHtml(result) + '</div>';
+        fb.innerHTML = '<h4 class="font-bold text-deep-navy mb-3">🔍 تحليل المثال</h4><div class="text-sm text-deep-navy/70 leading-relaxed whitespace-pre-wrap">' + escapeHtml(result) + '</div>';
         fb.classList.remove('hidden');
         fb.scrollIntoView({ behavior: 'smooth' });
     } catch (err) {
         alert('حدث خطأ، تأكد من الاتصال وحاول مرة أخرى\n' + err.message);
     } finally {
-        btn.textContent = origText;
-        btn.classList.remove('loader-dots');
+        btn.innerHTML = origHTML;
         btn.disabled = false;
     }
 }
 
-// ==================== UTILS ====================
 function escapeHtml(str) {
     const div = document.createElement('div');
     div.appendChild(document.createTextNode(str));

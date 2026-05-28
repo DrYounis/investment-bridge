@@ -158,7 +158,7 @@ function applySecurityHeaders(response: NextResponse): void {
 
 // ── Main middleware ─────────────────────────────────────────────────
 
-export async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   // 1. Rate limiting
   const rateLimitResponse = await applyRateLimit(request)
   if (rateLimitResponse) return rateLimitResponse

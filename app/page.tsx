@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import AuthAwareLinks from './components/AuthAwareLinks';
+import ShipHero from './components/ShipHero';
 
 export default async function Home() {
   return (
@@ -12,18 +13,26 @@ export default async function Home() {
       {/* Main Content */}
       <main className="relative min-h-screen flex flex-col pt-32 pb-16 px-4 max-w-7xl mx-auto">
 
-        {/* Hero Section */}
-        <div className="text-center mb-20 space-y-8 animate-fade-in-up relative">
-          {/* Animated Glow - Warm Gold */}
-          <div className="absolute -top-[50%] left-1/2 -translate-x-1/2 w-[60%] h-[60%] bg-gold/5 blur-[120px] rounded-full animate-pulse pointer-events-none"></div>
+        {/* Hero Section — dark navy night sky backdrop for the ship scene */}
+        <div className="relative text-center mb-20 space-y-8 animate-fade-in-up" style={{
+          background: 'linear-gradient(180deg, #0A192F 0%, #0d1a35 65%, #0A192F 100%)',
+          margin: '-8rem -2rem 5rem -2rem',
+          padding: '8rem 2rem 6rem 2rem',
+          borderRadius: '0 0 3rem 3rem',
+        }}>
+          {/* Ship Hero animated scene */}
+          <ShipHero />
 
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/10 border border-gold/20 text-gold text-sm font-bold mb-4">
+          {/* Animated Glow - Warm Gold */}
+          <div className="absolute -top-[50%] left-1/2 -translate-x-1/2 w-[60%] h-[60%] bg-gold/5 blur-[120px] rounded-full animate-pulse pointer-events-none" style={{ zIndex: 0 }}></div>
+
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/10 border border-gold/20 text-gold text-sm font-bold mb-4 relative" style={{ zIndex: 1 }}>
             🚀 <span className="tracking-wide uppercase">ما الذي يجعل مرفأ مختلفاً؟</span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-tight">
+          <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-tight relative" style={{ zIndex: 1 }}>
             <span style={{ color: '#c9a84c', fontWeight: 900 }}>مرفأ — </span>
-            <span style={{ color: '#0A192F', fontWeight: 900 }}>حيث تَرسو الطموحات.</span>
+            <span style={{ color: '#f0ead6', fontWeight: 900 }}>حيث تَرسو الطموحات.</span>
           </h1>
 
           <p style={{
@@ -35,12 +44,14 @@ export default async function Home() {
             marginTop: '0.5rem',
             marginBottom: '1.25rem',
             direction: 'ltr',
-            textAlign: 'right'
+            textAlign: 'right',
+            position: 'relative',
+            zIndex: 1,
           }}>
             Where Ambitions Anchor.
           </p>
 
-          <p className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-medium" style={{ color: '#8a9bb8', lineHeight: 1.75 }}>
+          <p className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-medium relative" style={{ color: '#8a9bb8', lineHeight: 1.75, zIndex: 1 }}>
             لسنا مجرد منصة. نحن الوجهة التي يصل إليها{' '}
             <span style={{ color: '#c9a84c', fontWeight: 700 }}>كل مشروع استثنائي</span>{' '}
             باحثاً عن شريك يؤمن بطموحاته — و
@@ -50,7 +61,9 @@ export default async function Home() {
           </p>
 
           {/* Action Buttons */}
-          <AuthAwareLinks />
+          <div className="relative" style={{ zIndex: 1 }}>
+            <AuthAwareLinks />
+          </div>
         </div>
 
         {/* The Two Pathways - Enhanced Design */}

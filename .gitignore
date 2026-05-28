@@ -78,3 +78,8 @@ curl_prod_output.txt
 *.swp
 *.swo
 *~
+._*
+._.swc
+.swc/
+._*
+.swc/

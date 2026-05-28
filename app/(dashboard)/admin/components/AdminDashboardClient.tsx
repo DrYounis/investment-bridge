@@ -35,7 +35,7 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
                 .eq('id', user.id)
                 .single();
 
-            if (profile?.user_type !== 'admin') {
+            if (profile?.user_type !== 'admin' && profile?.user_type !== 'super_admin') {
                 router.push('/admin/login');
             } else {
                 setIsCheckingAuth(false); // Only allow rendering if admin

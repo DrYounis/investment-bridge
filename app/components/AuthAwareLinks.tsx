@@ -24,7 +24,7 @@ export default function AuthAwareLinks() {
       </Link>
       <Link
         href={user ? '/marfa' : '/register?type=entrepreneur'}
-        className="px-10 py-5 bg-white dark:bg-gray-900 text-deep-navy dark:text-white border-2 border-gold/50 text-lg font-black rounded-2xl hover:bg-gold/5 hover:scale-105 hover:shadow-xl transition-all duration-300"
+        className="px-10 py-5 bg-transparent text-white border-2 border-gold/50 text-lg font-black rounded-2xl hover:bg-gold/5 hover:scale-105 hover:shadow-xl transition-all duration-300"
       >
         لدي فكرة مشروع
       </Link>

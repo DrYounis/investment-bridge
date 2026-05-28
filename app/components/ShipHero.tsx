@@ -366,7 +366,7 @@ export default function ShipHero() {
         /* Responsive — shrink on mobile */
         @media (max-width: 640px) {
           .ship-wrap { right: 2%; bottom: calc(36% - 1px); }
-          .ship-svg  { width: 100px; height: auto; }
+          .ship-svg  { width: 180px; height: auto; }
           .dock      { right: 3%; }
           .dock-platform { width: 60px; }
         }
@@ -423,8 +423,8 @@ export default function ShipHero() {
           {/* SVG Ship — fully inline, zero network request */}
           <svg
             className="ship-svg"
-            width="160"
-            height="90"
+            width="320"
+            height="180"
             viewBox="0 0 160 90"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"

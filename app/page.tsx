@@ -41,7 +41,7 @@ export default async function Home() {
             fontWeight: 700,
             color: '#c9a84c',
             fontSize: '1.15rem',
-            marginTop: '0.5rem',
+            marginTop: '2.5rem',
             marginBottom: '1.25rem',
             direction: 'ltr',
             textAlign: 'right',

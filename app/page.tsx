@@ -18,17 +18,35 @@ export default async function Home() {
           <div className="absolute -top-[50%] left-1/2 -translate-x-1/2 w-[60%] h-[60%] bg-gold/5 blur-[120px] rounded-full animate-pulse pointer-events-none"></div>
 
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/10 border border-gold/20 text-gold text-sm font-bold mb-4">
-            🚀 <span className="tracking-wide uppercase">منصة الاستثمار الذكي في المملكة</span>
+            🚀 <span className="tracking-wide uppercase">ما الذي يجعل مرفأ مختلفاً؟</span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-black text-deep-navy dark:text-white tracking-tight leading-tight">
-            أين تقع في عالم
-            <br />
-            <span className="text-luxury-gold inline-block mt-2">الاستثمار؟</span>
+          <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-tight">
+            <span style={{ color: '#c9a84c', fontWeight: 900 }}>مرفأ — </span>
+            <span style={{ color: '#0A192F', fontWeight: 900 }}>حيث تَرسو الطموحات.</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-deep-navy/70 dark:text-white/80 max-w-2xl mx-auto leading-relaxed font-medium">
-            منصة مرفأ هي الجسر الذكي الذي يربط بين رأس المال الجريء، والأفكار الاستثنائية
+          <p style={{
+            fontFamily: "'Playfair Display', serif",
+            fontStyle: 'italic',
+            fontWeight: 700,
+            color: '#c9a84c',
+            fontSize: '1.15rem',
+            marginTop: '0.5rem',
+            marginBottom: '1.25rem',
+            direction: 'ltr',
+            textAlign: 'right'
+          }}>
+            Where Ambitions Anchor.
+          </p>
+
+          <p className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-medium" style={{ color: '#8a9bb8', lineHeight: 1.75 }}>
+            لسنا مجرد منصة. نحن الوجهة التي يصل إليها{' '}
+            <span style={{ color: '#c9a84c', fontWeight: 700 }}>كل مشروع استثنائي</span>{' '}
+            باحثاً عن شريك يؤمن بطموحاته — و
+            <span style={{ color: '#c9a84c', fontWeight: 700 }}>يبني معه إرثاً</span>.
+            <br />
+            الجسر الذكي بين رأس المال الجريء والأفكار التي تُغيّر المشهد الاستثماري في المنطقة.
           </p>
 
           {/* Action Buttons */}

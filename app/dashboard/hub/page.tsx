@@ -1,45 +1,63 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DashboardHome from '@/app/components/dashboard/DashboardHome';
-import { Shield } from 'lucide-react';
 import { NewsProvider } from '@/app/context/NewsContext';
+import { createClient } from '@/lib/supabase/client';
 
-export default function HubTestPage() {
-    // This state simulates the currently logged-in user.
-    // In a real app, this would come from Supabase Auth & Database.
-    const [currentUser, setCurrentUser] = useState({
-        id: "1",
-        name: "د. يونس",
-        role: "admin", // Try changing this to 'investor' or 'entrepreneur'
-        projectName: "تطوير وادي مشار",
-    });
+export default function HubPage() {
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
 
-    const toggleRole = () => {
-        if (currentUser.role === 'admin') setCurrentUser({ ...currentUser, role: 'investor' });
-        else if (currentUser.role === 'investor') setCurrentUser({ ...currentUser, role: 'entrepreneur' });
-        else setCurrentUser({ ...currentUser, role: 'admin' });
+  useEffect(() => {
+    async function loadUser() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        setCurrentUser({
+          id: user.id,
+          name: profile?.full_name || user.email?.split('@')[0] || 'مستخدم',
+          email: user.email,
+          role: profile?.user_type || profile?.role || 'user',
+        });
+      }
+      setLoading(false);
     }
+    loadUser();
+  }, []);
 
+  if (loading) {
     return (
-        <NewsProvider>
-            <div className="min-h-screen bg-slate-50 font-sans" dir="rtl">
-                {/* Dev Tool: Role Switcher */}
-                <div className="fixed bottom-4 left-4 z-50">
-                    <button
-                        onClick={toggleRole}
-                        className="bg-slate-800 text-white px-4 py-2 rounded-full shadow-lg text-xs font-bold flex items-center gap-2 hover:bg-slate-700 transition"
-                    >
-                        <Shield size={14} />
-                        Current Role: {currentUser.role.toUpperCase()} (Click to Switch)
-                    </button>
-                </div>
-
-                <div className="p-4 md:p-8 max-w-7xl mx-auto">
-                    <DashboardHome user={currentUser} />
-                </div>
-            </div>
-        </NewsProvider>
+      <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center" dir="rtl">
+        <div className="text-[#8a9bb8]">جاري التحميل...</div>
+      </div>
     );
-}
+  }
 
+  if (!currentUser) {
+    return (
+      <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center" dir="rtl">
+        <div className="text-center">
+          <p className="text-[#8a9bb8] mb-4">يجب تسجيل الدخول للوصول إلى لوحة التحكم</p>
+          <a href="/login" className="text-[#c9a84c] font-bold hover:underline">تسجيل الدخول</a>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <NewsProvider>
+      <div className="min-h-screen bg-[#0a0f1e]" dir="rtl">
+        <div className="p-4 md:p-8 max-w-7xl mx-auto">
+          <DashboardHome user={currentUser} />
+        </div>
+      </div>
+    </NewsProvider>
+  );
+}

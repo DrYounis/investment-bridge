@@ -12,10 +12,6 @@ export default function Footer() {
                 <span>© 2026 Marfa. جميع الحقوق محفوظة</span>
                 <span className="hidden sm:inline text-slate-300">|</span>
                 <span className="font-medium text-slate-500">صُنع بحب في حائل ❤️</span>
-                <span className="hidden sm:inline text-slate-300">|</span>
-                <Link href="/admin/login" className="hover:text-slate-600 transition-colors">
-                    دخول المسؤول
-                </Link>
             </p>
         </footer>
     );

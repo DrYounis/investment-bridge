@@ -30,7 +30,7 @@ export default async function Home() {
             🚀 <span className="tracking-wide uppercase">ما الذي يجعل مرفأ مختلفاً؟</span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-tight relative" style={{ zIndex: 1 }}>
+          <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-tight relative" style={{ zIndex: 1, marginTop: '3rem' }}>
             <span style={{ color: '#c9a84c', fontWeight: 900 }}>مرفأ — </span>
             <span style={{ color: '#f0ead6', fontWeight: 900 }}>حيث تَرسو الطموحات.</span>
           </h1>

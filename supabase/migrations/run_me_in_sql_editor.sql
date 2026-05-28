@@ -64,28 +64,34 @@ alter table public.profiles    enable row level security;
 alter table public.assessments enable row level security;
 
 -- Profiles: users can read/write their own row
-create policy if not exists "profiles: own read"
+drop policy if exists "profiles: own read" on public.profiles;
+create policy "profiles: own read"
   on public.profiles for select
   using (auth.uid() = id);
 
-create policy if not exists "profiles: own update"
+drop policy if exists "profiles: own update" on public.profiles;
+create policy "profiles: own update"
   on public.profiles for update
   using (auth.uid() = id);
 
-create policy if not exists "profiles: own insert"
+drop policy if exists "profiles: own insert" on public.profiles;
+create policy "profiles: own insert"
   on public.profiles for insert
   with check (auth.uid() = id);
 
 -- Assessments: users can read/write their own assessments
-create policy if not exists "assessments: own read"
+drop policy if exists "assessments: own read" on public.assessments;
+create policy "assessments: own read"
   on public.assessments for select
   using (auth.uid() = user_id);
 
-create policy if not exists "assessments: own insert"
+drop policy if exists "assessments: own insert" on public.assessments;
+create policy "assessments: own insert"
   on public.assessments for insert
   with check (auth.uid() = user_id);
 
-create policy if not exists "assessments: own update"
+drop policy if exists "assessments: own update" on public.assessments;
+create policy "assessments: own update"
   on public.assessments for update
   using (auth.uid() = user_id);
 

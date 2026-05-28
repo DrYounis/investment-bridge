@@ -1,15 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { rateLimit, getClientIP, isValidOrigin } from '@/lib/rate-limit';
+import { sanitizeInput } from '@/lib/security';
 
 export const dynamic = 'force-dynamic';
 
 const RATE_LIMIT = { maxRequests: 5, windowMs: 60_000 };
 
+const ALLOWED_MIME_TYPES = [
+  'text/plain',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+] as const;
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  // Origin check
   if (!isValidOrigin(req)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
+  // Rate limiting
   const ip = getClientIP(req);
   const limit = rateLimit(ip, RATE_LIMIT);
   if (!limit.allowed) {
@@ -18,7 +29,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    return NextResponse.json({ error: 'AI service not configured' }, { status: 503 });
+    return NextResponse.json({ error: 'Service unavailable' }, { status: 503 });
   }
 
   try {
@@ -29,11 +40,27 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
+    // Validate MIME type server-side
+    if (!ALLOWED_MIME_TYPES.includes(file.type as typeof ALLOWED_MIME_TYPES[number])) {
+      return NextResponse.json(
+        { error: 'Unsupported file type' },
+        { status: 400 }
+      );
+    }
+
+    // Validate file size
+    if (file.size > MAX_FILE_SIZE) {
+      return NextResponse.json(
+        { error: 'File too large. Maximum size is 10MB.' },
+        { status: 400 }
+      );
+    }
+
     // Extract text from file
     let text = '';
     const fileName = file.name.toLowerCase();
 
-    if (fileName.endsWith('.txt')) {
+    if (fileName.endsWith('.txt') || file.type === 'text/plain') {
       text = await file.text();
     } else if (fileName.endsWith('.docx')) {
       try {
@@ -42,20 +69,24 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         const result = await mammothModule.extractRawText({ buffer } as any);
         text = result.value;
       } catch {
-        return NextResponse.json({ error: 'Could not parse DOCX file' }, { status: 400 });
+        return NextResponse.json({ error: 'Could not process file' }, { status: 400 });
       }
     } else {
-      return NextResponse.json({
-        error: 'Unsupported file type. Please upload a .txt or .docx file.',
-      }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Unsupported file type. Please upload a .txt or .docx file.' },
+        { status: 400 }
+      );
     }
 
     if (!text || text.trim().length < 50) {
-      return NextResponse.json({ error: 'Could not extract enough text from document' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Could not extract enough text from document' },
+        { status: 400 }
+      );
     }
 
-    // Limit text to first 6000 chars for Claude
-    const truncated = text.slice(0, 6000);
+    // Sanitize extracted text before sending to Claude
+    const sanitized = sanitizeInput(text.slice(0, 6000));
 
     const systemPrompt = 'أنت محلل أعمال خبير. استخرج من هذا المستند المعلومات التالية. أخرج JSON فقط بدون أي نص إضافي.';
 
@@ -68,7 +99,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 6. الفريق المذكور
 
 المستند:
-${truncated}
+${sanitized}
 
 أخرج JSON:
 {
@@ -97,7 +128,7 @@ ${truncated}
     });
 
     if (!res.ok) {
-      return NextResponse.json({ error: 'AI service unavailable' }, { status: 502 });
+      return NextResponse.json({ error: 'Service unavailable' }, { status: 502 });
     }
 
     const data = await res.json();
@@ -118,8 +149,10 @@ ${truncated}
       highlights: parsed || { raw: rawText },
       textLength: text.length,
     });
-  } catch (err) {
-    console.error('Document analysis error:', err);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  } catch {
+    return NextResponse.json(
+      { error: 'An unexpected error occurred' },
+      { status: 500 }
+    );
   }
 }

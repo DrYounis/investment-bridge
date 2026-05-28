@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { scrapeArgaamNews } from '@/lib/argaam/scraper';
 import { summarizeArticle } from '@/lib/argaam/summarizer';
 import { sanitizeContent, sanitizeTitle } from '@/lib/sanitize';
@@ -7,16 +8,18 @@ import { rateLimit, getClientIP } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
+const ScrapeBodySchema = z.object({
+  maxArticles: z.number().int().min(1).max(10).optional().default(5),
+});
+
 interface ScrapeResult {
   success: boolean;
   slug?: string;
   title?: string;
-  original_title?: string;
-  source_url?: string;
   error?: string;
 }
 
-export async function GET(_req: NextRequest): Promise<NextResponse> {
+export async function GET(): Promise<NextResponse> {
   try {
     const files = await listArticles();
     const total = await getArticlesCount();
@@ -25,35 +28,32 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
       filename: f.slug,
       created: f.article_date || f.created_at?.slice(0, 10) || '',
       title: f.title,
-      original_title: f.original_title,
-      source_url: f.source_url,
     }));
 
     return NextResponse.json({
       status: 'ready',
       total_articles: total,
-      content_dir: 'Supabase: financial_news_articles',
       latest_files: filesWithMeta,
-      cron_secret_configured: !!process.env.CRON_SECRET,
     });
-  } catch (err) {
-    console.error('❌ Status check error:', err);
+  } catch {
     return NextResponse.json(
-      { error: 'Failed to fetch status', details: String(err) },
+      { error: 'Failed to fetch status' },
       { status: 500 }
     );
   }
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  // Auth: require CRON_SECRET or allow from Vercel cron (sends Authorization header)
+  // Auth: require CRON_SECRET in Bearer header
   const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret) {
-    const authHeader = req.headers.get('authorization');
-    const expectedAuth = `Bearer ${cronSecret}`;
-    if (authHeader !== expectedAuth) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+  if (!cronSecret) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const authHeader = req.headers.get('authorization');
+  const expectedAuth = `Bearer ${cronSecret}`;
+  if (authHeader !== expectedAuth) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   // Rate limit: 1 scrape per 30 seconds per IP
@@ -63,35 +63,29 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
   }
 
-  console.log('\n🚀 ── Financial News Scrape Job Started ──\n');
-
   try {
+    // Parse and validate body
     let maxArticles = 5;
-
     try {
       const body = await req.json();
-      if (body.maxArticles !== undefined) {
-        maxArticles = Math.min(Math.max(1, parseInt(String(body.maxArticles), 10)), 10);
+      const parsed = ScrapeBodySchema.safeParse(body);
+      if (parsed.success) {
+        maxArticles = parsed.data.maxArticles;
       }
     } catch {
       // No body or invalid JSON — use default
     }
 
-    console.log(`📋 Target: ${maxArticles} articles\n`);
-
-    console.log('🔍 Step 1/3: Scraping financial news...');
     const articles = await scrapeArgaamNews(maxArticles);
-    console.log(`   Scraped ${articles.length} articles\n`);
 
     if (articles.length === 0) {
       return NextResponse.json({
         success: true,
         total_scraped: 0,
-        processed: 0,
         saved: 0,
         failed: 0,
         results: [],
-        message: 'No articles found — Argaam may require JavaScript rendering. Try again later.',
+        message: 'No articles found',
       });
     }
 
@@ -101,13 +95,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     for (let i = 0; i < articles.length; i++) {
       const article = articles[i];
-      console.log(`\n📰 [${i + 1}/${articles.length}] Processing: ${article.title.slice(0, 60)}...`);
 
       try {
-        console.log('   🤖 Step 2/3: Summarizing...');
         const summary = await summarizeArticle(article);
 
-        console.log('   💾 Step 3/3: Saving to Supabase...');
         const saved = await saveArticle({
           title: sanitizeTitle(summary.seo_title),
           original_title: sanitizeTitle(summary.original_title),
@@ -125,24 +116,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           success: true,
           slug: saved.slug,
           title: summary.seo_title,
-          original_title: article.title,
-          source_url: article.url,
         });
-      } catch (err) {
+      } catch {
         failedCount++;
-        const errMsg = String(err);
-        console.error(`   ❌ Failed:`, errMsg);
         results.push({
           success: false,
-          error: errMsg,
-          title: `❌ ${errMsg.slice(0, 80)}`,
-          original_title: article.title,
-          source_url: article.url,
+          error: 'Processing failed',
+          title: article.title?.slice(0, 60),
         });
       }
     }
-
-    console.log(`\n✅ ── Job Complete: ${savedCount} saved, ${failedCount} failed ──\n`);
 
     return NextResponse.json({
       success: true,
@@ -152,10 +135,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       failed: failedCount,
       results,
     });
-  } catch (err) {
-    console.error('❌ Scrape job error:', err);
+  } catch {
     return NextResponse.json(
-      { success: false, error: 'Scraping job failed', details: String(err) },
+      { success: false, error: 'Scraping job failed' },
       { status: 500 }
     );
   }

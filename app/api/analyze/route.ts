@@ -1,24 +1,50 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import Anthropic from '@anthropic-ai/sdk';
+import { sanitizeInput } from '@/lib/security';
 
-export async function POST(req: Request) {
+export const dynamic = 'force-dynamic';
+
+// Zod schema for request body
+const AnalyzeSchema = z.object({
+  idea: z.string().min(1, 'Idea is required').max(5000, 'Idea is too long'),
+  sector: z.string().max(200).optional().default('عام'),
+  role: z.enum(['investor', 'entrepreneur']).optional().default('entrepreneur'),
+});
+
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const { idea, sector, role } = await req.json();
-
-    if (!idea || typeof idea !== 'string' || idea.trim().length === 0) {
-      return Response.json({ error: 'يرجى إدخال فكرة المشروع' }, { status: 400 });
+    // Parse and validate body
+    let rawBody: unknown;
+    try {
+      rawBody = await req.json();
+    } catch {
+      return NextResponse.json({ error: 'Invalid request format' }, { status: 400 });
     }
+
+    const parsed = AnalyzeSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: 'Invalid request' },
+        { status: 400 }
+      );
+    }
+
+    const { idea, sector, role } = parsed.data;
+    const sanitizedIdea = sanitizeInput(idea);
+    const sanitizedSector = sanitizeInput(sector);
 
     const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
-      return Response.json({ error: 'مفتاح API غير متوفر' }, { status: 500 });
+      return NextResponse.json({ error: 'Service unavailable' }, { status: 503 });
     }
 
     const client = new Anthropic({ apiKey });
 
     const prompt = `أنت محلل أعمال سعودي خبير في رؤية 2030.
 حلل الفكرة التالية من منظور ${role === 'investor' ? 'مستثمر محتمل' : 'مؤسس شركة ناشئة'}.
-الفكرة: ${idea.trim()}
-القطاع: ${sector || 'عام'}
+الفكرة: ${sanitizedIdea}
+القطاع: ${sanitizedSector || 'عام'}
 
 أعد JSON فقط (بدون markdown أو شرح):
 {
@@ -47,13 +73,11 @@ export async function POST(req: Request) {
     const text =
       message.content[0]?.type === 'text' ? message.content[0].text : '';
 
-    // Parse JSON — handle possible markdown wrapping
     const cleaned = text.replace(/```json|```/g, '').trim();
     let result;
     try {
       result = JSON.parse(cleaned);
     } catch {
-      // If JSON parse fails, return raw text as verdict
       result = {
         executive_summary: 'تعذر تحليل النتيجة',
         market_size: 'غير متوفر',
@@ -72,11 +96,10 @@ export async function POST(req: Request) {
       };
     }
 
-    return Response.json(result);
-  } catch (err: any) {
-    console.error('Analyze API error:', err);
-    return Response.json(
-      { error: err?.message || 'حدث خطأ غير متوقع' },
+    return NextResponse.json(result);
+  } catch {
+    return NextResponse.json(
+      { error: 'An unexpected error occurred' },
       { status: 500 }
     );
   }

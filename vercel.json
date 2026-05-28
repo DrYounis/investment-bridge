@@ -10,7 +10,7 @@
   },
   "crons": [
     {
-      "path": "/api/cron/daily?token=marfa-daily-news-299713e0d16f",
+      "path": "/api/cron/daily",
       "schedule": "0 6 * * *"
     }
   ]

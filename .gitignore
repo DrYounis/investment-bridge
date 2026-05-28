@@ -58,3 +58,23 @@ scripts/__pycache__/
 *.pyc
 .qwen/
 junit.xml
+
+# Security: never commit curl outputs with tokens
+curl_output.txt
+curl_prod_output.txt
+*_output.txt
+
+# Security: never commit private keys or certificates
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

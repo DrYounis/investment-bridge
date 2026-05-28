@@ -15,21 +15,32 @@ export async function POST(req: Request): Promise<Response> {
 
 async function handleCronTrigger(req: Request): Promise<Response> {
   try {
+    // Auth: allow Vercel cron (x-vercel-cron header) OR valid token
+    const isVercelCron = req.headers.get('x-vercel-cron') !== null;
     const url = new URL(req.url);
     const token = url.searchParams.get('token');
+    const authHeader = req.headers.get('authorization');
     const cronSecret = process.env.CRON_SECRET;
 
+    // If no CRON_SECRET is configured, reject all requests
     if (!cronSecret) {
-      console.warn('⚠️ CRON_SECRET not configured — allowing trigger without token');
-    } else if (token !== cronSecret) {
-      console.error('❌ Unauthorized cron trigger — invalid token');
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    console.log('\n⏰ ── Scheduled Scrape Triggered ──\n');
+    // Allow Vercel cron OR valid token (query or Bearer header)
+    const isTokenValid =
+      token === cronSecret ||
+      authHeader === `Bearer ${cronSecret}`;
+
+    if (!isVercelCron && !isTokenValid) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
 
     const maxArticles = 5;
     const articles = await scrapeArgaamNews(maxArticles);
@@ -50,12 +61,10 @@ async function handleCronTrigger(req: Request): Promise<Response> {
           video_url: summary.video_url,
         });
         savedCount++;
-      } catch (err) {
-        console.error(`❌ Cron: failed to process article:`, err);
+      } catch {
+        // Continue to next article on failure
       }
     }
-
-    console.log(`\n✅ ── Cron Complete: ${savedCount}/${articles.length} saved ──\n`);
 
     return new Response(
       JSON.stringify({
@@ -69,10 +78,9 @@ async function handleCronTrigger(req: Request): Promise<Response> {
         headers: { 'Content-Type': 'application/json' },
       }
     );
-  } catch (err) {
-    console.error('❌ Cron job error:', err);
+  } catch {
     return new Response(
-      JSON.stringify({ error: 'Cron job failed', details: String(err) }),
+      JSON.stringify({ error: 'Cron job failed' }),
       {
         status: 500,
         headers: { 'Content-Type': 'application/json' },

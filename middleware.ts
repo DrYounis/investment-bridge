@@ -1,11 +1,12 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { updateSession } from './lib/supabase/middleware'
 import { RateLimiterMemory, RateLimiterRes } from 'rate-limiter-flexible'
+import { verifyCsrfToken, logSecurityEvent } from './lib/security'
 
-// Rate limiter configuration
+// ── Rate limiter configuration ─────────────────────────────────────
+
 const RATE_LIMIT_ENABLED = process.env.RATE_LIMIT_ENABLED !== 'false'
 
-// Create rate limiters
 const apiRateLimiter = new RateLimiterMemory({
   points: 10,
   duration: 60,
@@ -13,9 +14,9 @@ const apiRateLimiter = new RateLimiterMemory({
 })
 
 const authRateLimiter = new RateLimiterMemory({
-  points: 5,
-  duration: 300,
-  blockDuration: 300,
+  points: 5,        // 5 attempts
+  duration: 900,    // per 15 minutes
+  blockDuration: 900,
 })
 
 const formRateLimiter = new RateLimiterMemory({
@@ -24,43 +25,48 @@ const formRateLimiter = new RateLimiterMemory({
   blockDuration: 120,
 })
 
-// Get client identifier (IP address or user ID)
+const strictApiRateLimiter = new RateLimiterMemory({
+  points: 30,       // 30 requests
+  duration: 60,     // per minute
+  blockDuration: 60,
+})
+
+// ── Client identification ──────────────────────────────────────────
+
 function getClientId(request: NextRequest): string {
   const forwardedFor = request.headers.get('x-forwarded-for')
   const ip = forwardedFor ? forwardedFor.split(',')[0].trim() : 'unknown'
   return `ip:${ip}`
 }
 
-// Apply rate limiting based on path
+function getClientIP(request: NextRequest): string {
+  const forwardedFor = request.headers.get('x-forwarded-for')
+  return forwardedFor ? forwardedFor.split(',')[0].trim() : 'unknown'
+}
+
+// ── Rate limiting ──────────────────────────────────────────────────
+
 async function applyRateLimit(request: NextRequest): Promise<NextResponse | null> {
-  if (!RATE_LIMIT_ENABLED) {
-    return null
-  }
+  if (!RATE_LIMIT_ENABLED) return null
 
   const clientId = getClientId(request)
   const path = request.nextUrl.pathname
 
-  // Select appropriate rate limiter based on path
   let limiter: RateLimiterMemory
   let points: number
 
   if (path.startsWith('/api/auth') || path.startsWith('/login') || path.startsWith('/register')) {
-    // Stricter limits for auth endpoints
     limiter = authRateLimiter
     points = 5
   } else if (path.startsWith('/api/meetings') || path.startsWith('/meetings')) {
-    // Form submissions
     limiter = formRateLimiter
     points = 3
   } else if (path.startsWith('/api')) {
-    // General API endpoints
     limiter = apiRateLimiter
     points = 10
   } else if (path.startsWith('/marfa')) {
-    // No rate limiting for Marfa landing page
     return null
   } else {
-    // No rate limiting for other non-API routes
     return null
   }
 
@@ -70,13 +76,19 @@ async function applyRateLimit(request: NextRequest): Promise<NextResponse | null
   } catch (error) {
     if (error instanceof RateLimiterRes) {
       const retryAfter = error.msBeforeNext || 60000
-      
+
+      // Log rate limit breach
+      logSecurityEvent({
+        type: 'rate_limit.exceeded',
+        ip: getClientIP(request),
+        path,
+        method: request.method,
+        timestamp: new Date().toISOString(),
+        details: { retryAfter },
+      })
+
       return NextResponse.json(
-        {
-          error: 'Too Many Requests',
-          message: 'Rate limit exceeded. Please try again later.',
-          retryAfter: Math.ceil(retryAfter / 1000),
-        },
+        { error: 'Too Many Requests', message: 'Rate limit exceeded. Please try again later.' },
         {
           status: 429,
           headers: {
@@ -92,23 +104,80 @@ async function applyRateLimit(request: NextRequest): Promise<NextResponse | null
   }
 }
 
-export async function middleware(request: NextRequest) {
-  // Apply rate limiting first
-  const rateLimitResponse = await applyRateLimit(request)
-  if (rateLimitResponse) {
-    return rateLimitResponse
+// ── CSRF protection ────────────────────────────────────────────────
+
+function applyCsrfProtection(request: NextRequest): NextResponse | null {
+  const method = request.method.toUpperCase()
+  const stateChangingMethods = ['POST', 'PUT', 'PATCH', 'DELETE']
+
+  if (!stateChangingMethods.includes(method)) return null
+
+  // API routes that use Bearer token auth (cron, service-to-service) skip CSRF
+  const authHeader = request.headers.get('authorization')
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    // Bearer-authenticated requests have their own auth — CSRF not needed
+    return null
   }
 
-  // Then handle session
-  return await updateSession(request)
+  // Skip CSRF for public API endpoints that don't have a browser session
+  const path = request.nextUrl.pathname
+  const csrfExemptPaths = ['/api/cron', '/api/health', '/api/scrape']
+  if (csrfExemptPaths.some(p => path.startsWith(p))) return null
+
+  if (!verifyCsrfToken(request)) {
+    logSecurityEvent({
+      type: 'csrf.failed',
+      ip: getClientIP(request),
+      path,
+      method,
+      timestamp: new Date().toISOString(),
+    })
+
+    return NextResponse.json(
+      { error: 'Invalid or missing CSRF token' },
+      { status: 403 }
+    )
+  }
+
+  return null
+}
+
+// ── Security headers ───────────────────────────────────────────────
+
+function applySecurityHeaders(response: NextResponse): void {
+  response.headers.set('X-Content-Type-Options', 'nosniff')
+  response.headers.set('X-Frame-Options', 'DENY')
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+  response.headers.set(
+    'Permissions-Policy',
+    'camera=(), microphone=(), geolocation=(self), interest-cohort=()'
+  )
+  response.headers.set('Cross-Origin-Opener-Policy', 'same-origin')
+  response.headers.set('Cross-Origin-Resource-Policy', 'same-origin')
+}
+
+// ── Main middleware ─────────────────────────────────────────────────
+
+export async function middleware(request: NextRequest) {
+  // 1. Rate limiting
+  const rateLimitResponse = await applyRateLimit(request)
+  if (rateLimitResponse) return rateLimitResponse
+
+  // 2. CSRF protection on state-changing methods
+  const csrfResponse = applyCsrfProtection(request)
+  if (csrfResponse) return csrfResponse
+
+  // 3. Session management
+  const response = await updateSession(request)
+
+  // 4. Apply security headers
+  applySecurityHeaders(response)
+
+  return response
 }
 
 export const config = {
   matcher: [
-    /*
-     * Only run middleware on pages and API routes that need it.
-     * Skip all static assets, icons, and Next.js internals.
-     */
     '/((?!_next/static|_next/image|favicon\\.ico|apple-icon\\.png|icon\\.png|opengraph-image\\.png|twitter-image\\.png|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }

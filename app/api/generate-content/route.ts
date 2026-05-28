@@ -1,16 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { rateLimit, getClientIP, isValidOrigin } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
-// Rate limit: 3 generations per minute per IP (expensive operation)
 const RATE_LIMIT = { maxRequests: 3, windowMs: 60_000 };
 
+const ProjectDataSchema = z.object({
+  projectName: z.string().min(1).max(200),
+  problem: z.string().max(2000).optional(),
+  solution: z.string().max(2000).optional(),
+  market: z.string().max(2000).optional(),
+  businessModel: z.string().max(2000).optional(),
+  team: z.string().max(2000).optional(),
+  financials: z.string().max(2000).optional(),
+  ask: z.string().max(2000).optional(),
+});
+
+const GenerateContentSchema = z.object({
+  projectData: ProjectDataSchema,
+  documentHighlights: z.string().max(10000).optional(),
+});
+
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  // Origin check
   if (!isValidOrigin(req)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
+  // Rate limiting
   const ip = getClientIP(req);
   const limit = rateLimit(ip, RATE_LIMIT);
   if (!limit.allowed) {
@@ -19,16 +37,24 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    return NextResponse.json({ error: 'AI service not configured' }, { status: 503 });
+    return NextResponse.json({ error: 'Service unavailable' }, { status: 503 });
   }
 
   try {
-    const body = await req.json();
-    const { projectData, documentHighlights } = body || {};
-
-    if (!projectData?.projectName) {
-      return NextResponse.json({ error: 'Missing project data' }, { status: 400 });
+    // Parse and validate body
+    let rawBody: unknown;
+    try {
+      rawBody = await req.json();
+    } catch {
+      return NextResponse.json({ error: 'Invalid request format' }, { status: 400 });
     }
+
+    const bodyValidation = GenerateContentSchema.safeParse(rawBody);
+    if (!bodyValidation.success) {
+      return NextResponse.json({ error: 'Invalid request data' }, { status: 400 });
+    }
+
+    const { projectData, documentHighlights } = bodyValidation.data;
 
     const systemPrompt = `أنت خبير استثماري متخصص في إعداد عروض الشركات الناشئة (Pitch Decks) للمستثمرين في منطقة الخليج العربي.
 مهمتك: تحويل المعلومات المدخلة إلى محتوى احترافي لعرض استثماري يتبع معيار Y Combinator و500 Startups.
@@ -85,36 +111,31 @@ ${documentHighlights ? `\n\nمعلومات إضافية من المستندات 
     });
 
     if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      console.error('Anthropic API error:', res.status, err.error?.message);
-      return NextResponse.json({ error: 'AI service unavailable' }, { status: 502 });
+      return NextResponse.json({ error: 'Service unavailable' }, { status: 502 });
     }
 
     const data = await res.json();
     const rawText = data.content[0].text;
 
-    // Parse JSON from Claude response (handle markdown code blocks)
     let parsed;
     try {
       const jsonMatch = rawText.match(/```(?:json)?\s*([\s\S]*?)```/);
       const jsonStr = jsonMatch ? jsonMatch[1].trim() : rawText.trim();
       parsed = JSON.parse(jsonStr);
     } catch {
-      // Fallback: try to extract JSON object directly
       try {
         const start = rawText.indexOf('{');
         const end = rawText.lastIndexOf('}') + 1;
         parsed = JSON.parse(rawText.slice(start, end));
       } catch {
-        return NextResponse.json({ error: 'Failed to parse AI response', raw: rawText }, { status: 500 });
+        return NextResponse.json({ error: 'Failed to generate content' }, { status: 500 });
       }
     }
 
     if (!parsed.slides || !Array.isArray(parsed.slides)) {
-      return NextResponse.json({ error: 'Invalid response format', raw: rawText }, { status: 500 });
+      return NextResponse.json({ error: 'Failed to generate content' }, { status: 500 });
     }
 
-    // Add order numbers
     const slides = parsed.slides.map((s: any, i: number) => ({
       ...s,
       id: s.id || `slide-${i + 1}`,
@@ -124,8 +145,10 @@ ${documentHighlights ? `\n\nمعلومات إضافية من المستندات 
     }));
 
     return NextResponse.json({ slides });
-  } catch (err) {
-    console.error('Generate content error:', err);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  } catch {
+    return NextResponse.json(
+      { error: 'An unexpected error occurred' },
+      { status: 500 }
+    );
   }
 }

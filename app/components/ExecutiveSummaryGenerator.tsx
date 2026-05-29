@@ -48,10 +48,9 @@ const ExecutiveSummaryGenerator = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
 
-    const supabase = createClient();
-
     useEffect(() => {
         const checkUser = async () => {
+            const supabase = createClient();
             const { data: { user } } = await supabase.auth.getUser();
             setUser(user);
         };
@@ -78,6 +77,7 @@ const ExecutiveSummaryGenerator = () => {
 
     const handleSubmit = async () => {
         setIsSubmitting(true);
+        const supabase = createClient();
         try {
             const { error } = await supabase
                 .from('executive_summaries')

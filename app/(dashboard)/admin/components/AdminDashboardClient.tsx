@@ -23,23 +23,34 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         const checkAdmin = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) {
-                router.push('/admin/login');
-                return;
-            }
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) {
+                    router.push('/admin/login');
+                    return;
+                }
 
-            const { data: profile } = await supabase
-                .from('profiles')
-                .select('user_type')
-                .eq('id', user.id)
-                .single();
+                const { data: profile, error: profileError } = await supabase
+                    .from('profiles')
+                    .select('user_type')
+                    .eq('id', user.id)
+                    .maybeSingle();
 
-            if (profile?.user_type !== 'admin' && profile?.user_type !== 'super_admin') {
+                if (profileError) {
+                    console.error('Error fetching admin profile:', profileError);
+                    router.push('/admin/login');
+                    return;
+                }
+
+                if (!profile || (profile.user_type !== 'admin' && profile.user_type !== 'super_admin')) {
+                    router.push('/admin/login');
+                } else {
+                    setIsCheckingAuth(false); // Only allow rendering if admin
+                    fetchInvestors();
+                }
+            } catch (err) {
+                console.error('Admin auth check failed:', err);
                 router.push('/admin/login');
-            } else {
-                setIsCheckingAuth(false); // Only allow rendering if admin
-                fetchInvestors();
             }
         };
 
@@ -66,25 +77,34 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
 
                         if (newInvestorProfile.approval_status === 'pending') {
                             // Fetch details
-                            const { data: profileData } = await supabase
-                                .from('profiles')
-                                .select('full_name, email')
-                                .eq('id', newInvestorProfile.profile_id)
-                                .single();
+                            try {
+                                const { data: profileData, error: profileFetchError } = await supabase
+                                    .from('profiles')
+                                    .select('full_name, email')
+                                    .eq('id', newInvestorProfile.profile_id)
+                                    .maybeSingle();
 
-                            if (profileData) {
-                                const newEntry: PendingInvestor = {
-                                    id: newInvestorProfile.profile_id,
-                                    full_name: profileData.full_name,
-                                    email: profileData.email,
-                                    approval_status: newInvestorProfile.approval_status,
-                                    created_at: new Date().toISOString()
-                                };
+                                if (profileFetchError) {
+                                    console.error('Error fetching profile for realtime event:', profileFetchError);
+                                    return;
+                                }
 
-                                setPendingInvestors(prev => [newEntry, ...prev]);
-                                setStats(prev => ({ ...prev, pending: prev.pending + 1 }));
+                                if (profileData) {
+                                    const newEntry: PendingInvestor = {
+                                        id: newInvestorProfile.profile_id,
+                                        full_name: profileData.full_name,
+                                        email: profileData.email,
+                                        approval_status: newInvestorProfile.approval_status,
+                                        created_at: new Date().toISOString()
+                                    };
 
-                                // Optional: Play sound or show toast here
+                                    setPendingInvestors(prev => [newEntry, ...prev]);
+                                    setStats(prev => ({ ...prev, pending: prev.pending + 1 }));
+
+                                    // Optional: Play sound or show toast here
+                                }
+                            } catch (err) {
+                                console.error('Error in realtime profile fetch:', err);
                             }
                         }
                     } else if (payload.eventType === 'UPDATE') {

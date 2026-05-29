@@ -199,11 +199,11 @@ export default function AssessmentPage() {
         .from('assessments')
         .insert(payload)
         .select('id')
-        .single();
+        .maybeSingle();
 
       if (assessError) throw assessError;
 
-      setAssessmentId(inserted.id);
+      setAssessmentId(inserted?.id ?? null);
       setSaving(false);
       transition(() => setPhase('result'));
     } catch (err: any) {

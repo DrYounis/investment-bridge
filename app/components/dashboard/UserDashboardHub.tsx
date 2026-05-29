@@ -101,11 +101,15 @@ const DashboardContent = () => {
 
             if (authUser) {
                 // Fetch Profile
-                const { data: profile } = await supabase
+                const { data: profile, error: profileError } = await supabase
                     .from('profiles')
                     .select('*')
                     .eq('id', authUser.id)
-                    .single();
+                    .maybeSingle();
+
+                if (profileError) {
+                    console.error('Error fetching profile:', profileError);
+                }
 
                 if (profile) {
                     setUser({

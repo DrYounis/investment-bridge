@@ -12,21 +12,23 @@ export default function HubPage() {
 
   useEffect(() => {
     async function loadUser() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single();
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .maybeSingle();
 
-        setCurrentUser({
-          id: user.id,
-          name: profile?.full_name || user.email?.split('@')[0] || 'مستخدم',
-          email: user.email,
-          role: profile?.user_type || profile?.role || 'user',
-        });
-      }
+          setCurrentUser({
+            id: user.id,
+            name: profile?.full_name || user.email?.split('@')[0] || 'مستخدم',
+            email: user.email,
+            role: profile?.user_type || profile?.role || 'user',
+          });
+        }
+      } catch {}
       setLoading(false);
     }
     loadUser();

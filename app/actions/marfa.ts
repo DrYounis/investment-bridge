@@ -30,22 +30,27 @@ export async function saveDraft(id: string | null, data: DraftData) {
   const supabase = await createClient();
 
   if (!id) {
-    const { data: newIdea, error } = await supabase
-      .from('marfa_ideas')
-      .insert([{
-        title: data.title,
-        sector: data.sector,
-        description: data.description,
-        data: data,
-        status: 'draft'
-      }])
-      .select()
-      .single();
+    try {
+      const { data: newIdea, error } = await supabase
+        .from('marfa_ideas')
+        .insert([{
+          title: data.title,
+          sector: data.sector,
+          description: data.description,
+          data: data,
+          status: 'draft'
+        }])
+        .select()
+        .maybeSingle();
 
-    if (error) {
+      if (error) {
+        return { id: null, success: false, error: 'Failed to create draft' };
+      }
+      return { id: newIdea?.id ?? null, success: !!newIdea };
+    } catch (err) {
+      console.error('Error saving draft:', err);
       return { id: null, success: false, error: 'Failed to create draft' };
     }
-    return { id: newIdea?.id, success: !!newIdea };
   } else {
     const { error } = await supabase
       .from('marfa_ideas')

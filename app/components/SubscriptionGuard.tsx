@@ -33,13 +33,15 @@ export default function SubscriptionGuard({ children, fallback, featureName = "Ù
                     .from('profiles')
                     .select('subscription_tier')
                     .eq('id', user.id)
-                    .single();
+                    .maybeSingle();
 
                 if (error) {
                     console.error('Error fetching subscription:', error);
                     setTier('free'); // Default to free on error
+                } else if (!profile) {
+                    setTier('free'); // No profile found, default to free
                 } else {
-                    setTier(profile?.subscription_tier || 'free');
+                    setTier(profile.subscription_tier || 'free');
                 }
             } catch (err) {
                 console.error('Subscription check failed:', err);

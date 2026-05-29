@@ -299,9 +299,9 @@ export async function processIdeaValidation(submission: IdeaSubmission): Promise
                 description: JSON.stringify(feedback)
             }])
             .select()
-            .single();
+            .maybeSingle();
 
-        if (!error) savedId = data?.id;
+        if (!error && data) savedId = data.id;
     } catch (err) {
         console.error("Supabase error:", err);
     }
@@ -330,9 +330,18 @@ export async function saveMVPBlueprint(ideaId: string, features: any[]) {
 
 export async function triggerInvestorMatch(ideaId: string) {
     const supabase = await createClient();
-    const { data: idea } = await supabase.from('marfa_ideas').select('total_score').eq('id', ideaId).single();
-    if (idea && idea.total_score > 80) {
-        return { matched: true, message: "Idea sent to matching investors" };
+    try {
+        const { data: idea, error: ideaError } = await supabase.from('marfa_ideas').select('total_score').eq('id', ideaId).maybeSingle();
+        if (ideaError) {
+            console.error('Error fetching idea for investor match:', ideaError);
+            return { matched: false, message: 'Error checking idea' };
+        }
+        if (idea && idea.total_score > 80) {
+            return { matched: true, message: "Idea sent to matching investors" };
+        }
+        return { matched: false, message: "Score too low for auto-match" };
+    } catch (err) {
+        console.error('Investor match check failed:', err);
+        return { matched: false, message: 'Error during match check' };
     }
-    return { matched: false, message: "Score too low for auto-match" };
 }

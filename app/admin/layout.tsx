@@ -23,9 +23,15 @@ export default function AdminLayoutShell({ children }: { children: React.ReactNo
   const pathname = usePathname();
 
   useEffect(() => {
+    // Skip auth check on the login page itself
+    if (pathname === '/admin/login') {
+      setLoading(false);
+      return;
+    }
+
     (async () => {
       const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (!authUser) { router.push('/admin/login'); return; }
+      if (!authUser) { router.push('/admin/login'); setLoading(false); return; }
 
       const { data: profile } = await supabase
         .from('profiles')
@@ -34,12 +40,12 @@ export default function AdminLayoutShell({ children }: { children: React.ReactNo
         .maybeSingle();
 
       const allowed = ['admin', 'super_admin'].includes(profile?.user_type || '');
-      if (!allowed) { router.push('/admin/login'); return; }
+      if (!allowed) { router.push('/admin/login'); setLoading(false); return; }
 
       setUser({ ...authUser, ...profile });
       setLoading(false);
     })();
-  }, []);
+  }, [pathname]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();

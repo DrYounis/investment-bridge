@@ -1,16 +1,18 @@
 "use client";
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Card from '../../components/ui/Card';
 import { createClient } from '../../../lib/supabase/client';
 
-export default function LoginPage() {
+function LoginForm() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const redirectTo = searchParams.get('redirect') || '/dashboard/hub';
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -88,7 +90,7 @@ export default function LoginPage() {
                         .maybeSingle();
 
                     if (investorProfile?.approval_status === 'approved') {
-                        router.push('/dashboard/hub');
+                        router.push(redirectTo);
                     } else if (investorProfile?.approval_status === 'pending') {
                         // Sign out immediately and show clear message
                         await supabase.auth.signOut();
@@ -102,11 +104,11 @@ export default function LoginPage() {
                         return;
                     } else {
                         // If no investor profile found (rare), let them in or recreate
-                        router.push('/dashboard/hub');
+                        router.push(redirectTo);
                     }
 
                 } else if (profile?.user_type === 'entrepreneur') {
-                    router.push('/dashboard/hub');
+                    router.push(redirectTo);
                 } else {
                     router.push('/');
                 }
@@ -209,5 +211,20 @@ export default function LoginPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-background flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+                    <p className="mt-4 text-foreground/60">جاري التحميل...</p>
+                </div>
+            </div>
+        }>
+            <LoginForm />
+        </Suspense>
     );
 }

@@ -8,10 +8,16 @@ export default function AuthAwareLinks() {
   const [user, setUser] = useState<boolean | null>(null)
 
   useEffect(() => {
-    const supabase = createClient()
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(!!data.user)
-    })
+    try {
+      const supabase = createClient()
+      supabase.auth.getUser().then(({ data }) => {
+        setUser(!!data.user)
+      }).catch(() => {
+        setUser(false)
+      })
+    } catch {
+      setUser(false)
+    }
   }, [])
 
   if (user) {

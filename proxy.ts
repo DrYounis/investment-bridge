@@ -104,6 +104,28 @@ async function applyRateLimit(request: NextRequest): Promise<NextResponse | null
   }
 }
 
+// ── Auth gate for free services ────────────────────────────────────
+
+function applyAuthGate(request: NextRequest): NextResponse | null {
+  const path = request.nextUrl.pathname
+
+  // Paths that require authentication (free tools that drive registration)
+  const protectedPaths = ['/marfa', '/services/pitch-deck', '/meetings']
+  if (!protectedPaths.some(p => path.startsWith(p))) return null
+
+  // Fast check: look for Supabase session cookie without calling getUser()
+  const hasSession = request.cookies.getAll().some(
+    c => c.name.startsWith('sb-') && c.name.endsWith('-auth-token')
+  )
+  if (hasSession) return null
+
+  // Redirect to login with return URL
+  const url = request.nextUrl.clone()
+  url.pathname = '/login'
+  url.searchParams.set('redirect', request.nextUrl.pathname + request.nextUrl.search)
+  return NextResponse.redirect(url)
+}
+
 // ── CSRF protection ────────────────────────────────────────────────
 
 function applyCsrfProtection(request: NextRequest): NextResponse | null {
@@ -159,15 +181,19 @@ function applySecurityHeaders(response: NextResponse): void {
 // ── Main middleware ─────────────────────────────────────────────────
 
 export default async function proxy(request: NextRequest) {
-  // 1. Rate limiting
+  // 1. Auth gate for protected paths (free services → registration funnel)
+  const authGateResponse = applyAuthGate(request)
+  if (authGateResponse) return authGateResponse
+
+  // 2. Rate limiting
   const rateLimitResponse = await applyRateLimit(request)
   if (rateLimitResponse) return rateLimitResponse
 
-  // 2. CSRF protection on state-changing methods
+  // 3. CSRF protection on state-changing methods
   const csrfResponse = applyCsrfProtection(request)
   if (csrfResponse) return csrfResponse
 
-  // 3. Session management
+  // 4. Session management
   const response = await updateSession(request)
 
   // 4. Apply security headers

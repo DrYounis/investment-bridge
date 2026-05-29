@@ -210,7 +210,7 @@ export default async function Home() {
 
                   {/* CTA */}
                   <a
-                    href="/marfa/elevator-speech.html"
+                    href="/marfa/elevator-speech"
                     className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-deep-navy to-[#1a2a4a] text-gold rounded-xl font-bold text-lg hover:from-gold hover:to-gold-dark hover:text-deep-navy transition-all duration-300 shadow-lg hover:shadow-gold/20 border border-gold/10 group"
                   >
                     <span>جرّبها الآن مجاناً</span>

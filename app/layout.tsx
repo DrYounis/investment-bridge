@@ -135,7 +135,7 @@ export default function RootLayout({
                 "@type": "WebApplication",
                 "name": "مدرب خطاب المصعد | marfa.sa",
                 "description": "أداة مجانية بالذكاء الاصطناعي لبناء وتدريب خطاب المصعد في 20 ثانية باللغة العربية",
-                "url": "https://marfa.sa/marfa/elevator-speech.html",
+                "url": "https://marfa.sa/marfa/elevator-speech",
                 "applicationCategory": "EducationalApplication",
                 "operatingSystem": "Web",
                 "inLanguage": "ar",

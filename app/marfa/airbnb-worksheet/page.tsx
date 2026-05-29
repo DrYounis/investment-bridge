@@ -1,8 +1,8 @@
 import { readFile } from 'fs/promises'
 import path from 'path'
 
-export default async function ElevatorSpeechPage() {
-  const filePath = path.join(process.cwd(), 'app', 'marfa', 'elevator-speech', 'elevator-speech.html')
+export default async function AirbnbWorksheetPage() {
+  const filePath = path.join(process.cwd(), 'app', 'marfa', 'airbnb-worksheet', 'airbnb-worksheet.html')
   const html = await readFile(filePath, 'utf-8')
 
   const bodyMatch = html.match(/<body[^>]*>([\s\S]*)<\/body>/i)

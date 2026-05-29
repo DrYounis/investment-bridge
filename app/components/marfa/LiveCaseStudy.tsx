@@ -22,7 +22,7 @@ export default function LiveCaseStudy() {
                 </div>
 
                 <a
-                    href="/marfa/airbnb-worksheet.html"
+                    href="/marfa/airbnb-worksheet"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary/90 text-white rounded-lg font-bold transition-all hover:scale-105 shadow-lg hover:shadow-xl"

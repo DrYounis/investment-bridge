@@ -18,18 +18,33 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
         setError('');
         setIsLoading(true);
 
-        const supabase = createClient();
-        const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+        try {
+            const supabase = createClient();
 
-        if (authError) {
-            let msg = authError.message;
-            if (msg.includes('Invalid login credentials')) msg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
-            setError(msg);
+            // Timeout after 15 seconds
+            const timeout = new Promise<never>((_, reject) =>
+                setTimeout(() => reject(new Error('انتهت مهلة الاتصال. تحقق من اتصالك بالإنترنت.')), 15000)
+            );
+
+            const { error: authError } = await Promise.race([
+                supabase.auth.signInWithPassword({ email, password }),
+                timeout.then(() => ({ error: null, data: { user: null } }))
+            ]);
+
+            if (authError) {
+                let msg = authError.message;
+                if (msg.includes('Invalid login credentials')) msg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+                if (msg.includes('Email not confirmed')) msg = 'لم يتم تفعيل الحساب. تحقق من بريدك الإلكتروني.';
+                setError(msg);
+                setIsLoading(false);
+                return;
+            }
+
+            window.location.href = redirectTo;
+        } catch (err: any) {
+            setError(err.message || 'فشل الاتصال بالخادم. حاول مرة أخرى.');
             setIsLoading(false);
-            return;
         }
-
-        window.location.href = redirectTo;
     };
 
     return (

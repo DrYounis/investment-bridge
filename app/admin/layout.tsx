@@ -31,7 +31,7 @@ export default function AdminLayoutShell({ children }: { children: React.ReactNo
 
     (async () => {
       const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (!authUser) { router.push('/admin/login'); setLoading(false); return; }
+      if (!authUser) { router.push('/login'); setLoading(false); return; }
 
       const { data: profile } = await supabase
         .from('profiles')
@@ -40,7 +40,7 @@ export default function AdminLayoutShell({ children }: { children: React.ReactNo
         .maybeSingle();
 
       const allowed = ['admin', 'super_admin'].includes(profile?.user_type || '');
-      if (!allowed) { router.push('/admin/login'); setLoading(false); return; }
+      if (!allowed) { router.push('/login'); setLoading(false); return; }
 
       setUser({ ...authUser, ...profile });
       setLoading(false);
@@ -49,7 +49,7 @@ export default function AdminLayoutShell({ children }: { children: React.ReactNo
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    router.push('/admin/login');
+    router.push('/login');
   };
 
   if (loading) {

@@ -2,14 +2,12 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Card from '../../components/ui/Card';
 import { createClient } from '../../../lib/supabase/client';
 
 export function LoginForm({ redirectTo }: { redirectTo: string }) {
-    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +29,7 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
             return;
         }
 
-        router.push(redirectTo);
+        window.location.href = redirectTo;
     };
 
     return (

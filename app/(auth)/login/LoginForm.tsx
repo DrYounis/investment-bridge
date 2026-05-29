@@ -106,6 +106,8 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
 
                 } else if (profile?.user_type === 'entrepreneur') {
                     router.push(redirectTo);
+                } else if (profile?.user_type === 'admin') {
+                    router.push('/admin');
                 } else {
                     router.push('/');
                 }

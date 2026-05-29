@@ -31,7 +31,7 @@ export default function AdminLayoutShell({ children }: { children: React.ReactNo
         .from('profiles')
         .select('user_type, full_name')
         .eq('id', authUser.id)
-        .single();
+        .maybeSingle();
 
       const allowed = ['admin', 'super_admin'].includes(profile?.user_type || '');
       if (!allowed) { router.push('/admin/login'); return; }

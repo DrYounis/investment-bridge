@@ -35,11 +35,13 @@ export default function AdminLoginPage() {
                     .from('profiles')
                     .select('user_type')
                     .eq('id', user.id)
-                    .single();
+                    .maybeSingle();
 
-                if (profile?.user_type !== 'admin') {
+                if (!profile || profile.user_type !== 'admin') {
                     await supabase.auth.signOut();
-                    throw new Error('غير مصرح لك بالدخول لهذه اللوحة.');
+                    setError('غير مصرح لك بالدخول لهذه اللوحة. للمسؤولين فقط.');
+                    setIsLoading(false);
+                    return;
                 }
 
                 router.push('/admin');

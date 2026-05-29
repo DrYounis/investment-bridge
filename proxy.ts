@@ -121,7 +121,7 @@ function applyCsrfProtection(request: NextRequest): NextResponse | null {
 
   // Skip CSRF for public API endpoints that don't have a browser session
   const path = request.nextUrl.pathname
-  const csrfExemptPaths = ['/api/cron', '/api/health', '/api/scrape']
+  const csrfExemptPaths = ['/api/cron', '/api/health', '/api/scrape', '/api/claude']
   if (csrfExemptPaths.some(p => path.startsWith(p))) return null
 
   if (!verifyCsrfToken(request)) {

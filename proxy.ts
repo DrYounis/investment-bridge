@@ -110,7 +110,7 @@ function applyAuthGate(request: NextRequest): NextResponse | null {
   const path = request.nextUrl.pathname
 
   // Paths that require authentication (free tools that drive registration)
-  const protectedPaths = ['/marfa', '/services/pitch-deck', '/meetings']
+  const protectedPaths = ['/marfa', '/services/pitch-deck', '/meetings', '/advisor']
   if (!protectedPaths.some(p => path.startsWith(p))) return null
 
   // Fast check: look for Supabase session cookie without calling getUser()

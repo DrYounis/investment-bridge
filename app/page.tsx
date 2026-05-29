@@ -224,6 +224,79 @@ export default async function Home() {
           </div>
         </div>
 
+        {/* Featured Free Tool: Marfa 360° Advisor */}
+        <div className="max-w-6xl mx-auto w-full mb-24 animate-fade-in-up">
+          <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-gray-900 border border-gold/10 shadow-xl">
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-[0.03]">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full border-[60px] border-deep-navy"></div>
+            </div>
+            <div className="relative z-10 p-8 md:p-12">
+              <div className="flex flex-col lg:flex-row items-center gap-10">
+                {/* Left: Visual */}
+                <div className="shrink-0">
+                  <div className="relative w-48 h-48 md:w-56 md:h-56">
+                    <svg className="w-full h-full" viewBox="0 0 120 120">
+                      {[0, 60, 120, 180, 240, 300].map((angle, i) => {
+                        const col = ['#c9a84c','#5dcaa5','#8777dd','#d85a30','#378add','#63992e'][i]
+                        const start = (angle - 90) * Math.PI / 180
+                        const end = (angle - 30) * Math.PI / 180
+                        const r = 54, cx = 60, cy = 60
+                        return (
+                          <path
+                            key={i}
+                            d={`M${cx},${cy} L${cx + r * Math.cos(start)},${cy + r * Math.sin(start)} A${r},${r} 0 0,1 ${cx + r * Math.cos(end)},${cy + r * Math.sin(end)} Z`}
+                            fill={col}
+                            opacity="0.6"
+                            stroke="#f0f0ec" strokeWidth="0.5"
+                          />
+                        )
+                      })}
+                      <circle cx="60" cy="60" r="22" fill="white" stroke="#c9a84c" strokeWidth="1.5" />
+                      <text x="60" y="57" textAnchor="middle" fill="#c9a84c" fontSize="10" fontWeight="900">360°</text>
+                      <text x="60" y="69" textAnchor="middle" fill="#666" fontSize="6">مستشار</text>
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Right: Content */}
+                <div className="flex-1 text-right">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gold/10 border border-gold/20 text-gold-dark rounded-full text-sm font-bold mb-4">
+                    🧠 <span className="uppercase tracking-widest">مجاني — Free</span>
+                  </div>
+                  <h3 className="text-3xl md:text-4xl font-black text-deep-navy dark:text-white mb-4 leading-tight">
+                    Marfa 360°
+                    <span className="text-gold-dark"> مستشار استراتيجي</span>
+                  </h3>
+                  <p className="text-deep-navy/70 dark:text-gray-300 text-lg mb-4 max-w-xl leading-relaxed">
+                    حلّل فكرة مشروعك من 6 زوايا استراتيجية. نموذج عمل تجاري احترافي + خطة تسويقية كاملة بالذكاء الاصطناعي — خلال دقائق.
+                  </p>
+                  <div className="flex flex-wrap gap-3 mb-6">
+                    {[
+                      { icon: '🔍', text: 'تحليل ٣٦٠° لفكرتك' },
+                      { icon: '📋', text: 'نموذج العمل التجاري' },
+                      { icon: '📈', text: 'خطة تسويقية متكاملة' },
+                      { icon: '💾', text: 'حفظ التحليل في ملفك' },
+                    ].map((f, i) => (
+                      <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-cream dark:bg-gray-800 rounded-lg text-sm font-medium text-deep-navy/80 dark:text-gray-200 border border-gold/5">
+                        {f.icon} {f.text}
+                      </span>
+                    ))}
+                  </div>
+                  <a
+                    href="/advisor"
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-deep-navy to-[#1a2a4a] text-gold rounded-xl font-bold text-lg hover:from-gold hover:to-gold-dark hover:text-deep-navy transition-all duration-300 shadow-lg hover:shadow-gold/20 border border-gold/10 group"
+                  >
+                    <span>جرّب المستشار الآن</span>
+                    <svg className="w-5 h-5 transition-transform group-hover:-translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Featured Service: Pitch Deck */}
         <div className="max-w-6xl mx-auto w-full mb-24 animate-fade-in-up">
           <div className="text-center mb-10">

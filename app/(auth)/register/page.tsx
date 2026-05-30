@@ -1,16 +1,24 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
 import Card from '../../components/ui/Card'
 import OtpVerification from '../../components/ui/OtpVerification'
 import { createClient } from '../../../lib/supabase/client'
 
-export default function RegisterPage() {
-    const [step, setStep] = useState<'role' | 'form' | 'otp'>('role')
-    const [role, setRole] = useState<'investor' | 'entrepreneur' | null>(null)
+function RegisterForm() {
+    const searchParams = useSearchParams()
+    const preselectedType = searchParams.get('type') as 'investor' | 'entrepreneur' | null
+
+    const [step, setStep] = useState<'role' | 'form' | 'otp'>(
+        preselectedType === 'investor' || preselectedType === 'entrepreneur' ? 'form' : 'role'
+    )
+    const [role, setRole] = useState<'investor' | 'entrepreneur' | null>(
+        preselectedType === 'investor' || preselectedType === 'entrepreneur' ? preselectedType : null
+    )
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
@@ -151,5 +159,13 @@ export default function RegisterPage() {
                 </Card>
             </div>
         </div>
+    )
+}
+
+export default function RegisterPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><p>Loading...</p></div>}>
+            <RegisterForm />
+        </Suspense>
     )
 }

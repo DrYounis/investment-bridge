@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import ShipHero from './components/ShipHero';
+import AuthAwarePathway from './components/AuthAwarePathway';
+import AuthAwareLinks from './components/AuthAwareLinks';
 
 export default async function Home() {
   return (
@@ -59,89 +61,31 @@ export default async function Home() {
             الجسر الذكي بين رأس المال الجريء والأفكار التي تُغيّر المشهد الاستثماري في المنطقة.
           </p>
 
-          {/* Action Buttons — server-rendered, always clickable */}
-          <div className="relative flex flex-col sm:flex-row justify-center items-center gap-6 mt-12" style={{ zIndex: 10 }}>
-            <Link
-              href="/login"
-              className="relative px-10 py-5 bg-deep-navy text-gold text-lg font-black rounded-2xl hover:bg-primary-dark hover:scale-105 hover:shadow-2xl hover:shadow-gold/20 transition-all duration-300 border border-gold/30"
-              style={{ pointerEvents: 'auto' }}
-            >
-              تسجيل الدخول
-            </Link>
-            <Link
-              href="/register"
-              className="relative px-10 py-5 bg-transparent text-white border-2 border-gold/50 text-lg font-black rounded-2xl hover:bg-gold/5 hover:scale-105 hover:shadow-xl transition-all duration-300"
-              style={{ pointerEvents: 'auto' }}
-            >
-              إنشاء حساب
-            </Link>
-          </div>
+          {/* Action Buttons — auth-aware */}
+          <AuthAwareLinks />
         </div>
 
         {/* The Two Pathways - Enhanced Design */}
         <div className="grid md:grid-cols-2 gap-8 w-full max-w-6xl mx-auto mb-24">
 
-          {/* Pathway 1: Entrepreneur */}
-          <Link href="/marfa" className="group relative overflow-hidden rounded-3xl h-[480px] shadow-xl hover:shadow-2xl transition-all duration-500 bg-white dark:bg-gray-900 border border-gold/10">
-            {/* Gradient Overlay on Hover */}
-            <div className="absolute inset-0 bg-gradient-to-br from-gold/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-            {/* Floating Decorative Elements */}
-            <div className="absolute top-8 right-8 w-20 h-20 bg-gold/5 rounded-2xl rotate-12 group-hover:rotate-45 transition-transform duration-700"></div>
-            <div className="absolute bottom-12 left-8 w-16 h-16 bg-gold/5 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
-
-            <div className="relative z-10 p-10 h-full flex flex-col justify-between">
-              <div>
-                <div className="w-16 h-16 bg-gradient-to-br from-gold to-gold-dark text-deep-navy rounded-2xl flex items-center justify-center text-3xl mb-6 shadow-lg shadow-gold/20 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                  💡
-                </div>
-                <h2 className="text-4xl font-bold text-deep-navy dark:text-white mb-4 font-luxury">لدي فكرة مشروع</h2>
-                <p className="text-deep-navy/80 dark:text-white/80 text-lg leading-relaxed">
-                  هل تبحث عن تمويل؟ أو تريد التأكد من جدوى فكرتك؟
-                  <br />
-                  <span className="text-gold-dark font-bold">ابدأ رحلتك هنا لتحويل الفكرة إلى شركة ناشئة</span>
-                </p>
-              </div>
-
-              <div className="flex items-center gap-3 px-6 py-4 bg-gold/5 text-deep-navy dark:text-white rounded-xl font-bold group-hover:bg-deep-navy group-hover:text-gold dark:group-hover:bg-gold dark:group-hover:text-deep-navy transition-all duration-300 shadow-sm border border-gold/10">
-                <span>دخول رواد الأعمال</span>
-                <svg className="w-5 h-5 transition-transform group-hover:-translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </div>
-            </div>
-          </Link>
+          <AuthAwarePathway
+            role="entrepreneur"
+            label="لدي فكرة مشروع"
+            subLabel="هل تبحث عن تمويل؟ أو تريد التأكد من جدوى فكرتك؟ ابدأ رحلتك هنا لتحويل الفكرة إلى شركة ناشئة"
+            icon="💡"
+            protectedHref="/marfa"
+            variant="light"
+          />
 
           {/* Pathway 2: Investor */}
-          <Link href="/dashboard/investor" className="group relative overflow-hidden rounded-3xl h-[480px] shadow-xl hover:shadow-2xl transition-all duration-500 bg-deep-navy border border-gold/20">
-            {/* Gradient Overlay on Hover */}
-            <div className="absolute inset-0 bg-gradient-to-br from-gold/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-            {/* Floating Decorative Elements */}
-            <div className="absolute top-8 left-8 w-20 h-20 bg-white/5 rounded-2xl -rotate-12 group-hover:-rotate-45 transition-transform duration-700"></div>
-            <div className="absolute bottom-12 right-8 w-16 h-16 bg-gold/10 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
-
-            <div className="relative z-10 p-10 h-full flex flex-col justify-between">
-              <div>
-                <div className="w-16 h-16 bg-gradient-to-br from-gold to-gold-dark text-deep-navy rounded-2xl flex items-center justify-center text-3xl mb-6 shadow-lg shadow-gold/20 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                  📈
-                </div>
-                <h2 className="text-4xl font-bold text-luxury-gold mb-4 font-luxury">أنا مستثمر</h2>
-                <p className="text-gold-light/90 text-lg leading-relaxed">
-                  اكتشف فرصاً استثمارية مدروسة ومفلترة بعناية
-                  <br />
-                  <span className="text-gold font-bold">لوحة تحكم ذكية لعرض العائد وتحليل المخاطر</span>
-                </p>
-              </div>
-
-              <div className="flex items-center gap-3 px-6 py-4 bg-white/5 text-gold rounded-xl font-bold group-hover:bg-gold group-hover:text-deep-navy transition-all duration-300 shadow-sm border border-gold/20">
-                <span>دخول المستثمرين</span>
-                <svg className="w-5 h-5 transition-transform group-hover:-translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </div>
-            </div>
-          </Link>
+          <AuthAwarePathway
+            role="investor"
+            label="أنا مستثمر"
+            subLabel="اكتشف فرصاً استثمارية مدروسة ومفلترة بعناية. لوحة تحكم ذكية لعرض العائد وتحليل المخاطر"
+            icon="📈"
+            protectedHref="/dashboard/investor"
+            variant="dark"
+          />
         </div>
 
         {/* Elevator Speech Trainer — 20-Second Challenge */}

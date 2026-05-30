@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import DashboardHome from '@/app/components/dashboard/DashboardHome';
 import { NewsProvider } from '@/app/context/NewsContext';
 import { createClient } from '@/lib/supabase/client';
@@ -47,7 +48,7 @@ export default function HubPage() {
       <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center" dir="rtl">
         <div className="text-center">
           <p className="text-[#8a9bb8] mb-4">يجب تسجيل الدخول للوصول إلى لوحة التحكم</p>
-          <a href="/login" className="text-[#c9a84c] font-bold hover:underline">تسجيل الدخول</a>
+          <Link href="/login" className="text-[#c9a84c] font-bold hover:underline">تسجيل الدخول</Link>
         </div>
       </div>
     );

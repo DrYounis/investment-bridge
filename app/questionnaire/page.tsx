@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import AttractionMeter from '../components/AttractionMeter';
@@ -23,6 +24,7 @@ interface Advice {
 }
 
 export default function QuestionnairePage() {
+    const router = useRouter();
     const [userType, setUserType] = useState<UserType>(null);
     const [selectedSector, setSelectedSector] = useState<string | null>(null);
     const [currentStep, setCurrentStep] = useState(0);
@@ -225,7 +227,7 @@ export default function QuestionnairePage() {
 
         setTimeout(() => {
             setIsSubmitting(false);
-            window.location.href = '/register';
+            router.push('/register');
         }, 1500);
     };
 

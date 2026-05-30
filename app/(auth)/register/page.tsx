@@ -1,15 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
 import Card from '../../components/ui/Card'
 import { createClient } from '../../../lib/supabase/client'
 
 export default function RegisterPage() {
-    const router = useRouter()
     const [role, setRole] = useState<'investor' | 'entrepreneur' | null>(null)
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
@@ -20,13 +18,6 @@ export default function RegisterPage() {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
-
-    useEffect(() => {
-        try {
-            const stored = localStorage.getItem('userType')
-            if (stored === 'investor' || stored === 'entrepreneur') setRole(stored)
-        } catch {}
-    }, [])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -48,7 +39,7 @@ export default function RegisterPage() {
             localStorage.removeItem('questionnaireCompleted')
             localStorage.removeItem('userType')
             setSuccess(role === 'investor' ? '✅ تم التسجيل بنجاح! حسابك قيد المراجعة.' : '✅ تم التسجيل! مرحباً بك في مرفأ.')
-            setTimeout(() => router.push('/login'), 3000)
+            setTimeout(() => { window.location.href = '/login' }, 3000)
         } catch {
             setError('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
         }
@@ -60,10 +51,10 @@ export default function RegisterPage() {
             <div className="w-full max-w-md">
                 <h2 className="text-2xl font-bold text-center mb-2">اختر نوع الحساب</h2>
                 <p className="text-center text-foreground/60 text-sm mb-8">ابدأ رحلتك في مجتمع مرفأ الاستثماري</p>
-                <button onClick={() => setRole('investor')} className="w-full p-6 bg-white border-2 border-slate-100 rounded-2xl flex items-center gap-4 hover:border-blue-500 mb-4 text-right shadow-sm">
+                <button type="button" onClick={() => setRole('investor')} className="w-full p-6 bg-white border-2 border-slate-100 rounded-2xl flex items-center gap-4 hover:border-blue-500 mb-4 text-right shadow-sm">
                     <span className="text-3xl">💰</span><div><h3 className="font-bold text-lg">أنا مستثمر</h3><p className="text-xs text-slate-500">أبحث عن فرص واعدة</p></div>
                 </button>
-                <button onClick={() => setRole('entrepreneur')} className="w-full p-6 bg-white border-2 border-slate-100 rounded-2xl flex items-center gap-4 hover:border-teal-500 text-right shadow-sm">
+                <button type="button" onClick={() => setRole('entrepreneur')} className="w-full p-6 bg-white border-2 border-slate-100 rounded-2xl flex items-center gap-4 hover:border-teal-500 text-right shadow-sm">
                     <span className="text-3xl">💡</span><div><h3 className="font-bold text-lg">لدي فكرة مشروع</h3><p className="text-xs text-slate-500">أبحث عن تمويل وشراكات</p></div>
                 </button>
                 <p className="text-center mt-6"><Link href="/login" className="text-sm text-blue-600 hover:underline">لديك حساب بالفعل؟ تسجيل الدخول</Link></p>

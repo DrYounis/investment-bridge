@@ -5,7 +5,6 @@ import Link from 'next/link'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
 import Card from '../../components/ui/Card'
-import { createClient } from '../../../lib/supabase/client'
 
 export default function RegisterPage() {
     const [role, setRole] = useState<'investor' | 'entrepreneur' | null>(null)
@@ -28,12 +27,22 @@ export default function RegisterPage() {
 
         setIsLoading(true)
         try {
-            const supabase = createClient()
-            const { error: authError } = await supabase.auth.signUp({
-                email, password,
-                options: { data: { full_name: fullName, user_type: role, role, phone, commercial_register: role === 'investor' ? commercialRegister || null : undefined } }
+            const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+            const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+            const res = await fetch(`${url}/auth/v1/signup`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', apikey: key! },
+                body: JSON.stringify({
+                    email, password,
+                    data: { full_name: fullName, user_type: role, role, phone, commercial_register: role === 'investor' ? commercialRegister || null : undefined }
+                }),
             })
-            if (authError) { setError(authError.message); setIsLoading(false); return }
+            const data = await res.json()
+            if (!res.ok || data.error) {
+                setError(data.msg || data.error || 'Unknown error')
+                setIsLoading(false)
+                return
+            }
 
             localStorage.removeItem('investmentAnswers')
             localStorage.removeItem('questionnaireCompleted')

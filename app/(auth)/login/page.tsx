@@ -18,15 +18,24 @@ export default function LoginPage() {
         setError('')
         setIsLoading(true)
         try {
-            const supabase = createClient()
-            const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
-            if (authError) {
-                setError(authError.message.includes('Invalid') ? 'بريد إلكتروني أو كلمة مرور غير صحيحة' : authError.message)
+            const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+            const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+            const res = await fetch(`${url}/auth/v1/token?grant_type=password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', apikey: key! },
+                body: JSON.stringify({ email, password }),
+            })
+            const data = await res.json()
+            if (!res.ok || data.error || !data.access_token) {
+                const msg = data.msg || data.error_description || 'Login failed'
+                setError(msg.includes('Invalid') ? 'بريد إلكتروني أو كلمة مرور غير صحيحة' : msg)
                 setIsLoading(false)
                 return
             }
+            const supabase = createClient()
+            await supabase.auth.setSession({ access_token: data.access_token, refresh_token: data.refresh_token })
             window.location.href = '/dashboard/hub'
-        } catch {
+        } catch (err) {
             setError('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
             setIsLoading(false)
         }

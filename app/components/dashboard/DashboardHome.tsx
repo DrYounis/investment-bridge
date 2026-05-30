@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import AdminNewsManager from './AdminNewsManager';
 import { createClient } from '@/lib/supabase/client';
+import { logger } from '@/lib/logger';
 
 interface User {
     id: string;
@@ -233,7 +234,7 @@ const DashboardHome = ({ user }: DashboardProps) => {
                     meetings: meetingsCount.count || 0
                 });
             } catch (err) {
-                console.error("Failed to fetch dashboard stats", err);
+                logger.error("Failed to fetch dashboard stats", err);
             } finally {
                 setLoading(false);
             }

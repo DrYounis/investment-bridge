@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { logger } from '@/lib/logger';
 
 // --- Advanced Marfa Scoring Algorithm Types ---
 
@@ -303,7 +304,7 @@ export async function processIdeaValidation(submission: IdeaSubmission): Promise
 
         if (!error && data) savedId = data.id;
     } catch (err) {
-        console.error("Supabase error:", err);
+        logger.error("Supabase error:", err);
     }
 
     return {
@@ -333,7 +334,7 @@ export async function triggerInvestorMatch(ideaId: string) {
     try {
         const { data: idea, error: ideaError } = await supabase.from('marfa_ideas').select('total_score').eq('id', ideaId).maybeSingle();
         if (ideaError) {
-            console.error('Error fetching idea for investor match:', ideaError);
+            logger.error('Error fetching idea for investor match:', ideaError);
             return { matched: false, message: 'Error checking idea' };
         }
         if (idea && idea.total_score > 80) {
@@ -341,7 +342,7 @@ export async function triggerInvestorMatch(ideaId: string) {
         }
         return { matched: false, message: "Score too low for auto-match" };
     } catch (err) {
-        console.error('Investor match check failed:', err);
+        logger.error('Investor match check failed:', err);
         return { matched: false, message: 'Error during match check' };
     }
 }

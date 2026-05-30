@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { StravaService } from '@/lib/services/strava-service';
+import { logger } from '@/lib/logger';
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
@@ -52,7 +53,7 @@ export async function GET(request: NextRequest) {
             });
 
         if (dbError) {
-            console.error('Database error:', dbError);
+            logger.error('Database error:', dbError);
             return NextResponse.redirect(
                 new URL('/csr/technical-reports?error=db_error', request.url)
             );
@@ -63,7 +64,7 @@ export async function GET(request: NextRequest) {
             new URL('/csr/technical-reports?success=connected', request.url)
         );
     } catch (error) {
-        console.error('Strava callback error:', error);
+        logger.error('Strava callback error:', error);
         return NextResponse.redirect(
             new URL('/csr/technical-reports?error=server_error', request.url)
         );

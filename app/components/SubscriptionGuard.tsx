@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '../../lib/supabase/client';
+import { logger } from '@/lib/logger';
 import Link from 'next/link';
 
 interface SubscriptionGuardProps {
@@ -36,7 +37,7 @@ export default function SubscriptionGuard({ children, fallback, featureName = "Ù
                     .maybeSingle();
 
                 if (error) {
-                    console.error('Error fetching subscription:', error);
+                    logger.error('Error fetching subscription:', error);
                     setTier('free'); // Default to free on error
                 } else if (!profile) {
                     setTier('free'); // No profile found, default to free
@@ -44,7 +45,7 @@ export default function SubscriptionGuard({ children, fallback, featureName = "Ù
                     setTier(profile.subscription_tier || 'free');
                 }
             } catch (err) {
-                console.error('Subscription check failed:', err);
+                logger.error('Subscription check failed:', err);
                 setTier('free');
             } finally {
                 setLoading(false);

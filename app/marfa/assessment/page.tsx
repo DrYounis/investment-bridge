@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase/browser';
+import { logger } from '@/lib/logger';
 
 // ─── Data ───────────────────────────────────────────────────
 const SWOT_STEPS = [
@@ -207,7 +208,7 @@ export default function AssessmentPage() {
       setSaving(false);
       transition(() => setPhase('result'));
     } catch (err: any) {
-      console.error('Save error:', err);
+      logger.error('Save error:', err);
       setSaveError('حدث خطأ أثناء الحفظ. تحقق من اتصالك وحاول مجدداً.');
       setSaving(false);
     }

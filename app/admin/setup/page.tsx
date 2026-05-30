@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createClient } from '../../../lib/supabase/client';
+import { logger } from '@/lib/logger';
 import { useRouter } from 'next/navigation';
 import Card from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
@@ -39,7 +40,7 @@ export default function AdminSetupPage() {
                 setCanSetup(true);
             }
         } catch (err) {
-            console.error(err);
+            logger.error('Auth check failed:', err);
         } finally {
             setIsChecking(false);
         }
@@ -79,7 +80,7 @@ export default function AdminSetupPage() {
                     .eq('id', user.id);
 
                 if (updateError) {
-                    console.error("Failed to set admin role:", updateError);
+                    logger.error("Failed to set admin role:", updateError);
                     // Fallback: Try insert if profile not created
                     await supabase.from('profiles').insert({
                         id: user.id,

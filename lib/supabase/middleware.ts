@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
     // Skip Supabase entirely for public pages
-    const publicPaths = ['/login', '/auth', '/', '/marfa', '/meetings', '/financial-news', '/argaam-news', '/api/scrape', '/api/cron', '/api/health']
+    const publicPaths = ['/login', '/register', '/auth', '/api/auth', '/api/erasure', '/', '/marfa', '/meetings', '/financial-news', '/argaam-news', '/api/scrape', '/api/cron', '/api/health']
     const isPublicPath = publicPaths.some(p => request.nextUrl.pathname === p || request.nextUrl.pathname.startsWith(p + '/'))
 
     if (isPublicPath) {

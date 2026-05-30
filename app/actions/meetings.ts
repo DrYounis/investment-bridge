@@ -2,8 +2,11 @@
 
 import { Resend } from 'resend';
 import { createClient } from '@/lib/supabase/server';
+import { logger } from '@/lib/logger';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend(): Resend {
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 export async function scheduleMeeting(formData: FormData) {
     const name = formData.get('name') as string;
@@ -29,12 +32,12 @@ export async function scheduleMeeting(formData: FormData) {
             });
 
         if (dbError) {
-            console.error('Database insert error:', dbError);
+            logger.error('Database insert error:', dbError);
             return { success: false, error: 'فشل حفظ الطلب. يرجى المحاولة مرة أخرى.' };
         }
 
         // 2. Send email notification via Resend
-        const { error: emailError } = await resend.emails.send({
+        const { error: emailError } = await getResend().emails.send({
             from: 'Marfa.sa Meetings <onboarding@resend.dev>',
             to: adminEmail,
             subject: `طلب اجتماع مستثمر جديد: ${name}`,
@@ -58,13 +61,13 @@ export async function scheduleMeeting(formData: FormData) {
         });
 
         if (emailError) {
-            console.error('Email send error:', emailError);
+            logger.error('Email send error:', emailError);
             // Request is already saved in DB, so still return success
         }
 
         return { success: true };
     } catch (err) {
-        console.error('scheduleMeeting error:', err);
+        logger.error('scheduleMeeting error:', err);
         return { success: false, error: 'حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.' };
     }
 }

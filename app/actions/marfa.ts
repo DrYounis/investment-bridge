@@ -2,6 +2,7 @@
 
 import { processIdeaValidation, saveMVPBlueprint, triggerInvestorMatch } from '../lib/logic-engine';
 import { createClient } from '@/lib/supabase/server';
+import { logger } from '@/lib/logger';
 
 /**
  * Submit idea for validation and scoring
@@ -48,7 +49,7 @@ export async function saveDraft(id: string | null, data: DraftData) {
       }
       return { id: newIdea?.id ?? null, success: !!newIdea };
     } catch (err) {
-      console.error('Error saving draft:', err);
+      logger.error('Error saving draft:', err);
       return { id: null, success: false, error: 'Failed to create draft' };
     }
   } else {

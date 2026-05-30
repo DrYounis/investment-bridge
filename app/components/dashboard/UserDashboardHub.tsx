@@ -18,11 +18,12 @@ import SmartNewsTicker from './SmartNewsTicker';
 import AdminNewsManager from './AdminNewsManager';
 import { NewsProvider, useNews } from '../../context/NewsContext';
 import { createClient } from '@/lib/supabase/client';
+import { logger } from '@/lib/logger';
 
 // Notification Logic
 const requestNotificationPermission = async () => {
     if (typeof window !== 'undefined' && !("Notification" in window)) {
-        console.warn("هذا المتصفح لا يدعم الإشعارات");
+        logger.warn("هذا المتصفح لا يدعم الإشعارات");
         return false;
     }
 
@@ -36,7 +37,7 @@ const requestNotificationPermission = async () => {
             return true;
         }
     } catch (error) {
-        console.error("حدث خطأ أثناء طلب الإذن:", error);
+        logger.error("حدث خطأ أثناء طلب الإذن:", error);
     }
     return false;
 };
@@ -87,7 +88,7 @@ const DashboardContent = () => {
 
             setIsEditing(false);
         } catch (error) {
-            console.error('Failed to update profile', error);
+            logger.error('Failed to update profile', error);
             alert('حدث خطأ أثناء حفظ التغييرات. يرجى المحاولة مرة أخرى.');
         } finally {
             setSaving(false);
@@ -108,7 +109,7 @@ const DashboardContent = () => {
                     .maybeSingle();
 
                 if (profileError) {
-                    console.error('Error fetching profile:', profileError);
+                    logger.error('Error fetching profile:', profileError);
                 }
 
                 if (profile) {

@@ -1,11 +1,11 @@
-import { createBrowserClient } from '@supabase/ssr';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { getSupabaseUrl, getSupabaseAnonKey } from './config';
 
 /**
  * Create a Supabase browser client for Client Components.
- * NEXT_PUBLIC_ vars are inlined at build time for the browser bundle,
- * but we still use the config getters for consistency and validation.
+ * Uses the standard @supabase/supabase-js client (localStorage-based)
+ * instead of @supabase/ssr to avoid cookie/SSR issues in browser contexts.
  */
 export function createClient() {
-  return createBrowserClient(getSupabaseUrl(), getSupabaseAnonKey());
+  return createSupabaseClient(getSupabaseUrl(), getSupabaseAnonKey());
 }

@@ -69,7 +69,6 @@ export default async function Home() {
         <div className="grid md:grid-cols-2 gap-8 w-full max-w-6xl mx-auto mb-24">
 
           <AuthAwarePathway
-            role="entrepreneur"
             label="لدي فكرة مشروع"
             subLabel="هل تبحث عن تمويل؟ أو تريد التأكد من جدوى فكرتك؟ ابدأ رحلتك هنا لتحويل الفكرة إلى شركة ناشئة"
             icon="💡"
@@ -79,7 +78,6 @@ export default async function Home() {
 
           {/* Pathway 2: Investor */}
           <AuthAwarePathway
-            role="investor"
             label="أنا مستثمر"
             subLabel="اكتشف فرصاً استثمارية مدروسة ومفلترة بعناية. لوحة تحكم ذكية لعرض العائد وتحليل المخاطر"
             icon="📈"

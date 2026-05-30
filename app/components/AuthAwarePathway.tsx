@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
 interface AuthAwarePathwayProps {
-    role: 'investor' | 'entrepreneur'
     label: string
     subLabel: string
     icon: string
@@ -14,7 +13,6 @@ interface AuthAwarePathwayProps {
 }
 
 export default function AuthAwarePathway({
-    role,
     label,
     subLabel,
     icon,
@@ -32,7 +30,7 @@ export default function AuthAwarePathway({
         })
     }, [])
 
-    const href = isLoggedIn ? protectedHref : `/register?type=${role}`
+    const href = isLoggedIn ? protectedHref : '/register'
 
     if (variant === 'dark') {
         return (
@@ -49,7 +47,7 @@ export default function AuthAwarePathway({
                         <p className="text-gold-light/90 text-lg leading-relaxed">{subLabel}</p>
                     </div>
                     <div className="flex items-center gap-3 px-6 py-4 bg-white/5 text-gold rounded-xl font-bold group-hover:bg-gold group-hover:text-deep-navy transition-all duration-300 shadow-sm border border-gold/20">
-                        <span>{isLoggedIn ? 'دخول المستثمرين' : 'سجل كمستثمر'}</span>
+                        <span>{isLoggedIn ? 'دخول المستثمرين' : 'سجل الآن'}</span>
                         <svg className="w-5 h-5 transition-transform group-hover:-translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
@@ -73,7 +71,7 @@ export default function AuthAwarePathway({
                     <p className="text-deep-navy/80 dark:text-white/80 text-lg leading-relaxed">{subLabel}</p>
                 </div>
                 <div className="flex items-center gap-3 px-6 py-4 bg-gold/5 text-deep-navy dark:text-white rounded-xl font-bold group-hover:bg-deep-navy group-hover:text-gold dark:group-hover:bg-gold dark:group-hover:text-deep-navy transition-all duration-300 shadow-sm border border-gold/10">
-                    <span>{isLoggedIn ? 'دخول رواد الأعمال' : 'سجل كرائد أعمال'}</span>
+                    <span>{isLoggedIn ? 'دخول رواد الأعمال' : 'سجل الآن'}</span>
                     <svg className="w-5 h-5 transition-transform group-hover:-translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                     </svg>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import Button from './Button'
 import Input from './Input'
 
@@ -24,12 +25,13 @@ export default function OtpVerification({
     successMsg,
 }: OtpVerificationProps) {
     const [otp, setOtp] = useState('')
-    const [countdown, setCountdown] = useState(600) // 10 minutes in seconds
+    const [countdown, setCountdown] = useState(600)
     const [resendCooldown, setResendCooldown] = useState(0)
     const [resending, setResending] = useState(false)
+    const [shake, setShake] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null)
+    const submittingRef = useRef(false)
 
-    // Auto-focus input on mount
     useEffect(() => {
         inputRef.current?.focus()
     }, [])
@@ -37,28 +39,46 @@ export default function OtpVerification({
     // Countdown timer
     useEffect(() => {
         if (countdown <= 0) return
-        const timer = setInterval(() => {
-            setCountdown(c => Math.max(0, c - 1))
-        }, 1000)
+        const timer = setInterval(() => setCountdown(c => Math.max(0, c - 1)), 1000)
         return () => clearInterval(timer)
     }, [countdown])
 
     // Resend cooldown
     useEffect(() => {
         if (resendCooldown <= 0) return
-        const timer = setInterval(() => {
-            setResendCooldown(c => Math.max(0, c - 1))
-        }, 1000)
+        const timer = setInterval(() => setResendCooldown(c => Math.max(0, c - 1)), 1000)
         return () => clearInterval(timer)
     }, [resendCooldown])
+
+    // Shake on error
+    useEffect(() => {
+        if (error) {
+            setShake(true)
+            const t = setTimeout(() => setShake(false), 500)
+            return () => clearTimeout(t)
+        }
+    }, [error])
+
+    // Auto-submit when 6 digits entered
+    useEffect(() => {
+        if (otp.length === 6 && !isLoading && !submittingRef.current) {
+            submittingRef.current = true
+            const timer = setTimeout(() => {
+                onVerify(otp).finally(() => { submittingRef.current = false })
+            }, 300)
+            return () => clearTimeout(timer)
+        }
+    }, [otp, isLoading, onVerify])
 
     const handleResend = useCallback(async () => {
         if (resendCooldown > 0) return
         setResending(true)
         try {
             await onResend()
-            setCountdown(600) // reset countdown
-            setResendCooldown(60) // 60s cooldown before next resend
+            setCountdown(600)
+            setResendCooldown(60)
+            setOtp('')
+            inputRef.current?.focus()
         } catch {
             // handled by parent
         }
@@ -73,51 +93,102 @@ export default function OtpVerification({
 
     const countdownExpired = countdown <= 0
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = e.target.value.replace(/\D/g, '').slice(0, 6)
+        setOtp(val)
+    }
+
     return (
-        <form onSubmit={e => { e.preventDefault(); if (otp.length === 6) onVerify(otp) }} className="space-y-6">
+        <form
+            onSubmit={e => { e.preventDefault(); if (otp.length === 6) onVerify(otp) }}
+            className="space-y-6"
+        >
             <div>
-                <p className="text-sm text-foreground/60 mb-1">تم إرسال رمز التحقق إلى</p>
+                <p className="text-sm text-foreground/50 mb-1">تم إرسال رمز التحقق إلى</p>
                 <p className="font-bold text-foreground mb-2">{email}</p>
                 {!countdownExpired && (
-                    <p className="text-xs text-foreground/40">
-                        ⏱ تنتهي صلاحية الرمز خلال <span className="font-mono text-foreground/60">{formatTime(countdown)}</span>
+                    <p className="text-xs text-foreground/40 flex items-center gap-1">
+                        <motion.span
+                            animate={{ opacity: [1, 0.3, 1] }}
+                            transition={{ repeat: Infinity, duration: 2 }}
+                        >
+                            ⏱
+                        </motion.span>
+                        تنتهي صلاحية الرمز خلال{' '}
+                        <span className="font-mono text-foreground/60 tabular-nums">{formatTime(countdown)}</span>
                     </p>
                 )}
                 {countdownExpired && (
-                    <p className="text-xs text-error">انتهت صلاحية الرمز. يرجى طلب رمز جديد.</p>
+                    <p className="text-xs text-error font-medium">انتهت صلاحية الرمز. يرجى طلب رمز جديد.</p>
                 )}
             </div>
 
-            <Input
-                ref={inputRef}
-                label="رمز التحقق"
-                type="text"
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                required
-                value={otp}
-                onChange={e => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                placeholder="000000"
-                maxLength={6}
-            />
+            <motion.div
+                animate={shake ? { x: [0, -8, 8, -8, 8, 0] } : {}}
+                transition={{ duration: 0.4 }}
+            >
+                <Input
+                    ref={inputRef}
+                    label="رمز التحقق"
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    required
+                    value={otp}
+                    onChange={handleInputChange}
+                    placeholder="000000"
+                    maxLength={6}
+                />
+            </motion.div>
 
-            {successMsg && (
-                <div className="bg-green-100 border border-green-400 text-green-700 p-3 rounded text-sm font-bold text-center">
-                    {successMsg}
-                </div>
-            )}
-            {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 p-3 rounded text-sm">
-                    {error}
-                </div>
-            )}
+            {/* OTP digit indicators */}
+            <div className="flex justify-center gap-2 dir-ltr">
+                {Array.from({ length: 6 }).map((_, i) => (
+                    <motion.div
+                        key={i}
+                        animate={{
+                            scale: i < otp.length ? [1, 1.15, 1] : 1,
+                            borderColor: i < otp.length ? '#d4af37' : '#d1d5db',
+                            backgroundColor: i < otp.length ? 'rgba(212,175,55,0.08)' : 'transparent',
+                        }}
+                        transition={{ duration: 0.2 }}
+                        className="w-10 h-12 border-2 rounded-lg flex items-center justify-center text-lg font-bold text-foreground"
+                    >
+                        {otp[i] || ''}
+                    </motion.div>
+                ))}
+            </div>
+
+            <AnimatePresence>
+                {successMsg && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        className="bg-green-50 border border-green-200 text-green-700 p-3 rounded-lg text-sm font-medium text-center"
+                    >
+                        {successMsg}
+                    </motion.div>
+                )}
+                {error && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        className="bg-red-50 border border-red-200 text-red-700 p-3 rounded-lg text-sm flex items-center gap-2"
+                    >
+                        <span>⚠️</span> {error}
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             <Button
                 type="submit"
                 fullWidth
                 size="lg"
                 isLoading={isLoading}
-                disabled={otp.length !== 6 || countdownExpired}
+                loadingText="جاري التحقق..."
+                disabled={otp.length !== 6 || countdownExpired || isLoading}
             >
                 تحقق
             </Button>
@@ -127,7 +198,11 @@ export default function OtpVerification({
                     type="button"
                     onClick={handleResend}
                     disabled={resendCooldown > 0 || resending}
-                    className={`text-sm ${resendCooldown > 0 ? 'text-foreground/30 cursor-not-allowed' : 'text-blue-600 hover:underline'}`}
+                    className={`text-sm transition-colors ${
+                        resendCooldown > 0 || resending
+                            ? 'text-foreground/25 cursor-not-allowed'
+                            : 'text-blue-600 hover:text-blue-800 font-medium'
+                    }`}
                 >
                     {resending
                         ? 'جاري الإرسال...'
@@ -136,7 +211,11 @@ export default function OtpVerification({
                             : 'إعادة إرسال الرمز'}
                 </button>
                 <br />
-                <button type="button" onClick={onBack} className="text-sm text-foreground/60 hover:text-foreground">
+                <button
+                    type="button"
+                    onClick={onBack}
+                    className="text-sm text-foreground/50 hover:text-foreground transition-colors"
+                >
                     ← تغيير البريد الإلكتروني
                 </button>
             </div>

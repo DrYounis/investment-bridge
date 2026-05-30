@@ -36,18 +36,22 @@ export default function RegisterPage() {
         if (!role) return
 
         setIsLoading(true)
-        const supabase = createClient()
-        const { error: authError } = await supabase.auth.signUp({
-            email, password,
-            options: { data: { full_name: fullName, user_type: role, role, phone, commercial_register: role === 'investor' ? commercialRegister || null : undefined } }
-        })
-        if (authError) { setError(authError.message); setIsLoading(false); return }
+        try {
+            const supabase = createClient()
+            const { error: authError } = await supabase.auth.signUp({
+                email, password,
+                options: { data: { full_name: fullName, user_type: role, role, phone, commercial_register: role === 'investor' ? commercialRegister || null : undefined } }
+            })
+            if (authError) { setError(authError.message); setIsLoading(false); return }
 
-        localStorage.removeItem('investmentAnswers')
-        localStorage.removeItem('questionnaireCompleted')
-        localStorage.removeItem('userType')
-        setSuccess(role === 'investor' ? '✅ تم التسجيل بنجاح! حسابك قيد المراجعة.' : '✅ تم التسجيل! مرحباً بك في مرفأ.')
-        setTimeout(() => router.push('/login'), 3000)
+            localStorage.removeItem('investmentAnswers')
+            localStorage.removeItem('questionnaireCompleted')
+            localStorage.removeItem('userType')
+            setSuccess(role === 'investor' ? '✅ تم التسجيل بنجاح! حسابك قيد المراجعة.' : '✅ تم التسجيل! مرحباً بك في مرفأ.')
+            setTimeout(() => router.push('/login'), 3000)
+        } catch {
+            setError('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
+        }
         setIsLoading(false)
     }
 

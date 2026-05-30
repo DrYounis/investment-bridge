@@ -17,14 +17,19 @@ export default function LoginPage() {
         e.preventDefault()
         setError('')
         setIsLoading(true)
-        const supabase = createClient()
-        const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
-        if (authError) {
-            setError(authError.message.includes('Invalid') ? 'بريد إلكتروني أو كلمة مرور غير صحيحة' : authError.message)
+        try {
+            const supabase = createClient()
+            const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
+            if (authError) {
+                setError(authError.message.includes('Invalid') ? 'بريد إلكتروني أو كلمة مرور غير صحيحة' : authError.message)
+                setIsLoading(false)
+                return
+            }
+            window.location.href = '/dashboard/hub'
+        } catch {
+            setError('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
             setIsLoading(false)
-            return
         }
-        window.location.href = '/dashboard/hub'
     }
 
     return (

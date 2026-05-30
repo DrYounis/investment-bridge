@@ -14,9 +14,9 @@ const apiRateLimiter = new RateLimiterMemory({
 })
 
 const authRateLimiter = new RateLimiterMemory({
-  points: 5,        // 5 attempts
+  points: 30,       // 30 attempts
   duration: 900,    // per 15 minutes
-  blockDuration: 900,
+  blockDuration: 300,
 })
 
 const formRateLimiter = new RateLimiterMemory({

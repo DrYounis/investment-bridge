@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import ShipHero from './components/ShipHero';
 import AuthAwarePathway from './components/AuthAwarePathway';
 import AuthAwareLinks from './components/AuthAwareLinks';

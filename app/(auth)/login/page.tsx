@@ -146,7 +146,7 @@ function LoginForm() {
                                                 initial={{ opacity: 0, y: -10 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 exit={{ opacity: 0 }}
-                                                className="bg-red-50 border border-red-200 text-red-700 p-3 rounded-lg text-sm flex items-center gap-2"
+                                                className="bg-error/10 border border-error/30 text-error p-3 rounded-lg text-sm flex items-center gap-2"
                                             >
                                                 <span>⚠️</span> {error}
                                             </motion.div>
@@ -159,7 +159,7 @@ function LoginForm() {
 
                                     <p className="text-center text-sm">
                                         <span className="text-foreground/50">ليس لديك حساب؟ </span>
-                                        <Link href="/register" className="text-blue-600 hover:underline font-medium">إنشاء حساب جديد</Link>
+                                        <Link href="/register" className="text-info hover:underline font-medium">إنشاء حساب جديد</Link>
                                     </p>
                                 </form>
                             </Card>
@@ -214,7 +214,7 @@ function LoginForm() {
                                     initial={{ scale: 0, rotate: -180 }}
                                     animate={{ scale: 1, rotate: 0 }}
                                     transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
-                                    className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center text-4xl mx-auto mb-6"
+                                    className="w-20 h-20 bg-success/15 rounded-full flex items-center justify-center text-4xl mx-auto mb-6"
                                 >
                                     ✅
                                 </motion.div>

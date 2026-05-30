@@ -148,7 +148,7 @@ export default function OtpVerification({
                         key={i}
                         animate={{
                             scale: i < otp.length ? [1, 1.15, 1] : 1,
-                            borderColor: i < otp.length ? '#d4af37' : '#d1d5db',
+                            borderColor: i < otp.length ? 'var(--gold)' : 'var(--gray-300)',
                             backgroundColor: i < otp.length ? 'rgba(212,175,55,0.08)' : 'transparent',
                         }}
                         transition={{ duration: 0.2 }}
@@ -165,7 +165,7 @@ export default function OtpVerification({
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0 }}
-                        className="bg-green-50 border border-green-200 text-green-700 p-3 rounded-lg text-sm font-medium text-center"
+                        className="bg-success/10 border border-success/30 text-success p-3 rounded-lg text-sm font-medium text-center"
                     >
                         {successMsg}
                     </motion.div>
@@ -175,7 +175,7 @@ export default function OtpVerification({
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0 }}
-                        className="bg-red-50 border border-red-200 text-red-700 p-3 rounded-lg text-sm flex items-center gap-2"
+                        className="bg-error/10 border border-error/30 text-error p-3 rounded-lg text-sm flex items-center gap-2"
                     >
                         <span>⚠️</span> {error}
                     </motion.div>
@@ -201,7 +201,7 @@ export default function OtpVerification({
                     className={`text-sm transition-colors ${
                         resendCooldown > 0 || resending
                             ? 'text-foreground/25 cursor-not-allowed'
-                            : 'text-blue-600 hover:text-blue-800 font-medium'
+                            : 'text-info hover:text-info/80 font-medium'
                     }`}
                 >
                     {resending

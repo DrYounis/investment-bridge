@@ -173,7 +173,7 @@ function RegisterForm() {
                                     />
                                     <label className="flex items-start gap-2 text-sm cursor-pointer">
                                         <input type="checkbox" required className="mt-1 accent-gold" />
-                                        <span>أوافق على <Link href="/privacy" className="text-blue-600 hover:underline">سياسة الخصوصية</Link></span>
+                                        <span>أوافق على <Link href="/privacy" className="text-info hover:underline">سياسة الخصوصية</Link></span>
                                     </label>
 
                                     <AnimatePresence>
@@ -182,7 +182,7 @@ function RegisterForm() {
                                                 initial={{ opacity: 0, y: -10 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 exit={{ opacity: 0 }}
-                                                className="bg-red-50 border border-red-200 text-red-700 p-3 rounded-lg text-sm flex items-center gap-2"
+                                                className="bg-error/10 border border-error/30 text-error p-3 rounded-lg text-sm flex items-center gap-2"
                                             >
                                                 <span>⚠️</span> {error}
                                             </motion.div>
@@ -195,7 +195,7 @@ function RegisterForm() {
 
                                     <p className="text-center text-sm">
                                         <span className="text-foreground/50">لديك حساب؟ </span>
-                                        <Link href="/login" className="text-blue-600 hover:underline font-medium">تسجيل الدخول</Link>
+                                        <Link href="/login" className="text-info hover:underline font-medium">تسجيل الدخول</Link>
                                     </p>
                                 </form>
                             </Card>
@@ -250,7 +250,7 @@ function RegisterForm() {
                                     initial={{ scale: 0, rotate: -180 }}
                                     animate={{ scale: 1, rotate: 0 }}
                                     transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
-                                    className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center text-4xl mx-auto mb-6"
+                                    className="w-20 h-20 bg-success/15 rounded-full flex items-center justify-center text-4xl mx-auto mb-6"
                                 >
                                     ✅
                                 </motion.div>

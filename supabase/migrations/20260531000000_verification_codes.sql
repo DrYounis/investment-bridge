@@ -15,6 +15,7 @@ CREATE INDEX IF NOT EXISTS idx_verification_codes_email_code
 -- Only the service role can insert/update (edge functions use service key)
 ALTER TABLE public.verification_codes ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Service role manages verification codes" ON public.verification_codes;
 CREATE POLICY "Service role manages verification codes"
   ON public.verification_codes
   FOR ALL

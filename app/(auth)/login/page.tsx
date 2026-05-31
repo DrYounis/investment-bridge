@@ -11,7 +11,7 @@ import OtpVerification from '../../components/ui/OtpVerification'
 import { createClient } from '../../../lib/supabase/client'
 
 const stepVariants = {
-    enter: { opacity: 0, x: 40 },
+    enter: { opacity: 1, x: 0 },
     center: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: -40 },
 }

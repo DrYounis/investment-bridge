@@ -50,25 +50,18 @@ Deno.serve(async (req: Request) => {
       .update({ used: true })
       .eq('id', codes[0].id);
 
-    // 3. Check if user exists
-    const { data: existingUsers, error: listError } = await supabase.auth.admin.listUsers();
-    if (listError) {
-      console.error('Failed to list users:', listError);
-      return new Response(
-        JSON.stringify({ error: 'فشل في التحقق من المستخدم' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const existingUser = existingUsers.users.find(
-      (u) => u.email?.toLowerCase() === normalizedEmail
-    );
-
+    // 3. Check if user exists via profiles table
     let userId: string;
     let isNewUser = false;
 
-    if (existingUser) {
-      userId = existingUser.id;
+    const { data: existingProfile } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('email', normalizedEmail)
+      .maybeSingle();
+
+    if (existingProfile) {
+      userId = existingProfile.id;
     } else {
       // Create new user via Admin API (no password — passwordless)
       const password = crypto.randomUUID() + crypto.randomUUID(); // random secure password
@@ -95,74 +88,21 @@ Deno.serve(async (req: Request) => {
       isNewUser = true;
     }
 
-    // 4. Generate a session for the user
-    const { data: sessionData, error: sessionError } = await supabase.auth.admin.generateLink({
-      type: 'magiclink',
-      email: normalizedEmail,
-    });
+    // 4. Set password to a known value so we can sign in
+    const sessionPassword = crypto.randomUUID();
+    await supabase.auth.admin.updateUserById(userId, { password: sessionPassword });
 
-    // Fallback: generate access token directly if magic link fails
-    // We create a sign-in by generating a session token
+    // 5. Sign in to get a session
     const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
       email: normalizedEmail,
-      password: 'temporary-placeholder',
+      password: sessionPassword,
     });
 
-    // If sign-in fails (user was just created with random password), update password and try again
-    if (signInError && existingUser) {
-      // For existing users, generate a nonce-based session
-      const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
-        type: 'magiclink',
-        email: normalizedEmail,
-      });
-
-      if (linkError || !linkData) {
-        console.error('Failed to generate session:', linkError);
-        return new Response(
-          JSON.stringify({ error: 'فشل في إنشاء جلسة. يرجى المحاولة مرة أخرى.' }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-
-      return new Response(
-        JSON.stringify({
-          success: true,
-          is_new_user: false,
-          user_id: userId,
-          access_token: linkData.properties?.access_token || '',
-          refresh_token: linkData.properties?.refresh_token || '',
-        }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
     if (signInError || !signInData.session) {
-      // For new users, update their password to a known one so they can sign in client-side
-      const tempPassword = crypto.randomUUID();
-      await supabase.auth.admin.updateUserById(userId, { password: tempPassword });
-
-      const { data: retryData, error: retryError } = await supabase.auth.signInWithPassword({
-        email: normalizedEmail,
-        password: tempPassword,
-      });
-
-      if (retryError || !retryData.session) {
-        console.error('Failed to sign in new user:', retryError);
-        return new Response(
-          JSON.stringify({ error: 'فشل في إنشاء الجلسة' }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-
+      console.error('Failed to create session:', signInError);
       return new Response(
-        JSON.stringify({
-          success: true,
-          is_new_user: true,
-          user_id: userId,
-          access_token: retryData.session.access_token,
-          refresh_token: retryData.session.refresh_token,
-        }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: 'فشل في إنشاء الجلسة' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 

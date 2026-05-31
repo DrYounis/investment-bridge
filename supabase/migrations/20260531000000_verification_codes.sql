@@ -17,5 +17,7 @@ ALTER TABLE public.verification_codes ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Service role manages verification codes"
   ON public.verification_codes
+  FOR ALL
+  TO service_role
   USING (true)
   WITH CHECK (true);

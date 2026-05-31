@@ -33,7 +33,11 @@ CREATE TABLE IF NOT EXISTS public.entrepreneur_profiles (
 
 -- 3. Create/update the trigger function
 CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
 DECLARE
   meta jsonb;
   u_role text;
@@ -59,11 +63,11 @@ BEGIN
     email = EXCLUDED.email,
     role = EXCLUDED.role;
 
-  -- Insert into sub-profile
+  -- Insert into sub-profile (auto-approve investors)
   IF u_role = 'investor' THEN
     u_commercial_register := meta->>'commercial_register';
     INSERT INTO public.investor_profiles (profile_id, commercial_register, approval_status)
-    VALUES (NEW.id, u_commercial_register, 'pending')
+    VALUES (NEW.id, u_commercial_register, 'approved')
     ON CONFLICT (profile_id) DO NOTHING;
 
   ELSIF u_role = 'entrepreneur' THEN
@@ -79,7 +83,7 @@ EXCEPTION
     RAISE WARNING 'handle_new_user error: %', SQLERRM;
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 -- 4. Attach trigger
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { User } from '@supabase/supabase-js'
 
@@ -8,8 +9,6 @@ import type { User } from '@supabase/supabase-js'
 
 type Stage = 0 | 1 | 2 | 3 | 4
 type Phase = '💡 فكرة فقط' | '🌱 بداية وتنفيذ' | '🚀 نمو وتوسع' | '🔄 إعادة توجيه'
-type AuthTab = 'login' | 'signup'
-
 interface AngleResult { angle: string; content: string; color: string }
 interface CanvasData { partners: string; activities: string; value_prop: string; relations: string; segments: string; resources: string; channels: string; costs: string; revenues: string }
 interface PlanChannel { name: string; priority: string; tactic: string }
@@ -36,13 +35,7 @@ const CANVAS_LABELS: Record<keyof CanvasData, string> = {
 
 export default function AdvisorPage() {
   const [user, setUser] = useState<User | null>(null)
-  const [authTab, setAuthTab] = useState<AuthTab>('login')
   const [authLoading, setAuthLoading] = useState(true)
-  const [authEmail, setAuthEmail] = useState('')
-  const [authPassword, setAuthPassword] = useState('')
-  const [authName, setAuthName] = useState('')
-  const [authError, setAuthError] = useState('')
-  const [authSubmitting, setAuthSubmitting] = useState(false)
 
   const [stage, setStage] = useState<Stage>(0)
   const [idea, setIdea] = useState('')
@@ -69,30 +62,7 @@ export default function AdvisorPage() {
     return () => subscription.unsubscribe()
   }, [])
 
-  // ── Auth handlers ──
-  async function handleLogin(e: React.FormEvent) {
-    e.preventDefault()
-    setAuthError('')
-    setAuthSubmitting(true)
-    const { error } = await supabase.auth.signInWithPassword({ email: authEmail, password: authPassword })
-    if (error) setAuthError(error.message.includes('Invalid') ? 'البريد الإلكتروني أو كلمة المرور غير صحيحة' : error.message)
-    setAuthSubmitting(false)
-  }
-
-  async function handleSignup(e: React.FormEvent) {
-    e.preventDefault()
-    setAuthError('')
-    setAuthSubmitting(true)
-    const { error } = await supabase.auth.signUp({
-      email: authEmail,
-      password: authPassword,
-      options: { data: { full_name: authName } },
-    })
-    if (error) setAuthError(error.message)
-    else setAuthError('✓ تم إنشاء الحساب! تحقق من بريدك الإلكتروني لتأكيد التسجيل، ثم سجّل الدخول.')
-    setAuthSubmitting(false)
-  }
-
+  // ── Logout handler ──
   async function handleLogout() {
     await supabase.auth.signOut()
     setUser(null)
@@ -251,92 +221,31 @@ export default function AdvisorPage() {
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 font-[Tajawal]" dir="rtl" style={{ background: '#0a0f1e' }}>
-        <div className="w-full max-w-[420px] p-8 rounded-2xl border" style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(201,168,76,0.2)' }}>
-          <div className="text-center mb-6">
-            <div className="text-4xl mb-3">🔐</div>
-            <h1 className="text-xl font-bold" style={{ color: '#f0ece3' }}>
-              {authTab === 'login' ? 'تسجيل الدخول' : 'إنشاء حساب مجاني'}
-            </h1>
-            <p className="text-sm mt-2" style={{ color: 'rgba(255,255,255,0.6)' }}>
-              {authTab === 'login'
-                ? 'سجّل الدخول لاستكمال تحليلك وحفظه في ملفك'
-                : 'حسابك يحفظ تحليلك ويربطه بملفك الشخصي في مرفأ'}
-            </p>
-          </div>
-
-          {/* Tabs */}
-          <div className="flex mb-6 rounded-xl overflow-hidden border" style={{ borderColor: 'rgba(201,168,76,0.15)' }}>
-            {(['login', 'signup'] as AuthTab[]).map(tab => (
-              <button
-                key={tab}
-                onClick={() => { setAuthTab(tab); setAuthError('') }}
-                className="flex-1 py-2.5 text-sm font-bold transition"
-                style={{
-                  background: authTab === tab ? 'rgba(201,168,76,0.15)' : 'transparent',
-                  color: authTab === tab ? '#c9a84c' : 'rgba(255,255,255,0.5)',
-                }}
-              >
-                {tab === 'login' ? 'تسجيل الدخول' : 'حساب جديد'}
-              </button>
-            ))}
-          </div>
-
-          {/* Green badge for signup */}
-          {authTab === 'signup' && (
-            <div className="flex items-center justify-center gap-1.5 mb-4 px-3 py-1.5 rounded-full text-xs font-bold" style={{ background: 'rgba(16,185,129,0.1)', color: '#10b981', border: '1px solid rgba(16,185,129,0.2)' }}>
-              ✓ مجاني تماماً — لا بطاقة ائتمان
-            </div>
-          )}
-
-          {/* Error */}
-          {authError && (
-            <div className={`mb-4 p-3 rounded-lg text-sm ${authError.startsWith('✓') ? 'bg-green-500/10 border border-green-500/20 text-green-400' : 'bg-red-500/10 border border-red-500/20 text-red-400'}`}>
-              {authError}
-            </div>
-          )}
-
-          <form onSubmit={authTab === 'login' ? handleLogin : handleSignup} className="space-y-4">
-            {authTab === 'signup' && (
-              <input
-                type="text"
-                placeholder="الاسم الكامل"
-                value={authName}
-                onChange={e => setAuthName(e.target.value)}
-                required
-                className="w-full p-3 rounded-xl text-sm outline-none"
-                style={{ background: 'rgba(255,255,255,0.04)', border: '0.5px solid rgba(201,168,76,0.3)', color: '#f0ece3' }}
-              />
-            )}
-            <input
-              type="email"
-              placeholder="البريد الإلكتروني"
-              value={authEmail}
-              onChange={e => setAuthEmail(e.target.value)}
-              required
-              className="w-full p-3 rounded-xl text-sm outline-none"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '0.5px solid rgba(201,168,76,0.3)', color: '#f0ece3' }}
-            />
-            <input
-              type="password"
-              placeholder="كلمة المرور"
-              value={authPassword}
-              onChange={e => setAuthPassword(e.target.value)}
-              required
-              className="w-full p-3 rounded-xl text-sm outline-none"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '0.5px solid rgba(201,168,76,0.3)', color: '#f0ece3' }}
-            />
-            <button
-              type="submit"
-              disabled={authSubmitting}
-              className="w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition"
+        <div className="w-full max-w-[420px] p-8 rounded-2xl border text-center" style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(201,168,76,0.2)' }}>
+          <div className="text-4xl mb-4">🔐</div>
+          <h1 className="text-xl font-bold mb-2" style={{ color: '#f0ece3' }}>تسجيل الدخول مطلوب</h1>
+          <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            سجّل الدخول أو أنشئ حساباً للوصول إلى المستشار الذكي وحفظ تحليلك
+          </p>
+          <div className="flex flex-col gap-3">
+            <Link
+              href="/login?redirect=/advisor"
+              className="block w-full py-3 rounded-xl font-bold text-sm text-center transition"
               style={{ background: '#c9a84c', color: '#0a0f1e' }}
             >
-              {authSubmitting ? (
-                <div className="w-4 h-4 border-2 border-transparent border-t-[#0a0f1e] rounded-full animate-spin" />
-              ) : null}
-              {authTab === 'login' ? 'دخول' : 'إنشاء حساب'}
-            </button>
-          </form>
+              تسجيل الدخول
+            </Link>
+            <Link
+              href="/register?redirect=/advisor"
+              className="block w-full py-3 rounded-xl font-bold text-sm text-center transition"
+              style={{ background: 'rgba(201,168,76,0.1)', color: '#c9a84c', border: '1px solid rgba(201,168,76,0.3)' }}
+            >
+              إنشاء حساب جديد
+            </Link>
+          </div>
+          <div className="mt-4">
+            <Link href="/" className="text-xs underline" style={{ color: 'rgba(255,255,255,0.4)' }}>العودة للصفحة الرئيسية</Link>
+          </div>
         </div>
       </div>
     )

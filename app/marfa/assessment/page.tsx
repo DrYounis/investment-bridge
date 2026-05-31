@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { supabase } from '@/lib/supabase/browser';
 import { logger } from '@/lib/logger';
 
@@ -59,15 +60,7 @@ export default function AssessmentPage() {
 
   // UI flow
   const [phase,        setPhase]        = useState('intro');   // intro|auth|basic|swot|result
-  const [authMode,     setAuthMode]     = useState('signup');  // signup|login
   const [animIn,       setAnimIn]       = useState(true);
-
-  // Auth form
-  const [authEmail,    setAuthEmail]    = useState('');
-  const [authPassword, setAuthPassword] = useState('');
-  const [authName,     setAuthName]     = useState('');
-  const [authError,    setAuthError]    = useState('');
-  const [authLoading,  setAuthLoading]  = useState(false);
 
   // Assessment data
   const [currentSwot, setCurrentSwot] = useState(0);
@@ -113,36 +106,7 @@ export default function AssessmentPage() {
   const canAdvanceSwot  = (idx: number) => SWOT_STEPS[idx].questions.every(q => swotData[SWOT_STEPS[idx].key][q.id]?.trim());
   const allSwotFilled   = SWOT_STEPS.every((_, i) => canAdvanceSwot(i));
 
-  // ── Auth handlers ──
-  const handleSignUp = async () => {
-    setAuthError(''); setAuthLoading(true);
-    const { data, error } = await supabase.auth.signUp({
-      email:    authEmail,
-      password: authPassword,
-      options:  { data: { full_name: authName } },
-    });
-    if (error) { setAuthError(error.message); setAuthLoading(false); return; }
-    if (data.user && !data.session) {
-      setAuthError('تحقق من بريدك الإلكتروني لتأكيد الحساب، ثم ارجع وسجّل الدخول.');
-      setAuthMode('login');
-      setAuthLoading(false);
-      return;
-    }
-    setUser(data.user);
-    setBasicData(p => ({ ...p, email: authEmail, full_name: authName }));
-    setAuthLoading(false);
-    transition(() => setPhase('basic'));
-  };
-
-  const handleLogin = async () => {
-    setAuthError(''); setAuthLoading(true);
-    const { data, error } = await supabase.auth.signInWithPassword({ email: authEmail, password: authPassword });
-    if (error) { setAuthError(error.message); setAuthLoading(false); return; }
-    setUser(data.user);
-    setAuthLoading(false);
-    transition(() => setPhase('basic'));
-  };
-
+  // ── Logout handler ──
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -408,59 +372,30 @@ export default function AssessmentPage() {
             {/* ══════════ AUTH GATE ══════════ */}
             {phase === 'auth' && (
               <div className="auth-wrap">
-                <div className="auth-card">
+                <div className="auth-card" style={{ textAlign: 'center' }}>
                   <div className="auth-header">
                     <div className="auth-lock">🔐</div>
-                    <h2 className="auth-title">
-                      {authMode === 'signup' ? 'إنشاء حساب مجاني' : 'تسجيل الدخول'}
-                    </h2>
+                    <h2 className="auth-title">تسجيل الدخول مطلوب</h2>
                     <p className="auth-sub">
-                      {authMode === 'signup'
-                        ? 'حسابك يحفظ تحليلك ويربطه بملفك الشخصي في مرفأ'
-                        : 'سجّل الدخول لاستكمال التحليل وحفظه في ملفك'}
+                      سجّل الدخول أو أنشئ حساباً لحفظ تحليلك وربطه بملفك الشخصي في مرفأ
                     </p>
-                    {authMode === 'signup' && (
-                      <span className="auth-free-badge">✓ مجاني تماماً — لا بطاقة ائتمان</span>
-                    )}
                   </div>
-
-                  <div className="auth-tabs">
-                    <button className={`auth-tab ${authMode==='signup'?'active':''}`} onClick={() => { setAuthMode('signup'); setAuthError(''); }}>حساب جديد</button>
-                    <button className={`auth-tab ${authMode==='login' ?'active':''}`} onClick={() => { setAuthMode('login');  setAuthError(''); }}>دخول</button>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <Link
+                      href="/login?redirect=/marfa/assessment"
+                      className="btn-primary btn-full"
+                      style={{ textDecoration: 'none', textAlign: 'center' }}
+                    >
+                      تسجيل الدخول
+                    </Link>
+                    <Link
+                      href="/register?redirect=/marfa/assessment"
+                      className="btn-primary btn-full"
+                      style={{ textDecoration: 'none', textAlign: 'center', background: 'rgba(201,168,76,0.1)', color: '#c9a84c', border: '1px solid rgba(201,168,76,0.3)' }}
+                    >
+                      إنشاء حساب جديد
+                    </Link>
                   </div>
-
-                  {authError && <div className="auth-error">{authError}</div>}
-
-                  {authMode === 'signup' && (
-                    <div className="field-group">
-                      <label className="field-label">الاسم الكامل</label>
-                      <input className="field-input" type="text" placeholder="محمد العمري" value={authName} onChange={e => setAuthName(e.target.value)} />
-                    </div>
-                  )}
-                  <div className="field-group">
-                    <label className="field-label">البريد الإلكتروني</label>
-                    <input className="field-input" type="email" dir="ltr" placeholder="you @example.com" value={authEmail} onChange={e => setAuthEmail(e.target.value)} />
-                  </div>
-                  <div className="field-group" style={{ marginBottom:'1.75rem' }}>
-                    <label className="field-label">كلمة المرور</label>
-                    <input className="field-input" type="password" dir="ltr" placeholder="••••••••" value={authPassword} onChange={e => setAuthPassword(e.target.value)}
-                      onKeyDown={e => e.key === 'Enter' && (authMode==='signup' ? handleSignUp() : handleLogin())} />
-                  </div>
-
-                  <button
-                    className="btn-primary btn-full"
-                    disabled={authLoading || !authEmail || !authPassword || (authMode==='signup' && !authName)}
-                    onClick={authMode === 'signup' ? handleSignUp : handleLogin}
-                  >
-                    {authLoading
-                      ? <><span style={{ width:16,height:16,border:'2px solid rgba(10,15,30,.3)',borderTop:'2px solid #0a0f1e',borderRadius:'50%',animation:'spin .7s linear infinite',display:'inline-block' }} /> جارٍ...</>
-                      : authMode === 'signup' ? 'إنشاء الحساب والمتابعة ←' : 'دخول والمتابعة ←'
-                    }
-                  </button>
-                </div>
-
-                <div style={{ textAlign:'center', marginTop:'1.5rem' }}>
-                  <button className="nav-back" onClick={() => transition(() => setPhase('intro'))}>← العودة للصفحة الرئيسية</button>
                 </div>
               </div>
             )}

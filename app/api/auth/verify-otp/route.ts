@@ -40,26 +40,18 @@ export async function POST(req: NextRequest) {
       .update({ used: true })
       .eq('id', codes[0].id);
 
-    // 3. Check if user exists
-    const { data: existingUsers, error: listError } = await supabase.auth.admin.listUsers();
-
-    if (listError) {
-      logger.error('Failed to list users:', listError);
-      return NextResponse.json(
-        { error: 'فشل في التحقق من المستخدم' },
-        { status: 500 }
-      );
-    }
-
-    const existingUser = existingUsers.users.find(
-      (u) => u.email?.toLowerCase() === normalizedEmail
-    );
-
+    // 3. Check if user exists via profiles table (efficient indexed lookup)
     let userId: string;
     let isNewUser = false;
 
-    if (existingUser) {
-      userId = existingUser.id;
+    const { data: existingProfile } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('email', normalizedEmail)
+      .maybeSingle();
+
+    if (existingProfile) {
+      userId = existingProfile.id;
     } else {
       // Create new passwordless user
       const tempPassword = crypto.randomUUID() + crypto.randomUUID();

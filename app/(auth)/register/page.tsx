@@ -2,6 +2,7 @@
 
 import { Suspense, useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
@@ -25,6 +26,8 @@ function RegisterForm() {
     const [successMsg, setSuccessMsg] = useState('')
     const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
     const nameRef = useRef<HTMLInputElement>(null)
+    const router = useRouter()
+    const searchParams = useSearchParams()
 
     useEffect(() => {
         if (step === 'form') nameRef.current?.focus()
@@ -101,6 +104,8 @@ function RegisterForm() {
             localStorage.removeItem('questionnaireCompleted')
             localStorage.removeItem('userType')
             setStep('success')
+            const redirect = searchParams.get('redirect') || '/dashboard/hub'
+            setTimeout(() => router.push(redirect), 1200)
         } catch {
             setError('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
         }

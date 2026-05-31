@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
@@ -23,9 +23,16 @@ function LoginForm() {
     const [error, setError] = useState('')
     const [successMsg, setSuccessMsg] = useState('')
     const [fieldError, setFieldError] = useState('')
+    const [redirectUrl, setRedirectUrl] = useState('/dashboard/hub')
     const emailRef = useRef<HTMLInputElement>(null)
     const router = useRouter()
-    const searchParams = useSearchParams()
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search)
+            setRedirectUrl(params.get('redirect') || '/dashboard/hub')
+        }
+    }, [])
 
     useEffect(() => {
         if (step === 'email') emailRef.current?.focus()
@@ -82,8 +89,7 @@ function LoginForm() {
             })
 
             setStep('success')
-            const redirect = searchParams.get('redirect') || '/dashboard/hub'
-            setTimeout(() => router.push(redirect), 1200)
+            setTimeout(() => router.push(redirectUrl), 1200)
         } catch {
             setError('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
             setIsLoading(false)

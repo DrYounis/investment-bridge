@@ -10,12 +10,6 @@ import Card from '../../components/ui/Card'
 import OtpVerification from '../../components/ui/OtpVerification'
 import { createClient } from '../../../lib/supabase/client'
 
-const stepVariants = {
-    enter: { opacity: 1, x: 0 },
-    center: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -40 },
-}
-
 function LoginForm() {
     const [step, setStep] = useState<'email' | 'otp' | 'success'>('email')
     const [email, setEmail] = useState('')
@@ -111,14 +105,7 @@ function LoginForm() {
             <div className="w-full max-w-md">
                 <AnimatePresence mode="wait">
                     {step === 'email' && (
-                        <motion.div
-                            key="email"
-                            variants={stepVariants}
-                            initial="enter"
-                            animate="center"
-                            exit="exit"
-                            transition={{ duration: 0.25, ease: 'easeInOut' }}
-                        >
+                        <div key="email">
                             <div className="text-center mb-8">
                                 <motion.div
                                     initial={{ scale: 0 }}
@@ -169,18 +156,11 @@ function LoginForm() {
                                     </p>
                                 </form>
                             </Card>
-                        </motion.div>
+                        </div>
                     )}
 
                     {step === 'otp' && (
-                        <motion.div
-                            key="otp"
-                            variants={stepVariants}
-                            initial="enter"
-                            animate="center"
-                            exit="exit"
-                            transition={{ duration: 0.25, ease: 'easeInOut' }}
-                        >
+                        <div key="otp">
                             <div className="text-center mb-6">
                                 <motion.div
                                     initial={{ scale: 0 }}
@@ -205,16 +185,11 @@ function LoginForm() {
                                     successMsg={successMsg}
                                 />
                             </Card>
-                        </motion.div>
+                        </div>
                     )}
 
                     {step === 'success' && (
-                        <motion.div
-                            key="success"
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ type: 'spring', stiffness: 150, damping: 12 }}
-                        >
+                        <div key="success">
                             <Card glass className="p-10 text-center">
                                 <motion.div
                                     initial={{ scale: 0, rotate: -180 }}
@@ -235,7 +210,7 @@ function LoginForm() {
                                     جاري تحويلك...
                                 </div>
                             </Card>
-                        </motion.div>
+                        </div>
                     )}
                 </AnimatePresence>
 

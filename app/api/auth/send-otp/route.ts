@@ -26,6 +26,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'البريد الإلكتروني مطلوب' }, { status: 400 });
     }
 
+    // Validate Resend API key is configured
+    if (!process.env.RESEND_API_KEY || String(process.env.RESEND_API_KEY).length < 20) {
+      logger.error('RESEND_API_KEY is not configured or is a placeholder');
+      return NextResponse.json(
+        { error: 'خدمة البريد غير مهيأة. يرجى التواصل مع الدعم الفني.' },
+        { status: 500 }
+      );
+    }
+
     const normalizedEmail = email.toLowerCase().trim();
     const supabase = createServiceClient();
 
@@ -50,7 +59,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Send email via Resend
-    await getResend().emails.send({
+    const { error: resendError } = await getResend().emails.send({
       from: 'Marfa.sa <onboarding@resend.dev>',
       to: normalizedEmail,
       subject: 'رمز التحقق - منصة مرفأ الاستثمارية',
@@ -71,6 +80,14 @@ export async function POST(req: NextRequest) {
         </div>
       `,
     });
+
+    if (resendError) {
+      logger.error('Resend email send failed:', resendError);
+      return NextResponse.json(
+        { error: 'فشل في إرسال البريد الإلكتروني. يرجى المحاولة مرة أخرى.' },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ success: true });
   } catch (err) {

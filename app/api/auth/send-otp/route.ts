@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
 
     // Send email via Resend
     const { error: resendError } = await getResend().emails.send({
-      from: 'Marfa.sa <noreply@marfs.sa>',
+      from: 'noreply@marfs.sa',
       to: normalizedEmail,
       subject: 'رمز التحقق - منصة مرفأ الاستثمارية',
       html: `

@@ -38,7 +38,7 @@ export async function scheduleMeeting(formData: FormData) {
 
         // 2. Send email notification via Resend
         const { error: emailError } = await getResend().emails.send({
-            from: 'Marfa.sa Meetings <onboarding@resend.dev>',
+            from: 'Marfa.sa Meetings <noreply@marfa.sa>',
             to: adminEmail,
             subject: `طلب اجتماع مستثمر جديد: ${name}`,
             html: `

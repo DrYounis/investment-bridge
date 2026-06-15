@@ -57,7 +57,7 @@ Deno.serve(async (req: Request) => {
 
     // Send email via Resend
     await resend.emails.send({
-      from: 'Marfa.sa <onboarding@resend.dev>',
+      from: 'Marfa.sa <noreply@marfa.sa>',
       to: email,
       subject: 'رمز التحقق - منصة مرفأ الاستثمارية',
       html: `

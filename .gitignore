@@ -64,6 +64,9 @@ curl_output.txt
 curl_prod_output.txt
 *_output.txt
 
+# Build cache
+public/fonts/
+
 # Security: never commit private keys or certificates
 *.key
 *.pem

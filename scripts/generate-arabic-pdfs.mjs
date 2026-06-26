@@ -1,250 +1,382 @@
-import { jsPDF } from 'jspdf';
+import puppeteer from 'puppeteer';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = path.resolve(__dirname, '..', 'public', 'case-studies');
-const FONT_PATH = path.resolve(__dirname, '..', 'public', 'fonts', 'Cairo-Regular.ttf');
 
-// Arabic case study content for each meeting
+// ── Improved Arabic content ─────────────────────────────────────────────────
+
 const CASE_STUDIES = [
   {
     filename: 'Airbnb_Strategy_Arabic_Case_Study.pdf',
     title: 'دراسة حالة: Airbnb — الاستراتيجية',
-    content: [
-      ['عنوان الدراسة:', 'كيف أقنعت Airbnb المستثمرين بفكرة "تأجير غرف" في زمن الفنادق؟'],
-      ['الخلفية:', 'في عام 2008، واجه المؤسسان براين تشيسكي وجو جيبيا مشكلة بسيطة: لم يستطيعا دفع إيجار شقتهما في سان فرانسيسكو. فقررا تأجير ثلاث مراتب هوائية في غرفة المعيشة للزوار الذين يحضرون مؤتمراً للتصميم.'],
-      ['التحدي:', 'كانت الفكرة تبدو مجنونة: لماذا ينام شخص غريب في منزلك؟ وكيف يمكن منافسة صناعة الفنادق الضخمة؟'],
-      ['نقطة التحول:', 'رفض المستثمرون الفكرة مراراً. لكن المؤسسين لم يستسلموا. بدلاً من ذلك، ركزوا على بناء "تجربة" وليس مجرد "مكان للنوم".'],
-      ['الدرس المستفاد:', '1. الفكرة البسيطة قد تكون الأعظم إذا نُفذت بإتقان.\n2. لا تستمع لكلمة "لا" من أول مستثمر.\n3. ابنِ مجتمعاً حول فكرتك قبل أن تبحث عن التمويل.'],
-      ['تطبيق على السوق السعودي:', 'كيف يمكن تطبيق نموذج "الاقتصاد التشاركي" على قطاع السياحة في حائل؟ وما الفرص المتاحة في موسم الحج والعمرة؟'],
+    subtitle: 'كيف أقنعت منصة تأجير غرف المستثمرين وتغلبت على صناعة الفنادق؟',
+    sections: [
+      {
+        heading: 'نبذة عن الشركة',
+        body: 'في عام 2008، واجه المصممان براين تشيسكي وجو جيبيا مشكلة بسيطة: لم يستطيعا دفع إيجار شقتهما في سان فرانسيسكو. تزامن ذلك مع مؤتمر للتصميم ملأ جميع فنادق المدينة. فقاما بنفخ ثلاث مراتب هوائية في غرفة المعيشة وأطلقا موقعاً بسيطاً باسم AirBed & Breakfast. حضر ثلاثة ضيوف ودفع كل منهم 80 دولاراً في الليلة.',
+      },
+      {
+        heading: 'المشكلة المركزية',
+        body: 'رفض المستثمرون الفكرة مراراً. قال أحدهم: "السوق أصغر من أن نستثمر فيه". لجأ المؤسسان إلى بيع علب حبوب إفطار تحمل صورتي أوباما وماكين لجمع 30 ألف دولار أبقت الشركة على قيد الحياة. بول غراهام من Y Combinator قبلهم ليس لإيمانه بالفكرة، بل لإعجابه بمؤسسين يبيعون حبوب الإفطار لإبقاء شركتهم حية.',
+      },
+      {
+        heading: 'نقطة التحول',
+        body: 'بعد رفض العشرات من صناديق الاستثمار، وافقت Sequoia Capital أخيراً على قيادة جولة استثمارية بقيمة 7.2 مليون دولار عام 2010. من تلك اللحظة، بدأت تأثيرات الشبكة: كلما زاد عدد المضيفين زاد عدد الضيوف، وكلما زاد الضيوف زادت جاذبية المنصة. خلال 15 عاماً، أصبح لدى Airbnb عدد غرف يفوق أكبر 5 سلاسل فندقية مجتمعة.',
+      },
+      {
+        heading: 'الدروس المستفادة',
+        body: '1. الفكرة التي يرفضها الجميع قد تكون الأعظم — المهم التنفيذ.\n2. بناء الثقة ليس ترفاً بل منتج: المراجعات الثنائية، التحقق من الهوية، وضمان المضيف.\n3. نموذج المنصة (Platform Model) يتيح التوسع بدون امتلاك أصول — الدرس الأهم للشركات الناشئة.',
+      },
+      {
+        heading: 'تطبيق على السوق السعودي',
+        body: 'كيف يمكن تطبيق نموذج "الاقتصاد التشاركي" على قطاع السياحة في المملكة؟ في حائل تحديداً: تأجير بيوت جبل أجا التراثية، مخيمات صحراء النفود، وتوفير سكن إضافي خلال مهرجان حائل الشتوي. كلها فرص يمكن بناؤها بنفس منهجية Airbnb مع تكييفها للخصوصية والثقافة المحلية.',
+      },
     ],
   },
   {
     filename: 'Zappos_Leadership_Arabic_Case_Study.pdf',
-    title: 'دراسة حالة: Zappos — القيادة وخدمة العملاء',
-    content: [
-      ['عنوان الدراسة:', 'كيف بنت Zappos ثقافة مؤسسية تجعل الموظف يضحي من أجل العميل؟'],
-      ['الخلفية:', 'تأسست Zappos عام 1999 لبيع الأحذية عبر الإنترنت. لكن ما ميزها لم يكن المنتج، بل الخدمة. كان موظفو خدمة العملاء يبقون على الهاتف 10 ساعات مع عميل واحد!'],
-      ['التحدي:', 'كيف تبني ثقافة مؤسسية تجعل كل موظف "سفيراً" للعلامة التجارية، خاصة في بيئة العمل عن بُعد أو في المدن الصغيرة؟'],
-      ['نقطة التحول:', 'أنشأ توني شاي (المؤسس) "كتاب الثقافة" الذي يشارك فيه جميع الموظفين. القيم العشر لـ Zappos أصبحت مرجعاً عالمياً في بناء ثقافة الشركات.'],
-      ['الدرس المستفاد:', '1. الثقافة المؤسسية ليست رفاهية، بل استثمار.\n2. وظّف على أساس القيم وليس المهارات فقط.\n3. خدمة العميل الاستثنائية هي أفضل تسويق.'],
-      ['تطبيق على السوق السعودي:', 'كيف يمكن للشركات الناشئة السعودية بناء ثقافة خدمة عميل تنافس بها الشركات العالمية؟'],
+    title: 'دراسة حالة: Zappos — القيادة وثقافة المؤسسة',
+    subtitle: 'كيف بنى توني شاي شركة أصبحت مرجعاً عالمياً في خدمة العميل؟',
+    sections: [
+      {
+        heading: 'نبذة عن الشركة',
+        body: 'تأسست Zappos عام 1999 لبيع الأحذية عبر الإنترنت. لكن ما جعلها أسطورة لم يكن المنتج — كان خدمة العميل. موظفو مركز الاتصال كانوا يبقون على الهاتف 10 ساعات متواصلة مع عميل واحد إذا لزم الأمر. لا يوجد "سكريبت" ولا حد أقصى للمكالمة.',
+      },
+      {
+        heading: 'المشكلة المركزية',
+        body: 'كيف تبني ثقافة مؤسسية تجعل كل موظف "سفيراً" للعلامة التجارية؟ في عصر العمل عن بُعد وتعدد الجنسيات، الثقافة هي الميزة التنافسية الوحيدة التي لا يمكن نسخها.',
+      },
+      {
+        heading: 'نقطة التحول',
+        body: 'أنشأ توني شاي "كتاب الثقافة" Culture Book — وثيقة يشارك فيها جميع الموظفين سنوياً لوصف ثقافة Zappos بكلماتهم. القيم العشر للشركة (مثل "اخلق مرحاً وقليلاً من الغرابة" و "كن متواضعاً") أصبحت تدرّس في كليات إدارة الأعمال حول العالم.',
+      },
+      {
+        heading: 'الدروس المستفادة',
+        body: '1. الثقافة المؤسسية ليست ملصقات على الجدار — إنها قرارات التوظيف والفصل اليومية.\n2. وظّف على أساس القيم أولاً، المهارات ثانياً.\n3. أفضل استثمار تسويقي هو خدمة عميل استثنائية — العميل السعيد هو أفضل مسوّق.',
+      },
+      {
+        heading: 'تطبيق على السوق السعودي',
+        body: 'كيف يمكن للشركات الناشئة السعودية — خاصة في قطاعي التجزئة والخدمات — بناء ثقافة خدمة عميل تضاهي الشركات العالمية؟ وما الدور الذي تلعبه "الحوكمة" و"الشفافية" في بناء الثقة مع العميل السعودي؟',
+      },
     ],
   },
   {
     filename: 'WeWork_Finance_Arabic_Case_Study.pdf',
-    title: 'دراسة حالة: WeWork — المالية والفشل',
-    content: [
-      ['عنوان الدراسة:', 'كيف تحولت شركة بمليارات الدولارات إلى حافة الإفلاس؟'],
-      ['الخلفية:', 'في ذروتها عام 2019، بلغت قيمة WeWork 47 مليار دولار. بعد أشهر قليلة، انهارت القيمة إلى أقل من 5 مليارات. ماذا حدث؟'],
-      ['التحدي:', 'الفرق بين "النمو" و"الربحية". كانت WeWork تنمو بسرعة مذهلة، لكن كل مكتب جديد كان يخسر أموالاً. التوسع السريع بدون أساس مالي متين = وصفة كارثة.'],
-      ['نقطة التحول:', 'عندما تم تقديم أوراق الطرح العام (IPO)، اكتشف المستثمرون أن الخسائر تفوق الإيرادات. الرئيس التنفيذي آدم نيومان أُجبر على الاستقالة.'],
-      ['الدرس المستفاد:', '1. النمو ليس هدفاً بحد ذاته — الربحية هي الأساس.\n2. اقتصاديات الوحدة (Unit Economics) أهم من الأرقام الكبيرة.\n3. احذر من "عقلية القطيع" في الاستثمار.'],
-      ['تطبيق على السوق السعودي:', 'كيف نتجنب فخ "النمو الوهمي" في المشاريع الناشئة المدعومة من جهات حكومية أو استثمارية؟'],
+    title: 'دراسة حالة: WeWork — الانهيار المالي',
+    subtitle: 'كيف تحولت شركة قيمتها 47 مليار دولار إلى حافة الإفلاس في أشهر؟',
+    sections: [
+      {
+        heading: 'نبذة عن الشركة',
+        body: 'في ذروتها عام 2019، بلغت قيمة WeWork 47 مليار دولار. كانت تؤجر مساحات مكتبية مشتركة في 111 مدينة حول العالم. الرئيس التنفيذي آدم نيومان كان يوصف بأنه "رؤيوي" و"مؤسس استثنائي". بعد 6 أشهر فقط، انهار كل شيء.',
+      },
+      {
+        heading: 'المشكلة المركزية',
+        body: 'الخلط القاتل بين "النمو" و"الربحية". كانت WeWork تنمو بسرعة مذهلة — تفتتح 100 مكتب جديد شهرياً. لكن كل مكتب جديد كان يخسر أموالاً. إيرادات 1.8 مليار دولار قابلتها خسائر 1.9 مليار دولار. الشركة كانت تحرق مليارات الدولارات سنوياً لتبدو "كبيرة".',
+      },
+      {
+        heading: 'نقطة التحول',
+        body: 'عند تقديم أوراق الطرح العام IPO، قرأ المستثمرون الأرقام الحقيقية. اكتشفوا أن الخسائر تفوق الإيرادات، وأن المؤسس باع أسهمه بمئات الملايين قبل الطرح، وأن الشركة استأجرت عقارات من شركات يملكها نيومان شخصياً. انهارت قيمة الشركة من 47 ملياراً إلى أقل من 5 مليارات في أسابيع.',
+      },
+      {
+        heading: 'الدروس المستفادة',
+        body: '1. النمو ليس دليلاً على النجاح — اقتصاديات الوحدة Unit Economics هي المقياس الحقيقي.\n2. احذر من "عقلية القطيع" — حين يستثمر الجميع، لا يعني ذلك أن الاستثمار حكيم.\n3. الحوكمة الرشيدة تحمي المستثمرين والمؤسسين معاً — غيابها يدمر الطرفين.',
+      },
+      {
+        heading: 'تطبيق على السوق السعودي',
+        body: 'كيف نتجنب فخ "النمو الوهمي" في الشركات الناشئة السعودية المدعومة من صناديق حكومية أو استثمارية؟ وما هي "إشارات الخطر" التي يجب أن ينتبه لها المستثمر قبل أن يضخ أمواله؟',
+      },
     ],
   },
   {
     filename: 'Liquid_Death_Marketing_Arabic_Case_Study.pdf',
-    title: 'دراسة حالة: Liquid Death — التسويق',
-    content: [
-      ['عنوان الدراسة:', 'كيف تبيع منتجاً عادياً جداً (ماء) ببراند عبقري؟'],
-      ['الخلفية:', 'أسس مايك سيزاريو شركة Liquid Death لبيع المياه المعلبة. نعم، مجرد ماء. لكنه باعها في علب ألمنيوم تشبه علب البيرة، بشعار "اقتل عطشك" (Murder Your Thirst).'],
-      ['التحدي:', 'الماء سلعة (Commodity). لا يوجد فرق حقيقي بين مياه ومياه. كيف تجعل الناس يدفعون 3 أضعاف السعر لمجرد "تغليف مختلف"؟'],
-      ['نقطة التحول:', 'بدلاً من منافسة العلامات المائية الأخرى، نافست Liquid Death شركات المشروبات الغازية والبيرة. الاستراتيجية: اختر فئة جديدة بدلاً من المنافسة في فئة مزدحمة.'],
-      ['الدرس المستفاد:', '1. التغليف والتموضع (Positioning) قد يكونان أهم من المنتج نفسه.\n2. لا تنافس في "المحيط الأحمر" — اصنع "محيطك الأزرق".\n3. الجرأة في التسويق تجذب الانتباه المجاني.'],
-      ['تطبيق على السوق السعودي:', 'كيف يمكن للعلامات التجارية السعودية استخدام "التموضع الجريء" لتمييز نفسها في سوق مزدحم؟'],
+    title: 'دراسة حالة: Liquid Death — عبقرية التسويق',
+    subtitle: 'كيف تبيع المياه المعدنية في علبة تشبه البيرة بسعر 3 أضعاف؟',
+    sections: [
+      {
+        heading: 'نبذة عن الشركة',
+        body: 'أسس مايك سيزاريو شركة Liquid Death عام 2017. المنتج؟ ماء. مجرد ماء من جبال الألب. لكنه باعه في علب ألمنيوم طويلة تشبه علب مشروبات الطاقة والبيرة، بشعار: Murder Your Thirst (اقتل عطشك).',
+      },
+      {
+        heading: 'المشكلة المركزية',
+        body: 'الماء سلعة Commodity. لا فرق حقيقياً بين ماء وآخر. تنافس آلاف العلامات التجارية على السعر والتوزيع. فكيف تقنع الناس بدفع 3 أضعاف ثمن الماء العادي؟',
+      },
+      {
+        heading: 'نقطة التحول',
+        body: 'بدلاً من منافسة Evian و Fiji و Aquafina في فئة "المياه الفاخرة"، اختار Liquid Death منافسة Red Bull و Monster في فئة "مشروبات الطاقة" — ليس بالمنتج بل بالتموضع Positioning. الاستراتيجية: اختر فئة جديدة تماماً بدلاً من الازدحام في فئة قائمة. النتيجة: تقييم 1.4 مليار دولار لشركة تبيع ماء.',
+      },
+      {
+        heading: 'الدروس المستفادة',
+        body: '1. التموضع Positioning أهم من المنتج نفسه.\n2. لا تنافس في "المحيط الأحمر" المزدحم — اصنع "محيطك الأزرق" الخاص.\n3. الجرأة في التسويق تجذب انتباهاً مجانياً يفوق ميزانيات الإعلان الضخمة.',
+      },
+      {
+        heading: 'تطبيق على السوق السعودي',
+        body: 'كيف يمكن للعلامات التجارية السعودية — خاصة في قطاع الأغذية والمشروبات — استخدام استراتيجية "التموضع الجريء" لاختراق أسواق مزدحمة؟ وما الفرص المتاحة في سوق المياه المعبأة في المملكة؟',
+      },
     ],
   },
   {
     filename: 'Amazon_Operations_Arabic_Case_Study.pdf',
-    title: 'دراسة حالة: Amazon — العمليات والخدمات اللوجستية',
-    content: [
-      ['عنوان الدراسة:', 'كيف تدار العمليات في أكبر إمبراطورية لوجستية في العالم لتقليل الهدر؟'],
-      ['الخلفية:', 'أمازون لم تخترع التجارة الإلكترونية، لكنها أتقنت "علم العمليات". من المستودعات الآلية إلى التوصيل في نفس اليوم، كل خطوة محسوبة.'],
-      ['التحدي:', 'كيف تدير ملايين الطلبات يومياً مع تقليل الهدر في الوقت والمال والموارد؟ الإجابة: نظام "التايوتشي" (Toyota Production System) المطبق على التجارة الإلكترونية.'],
-      ['نقطة التحول:', 'استثمرت أمازون في الروبوتات (Kiva Systems) وفي الذكاء الاصطناعي للتنبؤ بالطلب قبل حدوثه، مما قلص وقت التوصيل من أيام إلى ساعات.'],
-      ['الدرس المستفاد:', '1. العمليات الجيدة = هامش ربح أفضل.\n2. استثمر في التكنولوجيا التي تقلل "الاحتكاك التشغيلي".\n3. التنبؤ بالطلب يمنع الهدر قبل حدوثه.'],
-      ['تطبيق على السوق السعودي:', 'كيف يمكن تطبيق مبادئ "العمليات الرشيقة" (Lean Operations) على سلسلة توريد الأغذية والمشروبات في المدن السعودية؟'],
+    title: 'دراسة حالة: Amazon — إدارة العمليات',
+    subtitle: 'كيف تدير أكبر إمبراطورية لوجستية في العالم ملايين الطلبات يومياً؟',
+    sections: [
+      {
+        heading: 'نبذة عن الشركة',
+        body: 'أمازون لم تخترع التجارة الإلكترونية. لكنها أتقنت "علم العمليات". من المستودعات الآلية إلى التوصيل في نفس اليوم، كل خطوة محسوبة. تستخدم الشركة أكثر من 750,000 روبوت في مستودعاتها. يمكنها توصيل طلب في أقل من ساعتين في مدن مختارة.',
+      },
+      {
+        heading: 'المشكلة المركزية',
+        body: 'كيف تدير ملايين الطلبات يومياً مع تقليل الهدر في الوقت والمال والموارد؟ كل دقيقة تأخير = خسارة، وكل سلعة تالفة = تكلفة مضاعفة. التحدي ليس فقط "التوصيل السريع" بل "التوصيل السريع والمربح في آن واحد".',
+      },
+      {
+        heading: 'نقطة التحول',
+        body: 'استثمرت أمازون 775 مليون دولار للاستحواذ على Kiva Systems (الروبوتات) عام 2012. كما طورت أنظمة ذكاء اصطناعي تتنبأ بالطلب قبل حدوثه — تشحن المنتج إلى أقرب مستودع للعميل المتوقع قبل أن يطلب! هذا الهوس بالتفاصيل التشغيلية هو ما جعل "التوصيل بنفس اليوم" ممكناً.',
+      },
+      {
+        heading: 'الدروس المستفادة',
+        body: '1. التميز التشغيلي = هامش ربح أفضل.\n2. استثمر في التكنولوجيا التي تقلل "الاحتكاك" في كل خطوة من سلسلة التوريد.\n3. التنبؤ بالطلب يمنع الهدر قبل حدوثه — وهو استثمار وليس تكلفة.',
+      },
+      {
+        heading: 'تطبيق على السوق السعودي',
+        body: 'كيف يمكن تطبيق مبادئ "العمليات الرشيقة" Lean Operations على سلسلة توريد الأغذية والمشروبات في المدن السعودية؟ وما الدروس المستفادة لقطاع التوصيل السريع (مثل هنقرستيشن وجاهز ومرسول)؟',
+      },
     ],
   },
   {
     filename: 'SharkTank_Negotiation_Arabic_Case_Study.pdf',
-    title: 'دراسة حالة: Shark Tank — التفاوض',
-    content: [
-      ['عنوان الدراسة:', 'لماذا يرفض المستثمر فكرة عبقرية؟ ولماذا يقبل فكرة بسيطة؟'],
-      ['الخلفية:', 'في برنامج Shark Tank، يقدم رواد الأعمال أفكارهم لمستثمرين كبار. لكن الغريب: أفكار عبقرية تُرفض، وأفكار بسيطة جداً تحصل على تمويل.'],
-      ['التحدي:', 'ما الفرق بين رائد الأعمال الذي يحصل على الصفقة والذي يخرج خالي الوفاض؟ الإجابة: ليس الفكرة فقط، بل طريقة عرضها والتفاوض عليها.'],
-      ['نقطة التحول:', 'المستثمرون لا يستثمرون في "الفكرة" فقط، بل في "الشخص". الثقة، معرفة الأرقام، والمرونة في التفاوض أهم من براءة الاختراع.'],
-      ['الدرس المستفاد:', '1. اعرف أرقامك جيداً قبل أن تتفاوض.\n2. لا تتمسك بتقييم غير واقعي.\n3. أظهر للمستثمر "لماذا أنت" وليس فقط "ماذا تفعل".'],
-      ['تطبيق على السوق السعودي:', 'ما الأخطاء الشائعة التي يقع فيها رواد الأعمال السعوديون عند التفاوض مع المستثمرين؟ وكيف نتجنبها؟'],
+    title: 'دراسة حالة: Shark Tank — فن التفاوض',
+    subtitle: 'لماذا يرفض المستثمر فكرة عبقرية ويقبل أخرى بسيطة جداً؟',
+    sections: [
+      {
+        heading: 'نبذة عن البرنامج',
+        body: 'في برنامج Shark Tank، يقدم رواد الأعمال أفكارهم لمجموعة من المستثمرين الأثرياء (الأسماك). الظاهرة المثيرة: أفكار عبقرية تُرفض تماماً، بينما أفكار بسيطة — مثل "قبعة عليها مروحة" — تحصل على تمويل بملايين الدولارات.',
+      },
+      {
+        heading: 'المشكلة المركزية',
+        body: 'ما الفرق بين رائد الأعمال الذي يخرج بشيك والعائد خالي الوفاض؟ الإجابة عند تحليل مئات الحلقات: ليس الفكرة. ليس السوق. بل الثقة والاستعداد والأرقام. المستثمرون يراهنون على "الفارس" لا على "الحصان".',
+      },
+      {
+        heading: 'نقطة التحول',
+        body: 'الأنماط المتكررة للصفقات الناجحة: (1) المؤسس يعرف أرقامه عن ظهر قلب — التكلفة، الهامش، تكلفة اكتساب العميل. (2) مرونة في التقييم — لا يتمسك برقم خيالي. (3) قصة شخصية مقنعة — "لماذا أنت؟" أهم من "ماذا تفعل؟". (4) استعداد للتخلي عن جزء من الملكية مقابل الخبرة وليس فقط المال.',
+      },
+      {
+        heading: 'الدروس المستفادة',
+        body: '1. اعرف أرقامك أفضل من أي شخص في الغرفة.\n2. لا تتمسك بتقييم غير واقعي — الأفضل أن تملك 50% من شركة ناجحة على أن تملك 100% من شركة فاشلة.\n3. أظهر للمستثمر "لماذا أنت" وليس فقط "ماذا تفعل" — القصة الشخصية هي أقوى أداة تفاوضية.',
+      },
+      {
+        heading: 'تطبيق على السوق السعودي',
+        body: 'ما الأخطاء الشائعة التي يقع فيها رواد الأعمال السعوديون عند التفاوض مع المستثمرين؟ وكيف يمكن التحضير للقاء المستثمر بشكل احترافي — من حيث الأرقام، القصة، والتقييم؟',
+      },
     ],
   },
   {
     filename: 'Saudi_German_Health_Arabic_Case_Study.pdf',
     title: 'دراسة حالة: Saudi German Health — حوكمة الشركات',
-    content: [
-      ['عنوان الدراسة:', 'إدانة 11 عضو مجلس إدارة بتضخيم إيرادات — ماذا يعني هذا لمصداقية السوق المالي السعودي؟'],
-      ['الخلفية:', 'في عام 2024، أدانت هيئة السوق المالية السعودية 11 عضواً في مجلس إدارة ولجنة المراجعة في شركة Saudi German Health (تداول: 4009) بتضخيم إيرادات بـ 358 مليون ريال.'],
-      ['التحدي:', 'المشكلة لم تكن في "خطأ محاسبي" بل في علمهم بعدم إمكانية تحصيل هذه الإيرادات ومع ذلك استمروا في إظهارها. غرامات بقيمة 18 مليون ريال فقط — أي 5% من قيمة التضخيم.'],
-      ['نقطة التحول:', 'هذه القضية كشفت ثغرة في الحوكمة: عندما تكون العقوبات أقل من الأرباح المتوقعة من المخالفة، يصبح الالتزام اختيارياً.'],
-      ['الدرس المستفاد:', '1. الحوكمة ليست "رفاهية قانونية" بل ضرورة لحماية المستثمرين.\n2. مجلس الإدارة مسؤول شخصياً عن دقة البيانات المالية.\n3. ثقة السوق تُبنى بالعقوبات الرادعة وليس بالتساهل.'],
-      ['تطبيق على السوق السعودي:', 'كيف يمكن للشركات الناشئة بناء أنظمة حوكمة قوية منذ البداية لتجنب مثل هذه الفضائح؟ وما دور المستثمر في الرقابة؟'],
+    subtitle: 'إدانة 11 عضواً في مجلس الإدارة — ماذا يعني هذا لمستقبل السوق المالي السعودي؟',
+    sections: [
+      {
+        heading: 'نبذة عن القضية',
+        body: 'في عام 2024، أصدرت هيئة السوق المالية السعودية قراراً بإدانة 11 عضواً في مجلس إدارة ولجنة المراجعة بشركة Saudi German Health (المدرجة في تداول تحت الرمز 4009). التهمة: تضخيم إيرادات بـ 358 مليون ريال سعودي مع العلم المسبق بعدم إمكانية تحصيلها.',
+      },
+      {
+        heading: 'المشكلة المركزية',
+        body: 'المشكلة لم تكن "خطأ محاسبياً" — بل كانت معرفة مسبقة باستحالة تحصيل هذه الإيرادات، ومع ذلك استمر المجلس في إظهارها في القوائم المالية. الغرامات المفروضة بلغت 18 مليون ريال فقط — أي ما يعادل 5% من قيمة المبلغ المضخم. السؤال المركزي: هل عقوبة 5% رادعة بما يكفي؟',
+      },
+      {
+        heading: 'نقطة التحول',
+        body: 'هذه القضية كشفت ثغرة جوهرية في نظام الحوكمة: عندما تكون العقوبات المالية أقل بكثير من الأرباح المحتملة للمخالفة، تصبح المخالفة "قراراً استثمارياً" وليس "خطأ". لا يمكن بناء سوق مالي موثوق إذا كانت عقوبة الاحتيال 5% فقط.',
+      },
+      {
+        heading: 'الدروس المستفادة',
+        body: '1. الحوكمة ليست "رفاهية قانونية" — إنها حماية للمستثمر الصغير قبل الكبير.\n2. مجلس الإدارة مسؤول شخصياً عن دقة البيانات المالية — والجهل ليس عذراً.\n3. ثقة السوق المالي تُبنى بالعقوبات الرادعة والشفافية الكاملة — لا بالتساهل أو التعتيم.',
+      },
+      {
+        heading: 'تطبيق على السوق السعودي',
+        body: 'كيف يمكن للشركات الناشئة السعودية بناء أنظمة حوكمة قوية منذ البداية — قبل أن تصبح مطالبة بها نظامياً؟ وما دور المستثمر الملائكي وصندوق الاستثمار الجريء في فرض معايير الحوكمة على الشركات التي يستثمر فيها؟',
+      },
     ],
   },
 ];
 
-// Helper: wrap Arabic text for the PDF width
-function wrapArabicText(doc, text, maxWidth) {
-  const words = text.split(' ');
-  const lines = [];
-  let currentLine = '';
+// ── HTML template ────────────────────────────────────────────────────────────
 
-  for (const word of words) {
-    const testLine = currentLine ? `${currentLine} ${word}` : word;
-    const width = doc.getTextWidth(testLine);
-    if (width > maxWidth) {
-      if (currentLine) lines.push(currentLine);
-      currentLine = word;
-    } else {
-      currentLine = testLine;
-    }
+function buildHTML(study) {
+  return `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: #FFFFFF;
+    color: #0A192F;
+    direction: rtl;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
-  if (currentLine) lines.push(currentLine);
-  return lines;
+
+  .cover {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: linear-gradient(135deg, #0A192F 0%, #153357 100%);
+    color: #FFFFFF;
+    padding: 60px 40px;
+    page-break-after: always;
+  }
+  .cover-badge {
+    display: inline-block;
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    color: #D4AF37;
+    padding: 8px 24px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+  }
+  .cover h1 {
+    font-size: 42px;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 16px;
+    color: #FFFFFF;
+  }
+  .cover h1 .gold {
+    color: #D4AF37;
+  }
+  .cover .subtitle {
+    font-size: 18px;
+    font-weight: 400;
+    color: #C5D0DD;
+    max-width: 600px;
+    line-height: 1.7;
+    margin-top: 8px;
+  }
+  .cover .footer-line {
+    margin-top: 50px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+  }
+
+  .page {
+    padding: 50px 45px;
+    page-break-after: always;
+  }
+  .section {
+    margin-bottom: 32px;
+  }
+  .section-heading {
+    font-size: 18px;
+    font-weight: 700;
+    color: #D4AF37;
+    border-bottom: 2px solid #D4AF37;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+  }
+  .section-body {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.9;
+    color: #0A192F;
+    text-align: justify;
+  }
+
+  .page-header {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 30px;
+    text-align: left;
+  }
+
+  .page-footer {
+    margin-top: 40px;
+    padding-top: 15px;
+    border-top: 1px solid #D4AF37;
+    font-size: 10px;
+    color: #999;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+
+<!-- Cover Page -->
+<div class="cover">
+  <div class="cover-badge">📄 دراسة حالة MBA</div>
+  <h1>${study.title}</h1>
+  <p class="subtitle">${study.subtitle}</p>
+  <p class="footer-line">منصة مرفأ • www.marfa.sa</p>
+</div>
+
+<!-- Content Page -->
+<div class="page">
+  <div class="page-header">دراسة حالة MBA — مرفأ</div>
+  ${study.sections.map((s) => `
+  <div class="section">
+    <h2 class="section-heading">${s.heading}</h2>
+    <p class="section-body">${s.body.replace(/\n/g, '<br><br>')}</p>
+  </div>
+  `).join('\n')}
+  <div class="page-footer">
+    <span>www.marfa.sa</span>
+    <span>منصة مرفأ — دراسات حالة MBA</span>
+  </div>
+</div>
+
+</body>
+</html>`;
 }
 
-// Generate a single PDF
-function generatePDF(doc, study) {
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
-  const margin = 20;
-  const maxWidth = pageWidth - 2 * margin;
-
-  let y = 25;
-
-  // Title
-  doc.setFont('Cairo', 'bold');
-  doc.setFontSize(20);
-  doc.setTextColor(10, 25, 47); // deep navy
-  const titleLines = wrapArabicText(doc, study.title, maxWidth);
-  for (const line of titleLines) {
-    doc.text(line, pageWidth - margin, y, { align: 'right' });
-    y += 10;
-  }
-
-  y += 5;
-
-  // Gold divider
-  doc.setDrawColor(212, 175, 55);
-  doc.setLineWidth(0.5);
-  doc.line(margin, y, pageWidth - margin, y);
-  y += 8;
-
-  // Content sections
-  for (const [label, text] of study.content) {
-    if (y > pageHeight - 40) {
-      doc.addPage();
-      y = 25;
-    }
-
-    // Label
-    doc.setFont('Cairo', 'bold');
-    doc.setFontSize(12);
-    doc.setTextColor(212, 175, 55); // gold
-    doc.text(label, pageWidth - margin, y, { align: 'right' });
-    y += 7;
-
-    // Text
-    doc.setFont('Cairo', 'normal');
-    doc.setFontSize(11);
-    doc.setTextColor(10, 25, 47); // deep navy
-
-    const textLines = wrapArabicText(doc, text, maxWidth);
-    for (const line of textLines) {
-      if (y > pageHeight - 25) {
-        doc.addPage();
-        y = 25;
-      }
-      doc.text(line, pageWidth - margin, y, { align: 'right' });
-      y += 6.5;
-    }
-    y += 4;
-  }
-
-  // Footer
-  y += 10;
-  if (y > pageHeight - 25) {
-    doc.addPage();
-    y = 25;
-  }
-  doc.setDrawColor(212, 175, 55);
-  doc.setLineWidth(0.3);
-  doc.line(margin, y, pageWidth - margin, y);
-  y += 6;
-  doc.setFont('Cairo', 'normal');
-  doc.setFontSize(8);
-  doc.setTextColor(10, 25, 47, 0.5);
-  doc.text('منصة مرفأ — دراسات حالة MBA', pageWidth - margin, y, { align: 'right' });
-  doc.text('www.marfa.sa', margin, y, { align: 'left' });
-}
+// ── Generate PDFs ────────────────────────────────────────────────────────────
 
 async function main() {
-  // Ensure output directories exist
-  const fontsDir = path.dirname(FONT_PATH);
-  if (!fs.existsSync(fontsDir)) {
-    fs.mkdirSync(fontsDir, { recursive: true });
-  }
   if (!fs.existsSync(PUBLIC_DIR)) {
     fs.mkdirSync(PUBLIC_DIR, { recursive: true });
   }
 
-  // Download Cairo font if not already present
-  if (!fs.existsSync(FONT_PATH)) {
-    console.log('Downloading Cairo font...');
-    const regularUrl = 'https://fonts.gstatic.com/s/cairo/v31/SLXgc1nY6HkvangtZmpQdkhzfH5lkSs2SgRjCAGMQ1z0hOA-W1Q.ttf';
-    const boldUrl = 'https://fonts.gstatic.com/s/cairo/v31/SLXgc1nY6HkvangtZmpQdkhzfH5lkSs2SgRjCAGMQ1z0hAc5W1Q.ttf';
+  console.log('Launching browser...');
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
 
-    const [regResp, boldResp] = await Promise.all([fetch(regularUrl), fetch(boldUrl)]);
-    if (!regResp.ok || !boldResp.ok) {
-      throw new Error(`Failed to download Cairo fonts`);
-    }
-
-    const [regBuffer, boldBuffer] = await Promise.all([
-      regResp.arrayBuffer().then((b) => Buffer.from(b)),
-      boldResp.arrayBuffer().then((b) => Buffer.from(b)),
-    ]);
-
-    fs.writeFileSync(FONT_PATH, regBuffer);
-    fs.writeFileSync(FONT_PATH.replace('Regular', 'Bold'), boldBuffer);
-    console.log('  ✅ Fonts downloaded to public/fonts/');
-  } else {
-    console.log('Using cached Cairo fonts...');
-  }
-
-  const fontRegularBase64 = fs.readFileSync(FONT_PATH, 'base64');
-  const fontBoldBase64 = fs.readFileSync(FONT_PATH.replace('Regular', 'Bold'), 'base64');
-
-  console.log(`Generating ${CASE_STUDIES.length} Arabic PDFs...`);
+  console.log(`Generating ${CASE_STUDIES.length} Arabic PDFs...\n`);
 
   for (const study of CASE_STUDIES) {
-    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const page = await browser.newPage();
+    const html = buildHTML(study);
 
-    // Register fonts with jsPDF
-    doc.addFileToVFS('Cairo-Regular.ttf', fontRegularBase64);
-    doc.addFont('Cairo-Regular.ttf', 'Cairo', 'normal');
-    doc.addFileToVFS('Cairo-Bold.ttf', fontBoldBase64);
-    doc.addFont('Cairo-Bold.ttf', 'Cairo', 'bold');
-
-    generatePDF(doc, study);
+    await page.setContent(html, { waitUntil: 'networkidle0', timeout: 30000 });
+    // Wait for fonts to load
+    await page.evaluate(() => document.fonts.ready);
 
     const outputPath = path.join(PUBLIC_DIR, study.filename);
-    doc.save(outputPath);
+    await page.pdf({
+      path: outputPath,
+      format: 'A4',
+      printBackground: true,
+      margin: { top: '0mm', right: '0mm', bottom: '0mm', left: '0mm' },
+      preferCSSPageSize: false,
+    });
+
     console.log(`  ✅ ${study.filename}`);
+    await page.close();
   }
 
-  console.log('\nAll Arabic PDFs generated successfully!');
+  await browser.close();
+  console.log('\nDone — all Arabic PDFs regenerated with proper Arabic text shaping.');
 }
 
 main().catch((err) => {

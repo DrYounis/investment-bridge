@@ -48,6 +48,7 @@ const SCHEDULE_DATA = [
         case: "حالة \"Airbnb\" في البدايات",
         challenge: "كيف تقنع المستثمر بفكرة \"تأجير خيام أو غرف\" بينما يوجد فنادق؟ (إسقاط على سياحة حائل).",
         pdf: "/case-studies/Airbnb_Strategy_Case_Study.pdf",
+        arPdf: "/case-studies/Airbnb_Strategy_Arabic_Case_Study.pdf",
     },
     {
         encounter: "اللقاء 2",
@@ -55,6 +56,7 @@ const SCHEDULE_DATA = [
         case: "حالة \"Zappos\" في خدمة العملاء",
         challenge: "هل يمكن بناء ثقافة مؤسسية تجعل الموظف يضحي من أجل العميل؟ وكيف نطبق ذلك في مشاريعنا؟",
         pdf: "/case-studies/Zappos_Leadership_Case_Study.pdf",
+        arPdf: "/case-studies/Zappos_Leadership_Arabic_Case_Study.pdf",
     },
     {
         encounter: "اللقاء 3",
@@ -62,6 +64,7 @@ const SCHEDULE_DATA = [
         case: "حالة \"WeWork\" (الفشل المالي)",
         challenge: "كيف تحولت شركة بمليارات الدولارات إلى الإفلاس؟ فهم الفرق بين \"النمو\" و\"الربحية\".",
         pdf: "/case-studies/WeWork_Finance_Case_Study.pdf",
+        arPdf: "/case-studies/WeWork_Finance_Arabic_Case_Study.pdf",
     },
     {
         encounter: "اللقاء 4",
@@ -69,6 +72,7 @@ const SCHEDULE_DATA = [
         case: "حالة \"Liquid Death\" (تسويق المياه)",
         challenge: "كيف تبيع منتجاً عادياً جداً (ماء) ببراند عبقري؟ درس في التميز البصري.",
         pdf: "/case-studies/Liquid_Death_Marketing_Case_Study.pdf",
+        arPdf: "/case-studies/Liquid_Death_Marketing_Arabic_Case_Study.pdf",
     },
     {
         encounter: "اللقاء 5",
@@ -76,6 +80,7 @@ const SCHEDULE_DATA = [
         case: "حالة \"Amazon Logistics\"",
         challenge: "كيف تدار العمليات لتقليل الهدر؟ (مناقشة تطبيقها في توريد الأغذية والمشروبات لسلسلة مقاهي).",
         pdf: "/case-studies/Amazon_Operations_Case_Study.pdf",
+        arPdf: "/case-studies/Amazon_Operations_Arabic_Case_Study.pdf",
     },
     {
         encounter: "اللقاء 6",
@@ -83,6 +88,7 @@ const SCHEDULE_DATA = [
         case: "حالة \"Shark Tank\" (نماذج حقيقية)",
         challenge: "تحليل صفقات حقيقية: لماذا رفض المستثمر فكرة عبقرية؟ ولماذا قبل فكرة بسيطة؟",
         pdf: "/case-studies/SharkTank_Negotiation_Case_Study.pdf",
+        arPdf: "/case-studies/SharkTank_Negotiation_Arabic_Case_Study.pdf",
     },
     {
         encounter: "اللقاء 7",
@@ -90,6 +96,7 @@ const SCHEDULE_DATA = [
         case: "حالة Saudi German Health (تداول: 4009)",
         challenge: "إدانة 11 عضو مجلس إدارة ولجنة مراجعة بتضخيم إيرادات بـ 358 مليون ريال رغم علمهم بعدم إمكانية تحصيلها. غرامات 18 مليون ريال فقط (5%). هل العقوبات رادعة؟ وماذا يعني هذا لمصداقية السوق المالي السعودي؟",
         pdf: "/case-studies/Saudi_German_Health_Case_Study.pdf",
+        arPdf: "/case-studies/Saudi_German_Health_Arabic_Case_Study.pdf",
     }
 ];
 
@@ -159,6 +166,7 @@ export default function MeetingsSchedule() {
                                 <th className="p-4 whitespace-nowrap">دراسة الحالة (The Case)</th>
                                 <th className="p-4 min-w-[300px]">التحدي الذي سنناقشه</th>
                                 <th className="p-4 whitespace-nowrap">ملف PDF</th>
+                                <th className="p-4 whitespace-nowrap">النسخة العربية</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gold/10">
@@ -179,6 +187,16 @@ export default function MeetingsSchedule() {
                                             className="inline-flex items-center gap-1 px-3 py-2 bg-gold/10 border border-gold/20 rounded-lg text-gold-dark text-sm font-bold hover:bg-gold/20 transition-colors"
                                         >
                                             📄 PDF
+                                        </a>
+                                    </td>
+                                    <td className="p-4">
+                                        <a
+                                            href={row.arPdf}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-1 px-3 py-2 bg-gold/10 border border-gold/20 rounded-lg text-gold-dark text-sm font-bold hover:bg-gold/20 transition-colors"
+                                        >
+                                            📄 عربي
                                         </a>
                                     </td>
                                 </tr>

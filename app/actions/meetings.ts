@@ -2,7 +2,6 @@
 
 import { Resend } from 'resend';
 import { createClient } from '@/lib/supabase/server';
-import { logger } from '@/lib/logger';
 
 function getResend(): Resend {
   return new Resend(process.env.RESEND_API_KEY);
@@ -32,7 +31,7 @@ export async function scheduleMeeting(formData: FormData) {
             });
 
         if (dbError) {
-            logger.error('Database insert error:', dbError);
+            console.error('Database insert error:', dbError);
             return { success: false, error: 'فشل حفظ الطلب. يرجى المحاولة مرة أخرى.' };
         }
 
@@ -61,13 +60,13 @@ export async function scheduleMeeting(formData: FormData) {
         });
 
         if (emailError) {
-            logger.error('Email send error:', emailError);
+            console.error('Email send error:', emailError);
             // Request is already saved in DB, so still return success
         }
 
         return { success: true };
     } catch (err) {
-        logger.error('scheduleMeeting error:', err);
+        console.error('scheduleMeeting error:', err);
         return { success: false, error: 'حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.' };
     }
 }

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/service';
-import { logger } from '@/lib/logger';
 
 export async function POST(req: NextRequest) {
   try {
@@ -69,7 +68,7 @@ export async function POST(req: NextRequest) {
       });
 
       if (createError || !newUser.user) {
-        logger.error('Failed to create user:', createError);
+        console.error('Failed to create user:', createError);
         return NextResponse.json(
           { error: 'فشل في إنشاء الحساب' },
           { status: 500 }
@@ -91,7 +90,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (signInError || !signInData.session) {
-      logger.error('Failed to create session:', signInError);
+      console.error('Failed to create session:', signInError);
       return NextResponse.json(
         { error: 'فشل في إنشاء الجلسة' },
         { status: 500 }
@@ -105,7 +104,7 @@ export async function POST(req: NextRequest) {
       refresh_token: signInData.session.refresh_token,
     });
   } catch (err) {
-    logger.error('verify-otp error:', err);
+    console.error('verify-otp error:', err);
     return NextResponse.json(
       { error: 'حدث خطأ غير متوقع' },
       { status: 500 }

@@ -1,5 +1,4 @@
 import { createClient } from '@/lib/supabase/server';
-import { logger } from '@/lib/logger';
 
 export interface StravaActivity {
     id: number;
@@ -258,7 +257,7 @@ export async function getStravaStats(): Promise<StravaStats> {
                 }))
             );
         } catch (error) {
-            logger.error('Failed to fetch activities:', error);
+            console.error('Failed to fetch activities:', error);
         }
     }
 

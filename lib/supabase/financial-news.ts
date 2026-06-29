@@ -1,6 +1,5 @@
 import { getSupabaseUrl, getSupabaseAnonKey } from './config';
 import { createServiceClient } from './service';
-import { logger } from '@/lib/logger';
 
 // ── Types ──────────────────────────────────────────────────────────
 
@@ -75,13 +74,13 @@ export async function getArticles(): Promise<ArticleListingItem[]> {
 
     if (!response.ok) {
       const errorText = await response.text();
-      logger.error('❌ getArticles fetch error:', { status: response.status, error: errorText.slice(0, 500) });
+      console.error('❌ getArticles fetch error:', { status: response.status, error: errorText.slice(0, 500) });
       return [];
     }
 
     data = await response.json();
   } catch (e: any) {
-    logger.error('❌ getArticles EXCEPTION:', { message: e.message, stack: e.stack });
+    console.error('❌ getArticles EXCEPTION:', { message: e.message, stack: e.stack });
     return [];
   }
 
@@ -125,7 +124,7 @@ export async function getArticleBySlug(
 
     if (!response.ok) {
       const errorText = await response.text();
-      logger.error('❌ getArticleBySlug error:', { status: response.status, error: errorText.slice(0, 500) });
+      console.error('❌ getArticleBySlug error:', { status: response.status, error: errorText.slice(0, 500) });
       return null;
     }
 
@@ -142,7 +141,7 @@ export async function getArticleBySlug(
 
     return null;
   } catch (e: any) {
-    logger.error('❌ getArticleBySlug exception:', { message: e.message, stack: e.stack?.slice(0, 200) });
+    console.error('❌ getArticleBySlug exception:', { message: e.message, stack: e.stack?.slice(0, 200) });
     return null;
   }
 }
@@ -186,7 +185,7 @@ export async function saveArticle(article: {
   const { error } = await supabase.from('financial_news_articles').insert(insertData);
 
   if (error) {
-    logger.error('❌ Failed to save article:', error);
+    console.error('❌ Failed to save article:', error);
     throw new Error(`Database insert failed: ${error.message}`);
   }
 
@@ -205,7 +204,7 @@ export async function listArticles(): Promise<
     .limit(10);
 
   if (error) {
-    logger.error('❌ Failed to list articles:', error);
+    console.error('❌ Failed to list articles:', error);
     return [];
   }
 

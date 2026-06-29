@@ -1,6 +1,5 @@
 
 import { createClient } from '../../../lib/supabase/server'
-import { logger } from '@/lib/logger'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
@@ -32,7 +31,7 @@ export async function GET(request: Request) {
                 return NextResponse.redirect(`${origin}${next}`)
             }
         } else {
-            logger.error('Auth Session Error:', sessionError)
+            console.error('Auth Session Error:', sessionError)
             return NextResponse.redirect(`${origin}/auth/auth-code-error?error=auth_error&error_description=${encodeURIComponent(sessionError.message)}`)
         }
     }

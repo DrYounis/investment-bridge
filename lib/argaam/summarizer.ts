@@ -1,7 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { RawArticle } from './scraper';
 import { sanitizeContent } from '@/lib/sanitize';
-import { logger } from '@/lib/logger';
 
 // ── Types ──────────────────────────────────────────────────────────
 
@@ -95,7 +94,7 @@ function buildTitlePrompt(originalTitle: string): string {
 function getClient(): Anthropic | null {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    logger.warn('⚠️ ANTHROPIC_API_KEY not set — using raw content without AI summarization');
+    console.warn('⚠️ ANTHROPIC_API_KEY not set — using raw content without AI summarization');
     return null;
   }
   return new Anthropic({ apiKey });
@@ -111,11 +110,11 @@ async function generateSummary(
   }
 
   if (!client) {
-    logger.info('   ⚠️ No Claude client — using original content as summary');
+    console.log('   ⚠️ No Claude client — using original content as summary');
     return content.slice(0, 500);
   }
 
-  logger.info('   🤖 Requesting summary from Claude...');
+  console.log('   🤖 Requesting summary from Claude...');
 
   const message = await client.messages.create({
     model: CLAUDE_MODEL,
@@ -177,7 +176,7 @@ async function generateSEOTitle(
 export async function summarizeArticle(
   article: RawArticle
 ): Promise<SummarizedArticle> {
-  logger.info(`   🤖 Summarizing: "${article.title.slice(0, 60)}..."`);
+  console.log(`   🤖 Summarizing: "${article.title.slice(0, 60)}..."`);
 
   const client = getClient();
   const [seoSummary, seoTitle] = await Promise.all([
@@ -195,6 +194,6 @@ export async function summarizeArticle(
     video_url: article.video_url,
   };
 
-  logger.info(`   ✅ Summarized: "${seoTitle.slice(0, 50)}..."`);
+  console.log(`   ✅ Summarized: "${seoTitle.slice(0, 50)}..."`);
   return result;
 }

@@ -3,7 +3,6 @@ import path from 'path';
 import matter from 'gray-matter';
 import type { RawArticle } from './scraper';
 import type { SummarizedArticle } from './summarizer';
-import { logger } from '@/lib/logger';
 
 // ── Types ──────────────────────────────────────────────────────────
 
@@ -93,7 +92,7 @@ export async function saveToMarkdown(
 ): Promise<MarkdownResult> {
   if (!fs.existsSync(CONTENT_DIR)) {
     fs.mkdirSync(CONTENT_DIR, { recursive: true });
-    logger.info(`📁 Created directory: ${CONTENT_DIR}`);
+    console.log(`📁 Created directory: ${CONTENT_DIR}`);
   }
 
   const filename = generateUniqueFilename(article.title, article.date);
@@ -101,7 +100,7 @@ export async function saveToMarkdown(
   const content = generateMarkdownContent(article, summary);
 
   fs.writeFileSync(filepath, content, 'utf-8');
-  logger.info(`💾 Saved: ${filename}`);
+  console.log(`💾 Saved: ${filename}`);
 
   return { filename, filepath, title: summary.seo_title };
 }

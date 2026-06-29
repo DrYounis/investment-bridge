@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { requestProjectDetails } from '@/app/actions/investor-requests';
-import { logger } from '@/lib/logger';
 import Toast from '@/app/components/ui/Toast';
 
 interface InvestorRequestFormProps {
@@ -24,7 +23,7 @@ export default function InvestorRequestForm({ repoName, repoUrl }: InvestorReque
             setToastMessage('Details requested successfully! Check your email soon.');
             setShowToast(true);
         } catch (error) {
-            logger.error('Failed to submit request:', error);
+            console.error('Failed to submit request:', error);
             setToastType('error');
             setToastMessage('Failed to submit request. Please try again.');
             setShowToast(true);

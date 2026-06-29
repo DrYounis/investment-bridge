@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { logger } from '@/lib/logger';
 import { useRouter } from 'next/navigation';
 
 // Types
@@ -38,7 +37,7 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
                     .maybeSingle();
 
                 if (profileError) {
-                    logger.error('Error fetching admin profile:', profileError);
+                    console.error('Error fetching admin profile:', profileError);
                     router.push('/admin/login');
                     return;
                 }
@@ -50,7 +49,7 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
                     fetchInvestors();
                 }
             } catch (err) {
-                logger.error('Admin auth check failed:', err);
+                console.error('Admin auth check failed:', err);
                 router.push('/admin/login');
             }
         };
@@ -68,7 +67,7 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
                     table: 'investor_profiles'
                 },
                 async (payload) => {
-                    logger.info('Realtime Event:', payload);
+                    console.log('Realtime Event:', payload);
 
                     if (payload.eventType === 'INSERT') {
                         // New investor signed up!
@@ -86,7 +85,7 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
                                     .maybeSingle();
 
                                 if (profileFetchError) {
-                                    logger.error('Error fetching profile for realtime event:', profileFetchError);
+                                    console.error('Error fetching profile for realtime event:', profileFetchError);
                                     return;
                                 }
 
@@ -105,7 +104,7 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
                                     // Optional: Play sound or show toast here
                                 }
                             } catch (err) {
-                                logger.error('Error in realtime profile fetch:', err);
+                                console.error('Error in realtime profile fetch:', err);
                             }
                         }
                     } else if (payload.eventType === 'UPDATE') {
@@ -168,7 +167,7 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
             });
 
         } catch (error) {
-            logger.error('Error fetching investors:', error);
+            console.error('Error fetching investors:', error);
             // Fallback for demo if DB is empty or connection fails
             setPendingInvestors([
                 { id: '1', full_name: "شركة استثمارات حائل", email: "contact@hailinvest.com", approval_status: "pending", created_at: "2026-01-30" },
@@ -193,7 +192,7 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
 
             // Optional: Send email via Edge Function here
         } catch (error) {
-            logger.error('Error approving investor:', error);
+            console.error('Error approving investor:', error);
             alert("حدث خطأ أثناء الاعتماد.");
         }
     };

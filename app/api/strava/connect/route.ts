@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { StravaService } from '@/lib/services/strava-service';
 import { createClient } from '@/lib/supabase/server';
-import { logger } from '@/lib/logger';
 
 export async function GET(request: NextRequest) {
     try {
@@ -26,7 +25,7 @@ export async function GET(request: NextRequest) {
         // Redirect to Strava authorization
         return NextResponse.redirect(authUrl);
     } catch (error) {
-        logger.error('Strava connect error:', error);
+        console.error('Strava connect error:', error);
         return NextResponse.redirect(
             new URL('/csr/technical-reports?error=server_error', request.url)
         );

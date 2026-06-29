@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Tajawal } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import { ToastProvider } from "@/components/ui/Toast";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import "./globals.css";
@@ -58,9 +59,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${tajawal.variable} antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <Header />
-          {children}
-          <Footer />
+          <ToastProvider>
+            <Header />
+            {children}
+            <Footer />
+          </ToastProvider>
         </ThemeProvider>
 
         {/* JSON-LD Structured Data for GEO/SEO — Elevator Speech Trainer */}

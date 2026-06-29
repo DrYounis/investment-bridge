@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { logger } from '@/lib/logger';
 import ArticleCard from '@/app/components/financial-news/ArticleCard';
 import ScraperStatus from '@/app/components/financial-news/ScraperStatus';
 
@@ -107,7 +106,7 @@ export default function AdminNewsPage() {
     } catch (err) {
       setJobStatus('error');
       setError(String(err));
-      logger.error('Scrape error:', err);
+      console.error('Scrape error:', err);
     } finally {
       setLoading(false);
     }

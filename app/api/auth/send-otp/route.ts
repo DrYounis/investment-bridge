@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createServiceClient } from '@/lib/supabase/service';
 import { rateLimit, getClientIP } from '@/lib/rate-limit';
-import { logger } from '@/lib/logger';
 
 function getResend(): Resend {
   return new Resend(process.env.RESEND_API_KEY);
@@ -28,7 +27,7 @@ export async function POST(req: NextRequest) {
 
     // Validate Resend API key is configured
     if (!process.env.RESEND_API_KEY || String(process.env.RESEND_API_KEY).length < 20) {
-      logger.error('RESEND_API_KEY is not configured or is a placeholder');
+      console.error('RESEND_API_KEY is not configured or is a placeholder');
       return NextResponse.json(
         { error: 'خدمة البريد غير مهيأة. يرجى التواصل مع الدعم الفني.' },
         { status: 500 }
@@ -51,7 +50,7 @@ export async function POST(req: NextRequest) {
       });
 
     if (insertError) {
-      logger.error('Failed to store verification code:', insertError);
+      console.error('Failed to store verification code:', insertError);
       return NextResponse.json(
         { error: 'فشل في إرسال الرمز. يرجى المحاولة مرة أخرى.' },
         { status: 500 }
@@ -82,7 +81,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (resendError) {
-      logger.error('Resend email send failed:', resendError);
+      console.error('Resend email send failed:', resendError);
       const resendMsg = typeof resendError === 'object' && resendError !== null
         ? (resendError as any).message || (resendError as any).name || JSON.stringify(resendError)
         : String(resendError);
@@ -94,7 +93,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    logger.error('send-otp error:', err);
+    console.error('send-otp error:', err);
     return NextResponse.json(
       { error: 'حدث خطأ غير متوقع' },
       { status: 500 }

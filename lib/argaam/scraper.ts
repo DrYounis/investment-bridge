@@ -1,5 +1,4 @@
 import * as cheerio from 'cheerio';
-import { logger } from '@/lib/logger';
 
 // ── Types ──────────────────────────────────────────────────────────
 
@@ -98,7 +97,7 @@ function extractArticleCards(
     });
   });
 
-  logger.info(`🔍 Found ${cards.length} articles (from ${links.length} total links)`);
+  console.log(`🔍 Found ${cards.length} articles (from ${links.length} total links)`);
   return cards;
 }
 
@@ -149,7 +148,7 @@ async function scrapeArticleContent(
   if (!url) return { content: '', date: '' };
 
   try {
-    logger.info(`📄 Fetching: ${url}`);
+    console.log(`📄 Fetching: ${url}`);
     const html = await fetchWithTimeout(url);
     const $ = cheerio.load(html);
 
@@ -217,7 +216,7 @@ async function scrapeArticleContent(
 
     return { content, date, video_url };
   } catch (err) {
-    logger.error(`❌ Failed to fetch content from ${url}:`, err);
+    console.error(`❌ Failed to fetch content from ${url}:`, err);
     return { content: '', date: '' };
   }
 }
@@ -227,9 +226,9 @@ async function scrapeArticleContent(
 export async function scrapeArgaamNews(
   maxArticles: number = 5
 ): Promise<RawArticle[]> {
-  logger.info(`🔍 Starting Argaam scraper (cheerio) — targeting ${maxArticles} articles...`);
+  console.log(`🔍 Starting Argaam scraper (cheerio) — targeting ${maxArticles} articles...`);
 
-  logger.info(`📰 Fetching ${ARGAAM_HOMEPAGE}...`);
+  console.log(`📰 Fetching ${ARGAAM_HOMEPAGE}...`);
   const html = await fetchWithTimeout(ARGAAM_HOMEPAGE);
 
   if (!html || html.length < 500) {
@@ -239,7 +238,7 @@ export async function scrapeArgaamNews(
   const cards = extractArticleCards(html, maxArticles);
 
   if (cards.length === 0) {
-    logger.info('⚠️ No articles found.');
+    console.log('⚠️ No articles found.');
     return [];
   }
 
@@ -248,7 +247,7 @@ export async function scrapeArgaamNews(
 
   for (let i = 0; i < cards.length; i++) {
     const card = cards[i];
-    logger.info(`📰 [${i + 1}/${cards.length}] ${card.title.slice(0, 60)}`);
+    console.log(`📰 [${i + 1}/${cards.length}] ${card.title.slice(0, 60)}`);
 
     // Fetch full article content and date from detail page
     const { content, date, video_url } = await scrapeArticleContent(card.url);
@@ -263,9 +262,9 @@ export async function scrapeArgaamNews(
       scraped_at: scrapedAt,
     });
 
-    logger.info(`   ✅ ${content.length} chars, date: ${date || 'N/A'}`);
+    console.log(`   ✅ ${content.length} chars, date: ${date || 'N/A'}`);
   }
 
-  logger.info(`\n✅ Scraping complete — ${articles.length} articles.`);
+  console.log(`\n✅ Scraping complete — ${articles.length} articles.`);
   return articles;
 }

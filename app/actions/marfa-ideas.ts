@@ -1,7 +1,6 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server';
-import { logger } from '@/lib/logger';
 
 export async function submitIdea(formData: FormData) {
     const name = formData.get('name') as string;
@@ -28,13 +27,13 @@ export async function submitIdea(formData: FormData) {
             });
 
         if (dbError) {
-            logger.error('Database insert error:', dbError);
+            console.error('Database insert error:', dbError);
             return { success: false, error: 'Failed to save your idea. Please try again.' };
         }
 
         return { success: true };
     } catch (err) {
-        logger.error('submitIdea error:', err);
+        console.error('submitIdea error:', err);
         return { success: false, error: 'An unexpected error occurred. Please try again.' };
     }
 }

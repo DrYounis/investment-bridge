@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useMemo } from 'react';
-import { logger } from '@/lib/logger';
 
 interface MeetingData {
   number: number;
@@ -104,7 +103,7 @@ export default function PreMeetingPrep({ meeting }: { meeting: MeetingData }) {
       participantCount,
       savedAt: new Date().toISOString(),
     };
-    logger.info('✅ Session setup saved:', session);
+    console.log('✅ Session setup saved:', session);
     alert('✅ Session setup saved! Check console for details.');
   };
 

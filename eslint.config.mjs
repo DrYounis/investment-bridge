@@ -111,8 +111,6 @@ const eslintConfig = defineConfig([
     "marfa-argaam-scraper/app/api/scrape/argaam/route.ts",
     "marfa-argaam-scraper/assets/marfa-argaam-scraper/route.ts",
     // More pre-existing files
-    "app/__tests__/health.test.ts",
-    "app/__tests__/page.test.tsx",
     "app/admin/layout.tsx",
     "app/advisor/page.tsx",
     "app/api/analyze-document/route.ts",

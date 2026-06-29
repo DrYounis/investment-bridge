@@ -1,5 +1,31 @@
 import '@testing-library/jest-dom'
 
+// Polyfill Web API globals for Node.js test environment (Next.js 16 requires them)
+if (typeof Request === 'undefined') {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (globalThis as any).Request = class Request {
+    url: string
+    method: string
+    headers: Headers
+    constructor(input: string, init?: RequestInit) {
+      this.url = input
+      this.method = init?.method || 'GET'
+      this.headers = new Headers(init?.headers)
+    }
+  }
+}
+if (typeof Response === 'undefined') {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (globalThis as any).Response = class Response {
+    status: number
+    headers: Headers
+    constructor(body?: BodyInit | null, init?: ResponseInit) {
+      this.status = init?.status || 200
+      this.headers = new Headers(init?.headers)
+    }
+  }
+}
+
 // Mock Next.js router
 jest.mock('next/navigation', () => ({
   useRouter() {

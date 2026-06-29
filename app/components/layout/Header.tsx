@@ -47,9 +47,14 @@ export default function Header() {
                             <div className="px-6 py-2 bg-white/10 rounded-full animate-pulse h-10 w-20" />
                         </div>
                     ) : user ? (
-                        <Link href="/dashboard/hub" className="px-5 py-2 bg-gradient-to-r from-gold to-gold-dark text-deep-navy text-sm font-black rounded-full hover:shadow-lg hover:shadow-gold/20 transition-all duration-300">
-                            لوحة التحكم
-                        </Link>
+                        <div className="flex gap-3">
+                            <Link href="/dashboard/hub" className="px-5 py-2 bg-gradient-to-r from-gold to-gold-dark text-deep-navy text-sm font-black rounded-full hover:shadow-lg hover:shadow-gold/20 transition-all duration-300">
+                                لوحة التحكم
+                            </Link>
+                            <Link href="/dashboard/profile" className="px-5 py-2 bg-white/5 backdrop-blur-md text-sm font-black text-gold rounded-full hover:bg-white/10 hover:shadow-md transition-all duration-300 border border-gold/30">
+                                الملف الشخصي
+                            </Link>
+                        </div>
                     ) : (
                         <div className="flex gap-3">
                             <Link href="/register" className="px-6 py-2 bg-gradient-to-r from-gold to-gold-dark text-deep-navy text-sm font-black rounded-full hover:shadow-lg hover:shadow-gold/20 transition-all duration-300 border border-gold/50">

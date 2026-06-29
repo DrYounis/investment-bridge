@@ -9,17 +9,40 @@ export default function Header() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const supabase = createClient();
-        supabase.auth.getUser().then(({ data }) => {
-            setUser(data.user);
+        async function checkAuth() {
+            try {
+                const supabase = createClient();
+                const { data: { user: supabaseUser } } = await supabase.auth.getUser();
+                if (supabaseUser) {
+                    setUser(supabaseUser);
+                    setLoading(false);
+                    return;
+                }
+            } catch { /* fallback to server endpoint */ }
+
+            // Server-side check as fallback (works with httpOnly cookies)
+            try {
+                const res = await fetch('/api/auth/me');
+                if (res.ok) {
+                    const json = await res.json();
+                    if (json.user) {
+                        setUser(json.user);
+                        setLoading(false);
+                        return;
+                    }
+                }
+            } catch { /* endpoint may not be deployed yet */ }
+
+            setUser(null);
             setLoading(false);
-        });
+        }
+        checkAuth();
     }, []);
 
     return (
         <header className="absolute top-0 left-0 w-full z-50 p-6" dir="rtl">
             <div className="max-w-7xl mx-auto flex justify-between items-center">
-                {/* Logo / Brand Name - Right Side (Arabic Only) */}
+                {/* Logo */}
                 <div className="flex items-center gap-2">
                     <a href="/" className="hover:opacity-80 transition-opacity">
                         <Image
@@ -32,7 +55,7 @@ export default function Header() {
                     </a>
                 </div>
 
-                {/* Navigation items */}
+                {/* Navigation */}
                 <div className="flex items-center gap-6">
                     <a href="/meetings" className="text-slate-200/90 hover:text-gold hover:scale-105 transition-all font-bold tracking-wide">
                         لقاءات مرفأ

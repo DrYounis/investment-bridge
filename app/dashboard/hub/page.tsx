@@ -6,6 +6,15 @@ import DashboardHome from '@/app/components/dashboard/DashboardHome';
 import WelcomeCard from '@/components/dashboard/WelcomeCard';
 import ProgressRings from '@/components/dashboard/ProgressRings';
 import NotificationBell from '@/components/dashboard/NotificationBell';
+import ThemeToggle from '@/components/dashboard/ThemeToggle';
+import ParticleBackground from '@/components/dashboard/ParticleBackground';
+import ActivityTimeline from '@/components/dashboard/ActivityTimeline';
+import MiniAnalytics from '@/components/dashboard/MiniAnalytics';
+import NextStepsChecklist from '@/components/dashboard/NextStepsChecklist';
+import AiTipOfDay from '@/components/dashboard/AiTipOfDay';
+import MeetingCountdown from '@/components/dashboard/MeetingCountdown';
+import SocialProofTicker from '@/components/dashboard/SocialProofTicker';
+import QuickActionFAB from '@/components/dashboard/QuickActionFAB';
 import { NewsProvider } from '@/app/context/NewsContext';
 import { createClient } from '@/lib/supabase/client';
 
@@ -65,25 +74,51 @@ export default function HubPage() {
 
   return (
     <NewsProvider>
-      <div className="min-h-screen bg-[#0a0f1e]" dir="rtl">
-        <div
-          className="p-4 md:p-8 max-w-7xl mx-auto space-y-6"
-          style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
-        >
-          {/* Top bar: notification bell */}
-          <div className="flex justify-end">
-            <NotificationBell />
+      <div className="min-h-screen bg-[#0a0f1e]" dir="rtl" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+        {/* Particle background behind hero area */}
+        <div className="relative overflow-hidden">
+          <ParticleBackground />
+          <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6 relative z-10">
+            {/* Top bar */}
+            <div className="flex justify-between items-center">
+              <div />
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <NotificationBell />
+              </div>
+            </div>
+
+            {/* Row 1: Welcome + Progress Rings */}
+            <div className="grid lg:grid-cols-2 gap-6">
+              <WelcomeCard />
+              <ProgressRings />
+            </div>
+
+            {/* Row 2: MiniAnalytics + NextSteps */}
+            <div className="grid lg:grid-cols-2 gap-6">
+              <MiniAnalytics />
+              <NextStepsChecklist />
+            </div>
+
+            {/* Row 3: AiTip + MeetingCountdown */}
+            <div className="grid lg:grid-cols-2 gap-6">
+              <AiTipOfDay />
+              <MeetingCountdown />
+            </div>
+
+            {/* Row 4: Activity Timeline (full width) */}
+            <ActivityTimeline />
+
+            {/* Row 5: Existing role-based dashboard */}
+            <DashboardHome user={currentUser} />
           </div>
 
-          {/* Welcome card */}
-          <WelcomeCard />
-
-          {/* Progress rings */}
-          <ProgressRings />
-
-          {/* Existing role-based dashboard */}
-          <DashboardHome user={currentUser} />
+          {/* Social proof ticker */}
+          <SocialProofTicker />
         </div>
+
+        {/* Floating action button */}
+        <QuickActionFAB />
       </div>
     </NewsProvider>
   );

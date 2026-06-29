@@ -3,6 +3,26 @@
 
 @import "tailwindcss";
 
+/* ===== Theme: Dark (default marfa dashboard) ===== */
+.dark {
+  --background: #0a0f1e;
+  --foreground: #ffffff;
+  --deep-navy: #0a0f1e;
+  --gold: #c9a84c;
+  --gold-dark: #d4a843;
+  --gold-light: rgba(201,168,76,0.15);
+}
+
+/* ===== Theme: Light ===== */
+.light {
+  --background: #f5f0e8;
+  --foreground: #0a0f1e;
+  --deep-navy: #0a0f1e;
+  --gold: #c9a84c;
+  --gold-dark: #d4a843;
+  --gold-light: rgba(201,168,76,0.15);
+}
+
 /* ===== CSS Variables ===== */
 :root {
   /* Colors - Light Mode - Luxury Palette */

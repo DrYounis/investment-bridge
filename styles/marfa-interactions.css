@@ -1,0 +1,48 @@
+/* ── Shimmer skeleton ── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.marfa-skeleton {
+  background: linear-gradient(90deg, #1a2540 25%, #243050 50%, #1a2540 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ── Card hover ── */
+.marfa-card-hover {
+  transition: transform 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+}
+.marfa-card-hover:hover {
+  transform: translateY(-2px);
+  border-color: rgba(201,168,76,0.4);
+  box-shadow: 0 8px 32px rgba(201,168,76,0.08);
+}
+
+/* ── Button hover ── */
+.marfa-btn-hover {
+  transition: transform 150ms ease, background-color 150ms ease;
+}
+.marfa-btn-hover:hover {
+  transform: scale(1.02);
+}
+
+/* ── Icon hover ── */
+.marfa-icon-hover {
+  transition: transform 150ms ease;
+}
+.marfa-icon-hover:hover {
+  transform: rotate(8deg) scale(1.1);
+}
+
+/* ── Ticker animation ── */
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marfa-ticker {
+  animation: ticker 30s linear infinite;
+}
+.marfa-ticker:hover {
+  animation-play-state: paused;
+}

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Tajawal } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import "./globals.css";
+import "../styles/marfa-interactions.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -55,9 +57,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${tajawal.variable} antialiased`}
       >
-        <Header />
-        {children}
-        <Footer />
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          <Header />
+          {children}
+          <Footer />
+        </ThemeProvider>
 
         {/* JSON-LD Structured Data for GEO/SEO — Elevator Speech Trainer */}
         <script

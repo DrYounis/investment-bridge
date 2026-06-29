@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
     // Skip Supabase entirely for public pages
-    const publicPaths = ['/login', '/register', '/auth', '/api/auth', '/api/erasure', '/', '/marfa', '/meetings', '/financial-news', '/argaam-news', '/api/scrape', '/api/cron', '/api/health']
+    const publicPaths = ['/login', '/register', '/auth', '/api/auth', '/api/erasure', '/', '/marfa', '/financial-news', '/argaam-news', '/api/scrape', '/api/cron', '/api/health']
     const isPublicPath = publicPaths.some(p => request.nextUrl.pathname === p || request.nextUrl.pathname.startsWith(p + '/'))
 
     if (isPublicPath) {
@@ -37,9 +37,10 @@ export async function updateSession(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser()
 
-    if (!user && request.nextUrl.pathname.startsWith('/dashboard')) {
+    if (!user && (request.nextUrl.pathname.startsWith('/dashboard') || request.nextUrl.pathname.startsWith('/meetings'))) {
         const url = request.nextUrl.clone()
         url.pathname = '/login'
+        url.searchParams.set('redirect', request.nextUrl.pathname)
         return NextResponse.redirect(url)
     }
 

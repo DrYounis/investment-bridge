@@ -31,7 +31,12 @@ jest.mock('@/lib/supabase/server', () => ({
   ),
 }))
 
-const { NextResponse } = require('next/server') as { NextResponse: { json: jest.Mock } }
+// Re-import NextResponse after mock is set up — avoids top-level await / require()
+let NextResponse: { json: jest.Mock }
+beforeAll(async () => {
+  const mod = await import('next/server')
+  NextResponse = mod.NextResponse as unknown as { json: jest.Mock }
+})
 
 describe('Health API', () => {
   beforeEach(() => {

@@ -10,7 +10,7 @@ jobs:
     name: Deploy to Production
     runs-on: ubuntu-latest
     environment: production
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -26,22 +26,8 @@ jobs:
 
       - name: Run tests
         run: npm run test:ci
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-          STRAVA_CLIENT_ID: ${{ secrets.STRAVA_CLIENT_ID }}
-          STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
 
       - name: Build application
         run: npm run build
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-          STRAVA_CLIENT_ID: ${{ secrets.STRAVA_CLIENT_ID }}
-          STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
 
-      # Deploy is handled automatically by Vercel's Git integration (vercel.json)
+      # Vercel auto-deploys from main via Git integration — no manual deploy step needed.

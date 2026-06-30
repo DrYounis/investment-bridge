@@ -19,7 +19,7 @@ import {
 
 export default function HailMarathon2026Page() {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#FDFCF0] to-white text-right font-arabic" dir="rtl">
+        <div className="min-h-screen bg-[#0a0f1e] text-right" dir="rtl">
 
             {/* Header Warning */}
             <div className="bg-deep-navy text-white py-3 px-6 text-center">

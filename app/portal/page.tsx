@@ -197,7 +197,7 @@ export default function UserPortal() {
     ];
 
     return (
-        <div className="flex h-screen bg-slate-50 font-sans" dir="rtl">
+        <div className="flex h-screen bg-[#0a0f1e]" dir="rtl">
 
             {/* 1. Sidebar */}
             <aside className="w-64 bg-white border-l border-slate-200 hidden md:flex flex-col">

@@ -7,10 +7,10 @@ export const dynamic = 'force-dynamic';
 
 export default async function MeetingsPage() {
     return (
-        <div className="min-h-screen bg-[#FDFCF0] font-sans relative overflow-hidden" dir="rtl">
+        <div className="min-h-screen bg-[#0a0f1e] relative overflow-hidden" dir="rtl">
 
             {/* Subtle Background Patterns - Luxury Gold Dust Effect */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.03),transparent_70%)] pointer-events-none"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(201,168,76,0.03),transparent_70%)] pointer-events-none"></div>
 
             {/* Main Content */}
             <main className="relative min-h-screen flex flex-col pt-32 pb-16 px-4 max-w-7xl mx-auto">
@@ -23,13 +23,13 @@ export default async function MeetingsPage() {
                         📅 <span className="tracking-wide uppercase">لقاءات مرفأ</span>
                     </div>
 
-                    <h1 className="text-5xl md:text-7xl font-black text-deep-navy tracking-tight leading-tight">
-                        لقاءات <span className="text-luxury-gold">مرفأ</span>
+                    <h1 className="text-5xl md:text-7xl font-black text-white tracking-tight leading-tight">
+                        لقاءات <span className="text-[#c9a84c]">مرفأ</span>
                     </h1>
-                    <p className="text-lg text-deep-navy/70 max-w-2xl mx-auto leading-relaxed">
+                    <p className="text-lg text-[#a0aec0] max-w-2xl mx-auto leading-relaxed">
                         منصة حصرية لربط رواد الأعمال بالمستثمرين من خلال لقاءات مجدولة ومنظمة.
                         <br />
-                        <span className="font-medium text-gold">تصفح الجدول</span> واحجز موعدك الآن.
+                        <span className="font-medium text-[#c9a84c]">تصفح الجدول</span> واحجز موعدك الآن.
                     </p>
                 </div>
 

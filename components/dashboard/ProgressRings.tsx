@@ -84,54 +84,32 @@ export default function ProgressRings() {
 
       const uid = user.id;
 
+      // Batch all 3 queries
+      const [profileResult, fundingResult, academyResult] = await Promise.allSettled([
+        supabase.from('profiles').select('full_name, bio, avatar_url, phone, sector').eq('id', uid).maybeSingle(),
+        supabase.from('funding_requests').select('progress_percent').eq('user_id', uid).maybeSingle(),
+        supabase.from('academy_progress').select('completion_percent').eq('user_id', uid).maybeSingle(),
+      ]);
+
       // Ring 1: Profile completion
       let profilePercent = 0;
-      try {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('full_name, bio, avatar_url, phone, sector')
-          .eq('id', uid)
-          .maybeSingle();
-
-        if (profile) {
-          const fields = [profile.full_name, profile.bio, profile.avatar_url, profile.phone, profile.sector];
-          const filled = fields.filter((f) => f && f.length > 0).length;
-          profilePercent = Math.round((filled / 5) * 100);
-        }
-      } catch {
-        profilePercent = 0;
+      if (profileResult.status === 'fulfilled' && profileResult.value.data) {
+        const profile = profileResult.value.data;
+        const fields = [profile.full_name, profile.bio, profile.avatar_url, profile.phone, profile.sector];
+        const filled = fields.filter((f) => f && f.length > 0).length;
+        profilePercent = Math.round((filled / 5) * 100);
       }
 
       // Ring 2: Funding progress
       let fundingPercent = 0;
-      try {
-        const { data: funding } = await supabase
-          .from('funding_requests')
-          .select('progress_percent')
-          .eq('user_id', uid)
-          .maybeSingle();
-
-        if (funding?.progress_percent != null) {
-          fundingPercent = Math.min(100, Math.max(0, funding.progress_percent));
-        }
-      } catch {
-        fundingPercent = 0;
+      if (fundingResult.status === 'fulfilled' && fundingResult.value.data?.progress_percent != null) {
+        fundingPercent = Math.min(100, Math.max(0, fundingResult.value.data.progress_percent));
       }
 
       // Ring 3: Academy progress
       let academyPercent = 0;
-      try {
-        const { data: academy } = await supabase
-          .from('academy_progress')
-          .select('completion_percent')
-          .eq('user_id', uid)
-          .maybeSingle();
-
-        if (academy?.completion_percent != null) {
-          academyPercent = Math.min(100, Math.max(0, academy.completion_percent));
-        }
-      } catch {
-        academyPercent = 0;
+      if (academyResult.status === 'fulfilled' && academyResult.value.data?.completion_percent != null) {
+        academyPercent = Math.min(100, Math.max(0, academyResult.value.data.completion_percent));
       }
 
       // Animate from 0 after a short delay so the transition triggers
@@ -156,19 +134,6 @@ export default function ProgressRings() {
       }}
       dir="rtl"
     >
-      <style>{`
-        @keyframes shimmer {
-          0% { background-position: -200% 0; }
-          100% { background-position: 200% 0; }
-        }
-        .marfa-skeleton {
-          background: linear-gradient(90deg, #1a2540 25%, #243050 50%, #1a2540 75%);
-          background-size: 200% 100%;
-          animation: shimmer 1.5s infinite;
-          border-radius: 8px;
-        }
-      `}</style>
-
       <h3
         className="text-lg font-bold mb-6"
         style={{ color: '#ffffff', fontFamily: 'var(--font-tajawal), sans-serif' }}

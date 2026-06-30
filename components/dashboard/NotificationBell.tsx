@@ -8,11 +8,18 @@ function timeAgo(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
   if (mins < 1) return 'الآن';
-  if (mins < 60) return `منذ ${mins} دقيقة`;
+  if (mins < 60) return `منذ ${arabicUnit(mins, 'دقيقة', 'دقيقتان', 'دقائق')}`;
   const hours = Math.floor(mins / 60);
-  if (hours < 24) return `منذ ${hours} ساعة`;
+  if (hours < 24) return `منذ ${arabicUnit(hours, 'ساعة', 'ساعتان', 'ساعات')}`;
   const days = Math.floor(hours / 24);
-  return `منذ ${days} يوم`;
+  return `منذ ${arabicUnit(days, 'يوم', 'يومان', 'أيام')}`;
+}
+
+function arabicUnit(num: number, singular: string, dual: string, plural: string): string {
+  if (num === 1) return `${num} ${singular}`;
+  if (num === 2) return `${dual}`;
+  if (num >= 3 && num <= 10) return `${num} ${plural}`;
+  return `${num} ${singular}`;
 }
 
 interface Notification {

@@ -89,10 +89,16 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 
       setToasts((prev) => {
         const next = [...prev, { id, message, type, duration }];
-        // Remove oldest if over limit
+        // If over limit, mark oldest as exiting (removed after animation)
         if (next.length > MAX_TOASTS) {
-          const oldest = next.shift();
-          if (oldest) removeToast(oldest.id);
+          next[0] = { ...next[0], exiting: true };
+          // Remove after exit animation plays
+          const oldestId = next[0].id;
+          setTimeout(() => {
+            setToasts((current) => current.filter((t) => t.id !== oldestId));
+            const timer = timersRef.current.get(oldestId);
+            if (timer) { clearTimeout(timer); timersRef.current.delete(oldestId); }
+          }, 260);
         }
         return next;
       });

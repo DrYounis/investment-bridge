@@ -64,16 +64,6 @@ export default function WelcomeCard() {
           <span className="marfa-skeleton h-4 w-40 rounded-lg" />
         </div>
         <style>{`
-          @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-          }
-          .marfa-skeleton {
-            background: linear-gradient(90deg, #1a2540 25%, #243050 50%, #1a2540 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 8px;
-          }
           @keyframes gradientShift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }

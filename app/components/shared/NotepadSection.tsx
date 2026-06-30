@@ -11,6 +11,7 @@ interface Note {
 export default function NotepadSection() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [draft, setDraft] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
 
   const saveNote = useCallback(() => {
     const trimmed = draft.trim();
@@ -34,6 +35,29 @@ export default function NotepadSection() {
       e.preventDefault();
       saveNote();
     }
+  };
+
+  const analyzeWithAI = async () => {
+    const trimmed = draft.trim();
+    if (!trimmed || aiLoading) return;
+    setAiLoading(true);
+    try {
+      const res = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: `حلل الملاحظات التالية لرائد أعمال سعودي وقدم 3 توصيات عملية مختصرة بالعربية:\n${trimmed}`,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const aiText = data.text || data.response || data.content || 'تعذر التحليل';
+        setDraft((prev) => prev + '\n\n🤖 تحليل الذكاء الاصطناعي:\n' + aiText);
+      }
+    } catch {
+      // silently fail — AI is optional
+    }
+    setAiLoading(false);
   };
 
   return (
@@ -62,14 +86,16 @@ export default function NotepadSection() {
             💾 حفظ
           </button>
           <button
-            className="px-5 py-2 rounded-xl text-sm font-bold transition-all hover:brightness-110"
+            onClick={analyzeWithAI}
+            disabled={aiLoading}
+            className="px-5 py-2 rounded-xl text-sm font-bold transition-all hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed"
             style={{
               background: 'transparent',
               border: '1px solid #c9a84c',
               color: '#c9a84c',
             }}
           >
-            🧠 اختبر مع الذكاء
+            {aiLoading ? '⏳ جار التحليل...' : '🧠 اختبر مع الذكاء'}
           </button>
         </div>
       </div>

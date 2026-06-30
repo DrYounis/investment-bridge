@@ -332,7 +332,7 @@ export default function AdvisorPage() {
             <button
               onClick={handleStart}
               disabled={idea.trim().length < 10 || !phase}
-              className="w-full py-4 rounded-2xl font-bold text-lg transition disabled:opacity-30"
+              className="w-full py-4 rounded-2xl font-bold text-lg transition disabled:opacity-30 hover:brightness-110"
               style={{ background: '#c9a84c', color: '#0a0f1e' }}
             >
               ابدأ التحليل ٣٦٠°
@@ -405,7 +405,7 @@ export default function AdvisorPage() {
               </div>
             </div>
             {stage === 1 && angles.length === ANGLES.length && (
-              <button onClick={runCanvas} className="w-full py-4 rounded-2xl font-bold text-lg transition" style={{ background: '#c9a84c', color: '#0a0f1e' }}>
+              <button onClick={runCanvas} className="w-full py-4 rounded-2xl font-bold text-lg transition hover:brightness-110" style={{ background: '#c9a84c', color: '#0a0f1e' }}>
                 التالي: نموذج العمل التجاري
               </button>
             )}
@@ -415,7 +415,7 @@ export default function AdvisorPage() {
         {/* ── Stage 2: Canvas ── */}
         {!loading && stage >= 2 && !canvas && (
           <div className="flex items-center justify-center py-20">
-            <button onClick={runCanvas} className="px-8 py-4 rounded-2xl font-bold text-lg" style={{ background: '#c9a84c', color: '#0a0f1e' }}>
+            <button onClick={runCanvas} className="px-8 py-4 rounded-2xl font-bold text-lg transition hover:brightness-110" style={{ background: '#c9a84c', color: '#0a0f1e' }}>
               تحليل نموذج العمل التجاري
             </button>
           </div>
@@ -437,7 +437,7 @@ export default function AdvisorPage() {
             </div>
             {error && <p className="text-center text-sm" style={{ color: '#ef4444' }}>{error}</p>}
             {stage === 2 && (
-              <button onClick={runPlan} className="w-full py-4 rounded-2xl font-bold text-lg transition" style={{ background: '#c9a84c', color: '#0a0f1e' }}>
+              <button onClick={runPlan} className="w-full py-4 rounded-2xl font-bold text-lg transition hover:brightness-110" style={{ background: '#c9a84c', color: '#0a0f1e' }}>
                 التالي: الخطة التسويقية
               </button>
             )}
@@ -447,7 +447,7 @@ export default function AdvisorPage() {
         {/* ── Stage 3: Marketing Plan ── */}
         {!loading && stage >= 3 && !plan && (
           <div className="flex items-center justify-center py-20">
-            <button onClick={runPlan} className="px-8 py-4 rounded-2xl font-bold text-lg" style={{ background: '#c9a84c', color: '#0a0f1e' }}>
+            <button onClick={runPlan} className="px-8 py-4 rounded-2xl font-bold text-lg transition hover:brightness-110" style={{ background: '#c9a84c', color: '#0a0f1e' }}>
               تحليل الخطة التسويقية
             </button>
           </div>

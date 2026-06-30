@@ -31,7 +31,8 @@ export default function SharkTankDeal({
 }: SharkTankDealProps) {
     const [status, setStatus] = useState<'locked' | 'unlocked' | 'passed' | 'connected' | 'expired'>('locked');
     const [showNDAModal, setShowNDAModal] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes in seconds
+    const [timeLeft, setTimeLeft] = useState(15 * 60);
+    const [saving, setSaving] = useState(false);
 
     // Countdown Timer Effect
     useEffect(() => {
@@ -63,12 +64,14 @@ export default function SharkTankDeal({
     };
 
     const handleConnect = () => {
-        // Here we would call API to update status to 'connected'
+        if (saving) return;
+        setSaving(true);
         setStatus('connected');
     };
 
     const handlePass = () => {
-        // Here we would call API to update status to 'passed'
+        if (saving) return;
+        setSaving(true);
         setStatus('passed');
     };
 
@@ -204,13 +207,15 @@ export default function SharkTankDeal({
                         <div className="flex gap-3 animate-fade-in-up">
                             <button
                                 onClick={handleConnect}
-                                className="flex-1 bg-green-600 text-white py-3 rounded-xl hover:bg-green-700 font-bold transition-all shadow-lg hover:shadow-green-500/20 flex items-center justify-center gap-2"
+                                disabled={saving}
+                                className="flex-1 bg-green-600 text-white py-3 rounded-xl hover:bg-green-700 font-bold transition-all shadow-lg hover:shadow-green-500/20 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                🤝 طلب ربط
+                                {saving ? '⏳' : '🤝'} طلب ربط
                             </button>
                             <button
                                 onClick={handlePass}
-                                className="w-1/3 bg-slate-100 text-slate-600 border border-slate-200 py-3 rounded-xl hover:bg-slate-200 font-bold transition-colors"
+                                disabled={saving}
+                                className="w-1/3 bg-slate-100 text-slate-600 border border-slate-200 py-3 rounded-xl hover:bg-slate-200 font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 ❌ تجاوز
                             </button>

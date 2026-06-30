@@ -18,6 +18,7 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
     const [stats, setStats] = useState({ pending: 0, accepted: 0 });
     const [loading, setLoading] = useState(true);
     const [isCheckingAuth, setIsCheckingAuth] = useState(true); // New state to block rendering
+    const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const supabase = createClient();
     const router = useRouter();
 
@@ -26,6 +27,12 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
             try {
                 const { data: { user } } = await supabase.auth.getUser();
                 if (!user) {
+                    router.push('/admin/login');
+                    return;
+                }
+
+                const superAdminEmail = process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL || 'mohamedy2003@gmail.com';
+                if (user.email !== superAdminEmail) {
                     router.push('/admin/login');
                     return;
                 }
@@ -67,8 +74,6 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
                     table: 'investor_profiles'
                 },
                 async (payload) => {
-                    console.log('Realtime Event:', payload);
-
                     if (payload.eventType === 'INSERT') {
                         // New investor signed up!
                         // The payload only has fields from investor_profiles (profile_id, approval_status, etc.)
@@ -163,16 +168,12 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
             setPendingInvestors(formatted);
             setStats({
                 pending: formatted.length,
-                accepted: 142 // Mocked as per design
+                accepted: stats.accepted
             });
 
         } catch (error) {
             console.error('Error fetching investors:', error);
-            // Fallback for demo if DB is empty or connection fails
-            setPendingInvestors([
-                { id: '1', full_name: "شركة استثمارات حائل", email: "contact@hailinvest.com", approval_status: "pending", created_at: "2026-01-30" },
-                { id: '2', full_name: "أحمد بن محمد", email: "ahmed@example.com", approval_status: "pending", created_at: "2026-01-30" }
-            ]);
+            setPendingInvestors([]);
         } finally {
             setLoading(false);
         }
@@ -188,12 +189,16 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
             if (error) throw error;
 
             setPendingInvestors(prev => prev.filter(inv => inv.id !== id));
-            alert("تم اعتماد المستثمر بنجاح وإرسال رسالة الترحيب.");
+            setStatusMessage({ type: 'success', text: 'تم اعتماد المستثمر بنجاح وإرسال رسالة الترحيب.' });
+
+            // Auto-dismiss after 4 seconds
+            setTimeout(() => setStatusMessage(null), 4000);
 
             // Optional: Send email via Edge Function here
         } catch (error) {
             console.error('Error approving investor:', error);
-            alert("حدث خطأ أثناء الاعتماد.");
+            setStatusMessage({ type: 'error', text: 'حدث خطأ أثناء الاعتماد. يرجى المحاولة مرة أخرى.' });
+            setTimeout(() => setStatusMessage(null), 4000);
         }
     };
 
@@ -239,6 +244,20 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
                         التاريخ: {new Date().toLocaleDateString('ar-SA')}
                     </div>
                 </header>
+
+                {/* Status message */}
+                {statusMessage && (
+                    <div className={`mb-6 p-4 rounded-xl border flex items-center gap-3 ${
+                        statusMessage.type === 'success'
+                            ? 'bg-green-50 border-green-200 text-green-800'
+                            : 'bg-red-50 border-red-200 text-red-800'
+                    }`}>
+                        <span className="text-lg">{statusMessage.type === 'success' ? '✅' : '❌'}</span>
+                        <span className="text-sm font-medium" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+                            {statusMessage.text}
+                        </span>
+                    </div>
+                )}
 
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">

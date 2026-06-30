@@ -13,6 +13,14 @@ import { createClient } from '../../../lib/supabase/client'
 function LoginForm() {
     const [step, setStep] = useState<'email' | 'otp' | 'success'>('email')
     const [email, setEmail] = useState('')
+    const redirectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+    // Cleanup timeout on unmount
+    useEffect(() => {
+        return () => {
+            if (redirectTimeoutRef.current) clearTimeout(redirectTimeoutRef.current)
+        }
+    }, [])
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
     const [successMsg, setSuccessMsg] = useState('')
@@ -83,7 +91,7 @@ function LoginForm() {
             })
 
             setStep('success')
-            setTimeout(() => router.push(redirectUrl), 1200)
+            redirectTimeoutRef.current = setTimeout(() => router.push(redirectUrl), 1200)
         } catch {
             setError('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
             setIsLoading(false)

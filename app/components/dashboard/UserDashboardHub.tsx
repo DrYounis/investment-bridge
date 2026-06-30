@@ -71,7 +71,8 @@ const DashboardContent = () => {
                 .from('profiles')
                 .update({
                     full_name: user.name,
-                    phone: user.phone
+                    phone: user.phone,
+                    bio: user.bio
                 })
                 .eq('id', user.id);
 

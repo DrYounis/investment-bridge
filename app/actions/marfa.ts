@@ -29,11 +29,18 @@ interface DraftData {
 export async function saveDraft(id: string | null, data: DraftData) {
   const supabase = await createClient();
 
+  // Get authenticated user
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return { id: null, success: false, error: 'يجب تسجيل الدخول أولاً' };
+  }
+
   if (!id) {
     try {
       const { data: newIdea, error } = await supabase
         .from('marfa_ideas')
         .insert([{
+          user_id: user.id,
           title: data.title,
           sector: data.sector,
           description: data.description,
@@ -52,6 +59,17 @@ export async function saveDraft(id: string | null, data: DraftData) {
       return { id: null, success: false, error: 'Failed to create draft' };
     }
   } else {
+    // Verify ownership before updating
+    const { data: existing } = await supabase
+      .from('marfa_ideas')
+      .select('user_id')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (!existing || existing.user_id !== user.id) {
+      return { id, success: false, error: 'غير مصرح بتعديل هذه المسودة' };
+    }
+
     const { error } = await supabase
       .from('marfa_ideas')
       .update({

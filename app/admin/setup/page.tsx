@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createClient } from '../../../lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import Card from '../../components/ui/Card';
@@ -17,7 +17,15 @@ export default function AdminSetupPage() {
     const [success, setSuccess] = useState('');
 
     const router = useRouter();
+    const redirectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const supabase = createClient();
+
+    // Cleanup timeout on unmount
+    useEffect(() => {
+        return () => {
+            if (redirectTimeoutRef.current) clearTimeout(redirectTimeoutRef.current)
+        }
+    }, []);
 
     useEffect(() => {
         checkAdminExists();
@@ -91,7 +99,7 @@ export default function AdminSetupPage() {
 
                 setSuccess('تم إنشاء حساب المسؤول بنجاح! جاري تحويلك...');
                 setCanSetup(false);
-                setTimeout(() => router.push('/admin/login'), 2000);
+                redirectTimeoutRef.current = setTimeout(() => router.push('/admin/login'), 2000);
             }
 
         } catch (err: any) {

@@ -10,6 +10,7 @@ import { createClient } from '@/lib/supabase/client';
 interface User {
     id: string;
     name: string;
+    email?: string;
     role: 'admin' | 'investor' | 'entrepreneur' | string;
     projectName?: string;
 }
@@ -216,6 +217,12 @@ const DashboardHome = ({ user }: DashboardProps) => {
     const supabase = createClient();
 
     useEffect(() => {
+        const superAdminEmail = process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL || 'mohamedy2003@gmail.com';
+        if (user.role !== 'admin' || user.email !== superAdminEmail) {
+            setLoading(false);
+            return;
+        }
+
         const fetchStats = async () => {
             try {
                 // Fetch stats concurrently
@@ -276,7 +283,7 @@ const DashboardHome = ({ user }: DashboardProps) => {
         };
     }, [supabase]);
 
-    if (user.role === 'admin') {
+    if (user.role === 'admin' && user.email === process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL) {
         return <AdminView user={user} stats={stats} />;
     }
 

@@ -15,6 +15,19 @@ export async function requestProjectDetails(formData: FormData) {
         throw new Error('Authentication required to request details.');
     }
 
+    // Check for duplicate pending request
+    const { data: existing } = await supabase
+        .from('investor_requests')
+        .select('id')
+        .eq('investor_id', user.id)
+        .eq('project_url', repoUrl)
+        .eq('status', 'pending')
+        .maybeSingle();
+
+    if (existing) {
+        throw new Error('لقد قمت بطلب تفاصيل هذا المشروع مسبقاً.');
+    }
+
     const { error } = await supabase
         .from('investor_requests')
         .insert({

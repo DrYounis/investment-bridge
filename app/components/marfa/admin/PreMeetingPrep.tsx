@@ -103,7 +103,6 @@ export default function PreMeetingPrep({ meeting }: { meeting: MeetingData }) {
       participantCount,
       savedAt: new Date().toISOString(),
     };
-    console.log('✅ Session setup saved:', session);
     alert('✅ Session setup saved! Check console for details.');
   };
 

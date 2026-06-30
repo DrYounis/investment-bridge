@@ -82,11 +82,8 @@ export async function POST(req: NextRequest) {
 
     if (resendError) {
       console.error('Resend email send failed:', resendError);
-      const resendMsg = typeof resendError === 'object' && resendError !== null
-        ? (resendError as any).message || (resendError as any).name || JSON.stringify(resendError)
-        : String(resendError);
       return NextResponse.json(
-        { error: `فشل في إرسال البريد الإلكتروني: ${resendMsg}` },
+        { error: 'فشل في إرسال البريد الإلكتروني. يرجى المحاولة مرة أخرى.' },
         { status: 500 }
       );
     }

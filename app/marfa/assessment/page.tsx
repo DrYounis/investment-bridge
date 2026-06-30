@@ -308,12 +308,12 @@ export default function AssessmentPage() {
 
         {/* ── NAV ── */}
         <nav className="nav">
-          <a href="https://www.marfa.sa/">
-            <img src="https://www.marfa.sa/_next/image?url=%2Fimages%2Flogo-marfa.png&w=256&q=75" alt="مرفأ" className="nav-logo" />
-          </a>
+          <Link href="/" className="nav-logo-link">
+            <img src="/images/logo-marfa.png" alt="مرفأ" className="nav-logo" />
+          </Link>
           <div className="nav-links">
-            <a href="https://www.marfa.sa/meetings"       className="nav-link">لقاءات مرفأ</a>
-            <a href="https://www.marfa.sa/financial-news" className="nav-link">📰 الأخبار</a>
+            <Link href="/meetings"       className="nav-link">لقاءات مرفأ</Link>
+            <Link href="/financial-news" className="nav-link">📰 الأخبار</Link>
           </div>
           <div className="nav-user">
             {user ? (
@@ -322,7 +322,7 @@ export default function AssessmentPage() {
                 <button className="nav-signout" onClick={handleSignOut}>خروج</button>
               </>
             ) : (
-              <a href="https://www.marfa.sa/marfa" className="nav-back">← العودة لمرفأ</a>
+              <Link href="/marfa" className="nav-back">← العودة لمرفأ</Link>
             )}
           </div>
         </nav>
@@ -516,7 +516,7 @@ export default function AssessmentPage() {
                 </div>
 
                 <div style={{ display:'flex', justifyContent:'center', gap:'1rem', flexWrap:'wrap' }}>
-                  <a href="https://www.marfa.sa/meetings" className="btn-primary" style={{ textDecoration:'none' }}>احجز لقاء مرفأ ←</a>
+                  <Link href="/meetings" className="btn-primary" style={{ textDecoration:'none' }}>احجز لقاء مرفأ ←</Link>
                   <button className="btn-secondary" onClick={() => transition(() => {
                     setPhase('basic');
                     setBasicData({ email: user?.email || '' });

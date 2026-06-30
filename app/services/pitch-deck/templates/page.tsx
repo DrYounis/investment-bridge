@@ -17,7 +17,7 @@ export default function TemplatesPage() {
   return (
     <div className="min-h-screen bg-[#0a0f1e] text-white font-arabic" dir="rtl">
       <nav className="sticky top-0 z-50 bg-[#0a0f1e]/90 backdrop-blur-xl border-b border-[#1e2d4a] px-6 h-16 flex items-center justify-between">
-        <a href="/services/pitch-deck" className="text-xl font-bold text-[#c9a84c]">مرفأ <span className="text-[#8a9bb8] font-light text-sm">Templates</span></a>
+        <Link href="/services/pitch-deck" className="text-xl font-bold text-[#c9a84c]">مرفأ <span className="text-[#8a9bb8] font-light text-sm">Templates</span></Link>
         <Link href="/services/pitch-deck/create" className="px-4 py-2 bg-[#c9a84c] text-[#0a0f1e] rounded-lg text-sm font-bold">
           ابدأ الآن
         </Link>

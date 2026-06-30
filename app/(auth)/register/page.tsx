@@ -21,7 +21,15 @@ function RegisterForm() {
     const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
     const [redirectUrl, setRedirectUrl] = useState('/dashboard/hub')
     const nameRef = useRef<HTMLInputElement>(null)
+    const redirectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
     const router = useRouter()
+
+    // Cleanup timeout on unmount
+    useEffect(() => {
+        return () => {
+            if (redirectTimeoutRef.current) clearTimeout(redirectTimeoutRef.current)
+        }
+    }, [])
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -105,7 +113,7 @@ function RegisterForm() {
             localStorage.removeItem('questionnaireCompleted')
             localStorage.removeItem('userType')
             setStep('success')
-            setTimeout(() => router.push(redirectUrl), 1200)
+            redirectTimeoutRef.current = setTimeout(() => router.push(redirectUrl), 1200)
         } catch {
             setError('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
         }

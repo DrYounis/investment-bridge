@@ -132,7 +132,6 @@ export default function PostSession({ meeting }: { meeting: Meeting }) {
       takeaways: takeaways.split('\n').filter(Boolean),
       assignments,
     };
-    console.log('📊 Session Summary:', JSON.stringify(data, null, 2));
     setToast('✅ Summary exported! Ready to send to participants.');
     setTimeout(() => setToast(''), 3000);
   };

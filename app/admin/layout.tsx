@@ -33,14 +33,14 @@ export default function AdminLayoutShell({ children }: { children: React.ReactNo
       const { data: { user: authUser } } = await supabase.auth.getUser();
       if (!authUser) { router.replace('/admin/login'); setLoading(false); return; }
 
+      const superAdminEmail = process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL || 'mohamedy2003@gmail.com';
+      if (authUser.email !== superAdminEmail) { router.replace('/admin/login'); setLoading(false); return; }
+
       const { data: profile } = await supabase
         .from('profiles')
         .select('user_type, full_name')
         .eq('id', authUser.id)
         .maybeSingle();
-
-      const allowed = ['admin', 'super_admin'].includes(profile?.user_type || '');
-      if (!allowed) { router.replace('/admin/login'); setLoading(false); return; }
 
       setUser({ ...authUser, ...profile });
       setLoading(false);

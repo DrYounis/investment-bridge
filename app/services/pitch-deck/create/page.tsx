@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import WizardStepper from '@/app/components/pitch-deck/WizardStepper';
 import StepOne_ProjectInfo from '@/app/components/pitch-deck/StepOne_ProjectInfo';
 import StepTwo_Upload from '@/app/components/pitch-deck/StepTwo_Upload';
@@ -83,10 +84,10 @@ export default function PitchDeckCreatePage() {
   return (
     <div className="min-h-screen bg-[#0a0f1e] text-white font-arabic" dir="rtl">
       <nav className="sticky top-0 z-50 bg-[#0a0f1e]/90 backdrop-blur-xl border-b border-[#1e2d4a] px-6 h-16 flex items-center justify-between">
-        <a href="/services/pitch-deck" className="text-xl font-bold text-[#c9a84c]">مرفأ <span className="text-[#8a9bb8] font-light text-sm">Pitch Deck</span></a>
+        <Link href="/services/pitch-deck" className="text-xl font-bold text-[#c9a84c]">مرفأ <span className="text-[#8a9bb8] font-light text-sm">Pitch Deck</span></Link>
         <div className="flex gap-4 text-sm text-[#8a9bb8]">
-          <a href="/services/pitch-deck/templates" className="hover:text-[#c9a84c]">القوالب</a>
-          <a href="/meetings" className="hover:text-[#c9a84c]">لقاءات مرفأ</a>
+          <Link href="/services/pitch-deck/templates" className="hover:text-[#c9a84c]">القوالب</Link>
+          <Link href="/meetings" className="hover:text-[#c9a84c]">لقاءات مرفأ</Link>
         </div>
       </nav>
 

@@ -34,13 +34,13 @@ export const metadata: Metadata = {
     apple: "/apple-icon.png",
   },
   openGraph: {
-    title: "مرفأ | Investment Bridge",
+    title: "مرفأ",
     description: "منصة ذكية لربط المستثمرين بالفرص الاستثمارية",
     images: [{ url: '/opengraph-image.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: "مرفأ | Investment Bridge",
+    title: "مرفأ",
     description: "منصة ذكية لربط المستثمرين بالفرص الاستثمارية",
     images: ['/twitter-image.png'],
   },

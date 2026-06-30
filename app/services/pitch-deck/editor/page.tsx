@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import SlideCard from '@/app/components/pitch-deck/SlideCard';
 import type { Slide, ProjectFormData, BrandingConfig } from '@/types/pitch-deck';
 import { generateSlideId, createEmptySlide } from '@/lib/slide-templates';
@@ -81,7 +82,7 @@ export default function PitchDeckEditorPage() {
       <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center text-white" dir="rtl">
         <div className="text-center">
           <p className="text-[#8a9bb8]">لا توجد شرائح. عد إلى المعالج لإنشاء العرض.</p>
-          <a href="/services/pitch-deck/create" className="text-[#c9a84c] mt-4 inline-block">← العودة للمعالج</a>
+          <Link href="/services/pitch-deck/create" className="text-[#c9a84c] mt-4 inline-block">← العودة للمعالج</Link>
         </div>
       </div>
     );
@@ -114,7 +115,7 @@ export default function PitchDeckEditorPage() {
     <div className="min-h-screen bg-[#0a0f1e] text-white font-arabic" dir="rtl">
       {/* Top bar */}
       <nav className="sticky top-0 z-50 bg-[#0a0f1e]/90 backdrop-blur-xl border-b border-[#1e2d4a] px-6 h-16 flex items-center justify-between">
-        <a href="/services/pitch-deck" className="text-xl font-bold text-[#c9a84c]">مرفأ <span className="text-[#8a9bb8] font-light text-sm">Editor</span></a>
+        <Link href="/services/pitch-deck" className="text-xl font-bold text-[#c9a84c]">مرفأ <span className="text-[#8a9bb8] font-light text-sm">Editor</span></Link>
         <div className="flex gap-3">
           <button onClick={togglePresentMode} className="px-4 py-2 border border-[#1e2d4a] text-[#8a9bb8] rounded-lg text-sm hover:border-[#c9a84c]/40">
             🖥 عرض

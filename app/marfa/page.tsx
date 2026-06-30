@@ -88,6 +88,81 @@ export default async function MarfaLandingPage() {
                     />
                 </div>
 
+                {/* Marfa Studio Ventures — Platform Pitches */}
+                <div className="mb-24">
+                    <div className="text-center max-w-3xl mx-auto mb-10 space-y-4">
+                        <div className="inline-block px-4 py-2 bg-[#c9a84c]/10 text-[#c9a84c] rounded-full text-sm font-bold tracking-wide border border-[#c9a84c]/20">
+                            🏛️ Marfa Studio Ventures
+                        </div>
+                        <h2 className="text-3xl font-bold text-white">
+                            فرص استثمارية{' '}
+                            <span className="text-[#c9a84c]">من مشغل المنصة</span>
+                        </h2>
+                        <p className="text-[#a0aec0]">
+                            فرص مدروسة ومصدرها Marfa Studio — خضعت للتحليل الداخلي وجاهزة للمستثمرين المعتمدين.
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6 mb-8">
+                        {/* WiqayaGen Card */}
+                        <div className="bg-[#0d1628] border border-[#c9a84c]/30 rounded-2xl p-6 hover:border-[#c9a84c] hover:-translate-y-1 transition-all duration-300 group">
+                            <div className="flex items-start justify-between mb-3">
+                                <h3 className="text-xl font-bold text-white group-hover:text-[#c9a84c] transition">WiqayaGen</h3>
+                                <span className="px-2 py-1 bg-[#c9a84c]/15 text-[#c9a84c] rounded-full text-[10px] font-bold">HealthTech</span>
+                            </div>
+                            <p className="text-sm text-[#a0aec0] mb-4 leading-relaxed">
+                                منصة ذكاء اصطناعي للرعاية الصحية الوقائية تستهدف القوى العاملة في دول الخليج.
+                            </p>
+                            <div className="flex items-center gap-3 text-xs text-[#64748b] mb-5">
+                                <span>💰 1.5M ر.س</span>
+                                <span>•</span>
+                                <span>📈 10% حصة</span>
+                                <span>•</span>
+                                <span>🌱 Seed</span>
+                            </div>
+                            <Link
+                                href="/dashboard/investor"
+                                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#c9a84c] hover:bg-[#d4a843] text-[#0a0f1e] rounded-xl font-bold text-sm transition"
+                            >
+                                عرض الفرصة ←
+                            </Link>
+                        </div>
+
+                        {/* Turathna Hub Card */}
+                        <div className="bg-[#0d1628] border border-[#c9a84c]/30 rounded-2xl p-6 hover:border-[#c9a84c] hover:-translate-y-1 transition-all duration-300 group">
+                            <div className="flex items-start justify-between mb-3">
+                                <h3 className="text-xl font-bold text-white group-hover:text-[#c9a84c] transition">Turathna Hub</h3>
+                                <span className="px-2 py-1 bg-[#c9a84c]/15 text-[#c9a84c] rounded-full text-[10px] font-bold">Creative Economy</span>
+                            </div>
+                            <p className="text-sm text-[#a0aec0] mb-4 leading-relaxed">
+                                سوق رقمي للحرف اليدوية والتراث الثقافي السعودي يصل الحرفيين بالأسواق العالمية.
+                            </p>
+                            <div className="flex items-center gap-3 text-xs text-[#64748b] mb-5">
+                                <span>💰 2M ر.س</span>
+                                <span>•</span>
+                                <span>📈 12.5% حصة</span>
+                                <span>•</span>
+                                <span>🌱 Seed</span>
+                            </div>
+                            <Link
+                                href="/dashboard/investor"
+                                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#c9a84c] hover:bg-[#d4a843] text-[#0a0f1e] rounded-xl font-bold text-sm transition"
+                            >
+                                عرض الفرصة ←
+                            </Link>
+                        </div>
+                    </div>
+
+                    <div className="text-center">
+                        <Link
+                            href="/dashboard/investor"
+                            className="inline-flex items-center gap-2 px-8 py-4 bg-[#0d1628] border-2 border-[#c9a84c]/40 text-[#c9a84c] rounded-2xl font-bold hover:bg-[#c9a84c]/10 hover:border-[#c9a84c] transition-all text-lg"
+                        >
+                            تصفح جميع الفرص الاستثمارية ←
+                        </Link>
+                    </div>
+                </div>
+
                 {/* Sample Dashboard Teaser */}
                 <div className="bg-[#0d1628] rounded-3xl p-8 md:p-16 text-white text-center relative overflow-hidden mb-24 border border-[#1a2540]">
                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10"></div>

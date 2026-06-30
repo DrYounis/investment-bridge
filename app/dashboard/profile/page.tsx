@@ -107,10 +107,10 @@ export default function ProfilePage() {
         '👤 مستخدم';
 
     const roleColor =
-        profile.role === 'entrepreneur' ? 'bg-blue-100 text-blue-700 border-blue-200' :
-        profile.role === 'investor' ? 'bg-emerald-100 text-emerald-700 border-emerald-200' :
-        profile.role === 'admin' || profile.role === 'super_admin' ? 'bg-purple-100 text-purple-700 border-purple-200' :
-        'bg-slate-100 text-slate-700 border-slate-200';
+        profile.role === 'entrepreneur' ? 'bg-[#c9a84c]/10 text-[#c9a84c] border-[#c9a84c]/20' :
+        profile.role === 'investor' ? 'bg-[#c9a84c]/15 text-[#d4a843] border-[#c9a84c]/30' :
+        profile.role === 'admin' || profile.role === 'super_admin' ? 'bg-[#c9a84c]/10 text-[#c9a84c] border-[#c9a84c]/30' :
+        'bg-[#1a2540] text-[#a0aec0] border-[#1a2540]';
 
     return (
         <div className="min-h-screen bg-cream" dir="rtl">

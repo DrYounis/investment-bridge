@@ -55,7 +55,10 @@ export default function MiniAnalytics() {
           if (found) found.count++;
         }
       }
-      setChartData(days.map((d, i) => ({ name: dayNames[i], value: d.count })));
+      setChartData(days.map((d) => {
+        const date = new Date(d.day + 'T00:00:00');
+        return { name: dayNames[date.getDay()], value: d.count };
+      }));
 
       setLoading(false);
     }

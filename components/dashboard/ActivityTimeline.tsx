@@ -47,6 +47,24 @@ export default function ActivityTimeline() {
       if (!user) { router.push('/login'); return; }
       setUserId(user.id);
 
+      // Log login activity (once per day — uses INSERT with conflict handling)
+      const today = new Date().toISOString().split('T')[0];
+      const { data: existing } = await supabase
+        .from('activity_log')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('action', 'login')
+        .gte('created_at', today)
+        .limit(1);
+      if (!existing || existing.length === 0) {
+        await supabase.from('activity_log').insert({
+          user_id: user.id,
+          action: 'login',
+          description: 'تسجيل الدخول إلى المنصة',
+        }).then(() => {}).catch(() => {}); // fire-and-forget, silent fail
+      }
+
+      // Fetch timeline
       try {
         const { data } = await supabase
           .from('activity_log')
@@ -60,29 +78,6 @@ export default function ActivityTimeline() {
     }
     init();
   }, [supabase, router]);
-
-  // Log current session as a login activity
-  useEffect(() => {
-    if (!userId) return;
-    async function logLogin() {
-      const today = new Date().toISOString().split('T')[0];
-      const { data } = await supabase
-        .from('activity_log')
-        .select('id')
-        .eq('user_id', userId)
-        .eq('action', 'login')
-        .gte('created_at', today)
-        .limit(1);
-      if (!data || data.length === 0) {
-        await supabase.from('activity_log').insert({
-          user_id: userId,
-          action: 'login',
-          description: 'تسجيل الدخول إلى المنصة',
-        });
-      }
-    }
-    logLogin();
-  }, [userId, supabase]);
 
   return (
     <GlassCard className="marfa-card-hover" dir="rtl">

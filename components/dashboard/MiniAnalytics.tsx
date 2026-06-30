@@ -83,7 +83,7 @@ export default function MiniAnalytics() {
       ) : (
         <>
           {/* Stat cards */}
-          <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
             {[
               { label: 'مشاهدات الملف', value: stats.views },
               { label: 'تحميلات العرض', value: stats.downloads },

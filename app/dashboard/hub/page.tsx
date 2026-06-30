@@ -74,7 +74,7 @@ export default function HubPage() {
 
   return (
     <NewsProvider>
-      <div className="min-h-screen bg-[#0a0f1e]" dir="rtl" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+      <div className="min-h-screen bg-[#0a0f1e] overflow-x-hidden" dir="rtl" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
         {/* Particle background behind hero area */}
         <div className="relative overflow-hidden">
           <ParticleBackground />

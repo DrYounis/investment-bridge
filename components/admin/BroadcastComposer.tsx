@@ -172,7 +172,7 @@ export default function BroadcastComposer() {
           <label className="block text-sm text-[#a0aec0] text-right mb-2" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
             الجمهور المستهدف
           </label>
-          <div className="flex gap-3 justify-end">
+          <div className="flex flex-wrap gap-3 justify-end">
             {([
               { value: 'all', label: 'الكل' },
               { value: 'investor', label: 'المستثمرون' },

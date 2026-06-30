@@ -162,6 +162,7 @@ export default function NotificationBell() {
       className="relative"
       dir="rtl"
       style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
+      onKeyDown={(e) => { if (e.key === 'Escape') setDropdownOpen(false); }}
     >
       <style>{`
         @keyframes badgePulse {
@@ -237,7 +238,9 @@ export default function NotificationBell() {
               notifications.map((n) => (
                 <div
                   key={n.id}
-                  className="py-3 px-4 border-b border-[#1a2540]/50 last:border-b-0"
+                  role="button"
+                  tabIndex={0}
+                  className="py-3 px-4 border-b border-[#1a2540]/50 last:border-b-0 cursor-pointer hover:bg-white/5 transition-colors"
                 >
                   <p
                     className="text-sm leading-relaxed"

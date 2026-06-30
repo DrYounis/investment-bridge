@@ -22,10 +22,12 @@ export default function BroadcastComposer() {
   const [error, setError] = useState('');
 
   // Super admin gate
+  const SUPER_ADMIN = process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL || 'mohamedy2003@gmail.com';
+
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) { router.push('/login'); return; }
-      if (user.email !== 'mohamedy2003@gmail.com') { router.push('/dashboard'); return; }
+      if (user.email !== SUPER_ADMIN) { router.push('/dashboard'); return; }
       setAuthed(true);
     });
   }, [supabase, router]);

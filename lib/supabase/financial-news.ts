@@ -1,3 +1,4 @@
+import 'server-only';
 import { getSupabaseUrl, getSupabaseAnonKey } from './config';
 import { createServiceClient } from './service';
 

@@ -6,7 +6,11 @@ import { updateSession } from './lib/supabase/middleware'
 function applyAuthGate(request: NextRequest): NextResponse | null {
   const path = request.nextUrl.pathname
 
-  const protectedPaths = ['/marfa', '/services/pitch-deck', '/meetings', '/advisor']
+  // Public admin paths: login and initial setup
+  const publicAdminPaths = ['/admin/login', '/admin/setup']
+  if (publicAdminPaths.some(p => path.startsWith(p))) return null
+
+  const protectedPaths = ['/marfa', '/services/pitch-deck', '/meetings', '/advisor', '/dashboard', '/admin']
   if (!protectedPaths.some(p => path.startsWith(p))) return null
 
   const hasSession = request.cookies.getAll().some(

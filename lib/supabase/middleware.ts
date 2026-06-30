@@ -44,5 +44,15 @@ export async function updateSession(request: NextRequest) {
         return NextResponse.redirect(url)
     }
 
+    // Admin routes: redirect to /admin/login, except for login and setup pages
+    if (!user && request.nextUrl.pathname.startsWith('/admin') &&
+        !request.nextUrl.pathname.startsWith('/admin/login') &&
+        !request.nextUrl.pathname.startsWith('/admin/setup')) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/admin/login'
+        url.searchParams.set('redirect', request.nextUrl.pathname)
+        return NextResponse.redirect(url)
+    }
+
     return supabaseResponse
 }

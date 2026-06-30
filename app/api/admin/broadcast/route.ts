@@ -35,7 +35,7 @@ export async function POST(request: Request) {
   const supabaseServer = await createServerClient();
   const { data: { session } } = await supabaseServer.auth.getSession();
 
-  if (!session || session.user.email !== 'mohamedy2003@gmail.com') {
+  if (!session || session.user.email !== process.env.SUPER_ADMIN_EMAIL) {
     return NextResponse.json({ error: 'غير مصرح' }, { status: 403 });
   }
 

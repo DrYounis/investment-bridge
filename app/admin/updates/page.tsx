@@ -1,10 +1,36 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import BroadcastComposer from '@/components/admin/BroadcastComposer';
 import BroadcastHistory from '@/components/admin/BroadcastHistory';
+import { createClient } from '@/lib/supabase/client';
 
 export default function AdminUpdatesPage() {
+  const router = useRouter();
+  const [authed, setAuthed] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) { router.replace('/login'); return; }
+      setAuthed(true);
+      setLoading(false);
+    });
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center" dir="rtl">
+        <p className="text-[#64748b]" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>جاري التحقق...</p>
+      </div>
+    );
+  }
+
+  if (!authed) return null;
+
   return (
     <div className="min-h-screen px-6 py-10 max-w-3xl mx-auto" style={{ background: '#0a0f1e' }} dir="rtl">
       {/* Back link */}

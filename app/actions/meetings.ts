@@ -14,7 +14,10 @@ export async function scheduleMeeting(formData: FormData) {
     const message = formData.get('message') as string;
     const preferredTime = formData.get('preferredTime') as string;
 
-    const adminEmail = process.env.ADMIN_EMAIL || 'op.younis@gmail.com';
+    const adminEmail = process.env.ADMIN_EMAIL;
+    if (!adminEmail) {
+      console.error('ADMIN_EMAIL environment variable is not set — skipping email notification');
+    }
 
     try {
         // 1. Save to Supabase database

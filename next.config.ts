@@ -46,7 +46,7 @@ const nextConfig: NextConfig = {
               "script-src 'self' 'unsafe-inline'",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' data: https://fonts.gstatic.com",
-              "connect-src 'self' https://*.supabase.co https://api.resend.com https://*.ingest.sentry.io https://api.anthropic.com",
+              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.resend.com https://*.ingest.sentry.io https://api.anthropic.com",
               "frame-ancestors 'none'",
               "frame-src 'none'",
               "object-src 'none'",

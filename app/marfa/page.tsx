@@ -5,27 +5,27 @@ import MeetingScheduler from '../components/marfa/MeetingScheduler';
 
 export default async function MarfaLandingPage() {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 text-right pt-32" dir="rtl">
+        <div className="min-h-screen bg-[#0a0f1e] text-right pt-32" dir="rtl">
             <main className="max-w-7xl mx-auto px-6 py-12 md:py-20">
 
                 {/* Hero Section */}
                 <div className="grid md:grid-cols-2 gap-12 items-center mb-24">
                     <div className="order-2 md:order-1 space-y-8 animate-fade-in-up">
-                        <div className="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-bold tracking-wide">
+                        <div className="inline-block px-4 py-2 bg-[#c9a84c]/10 text-[#c9a84c] rounded-full text-sm font-bold tracking-wide border border-[#c9a84c]/20">
                             حاضنة الأفكار الذكية
                         </div>
-                        <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 leading-tight">
-                            في <span className="text-blue-600">مرفأ</span>.. <br />
+                        <h1 className="text-5xl md:text-6xl font-extrabold text-white leading-tight">
+                            في <span className="text-[#c9a84c]">مرفأ</span>.. <br />
                             فكرتك لا تموت، بل تُصقل.
                         </h1>
-                        <p className="text-xl text-gray-600 leading-relaxed">
+                        <p className="text-xl text-[#a0aec0] leading-relaxed">
                             الجسر الآمن الذي ينقل فكرتك من مجرد "خاطرة" إلى "مشروع استثماري" متكامل مبني على الأرقام وحقائق السوق، وليس الأحلام فقط.
                         </p>
                         <div className="flex gap-4 pt-4">
-                            <Link href="/executive-summary" className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold shadow-lg shadow-blue-200 transition-all transform hover:-translate-y-1">
+                            <Link href="/executive-summary" className="px-8 py-4 bg-[#c9a84c] hover:bg-[#d4a843] text-[#0a0f1e] rounded-2xl font-bold shadow-lg transition-all hover:-translate-y-1">
                                 ابدأ رحلة التنقيح
                             </Link>
-                            <button className="px-8 py-4 bg-white border-2 border-slate-200 text-slate-700 rounded-2xl font-bold hover:border-blue-200 hover:bg-blue-50 transition-all">
+                            <button className="px-8 py-4 bg-[#0d1628] border-2 border-[#1a2540] text-[#a0aec0] rounded-2xl font-bold hover:border-[#c9a84c]/40 hover:bg-[#c9a84c]/5 transition-all">
                                 كيف نعمـل؟
                             </button>
                         </div>
@@ -33,31 +33,31 @@ export default async function MarfaLandingPage() {
 
                     {/* Visual abstract representation */}
                     <div className="order-1 md:order-2 relative">
-                        <div className="absolute top-0 right-0 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-                        <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-                        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
-                        <div className="relative bg-white/60 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-2xl">
+                        <div className="absolute top-0 right-0 w-72 h-72 bg-[#c9a84c]/20 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+                        <div className="absolute top-0 -left-4 w-72 h-72 bg-[#c9a84c]/15 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+                        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-[#c9a84c]/10 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+                        <div className="relative bg-[#0d1628]/70 backdrop-blur-xl border border-[#c9a84c]/20 p-8 rounded-3xl shadow-2xl">
                             <div className="space-y-6">
                                 <StepCard
                                     num="01"
                                     title="الفلترة والتحليل"
                                     desc="فحص جدوى الفكرة تقنياً وتجارياً باستخدام بيانات السوق الحقيقية."
                                     icon={<FilterIcon />}
-                                    color="bg-blue-100 text-blue-600"
+                                    color="bg-[#c9a84c]/15 text-[#c9a84c]"
                                 />
                                 <StepCard
                                     num="02"
                                     title="المختبر والتوجيه"
                                     desc="تعديل المسار (Pivot) أو الانتقال لدراسة الجدوى التفصيلية."
                                     icon={<CompassIcon />}
-                                    color="bg-purple-100 text-purple-600"
+                                    color="bg-[#c9a84c]/15 text-[#c9a84c]"
                                 />
                                 <StepCard
                                     num="03"
                                     title="بطاقة المستثمر"
                                     desc="توليد ملف استثماري احترافي جاهز للتمويل."
                                     icon={<FileCheckIcon />}
-                                    color="bg-green-100 text-green-600"
+                                    color="bg-[#c9a84c]/15 text-[#c9a84c]"
                                 />
                             </div>
                         </div>
@@ -66,8 +66,8 @@ export default async function MarfaLandingPage() {
 
                 {/* Value Proposition Section */}
                 <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
-                    <h2 className="text-3xl font-bold text-slate-900">لماذا تبدأ من مرفأ؟</h2>
-                    <p className="text-gray-500">نحن لا نقدم نصيحة عابرة، بل نقدم خارطة طريق.</p>
+                    <h2 className="text-3xl font-bold text-white">لماذا تبدأ من مرفأ؟</h2>
+                    <p className="text-[#a0aec0]">نحن لا نقدم نصيحة عابرة، بل نقدم خارطة طريق.</p>
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-8 mb-24 cursor-default">
@@ -89,32 +89,31 @@ export default async function MarfaLandingPage() {
                 </div>
 
                 {/* Sample Dashboard Teaser */}
-                <div className="bg-slate-900 rounded-3xl p-8 md:p-16 text-white text-center relative overflow-hidden mb-24">
-                    <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
+                <div className="bg-[#0d1628] rounded-3xl p-8 md:p-16 text-white text-center relative overflow-hidden mb-24 border border-[#1a2540]">
+                    <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10"></div>
                     <div className="relative z-10 max-w-2xl mx-auto">
                         <h2 className="text-3xl font-bold mb-6">جاهز لاختبار فكرتك؟</h2>
-                        <p className="text-slate-300 mb-8 text-lg">
+                        <p className="text-[#a0aec0] mb-8 text-lg">
                             أدخل "مختبر دراسة الجدوى" الآن واحصل على تقرير فوري (SWOT) يوضح نقاط القوة والضعف في مشروعك.
                         </p>
                         <div className="flex flex-col md:flex-row justify-center gap-4">
-                            <Link href="/marfa/assessment" className="inline-block px-10 py-5 bg-green-500 hover:bg-green-600 text-white rounded-2xl font-bold shadow-lg shadow-green-900/20 transition-all font-xl">
-                                إبدأ التحليل المجاني (Free) 🚀
+                            <Link href="/marfa/assessment" className="inline-block px-10 py-5 bg-[#c9a84c] hover:bg-[#d4a843] text-[#0a0f1e] rounded-2xl font-bold shadow-lg transition-all text-xl">
+                                إبدأ التحليل المجاني 🚀
                             </Link>
                         </div>
-                        <p className="mt-4 text-xs text-slate-400 opacity-60">* لا يتطلب اشتراك مدفوع لهذه المرحلة</p>
+                        <p className="mt-4 text-xs text-[#64748b]">* لا يتطلب اشتراك مدفوع لهذه المرحلة</p>
                     </div>
                 </div>
 
                 {/* Idea Validator Section */}
                 <div className="mb-24">
                     <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
-                        <h2 className="text-3xl font-bold text-slate-900">
-                            Submit Your Idea for{' '}
-                            <span className="text-amber-600">Validation</span>
+                        <h2 className="text-3xl font-bold text-white">
+                            قدّم فكرتك{' '}
+                            <span className="text-[#c9a84c]">للتحليل</span>
                         </h2>
-                        <p className="text-gray-500">
-                            Get expert feedback on your startup idea. Our team evaluates market potential,
-                            technical feasibility, and investment readiness.
+                        <p className="text-[#a0aec0]">
+                            احصل على تقييم خبير لفكرة مشروعك. فريقنا يقيّم الإمكانات السوقية، الجدوى التقنية، وجاهزية الاستثمار.
                         </p>
                     </div>
                     <IdeaValidator />
@@ -123,13 +122,12 @@ export default async function MarfaLandingPage() {
                 {/* Meeting Scheduler Section */}
                 <div className="mb-24">
                     <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
-                        <h2 className="text-3xl font-bold text-slate-900">
-                            Book a{' '}
-                            <span className="text-blue-600">Meeting</span> with Our Team
+                        <h2 className="text-3xl font-bold text-white">
+                            احجز{' '}
+                            <span className="text-[#c9a84c]">اجتماعاً</span> مع فريقنا
                         </h2>
-                        <p className="text-gray-500">
-                            Schedule a one-on-one session to discuss your project, funding needs, or
-                            partnership opportunities with our investment team.
+                        <p className="text-[#a0aec0]">
+                            جدولة جلسة فردية لمناقشة مشروعك، احتياجات التمويل، أو فرص الشراكة مع فريق الاستثمار.
                         </p>
                     </div>
                     <MeetingScheduler />
@@ -142,14 +140,14 @@ export default async function MarfaLandingPage() {
 
 function StepCard({ num, title, desc, icon, color }: any) {
     return (
-        <div className="flex items-start gap-4 p-4 rounded-xl hover:bg-white transition duration-300">
+        <div className="flex items-start gap-4 p-4 rounded-xl hover:bg-[#c9a84c]/5 transition duration-300">
             <div className={`p-3 rounded-lg ${color} shrink-0`}>
                 {icon}
             </div>
             <div>
-                <div className="text-xs font-bold text-gray-400 mb-1">المرحلة {num}</div>
-                <h3 className="text-lg font-bold text-slate-800 mb-1">{title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
+                <div className="text-xs font-bold text-[#64748b] mb-1">المرحلة {num}</div>
+                <h3 className="text-lg font-bold text-white mb-1">{title}</h3>
+                <p className="text-sm text-[#a0aec0] leading-relaxed">{desc}</p>
             </div>
         </div>
     );
@@ -157,10 +155,10 @@ function StepCard({ num, title, desc, icon, color }: any) {
 
 function ValueCard({ title, desc, emoji }: any) {
     return (
-        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition duration-300">
+        <div className="bg-[#0d1628] p-8 rounded-2xl shadow-sm border border-[#1a2540] hover:shadow-xl hover:-translate-y-1 hover:border-[#c9a84c]/30 transition duration-300">
             <div className="text-4xl mb-4">{emoji}</div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">{title}</h3>
-            <p className="text-gray-500 leading-relaxed text-sm">{desc}</p>
+            <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
+            <p className="text-[#a0aec0] leading-relaxed text-sm">{desc}</p>
         </div>
     );
 }

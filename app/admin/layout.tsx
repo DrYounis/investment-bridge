@@ -13,6 +13,7 @@ const NAV_ITEMS = [
 const ADMIN_ITEMS = [
   { href: '/admin/meetings', icon: '📅', label: 'الاجتماعات' },
   { href: '/admin/projects', icon: '🚀', label: 'المشاريع' },
+  { href: '/admin/product-lines', icon: '🏭', label: 'خطوط الإنتاج' },
 ];
 
 export default function AdminLayoutShell({ children }: { children: React.ReactNode }) {

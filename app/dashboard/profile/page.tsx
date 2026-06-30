@@ -89,10 +89,10 @@ export default function ProfilePage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-cream flex items-center justify-center" dir="rtl">
+            <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center" dir="rtl">
                 <div className="flex flex-col items-center gap-4">
-                    <div className="w-12 h-12 border-4 border-gold/30 border-t-gold rounded-full animate-spin" />
-                    <p className="text-deep-navy/60 font-bold">جاري تحميل الملف الشخصي...</p>
+                    <div className="w-12 h-12 border-4 border-[#c9a84c]/30 border-t-[#c9a84c] rounded-full animate-spin" />
+                    <p className="text-[#a0aec0] font-bold">جاري تحميل الملف الشخصي...</p>
                 </div>
             </div>
         );
@@ -113,12 +113,12 @@ export default function ProfilePage() {
         'bg-[#1a2540] text-[#a0aec0] border-[#1a2540]';
 
     return (
-        <div className="min-h-screen bg-cream" dir="rtl">
+        <div className="min-h-screen bg-[#0a0f1e]" dir="rtl">
             <div className="max-w-3xl mx-auto px-4 py-12 md:py-20">
                 {/* Back link */}
                 <Link
                     href="/dashboard/hub"
-                    className="inline-flex items-center gap-2 text-deep-navy/60 hover:text-gold-dark font-bold text-sm mb-8 transition-colors"
+                    className="inline-flex items-center gap-2 text-[#a0aec0] hover:text-[#c9a84c] font-bold text-sm mb-8 transition-colors"
                 >
                     <ArrowLeft size={16} />
                     العودة إلى لوحة التحكم
@@ -126,25 +126,25 @@ export default function ProfilePage() {
 
                 {/* Page Header */}
                 <div className="mb-10">
-                    <h1 className="text-3xl md:text-4xl font-black text-deep-navy mb-2">الملف الشخصي</h1>
-                    <p className="text-deep-navy/50 font-bold">إدارة بيانات حسابك وإعداداتك الشخصية</p>
+                    <h1 className="text-3xl md:text-4xl font-black text-white mb-2">الملف الشخصي</h1>
+                    <p className="text-[#a0aec0] font-bold">إدارة بيانات حسابك وإعداداتك الشخصية</p>
                 </div>
 
                 {/* Message */}
                 {message && (
                     <div className={`mb-6 p-4 rounded-xl font-bold text-sm ${
                         message.type === 'success'
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                            : 'bg-red-50 text-red-700 border border-red-200'
+                            ? 'bg-[#c9a84c]/10 text-[#c9a84c] border border-[#c9a84c]/20'
+                            : 'bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/20'
                     }`}>
                         {message.text}
                     </div>
                 )}
 
                 {/* Profile Card */}
-                <div className="bg-white rounded-3xl shadow-lg shadow-deep-navy/5 border border-deep-navy/5 overflow-hidden">
+                <div className="bg-[#0d1628] rounded-2xl shadow-lg shadow-black/20 border border-[#1a2540] overflow-hidden">
                     {/* Card Header */}
-                    <div className="bg-gradient-to-r from-deep-navy to-deep-navy/90 p-8 text-white">
+                    <div className="bg-gradient-to-r from-[#0a0f1e] to-[#0d1628] p-8 text-white">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-5">
                                 <div className="w-16 h-16 rounded-full bg-gold/20 border-2 border-gold/40 flex items-center justify-center text-2xl">
@@ -164,8 +164,8 @@ export default function ProfilePage() {
                     {/* Card Body */}
                     <div className="p-8">
                         <div className="flex justify-between items-center mb-8">
-                            <h3 className="text-lg font-bold text-deep-navy flex items-center gap-2">
-                                <Shield size={18} className="text-gold-dark" />
+                            <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                                <Shield size={18} className="text-[#c9a84c]" />
                                 معلومات الحساب
                             </h3>
                             {!isEditing ? (
@@ -180,7 +180,7 @@ export default function ProfilePage() {
                                 <div className="flex gap-2">
                                     <button
                                         onClick={handleCancel}
-                                        className="flex items-center gap-1 px-4 py-2.5 text-deep-navy/50 hover:text-deep-navy/70 font-bold text-sm rounded-xl transition-colors"
+                                        className="flex items-center gap-1 px-4 py-2.5 text-[#a0aec0] hover:text-white font-bold text-sm rounded-xl transition-colors"
                                     >
                                         <X size={16} />
                                         إلغاء
@@ -188,7 +188,7 @@ export default function ProfilePage() {
                                     <button
                                         onClick={handleSave}
                                         disabled={saving}
-                                        className="flex items-center gap-2 px-5 py-2.5 bg-gold text-deep-navy hover:bg-gold-dark font-black text-sm rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="flex items-center gap-2 px-5 py-2.5 bg-[#c9a84c] text-[#0a0f1e] hover:bg-[#d4a843] font-black text-sm rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <Save size={16} />
                                         {saving ? 'جاري الحفظ...' : 'حفظ'}
@@ -200,7 +200,7 @@ export default function ProfilePage() {
                         <div className="grid md:grid-cols-2 gap-6">
                             {/* Full Name */}
                             <div>
-                                <label className="flex items-center gap-2 text-sm font-bold text-deep-navy/60 mb-2">
+                                <label className="flex items-center gap-2 text-sm font-bold text-[#a0aec0] mb-2">
                                     <User size={14} />
                                     الاسم الكامل
                                 </label>
@@ -210,13 +210,13 @@ export default function ProfilePage() {
                                     value={formData.full_name}
                                     onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
                                     placeholder="أدخل اسمك الكامل"
-                                    className="w-full p-3.5 rounded-xl border border-deep-navy/10 bg-cream/50 focus:bg-white focus:border-gold focus:ring-2 focus:ring-gold/20 text-deep-navy font-bold transition-all outline-none disabled:opacity-60 disabled:cursor-not-allowed placeholder:text-deep-navy/30"
+                                    className="w-full p-3.5 rounded-xl border border-[#1a2540] bg-[#0a0f1e] focus:bg-[#0d1628] focus:border-[#c9a84c] focus:ring-2 focus:ring-[#c9a84c]/20 text-white font-bold transition-all outline-none disabled:opacity-60 disabled:cursor-not-allowed placeholder:text-[#64748b]"
                                 />
                             </div>
 
                             {/* Email (read-only) */}
                             <div>
-                                <label className="flex items-center gap-2 text-sm font-bold text-deep-navy/60 mb-2">
+                                <label className="flex items-center gap-2 text-sm font-bold text-[#a0aec0] mb-2">
                                     <Mail size={14} />
                                     البريد الإلكتروني
                                 </label>
@@ -224,14 +224,14 @@ export default function ProfilePage() {
                                     type="email"
                                     disabled
                                     value={profile.email || ''}
-                                    className="w-full p-3.5 rounded-xl border border-deep-navy/10 bg-deep-navy/[0.02] text-deep-navy/50 font-bold cursor-not-allowed"
+                                    className="w-full p-3.5 rounded-xl border border-[#1a2540] bg-[#0a0f1e]/50 text-[#64748b] font-bold cursor-not-allowed"
                                 />
-                                <p className="text-xs text-deep-navy/40 mt-1">لا يمكن تغيير البريد الإلكتروني</p>
+                                <p className="text-xs text-[#64748b] mt-1">لا يمكن تغيير البريد الإلكتروني</p>
                             </div>
 
                             {/* Phone */}
                             <div>
-                                <label className="flex items-center gap-2 text-sm font-bold text-deep-navy/60 mb-2">
+                                <label className="flex items-center gap-2 text-sm font-bold text-[#a0aec0] mb-2">
                                     <Phone size={14} />
                                     رقم الجوال
                                 </label>
@@ -242,13 +242,13 @@ export default function ProfilePage() {
                                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                     placeholder="مثال: +966 50 000 0000"
                                     dir="ltr"
-                                    className="w-full p-3.5 rounded-xl border border-deep-navy/10 bg-cream/50 focus:bg-white focus:border-gold focus:ring-2 focus:ring-gold/20 text-deep-navy font-bold transition-all outline-none disabled:opacity-60 disabled:cursor-not-allowed placeholder:text-deep-navy/30"
+                                    className="w-full p-3.5 rounded-xl border border-[#1a2540] bg-[#0a0f1e] focus:bg-[#0d1628] focus:border-[#c9a84c] focus:ring-2 focus:ring-[#c9a84c]/20 text-white font-bold transition-all outline-none disabled:opacity-60 disabled:cursor-not-allowed placeholder:text-[#64748b]"
                                 />
                             </div>
 
                             {/* Role (read-only badge) */}
                             <div>
-                                <label className="flex items-center gap-2 text-sm font-bold text-deep-navy/60 mb-2">
+                                <label className="flex items-center gap-2 text-sm font-bold text-[#a0aec0] mb-2">
                                     <Shield size={14} />
                                     نوع العضوية
                                 </label>
@@ -259,7 +259,7 @@ export default function ProfilePage() {
 
                             {/* Bio */}
                             <div className="md:col-span-2">
-                                <label className="flex items-center gap-2 text-sm font-bold text-deep-navy/60 mb-2">
+                                <label className="flex items-center gap-2 text-sm font-bold text-[#a0aec0] mb-2">
                                     <Edit2 size={14} />
                                     نبذة عني
                                 </label>
@@ -269,7 +269,7 @@ export default function ProfilePage() {
                                     onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
                                     rows={4}
                                     placeholder="اكتب نبذة مختصرة عن نفسك أو عن مشروعك..."
-                                    className="w-full p-3.5 rounded-xl border border-deep-navy/10 bg-cream/50 focus:bg-white focus:border-gold focus:ring-2 focus:ring-gold/20 text-deep-navy font-bold transition-all outline-none disabled:opacity-60 disabled:cursor-not-allowed resize-none placeholder:text-deep-navy/30"
+                                    className="w-full p-3.5 rounded-xl border border-[#1a2540] bg-[#0a0f1e] focus:bg-[#0d1628] focus:border-[#c9a84c] focus:ring-2 focus:ring-[#c9a84c]/20 text-white font-bold transition-all outline-none disabled:opacity-60 disabled:cursor-not-allowed resize-none placeholder:text-[#64748b]"
                                 />
                             </div>
                         </div>
@@ -279,18 +279,18 @@ export default function ProfilePage() {
                 {/* Meta Section */}
                 <div className="mt-8 space-y-4">
                     {/* Member since */}
-                    <div className="bg-white rounded-2xl p-5 shadow-sm border border-deep-navy/5 flex items-center justify-between">
+                    <div className="bg-[#0d1628] rounded-2xl p-5 shadow-sm border border-[#1a2540] flex items-center justify-between">
                         <div>
-                            <p className="text-sm font-bold text-deep-navy/50">عضو منذ</p>
-                            <p className="text-deep-navy font-black">
+                            <p className="text-sm font-bold text-[#a0aec0]">عضو منذ</p>
+                            <p className="text-white font-black">
                                 {profile.created_at
                                     ? new Date(profile.created_at).toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' })
                                     : '—'}
                             </p>
                         </div>
                         <div className="text-right">
-                            <p className="text-sm font-bold text-deep-navy/50">آخر تحديث</p>
-                            <p className="text-deep-navy font-black">
+                            <p className="text-sm font-bold text-[#a0aec0]">آخر تحديث</p>
+                            <p className="text-white font-black">
                                 {profile.updated_at
                                     ? new Date(profile.updated_at).toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' })
                                     : '—'}
@@ -301,7 +301,7 @@ export default function ProfilePage() {
                     {/* Logout */}
                     <button
                         onClick={handleLogout}
-                        className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl bg-red-50 text-red-600 hover:bg-red-100 font-bold text-sm transition-colors border border-red-100"
+                        className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl bg-[#ef4444]/10 text-[#ef4444] hover:bg-[#ef4444]/20 font-bold text-sm transition-colors border border-[#ef4444]/20"
                     >
                         <LogOut size={16} />
                         تسجيل الخروج

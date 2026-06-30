@@ -20,12 +20,12 @@ export default function InvestorRequestForm({ repoName, repoUrl }: InvestorReque
         try {
             await requestProjectDetails(formData);
             setToastType('success');
-            setToastMessage('Details requested successfully! Check your email soon.');
+            setToastMessage('تم إرسال الطلب بنجاح! سيصلك الرد عبر البريد الإلكتروني.');
             setShowToast(true);
         } catch (error) {
             console.error('Failed to submit request:', error);
             setToastType('error');
-            setToastMessage('Failed to submit request. Please try again.');
+            setToastMessage('فشل إرسال الطلب. يرجى المحاولة مرة أخرى.');
             setShowToast(true);
         } finally {
             setIsPending(false);

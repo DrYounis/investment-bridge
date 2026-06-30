@@ -38,10 +38,11 @@ export async function scheduleMeeting(formData: FormData) {
             return { success: false, error: 'فشل حفظ الطلب. يرجى المحاولة مرة أخرى.' };
         }
 
-        // 2. Send email notification via Resend
-        const { error: emailError } = await getResend().emails.send({
-            from: 'Marfa.sa Meetings <noreply@marfa.sa>',
-            to: adminEmail,
+        // 2. Send email notification via Resend (only if ADMIN_EMAIL is configured)
+        if (adminEmail) {
+            const { error: emailError } = await getResend().emails.send({
+                from: 'Marfa.sa Meetings <noreply@marfa.sa>',
+                to: adminEmail,
             subject: `طلب اجتماع مستثمر جديد: ${name}`,
             html: `
                 <div style="font-family: sans-serif; direction: rtl; text-align: right; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; max-width: 600px; margin: auto;">
@@ -62,9 +63,10 @@ export async function scheduleMeeting(formData: FormData) {
             `,
         });
 
-        if (emailError) {
-            console.error('Email send error:', emailError);
-            // Request is already saved in DB, so still return success
+            if (emailError) {
+                console.error('Email send error:', emailError);
+                // Request is already saved in DB, so still return success
+            }
         }
 
         return { success: true };

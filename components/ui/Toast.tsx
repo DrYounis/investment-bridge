@@ -32,7 +32,7 @@ export const useToast = () => {
 
 const icons: Record<ToastType, React.ReactNode> = {
   success: (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
   ),
@@ -54,7 +54,7 @@ const icons: Record<ToastType, React.ReactNode> = {
 };
 
 const borderColor: Record<ToastType, string> = {
-  success: '#10b981',
+  success: '#c9a84c',
   error: '#ef4444',
   warning: '#f59e0b',
   info: '#c9a84c',

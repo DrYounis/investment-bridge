@@ -113,6 +113,7 @@ function RegisterForm() {
     }
 
     const handleResend = async () => {
+        if (!email || !email.includes('@') || email.length < 5) return;
         setError('')
         await fetch('/api/auth/send-otp', {
             method: 'POST',

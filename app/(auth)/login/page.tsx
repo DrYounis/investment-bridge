@@ -91,6 +91,7 @@ function LoginForm() {
     }
 
     const handleResend = async () => {
+        if (!email || !email.includes('@') || email.length < 5) return;
         setError('')
         setSuccessMsg('')
         await fetch('/api/auth/send-otp', {

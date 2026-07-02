@@ -166,6 +166,8 @@ export async function POST(request: Request) {
       } catch (err: any) {
         results.push({ email, status: 'فشل', error: err.message });
       }
+      // Rate limit: Resend allows 2/sec — wait 600ms between sends
+      await new Promise(r => setTimeout(r, 600));
     }
 
     // Also send a copy to the super admin

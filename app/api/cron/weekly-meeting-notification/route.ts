@@ -128,6 +128,8 @@ export async function GET() {
       } catch {
         results.push({ email: sub.email, status: 'فشل' });
       }
+      // Rate limit: Resend allows 2/sec — wait 600ms between sends
+      await new Promise(r => setTimeout(r, 600));
     }
 
     // Notify super admin

@@ -29,5 +29,9 @@ jobs:
 
       - name: Build application
         run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder' }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY || 're_placeholder' }}
 
       # Vercel auto-deploys from main via Git integration — no manual deploy step needed.

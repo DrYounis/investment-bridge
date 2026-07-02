@@ -64,11 +64,9 @@ export default function AdminNotificationsPage() {
   }, [supabase, router]);
 
   async function loadSubscribers() {
-    const { data } = await supabase
-      .from('meeting_subscribers')
-      .select('email')
-      .order('subscribed_at', { ascending: true });
-    if (data) setEmails(data.map((s: { email: string }) => s.email));
+    const res = await fetch('/api/admin/subscribers');
+    const data = await res.json();
+    if (data.subscribers) setEmails(data.subscribers);
   }
 
   async function addEmail() {

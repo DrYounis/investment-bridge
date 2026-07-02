@@ -2,7 +2,12 @@ import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
-const SUPER_ADMIN_EMAIL = process.env.SUPER_ADMIN_EMAIL;
+const SUPER_ADMIN_EMAILS = [
+  'op.younis@gmail.com',
+  'mohamedy2003@gmail.com',
+  process.env.SUPER_ADMIN_EMAIL,
+  process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL,
+].filter(Boolean) as string[];
 
 function getResend() {
   return new Resend(process.env.RESEND_API_KEY);
@@ -125,7 +130,7 @@ export async function POST(request: Request) {
     const apiKey = request.headers.get('x-api-key');
 
     const isAuthorized =
-      (session?.user?.email && session.user.email === SUPER_ADMIN_EMAIL) ||
+      (session?.user?.email && SUPER_ADMIN_EMAILS.includes(session.user.email)) ||
       (apiKey && apiKey === process.env.RESEND_API_KEY);
 
     if (!isAuthorized) {

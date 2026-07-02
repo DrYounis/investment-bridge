@@ -4,9 +4,7 @@ import React, { useMemo } from 'react';
 import Card from '../ui/Card';
 
 function getWeeklyFridaySchedule() {
-    // Meeting 1 (Airbnb) starts Friday June 19, 2026
-    // Weekly on Fridays for 7 meetings
-    const baseFriday = new Date(2026, 5, 19); // June 19, 2026 (month is 0-indexed: 5 = June)
+    const baseFriday = new Date(2026, 5, 19); // June 19, 2026 — weekly Fridays
 
     const dates: Date[] = [];
     for (let i = 0; i < 7; i++) {

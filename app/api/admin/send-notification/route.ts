@@ -163,8 +163,8 @@ export async function POST(request: Request) {
         } else {
           results.push({ email, status: 'تم الإرسال' });
         }
-      } catch (err: any) {
-        results.push({ email, status: 'فشل', error: err.message });
+      } catch (err: unknown) {
+        results.push({ email, status: 'فشل', error: err instanceof Error ? err.message : String(err) });
       }
       // Rate limit: Resend allows 2/sec — wait 600ms between sends
       await new Promise(r => setTimeout(r, 600));
@@ -179,7 +179,7 @@ export async function POST(request: Request) {
     }).catch(() => {});
 
     return NextResponse.json({ success: true, results });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    return NextResponse.json({ error: err instanceof Error ? err.message : String(err) }, { status: 500 });
   }
 }

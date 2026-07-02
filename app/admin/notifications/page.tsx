@@ -45,6 +45,12 @@ export default function AdminNotificationsPage() {
   const router = useRouter();
   const supabase = createClient();
 
+  async function loadSubscribers() {
+    const res = await fetch('/api/admin/subscribers');
+    const data = await res.json();
+    if (data.subscribers) setEmails(data.subscribers);
+  }
+
   useEffect(() => {
     (async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -62,12 +68,6 @@ export default function AdminNotificationsPage() {
       setLoading(false);
     })();
   }, [supabase, router]);
-
-  async function loadSubscribers() {
-    const res = await fetch('/api/admin/subscribers');
-    const data = await res.json();
-    if (data.subscribers) setEmails(data.subscribers);
-  }
 
   async function addEmail() {
     const email = newEmail.trim().toLowerCase();

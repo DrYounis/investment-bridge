@@ -125,8 +125,8 @@ export async function GET() {
           html: buildEmailHTML(sub.email, name, false, meeting),
         });
         results.push({ email: sub.email, status: error ? `فشل: ${error.message}` : 'تم الإرسال' });
-      } catch (err: any) {
-        results.push({ email: sub.email, status: `فشل: ${err.message}` });
+      } catch (err: unknown) {
+        results.push({ email: sub.email, status: `فشل: ${err instanceof Error ? err.message : String(err)}` });
       }
       // Rate limit: Resend allows 2/sec — wait 600ms between sends
       await new Promise(r => setTimeout(r, 600));
@@ -142,7 +142,7 @@ export async function GET() {
     }).catch(() => {});
 
     return NextResponse.json({ success: true, sent, total: subscribers.length, results });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    return NextResponse.json({ error: err instanceof Error ? err.message : String(err) }, { status: 500 });
   }
 }

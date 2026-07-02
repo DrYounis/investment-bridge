@@ -47,6 +47,13 @@ export const MEETINGS: MeetingData[] = [
   { number: 5, date: 'July 17, 2026', topic: 'Operations', company: 'Amazon', challenge: 'How to manage operations to minimize waste?', hailApp: 'Food delivery logistics and supply chain for Hail restaurants' },
   { number: 6, date: 'July 24, 2026', topic: 'Negotiation', company: 'Shark Tank', challenge: 'Why do investors reject genius ideas and accept simple ones?', hailApp: 'Pitching to Saudi family offices and angel investors' },
   { number: 7, date: 'July 31, 2026', topic: 'Governance', company: 'Saudi German Health', challenge: 'SAR 358M fraud, SAR 18M penalties — adequate deterrence?', hailApp: 'Corporate governance reforms for Saudi listed companies' },
+  { number: 8, date: 'August 7, 2026', topic: 'Innovation', company: 'Netflix', challenge: 'How do you destroy your own successful business model before a competitor does?', hailApp: 'Digital transformation in traditional Hail sectors — retail, agriculture, logistics' },
+  { number: 9, date: 'August 14, 2026', topic: 'Human Resources', company: 'Google (Project Aristotle)', challenge: 'What actually makes a high-performing team? Psychological safety vs. star performers', hailApp: 'Building effective small teams in resource-constrained Hail startups' },
+  { number: 10, date: 'August 21, 2026', topic: 'Risk Management', company: 'Theranos', challenge: 'How can investors detect red flags before deploying capital?', hailApp: 'Due diligence frameworks for Hail angel investors and family offices' },
+  { number: 11, date: 'August 28, 2026', topic: 'International Expansion', company: 'IKEA', challenge: 'Balancing global standardization with local adaptation', hailApp: 'Expanding Hail-based businesses to other Gulf markets — cultural and regulatory considerations' },
+  { number: 12, date: 'September 4, 2026', topic: 'Crisis Management', company: "Johnson & Johnson (Tylenol 1982)", challenge: 'Managing consumer trust crises with transparency — preserving brand reputation', hailApp: 'Crisis communication plans for Hail startups and SMEs' },
+  { number: 13, date: 'September 11, 2026', topic: 'Sustainability & Responsibility', company: 'Patagonia', challenge: 'Can profit align with values? Building sustainable business models', hailApp: 'Vision 2030-aligned sustainable business models in Hail — agriculture, eco-tourism, solar' },
+  { number: 14, date: 'September 18, 2026', topic: 'Feasibility Studies', company: 'Quibi', challenge: 'Why do heavily-funded projects with star teams still fail? Validating market need before building', hailApp: 'Market validation for Hail entrepreneurs before seeking investment', }
 ];
 
 export const PHASES = ['Opening (10m)', 'Case Analysis (20m)', 'Framework Deep-Dive (15m)', 'Debate (20m)', 'Saudi/Hail Application (15m)', 'Synthesis (10m)'];
@@ -59,6 +66,13 @@ export const FRAMEWORKS_BY_TOPIC: Record<string, string[]> = {
   Operations: ["Lean Operations", "Six Sigma/DMAIC", "Supply Chain Resilience", "Just-in-Time vs Just-in-Case", "Triple Bottom Line"],
   Negotiation: ["BATNA & ZOPA", "Anchoring", "Venture Capital Method", "Term Sheet Analysis", "Cross-Cultural Negotiation"],
   Governance: ["Fiduciary Duty", "Agency Theory", "IFRS Revenue Recognition", "CMA Regulatory Framework", "Stakeholder Theory"],
+  Innovation: ["Disruptive Innovation (Christensen)", "Innovator's Dilemma", "Blue Ocean Strategy", "Jobs-to-Be-Done", "S-Curve Adoption"],
+  "Human Resources": ["Psychological Safety (Edmondson)", "Tuckman Team Stages", "Google re:Work", "Belbin Team Roles", "OKR Framework"],
+  "Risk Management": ["COSO ERM Framework", "Red Flags Due Diligence", "Pre-Mortem Analysis", "Risk Matrix (Probability × Impact)", "Swiss Cheese Model"],
+  "International Expansion": ["CAGE Distance Framework", "Uppsala Internationalization", "Born Global Theory", "Entry Mode Decision Matrix", "Localization vs Standardization"],
+  "Crisis Management": ["Crisis Communication Model (Coombs)", "Issue Lifecycle", "Stakeholder Mapping", "Scenario Planning", "Golden Hour Response"],
+  "Sustainability & Responsibility": ["Triple Bottom Line (3Ps)", "ESG Framework", "B-Corp Certification", "Circular Economy", "Shared Value (Porter & Kramer)"],
+  "Feasibility Studies": ["Market Validation Framework", "TAM SAM SOM", "Unit Economics & LTV/CAC", "Pre-Mortem Analysis", "Lean Canvas"],
 };
 
 export const MODULE_LIBRARY: Record<string, string[]> = {
@@ -69,6 +83,13 @@ export const MODULE_LIBRARY: Record<string, string[]> = {
   Leadership: ["Organizational Culture Design", "Change Management", "Team Motivation & Incentives", "Decision-Making Under Uncertainty", "Stakeholder Management"],
   Negotiation: ["BATNA & ZOPA Mastery", "Term Sheet Fundamentals", "Valuation Negotiation", "Win-Win Deal Structuring", "Cross-Cultural Negotiation (Saudi)"],
   Governance: ["Board Fiduciary Duties", "IFRS Financial Reporting", "Audit Committee Role", "Risk Management Frameworks", "Saudi Capital Market Law (CMA)"],
+  Innovation: ["Disruptive Innovation Theory", "The Innovator's Dilemma", "Platform Business Models", "Digital Transformation Strategy", "Product-Market Fit Validation"],
+  "Human Resources": ["Psychological Safety at Work", "High-Performance Team Design", "Talent Retention in Startups", "Culture Scaling", "Remote/Hybrid Team Management"],
+  "Risk Management": ["Investment Due Diligence", "Fraud Detection Red Flags", "Risk Assessment Matrices", "Portfolio Diversification", "Scenario Analysis & Stress Testing"],
+  "International Expansion": ["Market Entry Strategies", "Cross-Border Regulatory Compliance", "Cultural Adaptation Framework", "Franchise vs Direct Investment", "Gulf-to-Gulf Expansion Playbook"],
+  "Crisis Management": ["Crisis Communication Plans", "Stakeholder Trust Recovery", "Brand Reputation Defense", "Rapid Response Protocols", "Post-Crisis Rebuilding"],
+  "Sustainability & Responsibility": ["ESG Integration", "Circular Business Models", "B-Corp & Social Enterprise", "Vision 2030 Sustainability Goals", "Impact Investing Frameworks"],
+  "Feasibility Studies": ["Market Demand Validation", "TAM/SAM/SOM Sizing", "Unit Economics Modeling", "Pre-Investment Feasibility", "Lean Startup Validation"],
 };
 
 // ── Component ──────────────────────────────────────────────────

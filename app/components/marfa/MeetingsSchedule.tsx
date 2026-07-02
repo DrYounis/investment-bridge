@@ -7,7 +7,7 @@ function getWeeklyFridaySchedule() {
     const baseFriday = new Date(2026, 5, 19); // June 19, 2026 — weekly Fridays
 
     const dates: Date[] = [];
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 14; i++) {
         const d = new Date(baseFriday);
         d.setDate(d.getDate() + i * 7); // weekly
         dates.push(d);
@@ -79,6 +79,62 @@ const SCHEDULE_DATA = [
         challenge: "إدانة 11 عضو مجلس إدارة ولجنة مراجعة بتضخيم إيرادات بـ 358 مليون ريال رغم علمهم بعدم إمكانية تحصيلها. غرامات 18 مليون ريال فقط (5%). هل العقوبات رادعة؟ وماذا يعني هذا لمصداقية السوق المالي السعودي؟",
         pdf: "/case-studies/Saudi_German_Health_Case_Study.pdf",
         arPdf: "/case-studies/Saudi_German_Health_Arabic_Case_Study.pdf",
+    },
+    {
+        encounter: "اللقاء 8",
+        topic: "الابتكار",
+        case: "حالة \"Netflix\" (من تأجير DVD إلى الستريمنج)",
+        challenge: "كيف تُقدم على تدمير نموذج عملك الناجح حالياً لتبني نموذجاً جديداً، قبل أن يفعلها منافس؟ (إسقاط على التحول الرقمي في القطاعات التقليدية بحائل).",
+        pdf: "/case-studies/Netflix_Innovation_Case_Study.pdf",
+        arPdf: "/case-studies/Netflix_Innovation_Arabic_Case_Study.pdf",
+    },
+    {
+        encounter: "اللقاء 9",
+        topic: "الموارد البشرية",
+        case: "حالة \"Google – Project Aristotle\"",
+        challenge: "ما الذي يصنع فريقاً عالي الأداء فعلاً؟ الأمان النفسي مقابل \"تجميع النجوم\". كيف نبني فرقاً صغيرة فعّالة في مشاريع ناشئة محدودة الموارد؟",
+        pdf: "/case-studies/Google_Aristotle_HR_Case_Study.pdf",
+        arPdf: "/case-studies/Google_Aristotle_HR_Arabic_Case_Study.pdf",
+    },
+    {
+        encounter: "اللقاء 10",
+        topic: "إدارة المخاطر",
+        case: "حالة \"Theranos\" (انهيار الثقة الاستثمارية)",
+        challenge: "كيف يكتشف المستثمر علامات الخطر مبكراً قبل ضخ رأس المال؟ ودرس في أهمية الشفافية والحوكمة لرائد الأعمال نفسه.",
+        pdf: "/case-studies/Theranos_Risk_Case_Study.pdf",
+        arPdf: "/case-studies/Theranos_Risk_Arabic_Case_Study.pdf",
+    },
+    {
+        encounter: "اللقاء 11",
+        topic: "التوسع الدولي",
+        case: "حالة \"IKEA\" في دخول أسواق جديدة",
+        challenge: "كيف توازن الشركة بين \"المعيار العالمي\" و\"التكيف المحلي\"؟ إسقاط على التوسع من حائل إلى أسواق خليجية أخرى.",
+        pdf: "/case-studies/IKEA_Expansion_Case_Study.pdf",
+        arPdf: "/case-studies/IKEA_Expansion_Arabic_Case_Study.pdf",
+    },
+    {
+        encounter: "اللقاء 12",
+        topic: "إدارة الأزمات",
+        case: "حالة \"Johnson & Johnson\" (أزمة تايلينول 1982)",
+        challenge: "كيف تدار أزمة ثقة المستهلك بشفافية تحفظ سمعة العلامة التجارية بدلاً من تدميرها؟ خطة تواصل الأزمات لمشروع ناشئ.",
+        pdf: "/case-studies/JnJ_Crisis_Case_Study.pdf",
+        arPdf: "/case-studies/JnJ_Crisis_Arabic_Case_Study.pdf",
+    },
+    {
+        encounter: "اللقاء 13",
+        topic: "الاستدامة والمسؤولية",
+        case: "حالة \"Patagonia\" (الأرض هي المساهم الوحيد)",
+        challenge: "هل يمكن أن يتوافق الربح مع القيم؟ وكيف تُبنى نماذج أعمال مستدامة تتماشى مع رؤية 2030 دون التضحية بالجدوى المالية؟",
+        pdf: "/case-studies/Patagonia_Sustainability_Case_Study.pdf",
+        arPdf: "/case-studies/Patagonia_Sustainability_Arabic_Case_Study.pdf",
+    },
+    {
+        encounter: "اللقاء 14",
+        topic: "دراسة الجدوى",
+        case: "حالة \"Quibi\" (فشل رغم مليار دولار تمويل)",
+        challenge: "لماذا يفشل مشروع ضخم التمويل وبفريق نجوم؟ درس في التحقق من حاجة السوق الفعلية قبل بناء المنتج.",
+        pdf: "/case-studies/Quibi_Feasibility_Case_Study.pdf",
+        arPdf: "/case-studies/Quibi_Feasibility_Arabic_Case_Study.pdf",
     }
 ];
 
@@ -133,7 +189,7 @@ export default function MeetingsSchedule() {
             {/* Schedule Table */}
             <Card className="overflow-hidden bg-white/70 border border-gold/10">
                 <div className="p-6 border-b border-gold/10">
-                    <h3 className="text-xl font-bold text-deep-navy">جدول لقاءات مرفأ (3 أشهر)</h3>
+                    <h3 className="text-xl font-bold text-deep-navy">جدول لقاءات مرفأ (6 أشهر)</h3>
                     <p className="text-sm text-deep-navy/50 mt-1">
                         تبدأ من {formatDate(scheduleDates[0])} | كل يوم جمعة (أسبوعياً)
                     </p>

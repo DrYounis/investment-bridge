@@ -40,13 +40,13 @@ export interface SessionState {
 
 // ── Constants ──────────────────────────────────────────────────
 export const MEETINGS: MeetingData[] = [
-  { number: 1, date: 'June 4, 2026', topic: 'Strategy', company: 'Airbnb', challenge: 'How to convince investors that home-sharing can compete with hotels?', hailApp: 'Tourism in Hail — Aja Mountain homestays, Nafud Desert tent rentals, winter festival lodging' },
-  { number: 2, date: 'June 18, 2026', topic: 'Leadership', company: 'Zappos', challenge: 'Can you build an organizational culture where employees sacrifice for customers?', hailApp: 'Building service culture in Hail coffee shops and restaurants' },
-  { number: 3, date: 'July 2, 2026', topic: 'Finance', company: 'WeWork', challenge: 'Understanding the difference between growth and profitability', hailApp: 'Evaluating startup pitches and sustainable business models for Hail entrepreneurs' },
-  { number: 4, date: 'July 16, 2026', topic: 'Marketing', company: 'Liquid Death', challenge: 'How to sell ordinary water with genius branding?', hailApp: 'Differentiating Hail local products: dates, honey, coffee, bakery items' },
-  { number: 5, date: 'July 30, 2026', topic: 'Operations', company: 'Amazon', challenge: 'How to manage operations to minimize waste?', hailApp: 'Food delivery logistics and supply chain for Hail restaurants' },
-  { number: 6, date: 'August 13, 2026', topic: 'Negotiation', company: 'Shark Tank', challenge: 'Why do investors reject genius ideas and accept simple ones?', hailApp: 'Pitching to Saudi family offices and angel investors' },
-  { number: 7, date: 'August 27, 2026', topic: 'Governance', company: 'Saudi German Health', challenge: 'SAR 358M fraud, SAR 18M penalties — adequate deterrence?', hailApp: 'Corporate governance reforms for Saudi listed companies' },
+  { number: 1, date: 'June 19, 2026', topic: 'Strategy', company: 'Airbnb', challenge: 'How to convince investors that home-sharing can compete with hotels?', hailApp: 'Tourism in Hail — Aja Mountain homestays, Nafud Desert tent rentals, winter festival lodging' },
+  { number: 2, date: 'June 26, 2026', topic: 'Leadership', company: 'Zappos', challenge: 'Can you build an organizational culture where employees sacrifice for customers?', hailApp: 'Building service culture in Hail coffee shops and restaurants' },
+  { number: 3, date: 'July 3, 2026', topic: 'Finance', company: 'WeWork', challenge: 'Understanding the difference between growth and profitability', hailApp: 'Evaluating startup pitches and sustainable business models for Hail entrepreneurs' },
+  { number: 4, date: 'July 10, 2026', topic: 'Marketing', company: 'Liquid Death', challenge: 'How to sell ordinary water with genius branding?', hailApp: 'Differentiating Hail local products: dates, honey, coffee, bakery items' },
+  { number: 5, date: 'July 17, 2026', topic: 'Operations', company: 'Amazon', challenge: 'How to manage operations to minimize waste?', hailApp: 'Food delivery logistics and supply chain for Hail restaurants' },
+  { number: 6, date: 'July 24, 2026', topic: 'Negotiation', company: 'Shark Tank', challenge: 'Why do investors reject genius ideas and accept simple ones?', hailApp: 'Pitching to Saudi family offices and angel investors' },
+  { number: 7, date: 'July 31, 2026', topic: 'Governance', company: 'Saudi German Health', challenge: 'SAR 358M fraud, SAR 18M penalties — adequate deterrence?', hailApp: 'Corporate governance reforms for Saudi listed companies' },
 ];
 
 export const PHASES = ['Opening (10m)', 'Case Analysis (20m)', 'Framework Deep-Dive (15m)', 'Debate (20m)', 'Saudi/Hail Application (15m)', 'Synthesis (10m)'];

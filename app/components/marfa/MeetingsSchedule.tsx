@@ -3,31 +3,15 @@
 import React, { useMemo } from 'react';
 import Card from '../ui/Card';
 
-function getNextMonthSchedule() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth(); // 0-indexed
+function getWeeklyFridaySchedule() {
+    // Meeting 1 (Airbnb) starts Friday June 19, 2026
+    // Weekly on Fridays for 7 meetings
+    const baseFriday = new Date(2026, 5, 19); // June 19, 2026 (month is 0-indexed: 5 = June)
 
-    // Start from next month
-    let startYear = year;
-    let startMonth = month + 1;
-    if (startMonth > 11) {
-        startMonth = 0;
-        startYear = year + 1;
-    }
-
-    // First Thursday of next month
-    const firstDay = new Date(startYear, startMonth, 1);
-    const dayOfWeek = firstDay.getDay(); // 0=Sun, 4=Thu
-    let daysUntilThursday = (4 - dayOfWeek + 7) % 7;
-    if (daysUntilThursday === 0) daysUntilThursday = 7; // If 1st is Thursday, use it
-    const firstThursday = new Date(startYear, startMonth, 1 + daysUntilThursday);
-
-    // Generate 7 bi-weekly dates (every 2 weeks on Thursday)
     const dates: Date[] = [];
     for (let i = 0; i < 7; i++) {
-        const d = new Date(firstThursday);
-        d.setDate(d.getDate() + i * 14);
+        const d = new Date(baseFriday);
+        d.setDate(d.getDate() + i * 7); // weekly
         dates.push(d);
     }
     return dates;
@@ -120,7 +104,7 @@ const METHOD_STEPS = [
 ];
 
 export default function MeetingsSchedule() {
-    const scheduleDates = useMemo(() => getNextMonthSchedule(), []);
+    const scheduleDates = useMemo(() => getWeeklyFridaySchedule(), []);
 
     return (
         <div className="space-y-12">
@@ -153,7 +137,7 @@ export default function MeetingsSchedule() {
                 <div className="p-6 border-b border-gold/10">
                     <h3 className="text-xl font-bold text-deep-navy">جدول لقاءات مرفأ (3 أشهر)</h3>
                     <p className="text-sm text-deep-navy/50 mt-1">
-                        تبدأ من {formatDate(scheduleDates[0])} | كل يوم خميس (مرة كل أسبوعين)
+                        تبدأ من {formatDate(scheduleDates[0])} | كل يوم جمعة (أسبوعياً)
                     </p>
                 </div>
                 <div className="overflow-x-auto">

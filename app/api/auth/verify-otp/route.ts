@@ -97,6 +97,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // 6. Auto-subscribe to weekly meeting notifications
+    await supabase
+      .from('meeting_subscribers')
+      .upsert({ email: normalizedEmail, source: 'login', last_login_at: new Date().toISOString() }, { onConflict: 'email' })
+      .select()
+      .maybeSingle();
+
     return NextResponse.json({
       success: true,
       is_new_user: isNewUser,

@@ -4,7 +4,10 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 
-const SUPER_ADMIN_EMAIL = 'op.younis@gmail.com';
+const SUPER_ADMIN_EMAILS = ['op.younis@gmail.com', 'mohamedy2003@gmail.com'];
+if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL) {
+  SUPER_ADMIN_EMAILS.push(process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL);
+}
 
 const DEFAULT_EMAILS = [
   'Ahmedabdelzaher1395@gmail.com',
@@ -33,7 +36,7 @@ export default function AdminNotificationsPage() {
         return;
       }
       setUserEmail(session.user.email);
-      if (session.user.email !== SUPER_ADMIN_EMAIL) {
+      if (!SUPER_ADMIN_EMAILS.includes(session.user.email)) {
         setLoading(false);
         return;
       }
@@ -83,7 +86,7 @@ export default function AdminNotificationsPage() {
 
   if (loading) return <div className="min-h-screen bg-[#faf8f2] flex items-center justify-center"><p className="text-[#4a5b78]">جاري التحميل...</p></div>;
 
-  if (userEmail !== SUPER_ADMIN_EMAIL) {
+  if (userEmail && !SUPER_ADMIN_EMAILS.includes(userEmail)) {
     return (
       <div className="min-h-screen bg-[#faf8f2] flex items-center justify-center" dir="rtl">
         <div className="bg-white border border-red-200 rounded-3xl p-12 text-center max-w-md shadow-lg">

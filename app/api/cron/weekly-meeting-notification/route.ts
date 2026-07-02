@@ -124,9 +124,9 @@ export async function GET() {
           subject: `🔔 تذكير: لقاء مرفأ ${meeting.meetingNumber} — ${meeting.dateStr} | ${meeting.case}`,
           html: buildEmailHTML(sub.email, name, false, meeting),
         });
-        results.push({ email: sub.email, status: error ? 'فشل' : 'تم الإرسال' });
-      } catch {
-        results.push({ email: sub.email, status: 'فشل' });
+        results.push({ email: sub.email, status: error ? `فشل: ${error.message}` : 'تم الإرسال' });
+      } catch (err: any) {
+        results.push({ email: sub.email, status: `فشل: ${err.message}` });
       }
       // Rate limit: Resend allows 2/sec — wait 600ms between sends
       await new Promise(r => setTimeout(r, 600));

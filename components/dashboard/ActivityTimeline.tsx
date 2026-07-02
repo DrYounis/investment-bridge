@@ -57,11 +57,11 @@ export default function ActivityTimeline() {
         .gte('created_at', today)
         .limit(1);
       if (!existing || existing.length === 0) {
-        await supabase.from('activity_log').insert({
+        Promise.resolve(supabase.from('activity_log').insert({
           user_id: user.id,
           action: 'login',
           description: 'تسجيل الدخول إلى المنصة',
-        }).then(() => {}).catch(() => {}); // fire-and-forget, silent fail
+        })).catch(() => {}); // fire-and-forget, silent fail
       }
 
       // Fetch timeline

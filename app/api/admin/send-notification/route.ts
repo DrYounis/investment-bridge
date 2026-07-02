@@ -171,7 +171,7 @@ export async function POST(request: Request) {
     // Also send a copy to the super admin
     await resend.emails.send({
       from: 'Marfa Meetings <noreply@marfa.sa>',
-      to: SUPER_ADMIN_EMAIL!,
+      to: SUPER_ADMIN_EMAILS[0],
       subject: `📋 تأكيد إرسال — لقاء ${MEETING_DETAILS.number} — تم الإرسال إلى ${emails.length} بريد`,
       html: `<div style="font-family: sans-serif; padding: 20px;"><h2>تم إرسال الإشعار</h2><pre>${JSON.stringify(results, null, 2)}</pre></div>`,
     }).catch(() => {});

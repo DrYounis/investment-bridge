@@ -97,12 +97,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 6. Auto-subscribe to weekly meeting notifications
-    await supabase
+    // 6. Auto-subscribe to weekly meeting notifications (fire-and-forget — don't delay OTP)
+    supabase
       .from('meeting_subscribers')
       .upsert({ email: normalizedEmail, source: 'login', last_login_at: new Date().toISOString() }, { onConflict: 'email' })
       .select()
-      .maybeSingle();
+      .maybeSingle()
+      .catch(() => {}); // silent fail — don't block auth
 
     return NextResponse.json({
       success: true,

@@ -1,5 +1,3 @@
-import Link from 'next/link';
-import Image from 'next/image';
 import MeetingsSchedule from '../components/marfa/MeetingsSchedule';
 import InvestorMeetingForm from '../components/marfa/InvestorMeetingForm';
 

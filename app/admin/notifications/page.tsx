@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 
@@ -43,7 +43,7 @@ export default function AdminNotificationsPage() {
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
   const router = useRouter();
-  const supabase = createClient();
+  const supabase = useRef(createClient()).current;
 
   async function loadSubscribers() {
     const res = await fetch('/api/admin/subscribers');
@@ -67,7 +67,7 @@ export default function AdminNotificationsPage() {
       await loadSubscribers();
       setLoading(false);
     })();
-  }, [supabase, router]);
+  }, []);
 
   async function addEmail() {
     const email = newEmail.trim().toLowerCase();
@@ -129,7 +129,7 @@ export default function AdminNotificationsPage() {
           </div>
           <div className="flex items-center gap-2">
             <span className="px-3 py-1 rounded-full bg-green-50 border border-green-300 text-green-700 text-xs font-bold">
-              🤖 إرسال تلقائي كل أربعاء 8 صباحاً
+              🤖 إرسال تلقائي كل سبت 8 صباحاً
             </span>
             <span className="px-3 py-1 rounded-full bg-[#fdf9ef] border border-[#c9a84c]/30 text-[#c9a84c] text-xs font-bold">
               مشرف عام
@@ -192,7 +192,7 @@ export default function AdminNotificationsPage() {
 
         {/* Meeting Preview */}
         <div className="bg-white border border-[#c9a84c]/20 rounded-3xl p-6 shadow-[0_8px_30px_rgba(10,15,30,0.06)]">
-          <h2 className="text-[#c9a84c] font-bold text-lg mb-4">📅 اللقاء القادم (يُرسل تلقائياً الأربعاء)</h2>
+          <h2 className="text-[#c9a84c] font-bold text-lg mb-4">📅 اللقاء القادم (يُرسل تلقائياً السبت)</h2>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div><span className="text-[#8a94a8]">اللقاء:</span> <span className="text-[#0a0f1e] font-bold">اللقاء {MEETING.meetingNumber}</span></div>
             <div><span className="text-[#8a94a8]">التاريخ:</span> <span className="text-[#0a0f1e] font-bold">{MEETING.dateStr}</span></div>
@@ -200,7 +200,7 @@ export default function AdminNotificationsPage() {
             <div><span className="text-[#8a94a8]">المكان:</span> <span className="text-[#0a0f1e] font-bold">ثمد كوفي</span></div>
           </div>
           <div className="mt-4 p-4 bg-[#fdf9ef] rounded-xl text-sm text-[#4a5b78]">
-            <span className="text-[#c9a84c] font-bold">🤖 تلقائي:</span> كل يوم أربعاء الساعة 8 صباحاً، يُرسل إشعار تذكيري لجميع المشتركين ({emails.length} مشترك) عن لقاء الجمعة القادم.
+            <span className="text-[#c9a84c] font-bold">🤖 تلقائي:</span> كل يوم سبت الساعة 8 صباحاً، يُرسل إشعار تذكيري لجميع المشتركين ({emails.length} مشترك) عن لقاء الجمعة القادم.
           </div>
         </div>
 

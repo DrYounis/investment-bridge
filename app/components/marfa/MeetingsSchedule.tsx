@@ -27,9 +27,7 @@ function getThisFridayIndex(): number {
     const now = new Date();
     const dayOfWeek = now.getDay(); // 0=Sun ... 5=Friday
     const friday = new Date(now);
-    // If today is Friday (5), this is the current Friday
-    // If today is Saturday (6), last Friday has passed — next Friday is upcoming
-    // Get to the most recent Friday (or today if it is Friday)
+    // Compute the upcoming Friday (today if it is Friday)
     const daysFromFriday = (5 - dayOfWeek + 7) % 7;
     friday.setDate(friday.getDate() + daysFromFriday);
 

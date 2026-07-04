@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import PreMeetingPrep from '@/app/components/marfa/admin/PreMeetingPrep';
 import LiveDiscussion from '@/app/components/marfa/admin/LiveDiscussion';
 import FrameworkPanel from '@/app/components/marfa/admin/FrameworkPanel';

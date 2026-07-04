@@ -14,10 +14,7 @@ export async function scheduleMeeting(formData: FormData) {
     const message = formData.get('message') as string;
     const preferredTime = formData.get('preferredTime') as string;
 
-    const adminEmail = process.env.ADMIN_EMAIL;
-    if (!adminEmail) {
-      console.error('ADMIN_EMAIL environment variable is not set — skipping email notification');
-    }
+    const adminEmail = process.env.ADMIN_EMAIL || 'op.younis@gmail.com';
 
     try {
         // 1. Save to Supabase database
@@ -38,9 +35,8 @@ export async function scheduleMeeting(formData: FormData) {
             return { success: false, error: 'فشل حفظ الطلب. يرجى المحاولة مرة أخرى.' };
         }
 
-        // 2. Send email notification via Resend (only if ADMIN_EMAIL is configured)
-        if (adminEmail) {
-            const { error: emailError } = await getResend().emails.send({
+        // 2. Send email notification via Resend
+        const { error: emailError } = await getResend().emails.send({
                 from: 'Marfa.sa Meetings <noreply@marfa.sa>',
                 to: adminEmail,
             subject: `طلب اجتماع مستثمر جديد: ${name}`,
@@ -67,7 +63,6 @@ export async function scheduleMeeting(formData: FormData) {
                 console.error('Email send error:', emailError);
                 // Request is already saved in DB, so still return success
             }
-        }
 
         return { success: true };
     } catch (err) {

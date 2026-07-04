@@ -23,6 +23,22 @@ function formatDate(date: Date): string {
     return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
 }
 
+function getThisFridayIndex(): number {
+    const now = new Date();
+    const dayOfWeek = now.getDay(); // 0=Sun ... 5=Friday
+    const friday = new Date(now);
+    // If today is Friday (5), this is the current Friday
+    // If today is Saturday (6), last Friday has passed — next Friday is upcoming
+    // Get to the most recent Friday (or today if it is Friday)
+    const daysFromFriday = (5 - dayOfWeek + 7) % 7;
+    friday.setDate(friday.getDate() + daysFromFriday);
+
+    const baseFriday = new Date(2026, 5, 19); // June 19, 2026
+    const diffMs = friday.getTime() - baseFriday.getTime();
+    const diffWeeks = Math.round(diffMs / (7 * 24 * 60 * 60 * 1000));
+    return diffWeeks; // 0 = meeting 1, 1 = meeting 2, etc.
+}
+
 const SCHEDULE_DATA = [
     {
         encounter: "اللقاء 1",
@@ -159,6 +175,7 @@ const METHOD_STEPS = [
 
 export default function MeetingsSchedule() {
     const scheduleDates = useMemo(() => getWeeklyFridaySchedule(), []);
+    const thisFridayIdx = useMemo(() => getThisFridayIndex(), []);
 
     return (
         <div className="space-y-12">
@@ -218,24 +235,36 @@ export default function MeetingsSchedule() {
                                     <td className="p-4 font-semibold text-[#0a0f1e]">{row.case}</td>
                                     <td className="p-4 text-sm text-[#4a5b78] leading-relaxed">{row.challenge}</td>
                                     <td className="p-4">
-                                        <a
-                                            href={row.pdf}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-1 px-3 py-2 bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-lg text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition-colors"
-                                        >
-                                            📄 PDF
-                                        </a>
+                                        {idx <= thisFridayIdx ? (
+                                            <a
+                                                href={row.pdf}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-1 px-3 py-2 bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-lg text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition-colors"
+                                            >
+                                                📄 PDF
+                                            </a>
+                                        ) : (
+                                            <span className="inline-flex items-center gap-1 px-3 py-2 bg-[#f5f5f5] border border-[#c9a84c]/10 rounded-lg text-[#8a94a8] text-sm">
+                                                🔒 قريباً
+                                            </span>
+                                        )}
                                     </td>
                                     <td className="p-4">
-                                        <a
-                                            href={row.arPdf}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-1 px-3 py-2 bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-lg text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition-colors"
-                                        >
-                                            📄 عربي
-                                        </a>
+                                        {idx <= thisFridayIdx ? (
+                                            <a
+                                                href={row.arPdf}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-1 px-3 py-2 bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-lg text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition-colors"
+                                            >
+                                                📄 عربي
+                                            </a>
+                                        ) : (
+                                            <span className="inline-flex items-center gap-1 px-3 py-2 bg-[#f5f5f5] border border-[#c9a84c]/10 rounded-lg text-[#8a94a8] text-sm">
+                                                🔒 قريباً
+                                            </span>
+                                        )}
                                     </td>
                                 </tr>
                             ))}

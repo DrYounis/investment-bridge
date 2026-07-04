@@ -97,14 +97,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 6. Auto-subscribe to weekly meeting notifications (fire-and-forget — don't delay OTP)
+    // 6. Auto-subscribe + send welcome notification (fire-and-forget — don't delay OTP)
     Promise.resolve(
       supabase
         .from('meeting_subscribers')
         .upsert({ email: normalizedEmail, source: 'login', last_login_at: new Date().toISOString() }, { onConflict: 'email' })
         .select()
         .maybeSingle()
-    ).catch(() => {}); // silent fail — don't block auth
+    ).then(() => {
+      // After subscribing, trigger notification for this email (fire-and-forget)
+      fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.marfa.sa'}/api/cron/weekly-meeting-notification?email=${encodeURIComponent(normalizedEmail)}`)
+        .catch(() => {});
+    }).catch(() => {}); // silent fail — don't block auth
 
     return NextResponse.json({
       success: true,

@@ -20,7 +20,7 @@ export async function scheduleMeeting(formData: FormData) {
         // 1. Save to Supabase database
         const supabase = await createClient();
         const { error: dbError } = await supabase
-            .from('meetings')
+            .from('meeting_requests')
             .insert({
                 name,
                 email,

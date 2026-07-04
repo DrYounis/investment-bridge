@@ -97,10 +97,12 @@ function buildEmailHTML(email: string, name: string, isWelcome: boolean, meeting
 </body></html>`;
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const supabase = createServiceClient();
     const meeting = getUpcomingFriday();
+    const { searchParams } = new URL(request.url);
+    const singleEmail = searchParams.get('email');
 
     // Fetch all subscribers
     const { data: subscribers } = await supabase
@@ -112,10 +114,19 @@ export async function GET() {
       return NextResponse.json({ message: 'No subscribers found' });
     }
 
+    // If single email param provided, filter to just that one
+    const recipients = singleEmail
+      ? subscribers.filter(s => s.email === singleEmail)
+      : subscribers;
+
+    if (recipients.length === 0) {
+      return NextResponse.json({ message: `Email not found: ${singleEmail}` });
+    }
+
     const resend = getResend();
     const results: { email: string; status: string }[] = [];
 
-    for (const sub of subscribers) {
+    for (const sub of recipients) {
       const name = sub.email.split('@')[0];
       try {
         const { error } = await resend.emails.send({

@@ -19,6 +19,12 @@ function last7Days(): { day: string; count: number }[] {
   return result;
 }
 
+interface StatItem {
+  label: string;
+  value: number;
+  cta: string;
+}
+
 export default function MiniAnalytics() {
   const router = useRouter();
   const supabase = createClient();
@@ -46,7 +52,6 @@ export default function MiniAnalytics() {
         interests: results[2].status === 'fulfilled' ? (results[2].value.count || 0) : 0,
       });
 
-      // Build chart data
       const days = last7Days();
       if (results[3].status === 'fulfilled' && results[3].value.data) {
         for (const row of results[3].value.data) {
@@ -64,6 +69,14 @@ export default function MiniAnalytics() {
     }
     load();
   }, [supabase, router]);
+
+  const statItems: StatItem[] = [
+    { label: 'مشاهدات الملف', value: stats.views, cta: 'أكمل ملفك ليظهر للمستثمرين 👀' },
+    { label: 'تحميلات العرض', value: stats.downloads, cta: 'أضف عرضك التقديمي لجذب المستثمرين 📊' },
+    { label: 'اهتمام المستثمرين', value: stats.interests, cta: 'تفاعل مع الفرص لجذب الاهتمام 🤝' },
+  ];
+
+  const hasAnyData = stats.views > 0 || stats.downloads > 0 || stats.interests > 0;
 
   return (
     <GlassCard className="marfa-card-hover" dir="rtl">
@@ -85,13 +98,8 @@ export default function MiniAnalytics() {
         </div>
       ) : (
         <>
-          {/* Stat cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-            {[
-              { label: 'مشاهدات الملف', value: stats.views },
-              { label: 'تحميلات العرض', value: stats.downloads },
-              { label: 'اهتمام المستثمرين', value: stats.interests },
-            ].map((s) => (
+            {statItems.map((s) => (
               <div
                 key={s.label}
                 className="rounded-xl p-4 text-right border border-[#1a2540]"
@@ -103,9 +111,13 @@ export default function MiniAnalytics() {
                 <div className="text-sm text-[#a0aec0] mt-1" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
                   {s.label}
                 </div>
-                <span className="text-xs mt-1 block" style={{ color: s.value > 0 ? '#10b981' : '#64748b' }}>
-                  {s.value > 0 ? '↑ نشط' : '—'}
-                </span>
+                {s.value > 0 ? (
+                  <span className="text-xs mt-1 block text-[#10b981]">↑ نشط</span>
+                ) : (
+                  <span className="text-xs mt-1 block text-[#c9a84c] cursor-default" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+                    {s.cta}
+                  </span>
+                )}
               </div>
             ))}
           </div>
@@ -128,9 +140,15 @@ export default function MiniAnalytics() {
               <Tooltip
                 contentStyle={{ background: '#0d1628', border: '1px solid #1a2540', borderRadius: 8, color: '#fff', fontFamily: 'var(--font-tajawal)' }}
               />
-              <Bar dataKey="value" fill="#c9a84c" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="value" fill={hasAnyData ? '#c9a84c' : '#1a2540'} radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
+
+          {!hasAnyData && (
+            <p className="text-center text-xs text-[#64748b] mt-2" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+              ابدأ بإكمال ملفك الشخصي لترى إحصائياتك هنا
+            </p>
+          )}
         </>
       )}
     </GlassCard>

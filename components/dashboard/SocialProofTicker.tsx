@@ -3,6 +3,14 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 
+const QUALITATIVE: string[] = [
+  '⭐ مرفأ — حيث تَرسو الطموحات',
+  'مستثمرون من الرياض وحائل انضموا هذا الشهر',
+  'انضم إلى مجتمع رواد الأعمال والمستثمرين',
+  'منصتك للوصول إلى فرص استثمارية حقيقية',
+  'لقاءات أسبوعية بين رواد الأعمال والمستثمرين',
+];
+
 export default function SocialProofTicker() {
   const supabase = createClient();
   const [messages, setMessages] = useState<string[]>([
@@ -22,18 +30,31 @@ export default function SocialProofTicker() {
         const i = inv.status === 'fulfilled' ? (inv.value.count || 0) : 0;
         const m = mtg.status === 'fulfilled' ? (mtg.value.count || 0) : 0;
 
-        setMessages([
-          `🚀 انضم ${e} رائد أعمال هذا الأسبوع`,
-          `💼 ${i} مستثمر نشط على المنصة`,
-          `🤝 ${m} لقاء أُقيم هذا الأسبوع`,
-          '⭐ مرفأ — حيث تَرسو الطموحات',
-        ]);
-      } catch {}
+        const live: string[] = [];
+
+        if (e > 0) {
+          live.push(`🚀 انضم ${e} ${e === 1 ? 'رائد أعمال' : 'رائد أعمال'} هذا الأسبوع`);
+        }
+        if (i > 0) {
+          live.push(`💼 ${i} ${i === 1 ? 'مستثمر نشط' : 'مستثمر نشط'} على المنصة`);
+        }
+        if (m > 0) {
+          live.push(`🤝 ${m} ${m === 1 ? 'لقاء' : 'لقاء'} أُقيم هذا الأسبوع`);
+        }
+
+        // If no live data, show qualitative messages only
+        if (live.length === 0) {
+          setMessages(QUALITATIVE);
+        } else {
+          setMessages([...live, ...QUALITATIVE.slice(0, 1)]);
+        }
+      } catch {
+        setMessages(QUALITATIVE);
+      }
     }
     load();
   }, [supabase]);
 
-  // Duplicate items for seamless scroll
   const items = [...messages, ...messages];
 
   return (

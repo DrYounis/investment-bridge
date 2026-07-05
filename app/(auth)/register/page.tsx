@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
 import Card from '../../components/ui/Card'
@@ -24,7 +23,6 @@ function RegisterForm() {
     const redirectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
     const router = useRouter()
 
-    // Cleanup timeout on unmount
     useEffect(() => {
         return () => {
             if (redirectTimeoutRef.current) clearTimeout(redirectTimeoutRef.current)
@@ -133,136 +131,108 @@ function RegisterForm() {
     return (
         <div className="min-h-screen bg-background flex items-center justify-center p-4" dir="rtl">
             <div className="w-full max-w-md">
-                <AnimatePresence mode="wait">
-                    {step === 'form' && (
-                        <div key="form">
-                            <div className="text-center mb-8">
-                                <motion.div
-                                    initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
-                                    transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
-                                    className="w-14 h-14 bg-gradient-to-br from-gold to-gold-dark rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 shadow-lg shadow-gold/20"
-                                >
-                                    🚀
-                                </motion.div>
-                                <h2 className="text-2xl font-bold text-foreground mb-1">إنشاء حساب جديد</h2>
-                                <p className="text-sm text-foreground/50">ابدأ رحلتك في مجتمع مرفأ الاستثماري</p>
+                {step === 'form' && (
+                    <div>
+                        <div className="text-center mb-8">
+                            <div className="w-14 h-14 bg-gradient-to-br from-gold to-gold-dark rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 shadow-lg shadow-gold/20">
+                                🚀
                             </div>
-
-                            <Card glass className="p-8">
-                                <form onSubmit={handleSendOtp} className="space-y-4" noValidate>
-                                    <Input
-                                        ref={nameRef}
-                                        label="الاسم الكامل"
-                                        required
-                                        value={fullName}
-                                        onChange={e => { setFullName(e.target.value); setFieldErrors(p => ({ ...p, name: '' })) }}
-                                        placeholder="الاسم الكامل"
-                                        error={fieldErrors.name}
-                                    />
-                                    <Input
-                                        label="البريد الإلكتروني"
-                                        type="email"
-                                        required
-                                        value={email}
-                                        onChange={e => { setEmail(e.target.value); setFieldErrors(p => ({ ...p, email: '' })) }}
-                                        placeholder="example@email.com"
-                                        error={fieldErrors.email}
-                                    />
-                                    <Input
-                                        label="رقم الجوال"
-                                        type="tel"
-                                        required
-                                        value={phone}
-                                        onChange={e => { setPhone(e.target.value); setFieldErrors(p => ({ ...p, phone: '' })) }}
-                                        placeholder="05xxxxxxxx"
-                                        error={fieldErrors.phone}
-                                    />
-                                    <label className="flex items-start gap-2 text-sm cursor-pointer">
-                                        <input type="checkbox" required className="mt-1 accent-gold" />
-                                        <span>أوافق على <Link href="/privacy" className="text-info hover:underline">سياسة الخصوصية</Link></span>
-                                    </label>
-
-                                    <AnimatePresence>
-                                        {error && (
-                                            <motion.div
-                                                initial={{ opacity: 0, y: -10 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                exit={{ opacity: 0 }}
-                                                className="bg-error/10 border border-error/30 text-error p-3 rounded-lg text-sm flex items-center gap-2"
-                                            >
-                                                <span>⚠️</span> {error}
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
-
-                                    <Button type="submit" fullWidth size="lg" isLoading={isLoading} loadingText="جاري إرسال رمز التحقق...">
-                                        متابعة
-                                    </Button>
-
-                                    <p className="text-center text-sm">
-                                        <span className="text-foreground/50">لديك حساب؟ </span>
-                                        <Link href="/login" className="text-info hover:underline font-medium">تسجيل الدخول</Link>
-                                    </p>
-                                </form>
-                            </Card>
+                            <h2 className="text-2xl font-bold text-foreground mb-1">إنشاء حساب جديد</h2>
+                            <p className="text-sm text-foreground/50">ابدأ رحلتك في مجتمع مرفأ الاستثماري</p>
                         </div>
-                    )}
 
-                    {step === 'otp' && (
-                        <div key="otp">
-                            <div className="text-center mb-6">
-                                <motion.div
-                                    initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
-                                    transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
-                                    className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 shadow-lg shadow-blue-500/20"
-                                >
-                                    🔐
-                                </motion.div>
-                                <h2 className="text-2xl font-bold text-foreground mb-1">تأكيد الحساب</h2>
-                                <p className="text-sm text-foreground/50">أدخل الرمز المرسل إلى بريدك</p>
-                            </div>
-
-                            <Card glass className="p-8">
-                                <OtpVerification
-                                    email={email}
-                                    onVerify={handleVerifyOtp}
-                                    onResend={handleResend}
-                                    onBack={() => { setStep('form'); setError('') }}
-                                    isLoading={isLoading}
-                                    error={error}
-                                    successMsg={successMsg}
+                        <Card glass className="p-8">
+                            <form onSubmit={handleSendOtp} className="space-y-4" noValidate>
+                                <Input
+                                    ref={nameRef}
+                                    label="الاسم الكامل"
+                                    required
+                                    value={fullName}
+                                    onChange={e => { setFullName(e.target.value); setFieldErrors(p => ({ ...p, name: '' })) }}
+                                    placeholder="الاسم الكامل"
+                                    error={fieldErrors.name}
                                 />
-                            </Card>
-                        </div>
-                    )}
+                                <Input
+                                    label="البريد الإلكتروني"
+                                    type="email"
+                                    required
+                                    value={email}
+                                    onChange={e => { setEmail(e.target.value); setFieldErrors(p => ({ ...p, email: '' })) }}
+                                    placeholder="example@email.com"
+                                    error={fieldErrors.email}
+                                />
+                                <Input
+                                    label="رقم الجوال"
+                                    type="tel"
+                                    required
+                                    value={phone}
+                                    onChange={e => { setPhone(e.target.value); setFieldErrors(p => ({ ...p, phone: '' })) }}
+                                    placeholder="05xxxxxxxx"
+                                    error={fieldErrors.phone}
+                                />
+                                <label className="flex items-start gap-2 text-sm cursor-pointer">
+                                    <input type="checkbox" required className="mt-1 accent-gold" />
+                                    <span>أوافق على <Link href="/privacy" className="text-info hover:underline">سياسة الخصوصية</Link></span>
+                                </label>
 
-                    {step === 'success' && (
-                        <div key="success">
-                            <Card glass className="p-10 text-center">
-                                <motion.div
-                                    initial={{ scale: 0, rotate: -180 }}
-                                    animate={{ scale: 1, rotate: 0 }}
-                                    transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
-                                    className="w-20 h-20 bg-success/15 rounded-full flex items-center justify-center text-4xl mx-auto mb-6"
-                                >
-                                    ✅
-                                </motion.div>
-                                <h2 className="text-2xl font-bold text-foreground mb-2">تم التسجيل بنجاح!</h2>
-                                <p className="text-foreground/60 mb-6">مرحباً بك في منصة مرفأ الاستثمارية</p>
-                                <div className="flex items-center justify-center gap-2 text-sm text-foreground/40">
-                                    <motion.div
-                                        animate={{ rotate: 360 }}
-                                        transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
-                                        className="w-4 h-4 border-2 border-gold border-t-transparent rounded-full"
-                                    />
-                                    جاري تحويلك إلى لوحة التحكم...
-                                </div>
-                            </Card>
+                                {error && (
+                                    <div className="bg-error/10 border border-error/30 text-error p-3 rounded-lg text-sm flex items-center gap-2">
+                                        <span>⚠️</span> {error}
+                                    </div>
+                                )}
+
+                                <Button type="submit" fullWidth size="lg" isLoading={isLoading} loadingText="جاري إرسال رمز التحقق...">
+                                    متابعة
+                                </Button>
+
+                                <p className="text-center text-sm">
+                                    <span className="text-foreground/50">لديك حساب؟ </span>
+                                    <Link href="/login" className="text-info hover:underline font-medium">تسجيل الدخول</Link>
+                                </p>
+                            </form>
+                        </Card>
+                    </div>
+                )}
+
+                {step === 'otp' && (
+                    <div>
+                        <div className="text-center mb-6">
+                            <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 shadow-lg shadow-blue-500/20">
+                                🔐
+                            </div>
+                            <h2 className="text-2xl font-bold text-foreground mb-1">تأكيد الحساب</h2>
+                            <p className="text-sm text-foreground/50">أدخل الرمز المرسل إلى بريدك</p>
                         </div>
-                    )}
-                </AnimatePresence>
+
+                        <Card glass className="p-8">
+                            <OtpVerification
+                                email={email}
+                                onVerify={handleVerifyOtp}
+                                onResend={handleResend}
+                                onBack={() => { setStep('form'); setError('') }}
+                                isLoading={isLoading}
+                                error={error}
+                                successMsg={successMsg}
+                            />
+                        </Card>
+                    </div>
+                )}
+
+                {step === 'success' && (
+                    <div>
+                        <Card glass className="p-10 text-center">
+                            <div className="w-20 h-20 bg-success/15 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">
+                                ✅
+                            </div>
+                            <h2 className="text-2xl font-bold text-foreground mb-2">تم التسجيل بنجاح!</h2>
+                            <p className="text-foreground/60 mb-6">مرحباً بك في منصة مرفأ الاستثمارية</p>
+                            <div className="flex items-center justify-center gap-2 text-sm text-foreground/40">
+                                <div className="w-4 h-4 border-2 border-gold border-t-transparent rounded-full animate-spin" />
+                                جاري تحويلك إلى لوحة التحكم...
+                            </div>
+                        </Card>
+                    </div>
+                )}
             </div>
         </div>
     )

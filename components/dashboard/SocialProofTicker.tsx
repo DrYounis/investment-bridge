@@ -11,6 +11,13 @@ const QUALITATIVE: string[] = [
   'لقاءات أسبوعية بين رواد الأعمال والمستثمرين',
 ];
 
+function arPlural(n: number, forms: { one: string; two: string; few: string; many: string }): string {
+  if (n === 1) return forms.one;
+  if (n === 2) return forms.two;
+  if (n >= 3 && n <= 10) return `${n} ${forms.few}`;
+  return `${n} ${forms.many}`;
+}
+
 export default function SocialProofTicker() {
   const supabase = createClient();
   const [messages, setMessages] = useState<string[]>([
@@ -20,10 +27,11 @@ export default function SocialProofTicker() {
   useEffect(() => {
     async function load() {
       try {
+        const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
         const [ent, inv, mtg] = await Promise.allSettled([
-          supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'entrepreneur'),
+          supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'entrepreneur').gte('created_at', weekAgo),
           supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'investor'),
-          supabase.from('meetings').select('*', { count: 'exact', head: true }).gte('meeting_date', new Date(Date.now() - 7 * 86400000).toISOString()),
+          supabase.from('meetings').select('*', { count: 'exact', head: true }).gte('meeting_date', weekAgo),
         ]);
 
         const e = ent.status === 'fulfilled' ? (ent.value.count || 0) : 0;
@@ -33,16 +41,15 @@ export default function SocialProofTicker() {
         const live: string[] = [];
 
         if (e > 0) {
-          live.push(`🚀 انضم ${e} ${e === 1 ? 'رائد أعمال' : 'رائد أعمال'} هذا الأسبوع`);
+          live.push(`🚀 ${arPlural(e, { one: 'انضم رائد أعمال واحد هذا الأسبوع', two: 'انضم رائدا أعمال هذا الأسبوع', few: 'روّاد أعمال انضموا هذا الأسبوع', many: 'رائد أعمال انضموا هذا الأسبوع' })}`);
         }
         if (i > 0) {
-          live.push(`💼 ${i} ${i === 1 ? 'مستثمر نشط' : 'مستثمر نشط'} على المنصة`);
+          live.push(`💼 ${arPlural(i, { one: 'مستثمر واحد نشط على المنصة', two: 'مستثمران نشطان على المنصة', few: 'مستثمرين نشطين على المنصة', many: 'مستثمر نشط على المنصة' })}`);
         }
         if (m > 0) {
-          live.push(`🤝 ${m} ${m === 1 ? 'لقاء' : 'لقاء'} أُقيم هذا الأسبوع`);
+          live.push(`🤝 ${arPlural(m, { one: 'أُقيم لقاء واحد هذا الأسبوع', two: 'أُقيم لقاءان هذا الأسبوع', few: 'لقاءات أُقيمت هذا الأسبوع', many: 'لقاءً أُقيم هذا الأسبوع' })}`);
         }
 
-        // If no live data, show qualitative messages only
         if (live.length === 0) {
           setMessages(QUALITATIVE);
         } else {

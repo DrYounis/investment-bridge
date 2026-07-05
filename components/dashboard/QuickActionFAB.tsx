@@ -101,7 +101,7 @@ export default function QuickActionFAB() {
             {a.icon}
           </button>
           <span
-            className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+            className="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
             style={{ background: '#0d1628', color: '#c9a84c', fontFamily: 'var(--font-tajawal), sans-serif' }}
           >
             {a.label}

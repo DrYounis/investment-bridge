@@ -111,7 +111,7 @@ function RegisterForm() {
             localStorage.removeItem('questionnaireCompleted')
             localStorage.removeItem('userType')
             setStep('success')
-            redirectTimeoutRef.current = setTimeout(() => router.push(redirectUrl), 1200)
+            redirectTimeoutRef.current = setTimeout(() => { window.location.href = redirectUrl }, 800)
         } catch {
             setError('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
         }

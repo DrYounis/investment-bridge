@@ -38,6 +38,11 @@ const actions = [
       </svg>
     ),
   },
+  {
+    label: 'غرف الصفقات',
+    path: '/dashboard/deals',
+    icon: <span className="text-xl">🤝</span>,
+  },
 ];
 
 export default function QuickActionFAB() {

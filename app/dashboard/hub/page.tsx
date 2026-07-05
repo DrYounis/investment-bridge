@@ -14,6 +14,9 @@ import NextStepsChecklist from '@/components/dashboard/NextStepsChecklist';
 import AiTipOfDay from '@/components/dashboard/AiTipOfDay';
 import MeetingCountdown from '@/components/dashboard/MeetingCountdown';
 import SocialProofTicker from '@/components/dashboard/SocialProofTicker';
+import ReadinessScore from '@/components/dashboard/ReadinessScore';
+import PitchAuditCard from '@/components/dashboard/PitchAuditCard';
+import InvestorSignals from '@/components/dashboard/InvestorSignals';
 import QuickActionFAB from '@/components/dashboard/QuickActionFAB';
 import { NewsProvider } from '@/app/context/NewsContext';
 import { createClient } from '@/lib/supabase/client';
@@ -88,10 +91,11 @@ export default function HubPage() {
               </div>
             </div>
 
-            {/* Row 1: Welcome + Progress Rings */}
-            <div className="grid lg:grid-cols-2 gap-6">
+            {/* Row 1: Welcome + Progress Rings + Readiness Score */}
+            <div className="grid lg:grid-cols-3 gap-6">
               <WelcomeCard />
               <ProgressRings />
+              <ReadinessScore />
             </div>
 
             {/* Row 2: MiniAnalytics + NextSteps */}
@@ -106,8 +110,14 @@ export default function HubPage() {
               <MeetingCountdown />
             </div>
 
-            {/* Row 4: Activity Timeline (full width) */}
-            <ActivityTimeline />
+            {/* Row 3b: AI Pitch Audit (full width) */}
+            <PitchAuditCard />
+
+            {/* Row 4: Activity Timeline + Investor Signals */}
+            <div className="grid lg:grid-cols-2 gap-6">
+              <ActivityTimeline />
+              <InvestorSignals />
+            </div>
 
             {/* Row 5: Existing role-based dashboard */}
             <DashboardHome user={currentUser} />

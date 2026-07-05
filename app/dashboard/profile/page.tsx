@@ -15,6 +15,7 @@ export default function ProfilePage() {
     const [isEditing, setIsEditing] = useState(false);
     const [saving, setSaving] = useState(false);
     const [formData, setFormData] = useState({ full_name: '', phone: '', bio: '' });
+    const [weeklyDigest, setWeeklyDigest] = useState(true);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
     useEffect(() => {
@@ -38,6 +39,7 @@ export default function ProfilePage() {
                     phone: data.phone || '',
                     bio: data.bio || '',
                 });
+                setWeeklyDigest(data.weekly_digest_enabled !== false);
             }
             setLoading(false);
         }
@@ -278,6 +280,29 @@ export default function ProfilePage() {
 
                 {/* Meta Section */}
                 <div className="mt-8 space-y-4">
+                    {/* Weekly digest toggle */}
+                    <div className="bg-[#0d1628] rounded-2xl p-5 shadow-sm border border-[#1a2540] flex items-center justify-between">
+                        <div>
+                            <p className="text-sm font-bold text-white">الملخص الأسبوعي عبر البريد</p>
+                            <p className="text-xs text-[#64748b] mt-1">يصلك كل أحد ملخص بنشاط ملفك وإشارات المستثمرين</p>
+                        </div>
+                        <button
+                            onClick={async () => {
+                                const next = !weeklyDigest;
+                                setWeeklyDigest(next);
+                                await supabase
+                                    .from('profiles')
+                                    .update({ weekly_digest_enabled: next })
+                                    .eq('id', profile.id);
+                            }}
+                            className={`relative w-12 h-7 rounded-full transition-colors ${weeklyDigest ? 'bg-[#c9a84c]' : 'bg-[#1a2540]'}`}
+                        >
+                            <span
+                                className={`absolute top-0.5 w-6 h-6 rounded-full bg-white shadow transition-transform ${weeklyDigest ? 'translate-x-0.5' : 'translate-x-5'}`}
+                            />
+                        </button>
+                    </div>
+
                     {/* Member since */}
                     <div className="bg-[#0d1628] rounded-2xl p-5 shadow-sm border border-[#1a2540] flex items-center justify-between">
                         <div>

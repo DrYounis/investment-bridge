@@ -1,5 +1,6 @@
 import { readFile } from 'fs/promises'
 import path from 'path'
+import ElevatorSpeechContent from './elevator-speech-content'
 
 export default async function ElevatorSpeechPage() {
   const filePath = path.join(process.cwd(), 'app', 'marfa', 'elevator-speech', 'elevator-speech.html')
@@ -9,9 +10,9 @@ export default async function ElevatorSpeechPage() {
   const headMatch = html.match(/<head[^>]*>([\s\S]*)<\/head>/i)
 
   return (
-    <>
-      <div suppressHydrationWarning dangerouslySetInnerHTML={{ __html: headMatch?.[1] || '' }} />
-      <div suppressHydrationWarning dangerouslySetInnerHTML={{ __html: bodyMatch?.[1] || html }} />
-    </>
+    <ElevatorSpeechContent
+      headHtml={headMatch?.[1] || ''}
+      bodyHtml={bodyMatch?.[1] || html}
+    />
   )
 }

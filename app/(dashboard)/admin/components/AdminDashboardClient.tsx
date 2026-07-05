@@ -261,7 +261,7 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
 
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border-r-4 border-blue-500 hover:shadow-md transition-shadow">
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border-e-4 border-blue-500 hover:shadow-md transition-shadow">
                         <div className="flex justify-between items-start">
                             <div>
                                 <p className="text-gray-500 text-sm mb-1">مستثمرون بانتظار الاعتماد</p>
@@ -270,7 +270,7 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
                             <div className="p-2 bg-blue-100 rounded-lg text-blue-600">⏳</div>
                         </div>
                     </div>
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border-r-4 border-green-500 hover:shadow-md transition-shadow">
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border-e-4 border-green-500 hover:shadow-md transition-shadow">
                         <div className="flex justify-between items-start">
                             <div>
                                 <p className="text-gray-500 text-sm mb-1">إجمالي الأفكار المقبولة</p>
@@ -279,7 +279,7 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
                             <div className="p-2 bg-green-100 rounded-lg text-green-600">💡</div>
                         </div>
                     </div>
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border-r-4 border-purple-500 hover:shadow-md transition-shadow">
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border-e-4 border-purple-500 hover:shadow-md transition-shadow">
                         <div className="flex justify-between items-start">
                             <div>
                                 <p className="text-gray-500 text-sm mb-1">حجم الاستثمارات</p>

@@ -54,7 +54,7 @@ const InvestorView = ({ user }: { user: User }) => (
                 <h3 className="text-2xl font-black text-slate-800">مخيمات أجا، منتجع 2</h3>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm border-r-4 border-r-orange-400">
+            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm border-e-4 border-e-orange-400">
                 <div className="flex justify-between items-start mb-4">
                     <div className="p-3 bg-orange-50 rounded-xl text-orange-600" role="img" aria-label="فرص تطابق اهتمامك">
                         <Activity />
@@ -213,13 +213,11 @@ const DashboardHome = ({ user }: DashboardProps) => {
         activeProjects: 0,
         meetings: 0
     });
-    const [loading, setLoading] = useState(true);
     const supabase = createClient();
 
     useEffect(() => {
         const superAdminEmail = process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL || 'mohamedy2003@gmail.com';
         if (user.role !== 'admin' || user.email !== superAdminEmail) {
-            setLoading(false);
             return;
         }
 
@@ -241,8 +239,6 @@ const DashboardHome = ({ user }: DashboardProps) => {
                 });
             } catch (err) {
                 console.error("Failed to fetch dashboard stats", err);
-            } finally {
-                setLoading(false);
             }
         };
 

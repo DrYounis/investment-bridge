@@ -103,11 +103,11 @@ export default function AdminNotificationsPage() {
     setSending(false);
   }
 
-  if (loading) return <div className="min-h-screen bg-[#faf8f2] flex items-center justify-center"><p className="text-[#4a5b78]">جاري التحميل...</p></div>;
+  if (loading) return <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center"><p className="text-[#4a5b78]">جاري التحميل...</p></div>;
 
   if (userEmail && !SUPER_ADMIN_EMAILS.includes(userEmail)) {
     return (
-      <div className="min-h-screen bg-[#faf8f2] flex items-center justify-center" dir="rtl">
+      <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center" dir="rtl">
         <div className="bg-white border border-red-200 rounded-3xl p-12 text-center max-w-md shadow-lg">
           <p className="text-red-600 font-bold text-xl">⛔ غير مصرح</p>
           <p className="text-[#4a5b78] mt-4">هذه الصفحة مخصصة للمشرف العام فقط.</p>
@@ -117,7 +117,7 @@ export default function AdminNotificationsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf8f2]" dir="rtl">
+    <div className="min-h-screen bg-[#0a0f1e]" dir="rtl">
       <header className="bg-white border-b border-[#c9a84c]/20 sticky top-0 z-50">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">

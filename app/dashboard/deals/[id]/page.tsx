@@ -33,7 +33,6 @@ export default function DealRoomPage() {
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
-  const [userRole, setUserRole] = useState<string>('')
   const [acknowledging, setAcknowledging] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
 
@@ -42,13 +41,6 @@ export default function DealRoomPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push(`/login?redirect=/dashboard/deals/${roomId}`); return }
       setUserId(user.id)
-
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('user_type, role')
-        .eq('id', user.id)
-        .maybeSingle()
-      setUserRole(profile?.user_type || profile?.role || '')
 
       // Fetch room
       const { data: roomData } = await supabase

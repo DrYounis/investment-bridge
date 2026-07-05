@@ -218,19 +218,19 @@ export default function FrameworkPanel({ meeting }: { meeting: MeetingData }) {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-slate-400 text-left border-b border-white/5">
-                <th className="pb-3 pr-4">Meeting</th>
-                <th className="pb-3 pr-4">Topic</th>
-                <th className="pb-3 pr-4">Company</th>
+              <tr className="text-slate-400 text-start border-b border-white/5">
+                <th className="pb-3 pe-4">Meeting</th>
+                <th className="pb-3 pe-4">Topic</th>
+                <th className="pb-3 pe-4">Company</th>
                 <th className="pb-3">Status</th>
               </tr>
             </thead>
             <tbody>
               {ALL_MEETINGS.map(m => (
                 <tr key={m.number} className={`border-b border-white/5 ${m.number === meeting.number ? 'bg-gold/10' : ''}`}>
-                  <td className="py-2 pr-4 text-white font-medium">#{m.number}</td>
-                  <td className="py-2 pr-4 text-slate-400">{m.topic}</td>
-                  <td className="py-2 pr-4 text-slate-300">{m.company}</td>
+                  <td className="py-2 pe-4 text-white font-medium">#{m.number}</td>
+                  <td className="py-2 pe-4 text-slate-400">{m.topic}</td>
+                  <td className="py-2 pe-4 text-slate-300">{m.company}</td>
                   <td className="py-2">
                     {m.number < meeting.number ? (
                       <span className="text-green-400 text-xs">✅ Completed</span>

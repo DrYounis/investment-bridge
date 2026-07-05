@@ -7,7 +7,6 @@ import Link from 'next/link';
 export default function FeasibilityDashboard() {
     const [readiness, setReadiness] = useState(25); // Initial score based on passing the validator
     const [completedSteps, setCompletedSteps] = useState<number[]>([]);
-    const [activeTab, setActiveTab] = useState<number | null>(null);
 
     const pillars = [
         {

@@ -26,7 +26,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                 {label && (
                     <label className="block text-sm font-medium text-foreground mb-2">
                         {label}
-                        {props.required && <span className="text-error ml-1">*</span>}
+                        {props.required && <span className="text-error ms-1">*</span>}
                     </label>
                 )}
 
@@ -48,7 +48,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               transition-all duration-300
               disabled:opacity-50 disabled:cursor-not-allowed
               ${error ? 'border-error focus:ring-error' : ''}
-              ${startIcon ? 'pl-10' : ''}
+              ${startIcon ? 'ps-10' : ''}
               ${endIcon ? 'pr-10' : ''}
               ${className}
             `}

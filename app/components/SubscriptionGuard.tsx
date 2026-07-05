@@ -13,7 +13,6 @@ interface SubscriptionGuardProps {
 export default function SubscriptionGuard({ children, fallback, featureName = "هذه الميزة" }: SubscriptionGuardProps) {
     const [tier, setTier] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
-    const [userId, setUserId] = useState<string | null>(null);
 
     useEffect(() => {
         const checkSubscription = async () => {
@@ -25,8 +24,6 @@ export default function SubscriptionGuard({ children, fallback, featureName = "�
                     setLoading(false);
                     return;
                 }
-
-                setUserId(user.id);
 
                 // Fetch profile
                 const { data: profile, error } = await supabase

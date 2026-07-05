@@ -1,4 +1,3 @@
-import React from 'react';
 import Link from 'next/link';
 import IdeaValidator from '../components/marfa/IdeaValidator';
 import MeetingScheduler from '../components/marfa/MeetingScheduler';

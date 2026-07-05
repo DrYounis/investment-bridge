@@ -245,7 +245,7 @@ export default function LiveDiscussion({ meeting }: { meeting: MeetingData }) {
                         }`}>
                           {p.name}
                         </span>
-                        <span className="text-xs text-slate-600 ml-2 shrink-0">
+                        <span className="text-xs text-slate-600 ms-2 shrink-0">
                           {phaseCumStart}m–{phaseCumEnd}m
                         </span>
                       </div>
@@ -302,7 +302,7 @@ export default function LiveDiscussion({ meeting }: { meeting: MeetingData }) {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="text-slate-500 text-xs border-b border-white/5">
-                      <th className="text-left py-2 px-1">Name</th>
+                      <th className="text-start py-2 px-1">Name</th>
                       <th className="text-center py-2 px-1">Contrib.</th>
                       <th className="text-center py-2 px-1">Last Spoke</th>
                       <th className="text-center py-2 px-1">Action</th>
@@ -316,7 +316,7 @@ export default function LiveDiscussion({ meeting }: { meeting: MeetingData }) {
                         <td className="py-2 px-1">
                           <span className="text-white">{p.name}</span>
                           {p.contributions === 0 && (
-                            <span className="ml-2 text-red-400 text-xs">⚠️</span>
+                            <span className="ms-2 text-red-400 text-xs">⚠️</span>
                           )}
                         </td>
                         <td className="py-2 px-1 text-center">

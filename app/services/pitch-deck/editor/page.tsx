@@ -145,7 +145,7 @@ export default function PitchDeckEditorPage() {
               >
                 <div className="text-xs p-2 text-center" style={{ background: branding.secondaryColor }}>
                   <span style={{ color: branding.primaryColor }}>{i + 1}.</span>
-                  <span className="text-[#8a9bb8] ml-1">{slide.title?.slice(0, 15) || slide.type}</span>
+                  <span className="text-[#8a9bb8] ms-1">{slide.title?.slice(0, 15) || slide.type}</span>
                 </div>
               </div>
               <button

@@ -1,4 +1,3 @@
-import React from 'react';
 import Link from 'next/link';
 import InvestorDashboard from '../../components/marfa/InvestorDashboard';
 import FounderShowcase from './components/FounderShowcase';

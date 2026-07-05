@@ -146,7 +146,7 @@ const InvestorDashboard = () => {
                 جميع الفرص المعروضة هنا تجاوزت &quot;مختبر الجدوى&quot; وحصلت على تصنيف ائتماني من مرفأ.
               </p>
             </div>
-            <div className="text-left">
+            <div className="text-start">
               <div className="text-sm text-[#64748b]">محفظتك الافتراضية</div>
               <div className="text-2xl font-bold text-[#c9a84c]">{watchlist.length} فرص محفوظة 🔖</div>
             </div>
@@ -176,7 +176,7 @@ const InvestorDashboard = () => {
           {/* Organic Deals Grid */}
           {filteredDeals.length > 0 && (
             <div className="mb-16">
-              <h2 className="text-xl font-bold text-white mb-6 border-r-4 border-[#c9a84c] pr-3">
+              <h2 className="text-xl font-bold text-white mb-6 border-e-4 border-[#c9a84c] pe-3">
                 فرص استثمارية من رواد الأعمال
               </h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -203,7 +203,7 @@ const InvestorDashboard = () => {
                     Marfa Studio Ventures — فرص من مشغل المنصة
                   </h2>
                 </div>
-                <p className="text-[#a0aec0] text-sm pr-10">
+                <p className="text-[#a0aec0] text-sm pe-10">
                   هذه الفرص مصدرها مشغل منصة مرفأ (Marfa Studio) وليست من رواد أعمال مستقلين.
                   تم تقييمها داخلياً وعرضها للمستثمرين المعتمدين.
                 </p>
@@ -272,7 +272,7 @@ const InvestorDashboard = () => {
 
                   <div className="grid md:grid-cols-2 gap-8 mb-8">
                     <div>
-                      <h4 className="font-bold text-white mb-2 border-r-4 border-[#c9a84c] pr-3">
+                      <h4 className="font-bold text-white mb-2 border-e-4 border-[#c9a84c] pe-3">
                         ملخص الفرصة
                       </h4>
                       <p className="text-sm text-[#a0aec0] leading-relaxed">

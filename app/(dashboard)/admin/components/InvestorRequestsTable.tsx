@@ -20,7 +20,7 @@ export default async function InvestorRequestsTable() {
             </div>
 
             <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
+                <table className="w-full text-start text-sm">
                     <thead className="bg-slate-50 text-slate-600 border-b border-[#e5e0d8]">
                         <tr>
                             <th className="p-4 font-medium">Investor</th>

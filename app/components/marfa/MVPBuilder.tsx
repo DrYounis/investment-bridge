@@ -132,7 +132,7 @@ const MVPBuilder = () => {
                         <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">مصفوفة الأولويات (Impact Matrix)</h3>
 
                         {/* Matrix Grid */}
-                        <div className="relative h-[400px] border-l-2 border-b-2 border-gray-300 m-4 grid grid-cols-2 grid-rows-2 gap-1 bg-gray-50">
+                        <div className="relative h-[400px] border-s-2 border-b-2 border-gray-300 m-4 grid grid-cols-2 grid-rows-2 gap-1 bg-gray-50">
                             {/* Labels */}
                             <div className="absolute -left-8 top-1/2 -rotate-90 text-xs font-bold text-gray-400">قيمة العميل (Value) ⬆</div>
                             <div className="absolute bottom-[-25px] left-1/2 -translate-x-1/2 text-xs font-bold text-gray-400">التعقيد التقني (Complexity) ➡</div>

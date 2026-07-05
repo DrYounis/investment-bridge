@@ -223,7 +223,7 @@ export default function DecisionVoting({ meeting }: { meeting: MeetingData }) {
           <table className="w-full text-sm">
             <thead>
               <tr>
-                <th className="p-2 text-left text-slate-500 font-normal"></th>
+                <th className="p-2 text-start text-slate-500 font-normal"></th>
                 <th className="p-2 text-center text-slate-400 font-bold">Option A</th>
                 <th className="p-2 text-center text-slate-400 font-bold">Option B</th>
                 <th className="p-2 text-center text-slate-400 font-bold">Option C</th>

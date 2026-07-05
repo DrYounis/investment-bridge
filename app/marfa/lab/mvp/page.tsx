@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import Link from 'next/link';
 import MVPBuilder from '../../../components/marfa/MVPBuilder';
 import SubscriptionGuard from '../../../components/SubscriptionGuard';

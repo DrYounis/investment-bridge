@@ -114,7 +114,7 @@ const FinancialCalculator = () => {
                     type="number"
                     value={val[field] || ''}
                     onChange={(e) => setter({ ...val, [field]: Number(e.target.value) })}
-                    className="w-24 text-left bg-transparent outline-none font-bold text-gray-800"
+                    className="w-24 text-start bg-transparent outline-none font-bold text-gray-800"
                     placeholder="0"
                 />
                 <span className="text-gray-400 text-xs">ر.س</span>
@@ -188,15 +188,15 @@ const FinancialCalculator = () => {
                             <div className="space-y-3">
                                 <div className="flex justify-between items-center bg-green-50/50 p-3 rounded-lg border border-green-100">
                                     <label className="text-gray-700 text-sm font-medium">سعر بيع المنتج</label>
-                                    <input type="number" value={unitEconomics.salePrice || ''} onChange={e => setUnitEconomics({ ...unitEconomics, salePrice: Number(e.target.value) })} className="w-20 text-left bg-transparent font-bold outline-none" placeholder="0" />
+                                    <input type="number" value={unitEconomics.salePrice || ''} onChange={e => setUnitEconomics({ ...unitEconomics, salePrice: Number(e.target.value) })} className="w-20 text-start bg-transparent font-bold outline-none" placeholder="0" />
                                 </div>
                                 <div className="flex justify-between items-center bg-red-50/50 p-3 rounded-lg border border-red-100">
                                     <label className="text-gray-700 text-sm font-medium">تكلفة المنتج عليك (COGS)</label>
-                                    <input type="number" value={unitEconomics.costPerUnit || ''} onChange={e => setUnitEconomics({ ...unitEconomics, costPerUnit: Number(e.target.value) })} className="w-20 text-left bg-transparent font-bold outline-none" placeholder="0" />
+                                    <input type="number" value={unitEconomics.costPerUnit || ''} onChange={e => setUnitEconomics({ ...unitEconomics, costPerUnit: Number(e.target.value) })} className="w-20 text-start bg-transparent font-bold outline-none" placeholder="0" />
                                 </div>
                                 <div className="flex justify-between items-center bg-blue-50/50 p-3 rounded-lg border border-blue-100">
                                     <label className="text-gray-700 text-sm font-medium">عدد المبيعات المتوقعة (يومياً)</label>
-                                    <input type="number" value={unitEconomics.dailyVolume || ''} onChange={e => setUnitEconomics({ ...unitEconomics, dailyVolume: Number(e.target.value) })} className="w-20 text-left bg-transparent font-bold outline-none" placeholder="0" />
+                                    <input type="number" value={unitEconomics.dailyVolume || ''} onChange={e => setUnitEconomics({ ...unitEconomics, dailyVolume: Number(e.target.value) })} className="w-20 text-start bg-transparent font-bold outline-none" placeholder="0" />
                                 </div>
                             </div>
                         </div>
@@ -256,7 +256,7 @@ const FinancialCalculator = () => {
                                 {metrics.breakEvenUnits} <span className="text-lg font-normal text-gray-400">عميل / منتج شهرياً</span>
                             </div>
                             <div className="h-12 w-px bg-gray-200"></div>
-                            <div className="text-left">
+                            <div className="text-start">
                                 <div className="text-sm text-gray-500">معدل يومي:</div>
                                 <div className="font-bold text-gray-800">{Math.ceil(metrics.breakEvenUnits / unitEconomics.workingDays)} عميل</div>
                             </div>

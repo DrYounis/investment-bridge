@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import Link from 'next/link';
 import StatCard from '@/app/components/shared/StatCard';
 import ProgressBar from '@/app/components/shared/ProgressBar';

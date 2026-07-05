@@ -83,12 +83,9 @@ export default function HubPage() {
           <ParticleBackground />
           <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6 relative z-10">
             {/* Top bar */}
-            <div className="flex justify-between items-center">
-              <div />
-              <div className="flex items-center gap-2">
-                <ThemeToggle />
-                <NotificationBell />
-              </div>
+            <div className="flex justify-end items-center gap-2">
+              <ThemeToggle />
+              <NotificationBell />
             </div>
 
             {/* Row 1: Welcome + Progress Rings + Readiness Score */}

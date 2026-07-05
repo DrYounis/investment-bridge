@@ -14,7 +14,7 @@ export default function EntrepreneurLayout({
   return (
     <div className="min-h-screen flex" dir="rtl" style={{ background: '#0a0f1e' }}>
       <EntrepreneurSidebar />
-      <main className="flex-1 mr-64 p-6" style={{ background: '#0a0f1e' }}>
+      <main className="flex-1 me-64 p-6" style={{ background: '#0a0f1e' }}>
         {children}
       </main>
     </div>

@@ -1,7 +1,5 @@
 "use client";
 
-import React from 'react';
-
 /**
  * مكون توضيحي لاستعراض إمكانيات Tailwind CSS المخصصة
  * Example component to showcase custom Tailwind CSS capabilities

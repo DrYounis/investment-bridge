@@ -25,20 +25,12 @@ export default function DealsPage() {
   const [rooms, setRooms] = useState<DealRoom[]>([])
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState<string | null>(null)
-  const [userRole, setUserRole] = useState<string>('')
 
   useEffect(() => {
     async function init() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login?redirect=/dashboard/deals'); return }
       setUserId(user.id)
-
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('user_type, role')
-        .eq('id', user.id)
-        .maybeSingle()
-      setUserRole(profile?.user_type || profile?.role || '')
 
       const { data } = await supabase
         .from('deal_rooms')

@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 interface ProgressBarProps {
   percent: number;
   color: string;

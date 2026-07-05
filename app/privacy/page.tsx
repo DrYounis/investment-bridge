@@ -1,9 +1,8 @@
-import React from 'react';
 import Card from '../components/ui/Card';
 
 export default function PrivacyPage() {
     return (
-        <div className="min-h-screen bg-gray-50 py-12 px-4" dir="rtl">
+        <div className="min-h-screen bg-[#faf8f2] py-12 px-4" dir="rtl">
             <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-10">
                     <h1 className="text-3xl font-black text-slate-800 mb-4">سياسة الخصوصية وشروط الاستخدام</h1>

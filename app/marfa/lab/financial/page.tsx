@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import Link from 'next/link';
 import FinancialCalculator from '../../../components/marfa/FinancialCalculator';
 import SubscriptionGuard from '../../../components/SubscriptionGuard';

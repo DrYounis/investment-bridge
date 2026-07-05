@@ -127,7 +127,7 @@ export default function AdminLayoutShell({ children }: { children: React.ReactNo
 
       {/* Main content */}
       <main className="flex-1 overflow-y-auto">
-        <header className="h-16 border-b border-[#1e2d4a] flex items-center justify-between px-6 bg-[#0a0f1e]/80 backdrop-blur sticky top-0 z-10">
+        <header className="h-16 border-b border-[#1e2d4a] flex items-center justify-between px-6 bg-[#0a0f1e]/80 backdrop-blur sticky top-0 z-40">
           <h1 className="text-lg font-bold text-white">
             {NAV_ITEMS.concat(ADMIN_ITEMS).find(i => i.href === pathname)?.label || 'لوحة التحكم'}
           </h1>

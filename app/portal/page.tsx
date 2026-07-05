@@ -200,7 +200,7 @@ export default function UserPortal() {
         <div className="flex h-screen bg-[#0a0f1e]" dir="rtl">
 
             {/* 1. Sidebar */}
-            <aside className="w-64 bg-white border-l border-slate-200 hidden md:flex flex-col">
+            <aside className="w-64 bg-white border-s border-slate-200 hidden md:flex flex-col">
                 <div className="p-8 flex items-center gap-3">
                     <div className="w-8 h-8 bg-gradient-to-tr from-blue-600 to-teal-400 rounded-lg"></div>
                     <span className="text-2xl font-black text-slate-800 tracking-tighter">مرفأ</span>
@@ -248,8 +248,8 @@ export default function UserPortal() {
                             <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
                         </button>
 
-                        <div className="flex items-center gap-3 pl-2 border-l border-slate-200">
-                            <div className="text-left hidden sm:block">
+                        <div className="flex items-center gap-3 ps-2 border-s border-slate-200">
+                            <div className="text-start hidden sm:block">
                                 <span className="block text-sm font-bold text-slate-800">{currentUser.name}</span>
                                 <span className="block text-xs text-slate-500">
                                     {currentUser.role === 'investor' ? 'مستثمر معتمد' : 'رائد أعمال'}

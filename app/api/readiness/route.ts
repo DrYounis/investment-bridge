@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { computeReadiness, computeAndUpsertReadiness } from '@/lib/readiness'
+import { computeAndUpsertReadiness } from '@/lib/readiness'
 import { createServiceClient } from '@/lib/supabase/service'
 
 export async function GET() {

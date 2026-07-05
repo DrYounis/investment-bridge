@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
@@ -33,7 +32,6 @@ export default function QuestionnairePage() {
 
     // Gamification State
     const [score, setScore] = useState(0);
-    const [currentTip, setCurrentTip] = useState<string | null>(null);
     const [showScorecard, setShowScorecard] = useState(false);
     const [badges, setBadges] = useState<string[]>([]);
 
@@ -185,13 +183,7 @@ export default function QuestionnairePage() {
 
         setScore(prev => Math.min(100, prev + stepScore));
 
-        if (tip) {
-            setCurrentTip(tip);
-            setTimeout(() => setCurrentTip(null), 5000);
-        }
-
         if (newAdvice) {
-            setCurrentTip(newAdvice.message);
             setAdviseCard(newAdvice);
         }
 

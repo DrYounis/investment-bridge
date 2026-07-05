@@ -1,6 +1,5 @@
 "use client";
 
-import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -103,7 +102,7 @@ export default function CSRPage() {
                                     <Target className="w-8 h-8" />
                                     <h2 className="text-3xl font-bold">رؤيتنا</h2>
                                 </div>
-                                <p className="text-xl text-gray-700 leading-relaxed border-r-4 border-gold pr-6">
+                                <p className="text-xl text-gray-700 leading-relaxed border-e-4 border-gold pe-6">
                                     أن نكون الشريك الاستراتيجي الأول للقطاع الثالث في المملكة، من خلال تطبيق المنهجية الهندسية المبتكرة في التسويق الخيري، وتمكين المؤسسات غير الربحية من تحقيق الاستدامة المالية.
                                 </p>
                             </div>
@@ -112,7 +111,7 @@ export default function CSRPage() {
                                     <Heart className="w-8 h-8" />
                                     <h2 className="text-3xl font-bold">رسالتنا</h2>
                                 </div>
-                                <p className="text-xl text-gray-700 leading-relaxed border-r-4 border-deep-navy pr-6">
+                                <p className="text-xl text-gray-700 leading-relaxed border-e-4 border-deep-navy pe-6">
                                     بناء جسور الثقة بين الجمعيات الخيرية والرعاة الاستراتيجيين، من خلال تقديم حلول تسويقية هندسية مبتكرة تعتمد على الدقة في التخطيط والشفافية في التنفيذ.
                                 </p>
                             </div>
@@ -177,7 +176,7 @@ export default function CSRPage() {
                 <div className="absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none" />
                 <div className="max-w-7xl mx-auto px-6 relative z-10">
                     <div className="mb-16">
-                        <h2 className="text-4xl font-bold mb-4 border-r-8 border-gold pr-6">سجل إنجازاتنا</h2>
+                        <h2 className="text-4xl font-bold mb-4 border-e-8 border-gold pe-6">سجل إنجازاتنا</h2>
                         <p className="text-blue-200">نماذج من قصص نجاحنا المشتركة في منطقة حائل</p>
                     </div>
 

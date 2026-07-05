@@ -16,7 +16,6 @@ function RegisterForm() {
     const [phone, setPhone] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
-    const [successMsg, setSuccessMsg] = useState('')
     const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
     const [redirectUrl, setRedirectUrl] = useState('/dashboard/hub')
     const nameRef = useRef<HTMLInputElement>(null)
@@ -212,7 +211,7 @@ function RegisterForm() {
                                 onBack={() => { setStep('form'); setError('') }}
                                 isLoading={isLoading}
                                 error={error}
-                                successMsg={successMsg}
+                                successMsg=""
                             />
                         </Card>
                     </div>

@@ -24,7 +24,7 @@ export default function PitchAuditCard() {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) router.push('/login')
     })
-  }, [])
+  }, [router, supabase.auth])
 
   async function handleAudit() {
     if (!pitchText.trim()) return

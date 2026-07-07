@@ -69,20 +69,22 @@ export default function ReadinessScore() {
   const [loading, setLoading] = useState(true)
   const [recomputing, setRecomputing] = useState(false)
 
-  async function fetchScore() {
-    try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { router.push('/login'); return }
-      const res = await fetch('/api/readiness')
-      if (res.ok) {
-        const json = await res.json()
-        setData(json)
-      }
-    } catch {}
-    setLoading(false)
-  }
-
-  useEffect(() => { fetchScore() }, [])
+  useEffect(() => {
+    let ignore = false
+    ;(async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) { router.push('/login'); return }
+        const res = await fetch('/api/readiness')
+        if (res.ok && !ignore) {
+          const json = await res.json()
+          setData(json)
+        }
+      } catch {}
+      if (!ignore) setLoading(false)
+    })()
+    return () => { ignore = true }
+  }, [router, supabase.auth])
 
   async function handleRecompute() {
     setRecomputing(true)

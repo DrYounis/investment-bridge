@@ -9,13 +9,6 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-function extractYouTubeId(url: string): string | null {
-  const match = url.match(
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/
-  );
-  return match ? match[1] : null;
-}
-
 function renderContent(summary: string, fullContent?: string | null): string {
   const body = fullContent || summary;
 

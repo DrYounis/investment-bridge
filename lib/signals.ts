@@ -1,9 +1,10 @@
 import 'server-only'
+import type { SupabaseClient } from '@supabase/supabase-js'
 
 export type SignalType = 'profile_view' | 'deck_download' | 'interest' | 'sector_view'
 
 export async function recordSignal(
-  supabase: any,
+  supabase: SupabaseClient,
   params: { entrepreneurId: string; investorId: string; signalType: SignalType; sector?: string }
 ) {
   const { error } = await supabase

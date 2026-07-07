@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
@@ -36,6 +36,16 @@ export default function DealRoomPage() {
   const [acknowledging, setAcknowledging] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
 
+  const fetchMessages = useCallback(async () => {
+    const { data } = await supabase
+      .from('deal_room_messages')
+      .select('*')
+      .eq('room_id', roomId)
+      .order('created_at', { ascending: true })
+
+    if (data) setMessages(data)
+  }, [supabase, roomId])
+
   useEffect(() => {
     async function init() {
       const { data: { user } } = await supabase.auth.getUser()
@@ -69,24 +79,14 @@ export default function DealRoomPage() {
       setLoading(false)
     }
     init()
-  }, [roomId])
-
-  async function fetchMessages() {
-    const { data } = await supabase
-      .from('deal_room_messages')
-      .select('*')
-      .eq('room_id', roomId)
-      .order('created_at', { ascending: true })
-
-    if (data) setMessages(data)
-  }
+  }, [roomId, fetchMessages, router, supabase])
 
   // Poll every 10s
   useEffect(() => {
     if (!room || room.status !== 'active') return
     const interval = setInterval(fetchMessages, 10000)
     return () => clearInterval(interval)
-  }, [room?.status])
+  }, [room?.status, fetchMessages, room])
 
   // Scroll to bottom on new messages
   useEffect(() => {

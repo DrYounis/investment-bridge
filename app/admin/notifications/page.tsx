@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 
@@ -43,7 +43,7 @@ export default function AdminNotificationsPage() {
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
   const router = useRouter();
-  const supabase = useRef(createClient()).current;
+  const supabase = useMemo(() => createClient(), []);
 
   async function loadSubscribers() {
     const res = await fetch('/api/admin/subscribers');
@@ -67,7 +67,7 @@ export default function AdminNotificationsPage() {
       await loadSubscribers();
       setLoading(false);
     })();
-  }, []);
+  }, [router, supabase]);
 
   async function addEmail() {
     const email = newEmail.trim().toLowerCase();

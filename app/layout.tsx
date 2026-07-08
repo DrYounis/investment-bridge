@@ -25,23 +25,50 @@ const tajawal = Tajawal({
 });
 
 export const metadata: Metadata = {
-  title: "مرفأ",
-  description: "منصة ذكية لربط المستثمرين بالفرص الاستثمارية",
-  metadataBase: new URL('https://marfa.sa'), // Ensuring absolute URLs
+  metadataBase: new URL('https://www.marfa.sa'),
+  title: {
+    default: 'مرفأ | منصة استثمارية سعودية تربط رواد الأعمال بالمستثمرين',
+    template: '%s | مرفأ',
+  },
+  description:
+    'مرفأ منصة استثمارية سعودية تربط رواد الأعمال بالمستثمرين في المملكة. اعرض مشروعك أو اكتشف فرصاً استثمارية موثوقة بما يتوافق مع رؤية السعودية 2030. حيث ترسو الطموحات.',
+  keywords: [
+    'منصة استثمار سعودية',
+    'فرص استثمارية في السعودية',
+    'تمويل المشاريع الناشئة',
+    'ربط رواد الأعمال بالمستثمرين',
+    'الاستثمار في الشركات الناشئة',
+    'رؤية 2030',
+    'مرفأ',
+    'Marfa Investment Bridge',
+  ],
+  alternates: {
+    canonical: 'https://www.marfa.sa',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large' },
+  },
   icons: {
     icon: "/icon.png",
     shortcut: "/favicon.png",
     apple: "/apple-icon.png",
   },
   openGraph: {
-    title: "مرفأ",
-    description: "منصة ذكية لربط المستثمرين بالفرص الاستثمارية",
-    images: [{ url: '/opengraph-image.png', width: 1200, height: 630 }],
+    type: 'website',
+    locale: 'ar_SA',
+    url: 'https://www.marfa.sa',
+    siteName: 'مرفأ | Marfa',
+    title: 'مرفأ | منصة استثمارية سعودية تربط رواد الأعمال بالمستثمرين',
+    description:
+      'اعرض مشروعك على مستثمرين موثوقين أو اكتشف فرصاً استثمارية واعدة في السعودية. حيث ترسو الطموحات.',
+    images: [{ url: '/opengraph-image.png', width: 1200, height: 630, alt: 'مرفأ - منصة الاستثمار السعودية' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: "مرفأ",
-    description: "منصة ذكية لربط المستثمرين بالفرص الاستثمارية",
+    title: 'مرفأ | منصة استثمارية سعودية تربط رواد الأعمال بالمستثمرين',
+    description: 'اعرض مشروعك أو اكتشف فرصاً استثمارية في السعودية. حيث ترسو الطموحات.',
     images: ['/twitter-image.png'],
   },
 };
@@ -164,6 +191,41 @@ export default async function RootLayout({
                 "offers": { "@type": "Offer", "price": "0", "priceCurrency": "SAR" }
               }
             ])
+          }}
+        />
+
+        {/* JSON-LD: Organization */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'مرفأ',
+              alternateName: 'Marfa Investment Bridge',
+              url: 'https://www.marfa.sa',
+              logo: 'https://www.marfa.sa/icon.png',
+              slogan: 'حيث تَرسو الطموحات',
+              description:
+                'منصة استثمارية سعودية تربط رواد الأعمال بالمستثمرين بما يتوافق مع رؤية السعودية 2030.',
+              areaServed: { '@type': 'Country', name: 'Saudi Arabia' },
+              knowsLanguage: ['ar', 'en'],
+            }),
+          }}
+        />
+
+        {/* JSON-LD: WebSite */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'مرفأ | Marfa',
+              alternateName: 'Marfa Investment Bridge',
+              url: 'https://www.marfa.sa',
+              inLanguage: 'ar',
+            }),
           }}
         />
 

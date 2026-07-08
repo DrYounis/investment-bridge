@@ -12,18 +12,21 @@ const AdminNewsManager = () => {
         category: '',
         link: ''
     });
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     if (!isAdminMode) return null; // Invisible if not admin
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!formData.text) return;
+        if (!formData.text || isSubmitting) return;
+        setIsSubmitting(true);
         try {
             await addNews(formData);
-            setFormData({ text: '', source: 'local', category: '', link: '' }); // Reset
+            setFormData({ text: '', source: 'local', category: '', link: '' });
         } catch {
-            // In production, log to Sentry
             alert("حدث خطأ أثناء إضافة الخبر");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -83,7 +86,8 @@ const AdminNewsManager = () => {
                 <div className="md:col-span-2 flex items-end">
                     <button
                         type="submit"
-                        className="w-full bg-purple-600 text-white p-2 rounded-lg text-sm font-bold hover:bg-purple-700 transition flex items-center justify-center gap-2"
+                        disabled={isSubmitting}
+                        className="w-full bg-purple-600 text-white p-2 rounded-lg text-sm font-bold hover:bg-purple-700 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <PlusCircle size={16} />
                         إضافة

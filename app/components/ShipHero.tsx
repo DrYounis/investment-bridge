@@ -65,7 +65,7 @@ export default function ShipHero() {
         .sea {
           position: absolute;
           bottom: 0; left: 0; right: 0;
-          height: 38%;
+          height: 18%;
         }
 
         /* Wave layers — staggered for depth */
@@ -130,7 +130,7 @@ export default function ShipHero() {
         /* ── HORIZON GLOW ── */
         .horizon {
           position: absolute;
-          bottom: 36%;
+          bottom: 16%;
           left: 0; right: 0;
           height: 2px;
           background: linear-gradient(90deg,
@@ -145,7 +145,7 @@ export default function ShipHero() {
         /* ── DOCK / PORT ── */
         .dock {
           position: absolute;
-          bottom: 36%;
+          bottom: 16%;
           right: 6%;
           display: flex;
           flex-direction: column;
@@ -193,7 +193,7 @@ export default function ShipHero() {
         /* ── SHIP WRAPPER ── */
         .ship-wrap {
           position: absolute;
-          bottom: calc(36% - 2px);
+          bottom: calc(16% - 2px);
           right: 4%;  /* final anchor position */
 
           /* Entry: start far right off-screen */
@@ -365,7 +365,7 @@ export default function ShipHero() {
 
         /* Responsive — shrink on mobile */
         @media (max-width: 640px) {
-          .ship-wrap { right: 2%; bottom: calc(36% - 1px); }
+          .ship-wrap { right: 2%; bottom: calc(16% - 1px); }
           .ship-svg  { width: 180px; height: auto; }
           .dock      { right: 3%; }
           .dock-platform { width: 60px; }

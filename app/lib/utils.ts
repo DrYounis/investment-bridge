@@ -257,6 +257,7 @@ export function throttle<T extends (...args: any[]) => any>(
  * حفظ البيانات في localStorage بشكل آمن
  */
 export function setLocalStorage(key: string, value: any): void {
+    if (typeof window === 'undefined') return;
     try {
         localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
@@ -268,6 +269,7 @@ export function setLocalStorage(key: string, value: any): void {
  * قراءة البيانات من localStorage
  */
 export function getLocalStorage<T>(key: string, defaultValue?: T): T | null {
+    if (typeof window === 'undefined') return defaultValue ?? null;
     try {
         const item = localStorage.getItem(key);
         return item ? JSON.parse(item) : defaultValue ?? null;
@@ -281,6 +283,7 @@ export function getLocalStorage<T>(key: string, defaultValue?: T): T | null {
  * حذف البيانات من localStorage
  */
 export function removeLocalStorage(key: string): void {
+    if (typeof window === 'undefined') return;
     try {
         localStorage.removeItem(key);
     } catch (error) {

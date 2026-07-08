@@ -37,7 +37,7 @@ export async function updateSession(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser()
 
-    if (!user && (request.nextUrl.pathname.startsWith('/dashboard') || request.nextUrl.pathname.startsWith('/meetings'))) {
+    if (!user && (request.nextUrl.pathname.startsWith('/dashboard') || request.nextUrl.pathname.startsWith('/meetings') || request.nextUrl.pathname.startsWith('/advisor') || request.nextUrl.pathname.startsWith('/services/pitch-deck'))) {
         const url = request.nextUrl.clone()
         url.pathname = '/login'
         url.searchParams.set('redirect', request.nextUrl.pathname)

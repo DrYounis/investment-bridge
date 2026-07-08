@@ -53,7 +53,22 @@ function buildDigestHTML(email: string, name: string, data: {
 </body></html>`
 }
 
-export async function GET() {
+function isCronAuthorized(request: Request): boolean {
+  if (request.headers.get('x-vercel-cron')) return true;
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret) return false;
+  const url = new URL(request.url);
+  if (url.searchParams.get('token') === cronSecret) return true;
+  const authHeader = request.headers.get('authorization');
+  if (authHeader === `Bearer ${cronSecret}`) return true;
+  return false;
+}
+
+export async function GET(request: Request) {
+  if (!isCronAuthorized(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const supabase = createServiceClient()
     const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString()

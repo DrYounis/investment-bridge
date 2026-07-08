@@ -10,7 +10,7 @@ function applyAuthGate(request: NextRequest): NextResponse | null {
   const publicAdminPaths = ['/admin/login', '/admin/setup']
   if (publicAdminPaths.some(p => path.startsWith(p))) return null
 
-  const protectedPaths = ['/marfa', '/services/pitch-deck', '/advisor', '/dashboard', '/admin', '/meetings']
+  const protectedPaths = ['/services/pitch-deck', '/advisor', '/dashboard', '/admin', '/meetings']
   if (!protectedPaths.some(p => path.startsWith(p))) return null
 
   const hasSession = request.cookies.getAll().some(

@@ -106,7 +106,8 @@ export async function POST(req: NextRequest) {
         .maybeSingle()
     ).then(() => {
       // After subscribing, trigger notification for this email (fire-and-forget)
-      fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.marfa.sa'}/api/cron/weekly-meeting-notification?email=${encodeURIComponent(normalizedEmail)}&welcome=1`)
+      const cronToken = process.env.CRON_SECRET ? `&token=${encodeURIComponent(process.env.CRON_SECRET)}` : '';
+      fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.marfa.sa'}/api/cron/weekly-meeting-notification?email=${encodeURIComponent(normalizedEmail)}&welcome=1${cronToken}`)
         .catch(() => {});
     }).catch(() => {}); // silent fail — don't block auth
 

@@ -119,16 +119,17 @@ export async function GET() {
     }
 
     const sent = results.filter((r) => r.status === 'تم الإرسال').length
+    const attempted = results.filter((r) => !r.status.startsWith('تم التخطي')).length
 
     // Notify super admin
     await resend.emails.send({
       from: 'Marfa <noreply@marfa.sa>',
       to: 'op.younis@gmail.com',
-      subject: `📋 الملخص الأسبوعي — تم إرسال ${sent}/${profiles.length} ملخص`,
+      subject: `📋 الملخص الأسبوعي — تم إرسال ${sent}/${attempted} ملخص`,
       html: `<div style="font-family:sans-serif;padding:20px"><h2>تقرير الملخص الأسبوعي</h2><pre>${JSON.stringify(results, null, 2)}</pre></div>`,
     }).catch(() => {})
 
-    return NextResponse.json({ success: true, sent, total: profiles.length, results })
+    return NextResponse.json({ success: true, sent, total: attempted, results })
   } catch (err: unknown) {
     return NextResponse.json({ error: err instanceof Error ? err.message : String(err) }, { status: 500 })
   }

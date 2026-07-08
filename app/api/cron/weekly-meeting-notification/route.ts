@@ -103,6 +103,7 @@ export async function GET(request: Request) {
     const meeting = getUpcomingFriday();
     const { searchParams } = new URL(request.url);
     const singleEmail = searchParams.get('email');
+    const isWelcome = searchParams.get('welcome') === '1';
 
     // Fetch all subscribers
     const { data: subscribers } = await supabase
@@ -133,7 +134,7 @@ export async function GET(request: Request) {
           from: 'Marfa Meetings <noreply@marfa.sa>',
           to: sub.email,
           subject: `🔔 تذكير: لقاء مرفأ ${meeting.meetingNumber} — ${meeting.dateStr} | ${meeting.case}`,
-          html: buildEmailHTML(sub.email, name, false, meeting),
+          html: buildEmailHTML(sub.email, name, isWelcome, meeting),
         });
         results.push({ email: sub.email, status: error ? `فشل: ${error.message}` : 'تم الإرسال' });
       } catch (err: unknown) {
@@ -148,11 +149,11 @@ export async function GET(request: Request) {
     await resend.emails.send({
       from: 'Marfa Meetings <noreply@marfa.sa>',
       to: 'op.younis@gmail.com',
-      subject: `📋 التقرير الأسبوعي — تم إرسال ${sent}/${subscribers.length} إشعار للقاء ${meeting.meetingNumber}`,
+      subject: `📋 التقرير الأسبوعي — تم إرسال ${sent}/${recipients.length} إشعار للقاء ${meeting.meetingNumber}`,
       html: `<div style="font-family: sans-serif; padding: 20px;"><h2>تقرير الإرسال الأسبوعي</h2><p>اللقاء: ${meeting.meetingNumber} — ${meeting.dateStr}</p><pre>${JSON.stringify(results, null, 2)}</pre></div>`,
     }).catch(() => {});
 
-    return NextResponse.json({ success: true, sent, total: subscribers.length, results });
+    return NextResponse.json({ success: true, sent, total: recipients.length, results });
   } catch (err: unknown) {
     return NextResponse.json({ error: err instanceof Error ? err.message : String(err) }, { status: 500 });
   }

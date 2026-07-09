@@ -139,11 +139,11 @@ export default function AdvisorPage() {
       const text = await callClaude(prompt)
       const json = JSON.parse(text.replace(/```json|```/g, '').trim())
       setCanvas(json as CanvasData)
+      setStage(3)
     } catch (e) {
       setError('فشل تحليل نموذج العمل. حاول مرة أخرى.')
     }
     setLoading(false)
-    setStage(3)
   }
 
   // ── Stage 3: Marketing Plan ──
@@ -170,11 +170,11 @@ export default function AdvisorPage() {
       const text = await callClaude(prompt)
       const json = JSON.parse(text.replace(/```json|```/g, '').trim())
       setPlan(json as MarketingPlan)
+      setStage(4)
     } catch (e) {
       setError('فشل تحليل الخطة التسويقية. حاول مرة أخرى.')
     }
     setLoading(false)
-    setStage(4)
   }
 
   // ── Save to Supabase ──
@@ -412,8 +412,8 @@ export default function AdvisorPage() {
           </div>
         )}
 
-        {/* ── Stage 2: Canvas ── */}
-        {!loading && stage >= 2 && !canvas && (
+        {/* ── Stage 2: Canvas CTA ── */}
+        {!loading && stage === 2 && (
           <div className="flex items-center justify-center py-20">
             <button onClick={runCanvas} className="px-8 py-4 rounded-2xl font-bold text-lg transition hover:brightness-110" style={{ background: '#c9a84c', color: '#0a0f1e' }}>
               تحليل نموذج العمل التجاري
@@ -435,17 +435,14 @@ export default function AdvisorPage() {
                 </div>
               ))}
             </div>
-            {error && <p className="text-center text-sm" style={{ color: '#ef4444' }}>{error}</p>}
-            {stage === 2 && (
-              <button onClick={runPlan} className="w-full py-4 rounded-2xl font-bold text-lg transition hover:brightness-110" style={{ background: '#c9a84c', color: '#0a0f1e' }}>
-                التالي: الخطة التسويقية
-              </button>
-            )}
           </div>
         )}
+        {error && stage >= 2 && !canvas && (
+          <p className="text-center text-sm py-4" style={{ color: '#ef4444' }}>{error}</p>
+        )}
 
-        {/* ── Stage 3: Marketing Plan ── */}
-        {!loading && stage >= 3 && !plan && (
+        {/* ── Stage 3: Marketing Plan CTA ── */}
+        {!loading && stage === 3 && (
           <div className="flex items-center justify-center py-20">
             <button onClick={runPlan} className="px-8 py-4 rounded-2xl font-bold text-lg transition hover:brightness-110" style={{ background: '#c9a84c', color: '#0a0f1e' }}>
               تحليل الخطة التسويقية
@@ -512,19 +509,24 @@ export default function AdvisorPage() {
                 ))}
               </div>
             </div>
+          </div>
+        )}
 
-            {error && <p className="text-center text-sm" style={{ color: '#ef4444' }}>{error}</p>}
+        {/* Error — shown outside data blocks */}
+        {error && stage >= 3 && !plan && (
+          <p className="text-center text-sm py-4" style={{ color: '#ef4444' }}>{error}</p>
+        )}
 
-            {/* Reset */}
-            <div className="text-center pt-4">
-              <button
-                onClick={handleReset}
-                className="px-8 py-3 rounded-xl text-sm font-bold transition"
-                style={{ background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.6)', border: '0.5px solid rgba(255,255,255,0.1)' }}
-              >
-                بدء من جديد
-              </button>
-            </div>
+        {/* Reset — always visible at stage 1+ */}
+        {stage >= 1 && (
+          <div className="text-center pt-4">
+            <button
+              onClick={handleReset}
+              className="px-8 py-3 rounded-xl text-sm font-bold transition"
+              style={{ background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.6)', border: '0.5px solid rgba(255,255,255,0.1)' }}
+            >
+              بدء من جديد
+            </button>
           </div>
         )}
       </div>

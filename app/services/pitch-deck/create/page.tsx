@@ -30,6 +30,7 @@ export default function PitchDeckCreatePage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
   const [progressText, setProgressText] = useState('');
+  const [generatingError, setGeneratingError] = useState('');
 
   const handleGenerate = async () => {
     setIsGenerating(true);
@@ -60,7 +61,7 @@ export default function PitchDeckCreatePage() {
       const data = await res.json();
 
       if (data.error) {
-        alert('حدث خطأ: ' + data.error);
+        setGeneratingError('حدث خطأ: ' + data.error);
         setIsGenerating(false);
         return;
       }
@@ -70,7 +71,7 @@ export default function PitchDeckCreatePage() {
       setProgressText('اكتمل!');
       await new Promise(r => setTimeout(r, 500));
     } catch (err: any) {
-      alert('حدث خطأ: ' + err.message);
+      setGeneratingError('حدث خطأ: ' + (err?.message || 'خطأ غير معروف'));
     } finally {
       setIsGenerating(false);
     }
@@ -84,7 +85,7 @@ export default function PitchDeckCreatePage() {
   return (
     <div className="min-h-screen bg-[#0a0f1e] text-white font-arabic" dir="rtl">
       <nav className="sticky top-0 z-50 bg-[#0a0f1e]/90 backdrop-blur-xl border-b border-[#1e2d4a] px-6 h-16 flex items-center justify-between">
-        <Link href="/services/pitch-deck" className="text-xl font-bold text-[#c9a84c]">مرفأ <span className="text-[#8a9bb8] font-light text-sm">Pitch Deck</span></Link>
+        <Link href="/services/pitch-deck" className="text-xl font-bold text-[#c9a84c]">مرفأ <span className="text-[#8a9bb8] font-light text-sm">العروض التقديمية</span></Link>
         <div className="flex gap-4 text-sm text-[#8a9bb8]">
           <Link href="/services/pitch-deck/templates" className="hover:text-[#c9a84c]">القوالب</Link>
           <Link href="/meetings" className="hover:text-[#c9a84c]">لقاءات مرفأ</Link>
@@ -113,6 +114,7 @@ export default function PitchDeckCreatePage() {
               isGenerating={isGenerating}
               progress={progress}
               progressText={progressText}
+              error={generatingError}
               onGenerate={handleGenerate}
               onViewEditor={handleViewEditor}
             />

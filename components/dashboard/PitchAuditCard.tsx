@@ -18,17 +18,20 @@ export default function PitchAuditCard() {
   const [result, setResult] = useState<AuditResult | null>(null)
   const [error, setError] = useState('')
   const [remaining, setRemaining] = useState(3)
+  const [authChecked, setAuthChecked] = useState(false)
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({ strengths: true, gaps: true, questions: true })
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) router.push('/login')
+      else setAuthChecked(true)
     })
   }, [router, supabase.auth])
 
   async function handleAudit() {
     if (!pitchText.trim()) return
     setError('')
+    setResult(null)
     setLoading(true)
     try {
       const res = await fetch('/api/pitch-audit', {
@@ -118,7 +121,7 @@ export default function PitchAuditCard() {
             </button>
             {openSections.strengths && (
               <ul className="px-4 py-3 space-y-2">
-                {result.strengths.map((s, i) => (
+                {result.strengths?.map((s, i) => (
                   <li key={i} className="text-sm text-[#a0aec0] pr-3" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
                     • {s}
                   </li>
@@ -140,7 +143,7 @@ export default function PitchAuditCard() {
             </button>
             {openSections.gaps && (
               <ul className="px-4 py-3 space-y-2">
-                {result.gaps.map((g, i) => (
+                {result.gaps?.map((g, i) => (
                   <li key={i} className="text-sm text-[#a0aec0] pr-3" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
                     • {g}
                   </li>
@@ -162,7 +165,7 @@ export default function PitchAuditCard() {
             </button>
             {openSections.questions && (
               <ul className="px-4 py-3 space-y-2">
-                {result.investor_questions.map((q, i) => (
+                {result.investor_questions?.map((q, i) => (
                   <li key={i} className="text-sm text-[#a0aec0] pr-3" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
                     • {q}
                   </li>

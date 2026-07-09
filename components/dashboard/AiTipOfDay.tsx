@@ -24,6 +24,7 @@ export default function AiTipOfDay() {
   const supabase = createClient();
   const [tip, setTip] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [authChecked, setAuthChecked] = useState(false);
   const lastTipRef = useRef<string>('');
 
   function randomFallback(): string {
@@ -39,6 +40,7 @@ export default function AiTipOfDay() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.push('/login'); return; }
+      setAuthChecked(true);
 
       const res = await fetch('/api/claude', {
         method: 'POST',
@@ -79,7 +81,7 @@ export default function AiTipOfDay() {
       </div>
 
       <div className="pr-4" style={{ borderRight: '4px solid #c9a84c' }}>
-        {loading ? (
+        {loading || !authChecked ? (
           <div className="space-y-2">
             <Skeleton height="14px" width="100%" />
             <Skeleton height="14px" width="80%" />

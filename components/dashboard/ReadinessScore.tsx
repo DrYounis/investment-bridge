@@ -68,6 +68,8 @@ export default function ReadinessScore() {
   const [data, setData] = useState<ScoreData | null>(null)
   const [loading, setLoading] = useState(true)
   const [recomputing, setRecomputing] = useState(false)
+  const [error, setError] = useState('')
+  const [authChecked, setAuthChecked] = useState(false)
 
   useEffect(() => {
     let ignore = false
@@ -75,12 +77,17 @@ export default function ReadinessScore() {
       try {
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) { router.push('/login'); return }
+        if (!ignore) setAuthChecked(true)
         const res = await fetch('/api/readiness')
         if (res.ok && !ignore) {
           const json = await res.json()
           setData(json)
+        } else if (!res.ok && !ignore) {
+          setError('تعذر تحميل مؤشر الجاهزية')
         }
-      } catch {}
+      } catch {
+        if (!ignore) setError('حدث خطأ في الاتصال')
+      }
       if (!ignore) setLoading(false)
     })()
     return () => { ignore = true }
@@ -88,13 +95,18 @@ export default function ReadinessScore() {
 
   async function handleRecompute() {
     setRecomputing(true)
+    setError('')
     try {
       const res = await fetch('/api/readiness', { method: 'POST' })
       if (res.ok) {
         const json = await res.json()
         setData(json)
+      } else {
+        setError('فشل إعادة الاحتساب — حاول مرة أخرى')
       }
-    } catch {}
+    } catch {
+      setError('حدث خطأ في الاتصال')
+    }
     setRecomputing(false)
   }
 
@@ -120,7 +132,7 @@ export default function ReadinessScore() {
         مؤشر الجاهزية الاستثمارية
       </h3>
 
-      {loading ? (
+      {loading || !authChecked ? (
         <div className="flex flex-col items-center gap-4">
           <div className="marfa-skeleton w-[110px] h-[110px] rounded-full" />
           <div className="space-y-2 w-full">
@@ -158,6 +170,18 @@ export default function ReadinessScore() {
             ) : (
               'إعادة احتساب'
             )}
+          </button>
+        </div>
+      ) : error ? (
+        <div className="text-center py-6 space-y-3">
+          <p className="text-sm text-[#ef4444]" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>{error}</p>
+          <button
+            onClick={handleRecompute}
+            disabled={recomputing}
+            className="px-5 py-2 rounded-xl text-sm font-bold border border-[#c9a84c]/40 text-[#c9a84c] hover:bg-[#c9a84c]/10 transition-colors disabled:opacity-40"
+            style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
+          >
+            {recomputing ? 'جارٍ المحاولة...' : 'حاول مرة أخرى'}
           </button>
         </div>
       ) : null}

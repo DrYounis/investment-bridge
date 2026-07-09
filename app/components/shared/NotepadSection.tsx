@@ -12,6 +12,7 @@ export default function NotepadSection() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [draft, setDraft] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState('');
 
   const saveNote = useCallback(() => {
     const trimmed = draft.trim();
@@ -41,21 +42,28 @@ export default function NotepadSection() {
     const trimmed = draft.trim();
     if (!trimmed || aiLoading) return;
     setAiLoading(true);
+    setAiError('');
     try {
       const res = await fetch('/api/claude', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prompt: `حلل الملاحظات التالية لرائد أعمال سعودي وقدم 3 توصيات عملية مختصرة بالعربية:\n${trimmed}`,
+          messages: [{ role: 'user', content: `حلل الملاحظات التالية لرائد أعمال سعودي وقدم 3 توصيات عملية مختصرة بالعربية:\n${trimmed}` }],
         }),
       });
       if (res.ok) {
         const data = await res.json();
-        const aiText = data.text || data.response || data.content || 'تعذر التحليل';
-        setDraft((prev) => prev + '\n\n🤖 تحليل الذكاء الاصطناعي:\n' + aiText);
+        const aiText = data.content?.[0]?.text ?? data.text ?? data.response ?? data.content ?? '';
+        if (aiText) {
+          setDraft((prev) => prev + '\n\n🤖 تحليل الذكاء الاصطناعي:\n' + aiText);
+        } else {
+          setAiError('لم يتم الحصول على رد من المساعد — حاول مرة أخرى');
+        }
+      } else {
+        setAiError('حدث خطأ — حاول مرة أخرى');
       }
     } catch {
-      // silently fail — AI is optional
+      setAiError('تعذر الاتصال بالمساعد الذكي');
     }
     setAiLoading(false);
   };
@@ -87,7 +95,7 @@ export default function NotepadSection() {
           </button>
           <button
             onClick={analyzeWithAI}
-            disabled={aiLoading}
+            disabled={aiLoading || !draft.trim()}
             className="px-5 py-2 rounded-xl text-sm font-bold transition-all hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed"
             style={{
               background: 'transparent',
@@ -98,6 +106,9 @@ export default function NotepadSection() {
             {aiLoading ? '⏳ جار التحليل...' : '🧠 اختبر مع الذكاء'}
           </button>
         </div>
+        {aiError && (
+          <p className="text-xs text-[#ef4444]">{aiError}</p>
+        )}
       </div>
 
       {/* Saved notes list */}

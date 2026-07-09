@@ -7,17 +7,23 @@ interface StepFourProps {
   isGenerating: boolean;
   progress: number;
   progressText: string;
+  error?: string;
   onGenerate: () => void;
   onViewEditor: () => void;
 }
 
 export default function StepFour_Generate({
-  slides, isGenerating, progress, progressText, onGenerate, onViewEditor,
+  slides, isGenerating, progress, progressText, error, onGenerate, onViewEditor,
 }: StepFourProps) {
   return (
     <div className="space-y-6 text-center">
       {!isGenerating && slides.length === 0 && (
         <>
+          {error && (
+            <div className="p-3 rounded-lg bg-[#ef4444]/10 border border-[#ef4444]/20 text-[#ef4444] text-sm mb-4">
+              {error}
+            </div>
+          )}
           <div className="text-6xl mb-4">🚀</div>
           <h2 className="text-2xl font-bold text-white mb-2">جاهز لإنشاء عرضك الاستثماري</h2>
           <p className="text-[#8a9bb8] text-sm max-w-md mx-auto mb-6">

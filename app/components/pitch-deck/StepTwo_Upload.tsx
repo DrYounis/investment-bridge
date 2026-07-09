@@ -110,9 +110,6 @@ export default function StepTwo_Upload({ onHighlightsExtracted, onNext }: StepTw
       )}
 
       <div className="flex justify-between pt-4">
-        <button onClick={() => onNext()} className="px-6 py-3 border border-[#1e2d4a] text-[#8a9bb8] rounded-xl hover:border-[#c9a84c]/40">
-          تخطي ←
-        </button>
         <button onClick={() => onNext()} className="px-8 py-3 bg-gradient-to-r from-[#c9a84c] to-[#a07830] text-[#0a0f1e] font-bold rounded-xl">
           التالي ←
         </button>

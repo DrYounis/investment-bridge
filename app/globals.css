@@ -177,6 +177,26 @@ body {
   transition: background-color var(--transition-base), color var(--transition-base);
 }
 
+/* ===== Global Mobile Fixes ===== */
+/* iOS input zoom prevention — all inputs ≥ 16px on mobile */
+@media (max-width: 640px) {
+  input, select, textarea, button {
+    font-size: 16px !important;
+  }
+  /* Touch targets — all tappable elements ≥ 44px */
+  a, button, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ── Safe area insets ── */
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+.safe-top { padding-top: env(safe-area-inset-top, 0px); }
+
+/* ── Arabic legibility ── */
+.leading-arabic { line-height: 1.85; }
+
 /* Arabic/RTL Support */
 html[dir="rtl"] body {
   font-family: var(--font-arabic);

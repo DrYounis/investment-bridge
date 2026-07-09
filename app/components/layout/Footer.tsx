@@ -1,14 +1,14 @@
 export default function Footer() {
     return (
         <footer className="text-center text-slate-400 text-sm py-12 border-t border-gold/10 mt-auto w-full bg-deep-navy/95 backdrop-blur-sm">
-            <div className="flex items-center justify-center gap-2 mb-3">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-2 mb-3">
                 <div className="text-lg font-bold text-luxury-gold">مرفأ</div>
-                <div className="w-1 h-1 bg-gold/50 rounded-full"></div>
+                <div className="w-1 h-1 bg-gold/50 rounded-full hidden md:block"></div>
                 <span className="text-gold/80 italic">Investment Bridge</span>
             </div>
-            <p className="flex flex-wrap justify-center items-center gap-2">
+            <p className="flex flex-col md:flex-row flex-wrap justify-center items-center gap-2">
                 <span>© 2026 Marfa. جميع الحقوق محفوظة</span>
-                <span className="hidden sm:inline text-slate-300">|</span>
+                <span className="hidden md:inline text-slate-300">|</span>
                 <span className="font-medium text-slate-500">صُنع بحب في حائل ❤️</span>
             </p>
         </footer>

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Tajawal } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { ToastProvider } from "@/components/ui/Toast";
@@ -7,6 +7,17 @@ import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import "./globals.css";
 import "../styles/marfa-interactions.css";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#faf8f2" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0f1e" },
+  ],
+};
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

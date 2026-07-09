@@ -1,9 +1,15 @@
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/server';
 import ShipHero from './components/ShipHero';
 import AuthAwarePathway from './components/AuthAwarePathway';
 import AuthAwareLinks from './components/AuthAwareLinks';
 
 export default async function Home() {
+  const supabase = await createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  const isAuthenticated = !!user;
+
   return (
     <div className="min-h-screen bg-[#0a0f1e] relative overflow-hidden" dir="rtl">
 
@@ -58,7 +64,7 @@ export default async function Home() {
             الجسر الذكي بين رأس المال الجريء والأفكار التي تُغيّر المشهد الاستثماري في المنطقة.
           </p>
 
-          <AuthAwareLinks />
+          <AuthAwareLinks isAuthenticated={isAuthenticated} />
         </div>
 
         {/* The Two Pathways */}

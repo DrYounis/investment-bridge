@@ -1,67 +1,43 @@
-'use client'
+import Link from 'next/link';
 
-import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+interface AuthAwareLinksProps {
+  isAuthenticated: boolean;
+}
 
-export default function AuthAwareLinks() {
-  const [user, setUser] = useState<boolean | null>(null)
-
-  useEffect(() => {
-    try {
-      const supabase = createClient()
-      supabase.auth.getUser().then(({ data }) => {
-        setUser(!!data.user)
-      }).catch(() => {
-        setUser(false)
-      })
-    } catch {
-      setUser(false)
-    }
-  }, [])
-
-  if (user === null) {
-    // Loading — show skeleton
+export default function AuthAwareLinks({ isAuthenticated }: AuthAwareLinksProps) {
+  if (isAuthenticated) {
     return (
-      <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-12" style={{ zIndex: 10 }}>
-        <div className="px-10 py-5 bg-white/5 rounded-2xl animate-pulse h-16 w-40" />
-        <div className="px-10 py-5 bg-white/5 rounded-2xl animate-pulse h-16 w-40" />
-      </div>
-    )
-  }
-
-  if (user) {
-    return (
-      <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-12" style={{ zIndex: 10 }}>
-        <a
+      <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-12 relative" style={{ zIndex: 10 }}>
+        <Link
           href="/dashboard/hub"
-          className="px-10 py-5 bg-deep-navy text-gold text-lg font-black rounded-2xl hover:bg-primary-dark hover:scale-105 hover:shadow-2xl hover:shadow-gold/20 transition-all duration-300 border border-gold/30 inline-block"
+          className="px-10 py-5 bg-[#c9a84c] text-[#0a0f1e] text-lg font-black rounded-2xl hover:bg-[#d4a843] hover:scale-105 hover:shadow-2xl hover:shadow-gold/20 transition-all duration-300 inline-block"
         >
           لوحة التحكم
-        </a>
-        <a
+        </Link>
+        <Link
           href="/marfa"
-          className="px-10 py-5 bg-transparent text-white border-2 border-gold/50 text-lg font-black rounded-2xl hover:bg-gold/5 hover:scale-105 hover:shadow-xl transition-all duration-300 inline-block"
+          className="px-10 py-5 bg-transparent text-[#c9a84c] border-2 border-[#c9a84c]/50 text-lg font-black rounded-2xl hover:bg-[#c9a84c]/10 hover:scale-105 hover:shadow-xl transition-all duration-300 inline-block"
         >
           مختبر مرفأ
-        </a>
+        </Link>
       </div>
-    )
+    );
   }
 
   return (
-    <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-12" style={{ zIndex: 10 }}>
-      <a
+    <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-12 relative" style={{ zIndex: 10 }}>
+      <Link
         href="/login"
-        className="px-10 py-5 bg-deep-navy text-gold text-lg font-black rounded-2xl hover:bg-primary-dark hover:scale-105 hover:shadow-2xl hover:shadow-gold/20 transition-all duration-300 border border-gold/30 inline-block"
+        className="px-10 py-5 bg-[#c9a84c] text-[#0a0f1e] text-lg font-black rounded-2xl hover:bg-[#d4a843] hover:scale-105 hover:shadow-2xl hover:shadow-gold/20 transition-all duration-300 inline-block"
       >
         تسجيل الدخول
-      </a>
-      <a
+      </Link>
+      <Link
         href="/register"
-        className="px-10 py-5 bg-transparent text-white border-2 border-gold/50 text-lg font-black rounded-2xl hover:bg-gold/5 hover:scale-105 hover:shadow-xl transition-all duration-300 inline-block"
+        className="px-10 py-5 bg-transparent text-[#c9a84c] border-2 border-[#c9a84c]/50 text-lg font-black rounded-2xl hover:bg-[#c9a84c]/10 hover:scale-105 hover:shadow-xl transition-all duration-300 inline-block"
       >
         إنشاء حساب
-      </a>
+      </Link>
     </div>
-  )
+  );
 }

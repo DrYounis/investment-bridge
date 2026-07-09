@@ -90,12 +90,21 @@ async function main() {
           });
 
           if (fontGateBilingual && embeddedFont) {
-            // ── BILINGUAL ──
-            const l1 = '\u0645\u0631\u0641\u0623  MARFA.SA';
-            const l2 = '\u062D\u064A\u062B \u062A\u064E\u0631\u0633\u0648 \u0627\u0644\u0637\u0645\u0648\u062D\u0627\u062A \u2014 MBA Case Study';
+            // ── BILINGUAL: separate draw calls per script to avoid bidi reversal ──
+            const ar = '\u0645\u0631\u0641\u0623';
+            const en = 'MARFA.SA';
+            const arSlogan = '\u062D\u064A\u062B \u062A\u064E\u0631\u0633\u0648 \u0627\u0644\u0637\u0645\u0648\u062D\u0627\u062A \u2014';
+            const enSlogan = 'MBA Case Study';
 
-            page.drawText(l1, { x: 22, y: h - 16, size: 15, color: GOLD, font: embeddedFont });
-            page.drawText(l2, { x: 22, y: h - 30, size: 8, color: CREAM, font: embeddedFont });
+            // Line 1: Arabic brand + English domain (both gold, side by side)
+            const arW = embeddedFont.widthOfTextAtSize(ar, 15);
+            page.drawText(ar, { x: 22, y: h - 16, size: 15, color: GOLD, font: embeddedFont });
+            page.drawText(en, { x: 22 + arW + 6, y: h - 16, size: 9, color: WHITE, font: embeddedFont });
+
+            // Line 2: Arabic slogan + English tagline
+            const arSloganW = embeddedFont.widthOfTextAtSize(arSlogan, 8);
+            page.drawText(arSlogan, { x: 22, y: h - 30, size: 8, color: CREAM, font: embeddedFont });
+            page.drawText(enSlogan, { x: 22 + arSloganW + 4, y: h - 30, size: 8, color: CREAM, font: embeddedFont });
           } else {
             // ── ENGLISH-ONLY fallback ──
             page.drawText('MARFA.SA', { x: 22, y: h - 18, size: 15, color: GOLD });

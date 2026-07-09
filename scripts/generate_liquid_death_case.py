@@ -7,6 +7,8 @@ Requires: reportlab (pip install reportlab)
 """
 
 import os
+import io
+import base64
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.colors import HexColor, black, white, gray
@@ -14,15 +16,135 @@ from reportlab.lib.units import inch
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
 from reportlab.platypus import (
     SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle,
-    PageBreak, KeepTogether, HRFlowable
+    PageBreak, KeepTogether, HRFlowable, Image
 )
+
+# ---------------------------------------------------------------------------
+# Output path — resolve relative to script location
+# ---------------------------------------------------------------------------
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+OUTPUT_DIR = os.path.join(SCRIPT_DIR, "..", "public", "case-studies")
+OUTPUT_PATH = os.path.join(OUTPUT_DIR, "Liquid_Death_Marketing_Case_Study.pdf")
+
+# ---------------------------------------------------------------------------
+# Marfa Branded Header (page 1 only)
+# ---------------------------------------------------------------------------
+MARFA_NAVY = HexColor("#0a0f1e")
+MARFA_GOLD = HexColor("#c9a84c")
+MARFA_CREAM = HexColor("#d8d5cc")
+
+# QR code → https://www.marfa.sa/meetings
+QR_BASE64 = ("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")
+
+def on_first_page(canvas, doc):
+    """Draws the marfa branded header on page 1."""
+    canvas.saveState()
+    page_w = letter[0]
+    page_h = letter[1]
+
+    # Navy header background
+    canvas.setFillColor(MARFA_NAVY)
+    canvas.rect(0, page_h - 52, page_w, 52, fill=1, stroke=0)
+
+    # Brand name
+    canvas.setFillColor(MARFA_GOLD)
+    canvas.setFont("Helvetica-Bold", 18)
+    canvas.drawString(22, page_h - 30, "مرفأ")
+
+    # Domain
+    canvas.setFillColor(white)
+    canvas.setFont("Helvetica", 8)
+    canvas.drawString(62, page_h - 28, "marfa.sa")
+
+    # Slogan
+    canvas.setFillColor(MARFA_CREAM)
+    canvas.setFont("Helvetica", 7.5)
+    canvas.drawString(22, page_h - 42, "حيث تَرسو الطموحات — MBA Case Study")
+
+    # QR code (right side)
+    qr_size = 68
+    qr_x = page_w - 22 - qr_size
+    qr_y = page_h - 52 + 2
+    try:
+        qr_data = base64.b64decode(QR_BASE64)
+        qr_img = io.BytesIO(qr_data)
+        canvas.drawImage(qr_img, qr_x + 2, qr_y + 2, qr_size - 4, qr_size - 4, mask='auto')
+    except:
+        pass
+
+    # White QR frame
+    canvas.setFillColor(white)
+    canvas.setStrokeColor(white)
+    canvas.setLineWidth(0.5)
+    canvas.roundRect(qr_x, qr_y, qr_size, qr_size, 3, fill=0, stroke=1)
+
+    # QR caption
+    canvas.setFillColor(MARFA_GOLD)
+    canvas.setFont("Helvetica", 6)
+    canvas.drawCentredString(qr_x + qr_size / 2, qr_y - 10, "Scan to join sessions")
+
+    # Gold rule
+    canvas.setFillColor(MARFA_GOLD)
+    canvas.setStrokeColor(MARFA_GOLD)
+    canvas.setLineWidth(2)
+    canvas.line(0, page_h - 54, page_w, page_h - 54)
+
+    canvas.restoreState()
 
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
-OUTPUT_DIR = "/Volumes/Samsung/investment-bridge/public/case-studies"
-OUTPUT_PATH = os.path.join(OUTPUT_DIR, "Liquid_Death_Marketing_Case_Study.pdf")
-
 DARK_RED = HexColor("#8B0000")
 DARK_BLUE = HexColor("#1F4788")
 TABLE_GRAY = HexColor("#F5F5F5")
@@ -496,7 +618,7 @@ def main():
     story.append(PageBreak())
     story.extend(build_page2())
 
-    doc.build(story, onFirstPage=on_page, onLaterPages=on_page)
+    doc.build(story, onFirstPage=on_first_page, onLaterPages=on_page)
     print(f"PDF generated: {OUTPUT_PATH}")
 
 

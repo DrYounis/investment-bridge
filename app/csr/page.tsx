@@ -20,7 +20,7 @@ import {
 
 export default function CSRPage() {
     return (
-        <div className="min-h-screen bg-[#FDFCF0] text-right font-arabic" dir="rtl">
+        <div className="min-h-screen bg-[#faf8f2] text-right font-arabic" dir="rtl">
 
             {/* Hero Section */}
             <section className="relative pt-32 pb-20 overflow-hidden">
@@ -93,7 +93,7 @@ export default function CSRPage() {
             </section>
 
             {/* Vision & Mission */}
-            <section className="py-24 bg-gradient-to-br from-[#FDFCF0] to-white">
+            <section className="py-24 bg-gradient-to-br from-[#faf8f2] to-white">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="grid md:grid-cols-2 gap-16 items-center">
                         <div className="space-y-8 order-2 md:order-1">

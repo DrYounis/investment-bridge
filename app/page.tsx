@@ -28,7 +28,7 @@ export default async function Home() {
         }}>
           <ShipHero />
 
-          <div className="absolute -top-[50%] left-1/2 -translate-x-1/2 w-[60%] h-[60%] bg-[#c9a84c]/5 blur-[120px] rounded-full animate-pulse pointer-events-none" style={{ zIndex: 0 }}></div>
+          <div className="absolute -top-[50%] left-1/2 -translate-x-1/2 w-[60%] h-[60%] bg-[#c9a84c]/5 blur-[80px] rounded-full animate-pulse pointer-events-none transform-gpu" style={{ transform: 'translateZ(0)', zIndex: 0 }}></div>
 
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#c9a84c]/10 border border-[#c9a84c]/20 text-[#c9a84c] text-sm font-bold mb-4 relative" style={{ zIndex: 1 }}>
             🚀 <span className="tracking-wide uppercase">ما الذي يجعل مرفأ مختلفاً؟</span>
@@ -89,8 +89,8 @@ export default async function Home() {
         <div className="max-w-6xl mx-auto w-full mb-24 animate-fade-in-up">
           <div className="relative overflow-hidden rounded-3xl bg-[#0d1628] border border-[#1a2540] shadow-xl">
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-[0.03]">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full border-[60px] border-[#c9a84c]"></div>
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full border-[30px] border-[#c9a84c]"></div>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[500px] h-[500px] rounded-full border-[60px] border-[#c9a84c]"></div>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[300px] h-[300px] rounded-full border-[30px] border-[#c9a84c]"></div>
             </div>
 
             <div className="relative z-10 p-8 md:p-12">
@@ -162,7 +162,7 @@ export default async function Home() {
         <div className="max-w-6xl mx-auto w-full mb-24 animate-fade-in-up">
           <div className="relative overflow-hidden rounded-3xl bg-[#0d1628] border border-[#1a2540] shadow-xl">
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-[0.03]">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full border-[60px] border-[#c9a84c]"></div>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[500px] h-[500px] rounded-full border-[60px] border-[#c9a84c]"></div>
             </div>
             <div className="relative z-10 p-8 md:p-12">
               <div className="flex flex-col lg:flex-row items-center gap-10">

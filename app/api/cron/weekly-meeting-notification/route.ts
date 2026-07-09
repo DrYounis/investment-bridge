@@ -74,23 +74,23 @@ function buildEmailHTML(email: string, name: string, isWelcome: boolean, meeting
   </div>
   <div style="padding: 32px 24px;">
     ${welcomeBlock}
-    <div style="border: 2px solid #c9a84c; border-radius: 16px; padding: 24px; background: #fdf9ef;">
+    <div style="border: 2px solid #c9a84c; border-radius: 16px; padding: 24px; background: #faf8f2;">
       <h2 style="color: #0a0f1e; font-size: 18px; margin: 0 0 16px 0; text-align: center;">📅 دعوة لحضور اللقاء ${meeting.meetingNumber}</h2>
       <table style="width: 100%; border-collapse: collapse;">
-        <tr><td style="padding: 10px 12px; font-weight: bold; color: #4a5b78; width: 100px;">📅 التاريخ</td><td style="padding: 10px 12px; color: #0a0f1e; font-weight: bold;">${meeting.dateStr}</td></tr>
-        <tr><td style="padding: 10px 12px; font-weight: bold; color: #4a5b78;">🕐 الوقت</td><td style="padding: 10px 12px; color: #0a0f1e; font-weight: bold;">بعد صلاة الجمعة</td></tr>
-        <tr><td style="padding: 10px 12px; font-weight: bold; color: #4a5b78;">📍 المكان</td><td style="padding: 10px 12px; color: #0a0f1e; font-weight: bold;">ثمد كوفي</td></tr>
-        <tr><td style="padding: 10px 12px; font-weight: bold; color: #4a5b78;">📚 الموضوع</td><td style="padding: 10px 12px; color: #c9a84c; font-weight: bold;">${meeting.topic}</td></tr>
-        <tr><td style="padding: 10px 12px; font-weight: bold; color: #4a5b78;">🏢 دراسة الحالة</td><td style="padding: 10px 12px; color: #0a0f1e;">${meeting.case}</td></tr>
-        <tr><td style="padding: 10px 12px; font-weight: bold; color: #4a5b78; vertical-align: top;">🎯 التحدي</td><td style="padding: 10px 12px; color: #4a5b78; line-height: 1.7;">${meeting.challenge}</td></tr>
+        <tr><td style="padding: 10px 12px; font-weight: bold; color: #64748b; width: 100px;">📅 التاريخ</td><td style="padding: 10px 12px; color: #0a0f1e; font-weight: bold;">${meeting.dateStr}</td></tr>
+        <tr><td style="padding: 10px 12px; font-weight: bold; color: #64748b;">🕐 الوقت</td><td style="padding: 10px 12px; color: #0a0f1e; font-weight: bold;">بعد صلاة الجمعة</td></tr>
+        <tr><td style="padding: 10px 12px; font-weight: bold; color: #64748b;">📍 المكان</td><td style="padding: 10px 12px; color: #0a0f1e; font-weight: bold;">ثمد كوفي</td></tr>
+        <tr><td style="padding: 10px 12px; font-weight: bold; color: #64748b;">📚 الموضوع</td><td style="padding: 10px 12px; color: #c9a84c; font-weight: bold;">${meeting.topic}</td></tr>
+        <tr><td style="padding: 10px 12px; font-weight: bold; color: #64748b;">🏢 دراسة الحالة</td><td style="padding: 10px 12px; color: #0a0f1e;">${meeting.case}</td></tr>
+        <tr><td style="padding: 10px 12px; font-weight: bold; color: #64748b; vertical-align: top;">🎯 التحدي</td><td style="padding: 10px 12px; color: #64748b; line-height: 1.7;">${meeting.challenge}</td></tr>
       </table>
     </div>
     <div style="margin-top: 24px; text-align: center;">
       <a href="https://www.marfa.sa/meetings" style="display: inline-block; background: #c9a84c; color: #0a0f1e; padding: 14px 32px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 15px;">📄 تصفح ملف PDF للقاء</a>
     </div>
     <div style="margin-top: 32px; padding-top: 20px; border-top: 1px solid #c9a84c44; text-align: center;">
-      <p style="color: #8a94a8; font-size: 12px; margin: 0 0 4px 0;">📍 ثمد كوفي — بعد صلاة الجمعة من كل أسبوع</p>
-      <p style="color: #8a94a8; font-size: 11px; margin: 0;">www.marfa.sa &nbsp;|&nbsp; منصة مرفأ الاستثمارية &nbsp;|&nbsp; حائل 🇸🇦</p>
+      <p style="color: #64748b; font-size: 12px; margin: 0 0 4px 0;">📍 ثمد كوفي — بعد صلاة الجمعة من كل أسبوع</p>
+      <p style="color: #64748b; font-size: 11px; margin: 0;">www.marfa.sa &nbsp;|&nbsp; منصة مرفأ الاستثمارية &nbsp;|&nbsp; حائل 🇸🇦</p>
     </div>
   </div>
 </div>

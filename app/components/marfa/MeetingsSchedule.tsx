@@ -182,7 +182,7 @@ export default function MeetingsSchedule() {
                 <h2 className="text-3xl font-bold text-[#c9a84c]">
                     منهج دراسة الحالة - The Case Study Method
                 </h2>
-                <p className="text-[#4a5b78] leading-relaxed text-lg">
+                <p className="text-[#64748b] leading-relaxed text-lg">
                     تحويل اللقاءات إلى دراسات حالة هو الأسلوب المتبع في الجامعات العريقة، وهو الأنسب لبيئة "مرفأ" لتعزيز تبادل الخبرات.
                     في كل لقاء، سنناقش مشروعاً واقعياً وتحديات حقيقية.
                 </p>
@@ -196,7 +196,7 @@ export default function MeetingsSchedule() {
                             {idx + 1}
                         </div>
                         <h3 className="font-bold text-lg mb-2 text-[#c9a84c]">{item.step.split(':')[0]}</h3>
-                        <p className="text-sm text-[#4a5b78]">{item.description}</p>
+                        <p className="text-sm text-[#64748b]">{item.description}</p>
                     </Card>
                 ))}
             </div>
@@ -205,13 +205,13 @@ export default function MeetingsSchedule() {
             <Card className="overflow-hidden bg-white border border-[#c9a84c]/20 rounded-3xl shadow-[0_8px_30px_rgba(10,15,30,0.06)]">
                 <div className="p-6 border-b border-[#c9a84c]/10">
                     <h3 className="text-xl font-bold text-[#0a0f1e]">جدول لقاءات مرفأ (6 أشهر)</h3>
-                    <p className="text-sm text-[#4a5b78] mt-1">
+                    <p className="text-sm text-[#64748b] mt-1">
                         تبدأ من {formatDate(scheduleDates[0])} | كل يوم جمعة (أسبوعياً)
                     </p>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-right">
-                        <thead className="bg-[#fdf9ef] text-[#c9a84c]">
+                        <thead className="bg-[#faf8f2] text-[#c9a84c]">
                             <tr>
                                 <th className="p-4 whitespace-nowrap">اللقاء</th>
                                 <th className="p-4 whitespace-nowrap">التاريخ</th>
@@ -225,25 +225,25 @@ export default function MeetingsSchedule() {
                         <tbody className="divide-y divide-[#c9a84c]/10">
                             {SCHEDULE_DATA.map((row, idx) => (
                                 <tr key={idx} className="hover:bg-[#c9a84c]/5 transition-colors">
-                                    <td className="p-4 font-medium text-[#4a5b78]">{row.encounter}</td>
+                                    <td className="p-4 font-medium text-[#64748b]">{row.encounter}</td>
                                     <td className="p-4 text-[#c9a84c] font-bold whitespace-nowrap" dir="ltr">
                                         {formatDate(scheduleDates[idx])}
                                     </td>
                                     <td className="p-4 text-[#c9a84c] font-bold">{row.topic}</td>
                                     <td className="p-4 font-semibold text-[#0a0f1e]">{row.case}</td>
-                                    <td className="p-4 text-sm text-[#4a5b78] leading-relaxed">{row.challenge}</td>
+                                    <td className="p-4 text-sm text-[#64748b] leading-relaxed">{row.challenge}</td>
                                     <td className="p-4">
                                         {idx <= thisFridayIdx ? (
                                             <a
                                                 href={row.pdf}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-1 px-3 py-2 bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-lg text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition-colors"
+                                                className="inline-flex items-center gap-1 px-3 py-2 bg-[#faf8f2] border border-[#c9a84c]/30 rounded-lg text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition-colors"
                                             >
                                                 📄 PDF
                                             </a>
                                         ) : (
-                                            <span className="inline-flex items-center gap-1 px-3 py-2 bg-[#f5f5f5] border border-[#c9a84c]/10 rounded-lg text-[#8a94a8] text-sm">
+                                            <span className="inline-flex items-center gap-1 px-3 py-2 bg-[#f5f5f5] border border-[#c9a84c]/10 rounded-lg text-[#64748b] text-sm">
                                                 🔒 قريباً
                                             </span>
                                         )}
@@ -254,12 +254,12 @@ export default function MeetingsSchedule() {
                                                 href={row.arPdf}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-1 px-3 py-2 bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-lg text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition-colors"
+                                                className="inline-flex items-center gap-1 px-3 py-2 bg-[#faf8f2] border border-[#c9a84c]/30 rounded-lg text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition-colors"
                                             >
                                                 📄 عربي
                                             </a>
                                         ) : (
-                                            <span className="inline-flex items-center gap-1 px-3 py-2 bg-[#f5f5f5] border border-[#c9a84c]/10 rounded-lg text-[#8a94a8] text-sm">
+                                            <span className="inline-flex items-center gap-1 px-3 py-2 bg-[#f5f5f5] border border-[#c9a84c]/10 rounded-lg text-[#64748b] text-sm">
                                                 🔒 قريباً
                                             </span>
                                         )}

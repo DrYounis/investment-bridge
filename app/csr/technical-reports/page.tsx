@@ -18,7 +18,7 @@ export default async function TechnicalReportsPage() {
     const stats = await getStravaStats();
 
     return (
-        <div className="min-h-screen bg-[#FDFCF0] text-right font-arabic" dir="rtl">
+        <div className="min-h-screen bg-[#faf8f2] text-right font-arabic" dir="rtl">
             {/* Header */}
             <header className="bg-deep-navy py-8 px-6 text-white">
                 <div className="max-w-7xl mx-auto flex justify-between items-center">

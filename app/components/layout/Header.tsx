@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Newspaper } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import { createClient } from '@/lib/supabase/client';
 
 type HeaderProps = {
@@ -15,6 +16,9 @@ export default function Header({ serverUser }: HeaderProps) {
   const loggedIn = !!serverUser;
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
+  const navColor = isLight ? 'text-[#0a0f1e]' : 'text-white/90';
 
   // Lock body scroll when drawer is open
   useEffect(() => {
@@ -57,11 +61,12 @@ export default function Header({ serverUser }: HeaderProps) {
 
           {/* Desktop nav — hidden on mobile */}
           <div className="hidden md:flex items-center gap-6">
-            <Link href="/meetings" className="text-slate-200/90 hover:text-gold hover:scale-105 transition-all font-bold tracking-wide">
+            <Link href="/meetings" className={`${navColor} hover:text-gold transition-colors font-bold tracking-wide`}>
               لقاءات مرفأ
             </Link>
-            <Link href="/financial-news" className="text-slate-200/90 hover:text-gold hover:scale-105 transition-all font-bold tracking-wide">
-              📰 الأخبار المالية
+            <Link href="/financial-news" className={`${navColor} hover:text-gold transition-colors font-bold tracking-wide flex items-center gap-1.5`}>
+              <Newspaper size={16} />
+              الأخبار المالية
             </Link>
             {loggedIn ? (
               <div className="flex gap-3">
@@ -127,10 +132,11 @@ export default function Header({ serverUser }: HeaderProps) {
               </Link>
               <Link
                 href="/financial-news"
-                className="text-gold font-bold text-lg hover:opacity-80 transition-opacity"
+                className="text-gold font-bold text-lg hover:opacity-80 transition-opacity flex items-center gap-2"
                 onClick={() => setMenuOpen(false)}
               >
-                📰 الأخبار المالية
+                <Newspaper size={18} />
+                الأخبار المالية
               </Link>
 
               {loggedIn ? (

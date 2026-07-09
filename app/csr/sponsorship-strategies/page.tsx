@@ -21,7 +21,7 @@ import {
 
 export default function SponsorshipStrategiesPage() {
     return (
-        <div className="min-h-screen bg-[#FDFCF0] text-right font-arabic" dir="rtl">
+        <div className="min-h-screen bg-[#faf8f2] text-right font-arabic" dir="rtl">
 
             {/* Hero Section */}
             <section className="relative pt-32 pb-16 bg-gradient-to-br from-deep-navy to-primary-dark text-white overflow-hidden">

@@ -103,14 +103,14 @@ export default function AdminNotificationsPage() {
     setSending(false);
   }
 
-  if (loading) return <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center"><p className="text-[#4a5b78]">جاري التحميل...</p></div>;
+  if (loading) return <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center"><p className="text-[#64748b]">جاري التحميل...</p></div>;
 
   if (userEmail && !SUPER_ADMIN_EMAILS.includes(userEmail)) {
     return (
       <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center" dir="rtl">
         <div className="bg-white border border-red-200 rounded-3xl p-12 text-center max-w-md shadow-lg">
           <p className="text-red-600 font-bold text-xl">⛔ غير مصرح</p>
-          <p className="text-[#4a5b78] mt-4">هذه الصفحة مخصصة للمشرف العام فقط.</p>
+          <p className="text-[#64748b] mt-4">هذه الصفحة مخصصة للمشرف العام فقط.</p>
         </div>
       </div>
     );
@@ -124,14 +124,14 @@ export default function AdminNotificationsPage() {
             <span className="text-2xl">📧</span>
             <div>
               <h1 className="text-[#0a0f1e] font-bold text-lg">إدارة الإشعارات</h1>
-              <p className="text-[#8a94a8] text-xs">إرسال إشعارات اللقاءات الأسبوعية — المخزّن في Supabase</p>
+              <p className="text-[#64748b] text-xs">إرسال إشعارات اللقاءات الأسبوعية — المخزّن في Supabase</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <span className="px-3 py-1 rounded-full bg-green-50 border border-green-300 text-green-700 text-xs font-bold">
               🤖 إرسال تلقائي كل سبت 8 صباحاً
             </span>
-            <span className="px-3 py-1 rounded-full bg-[#fdf9ef] border border-[#c9a84c]/30 text-[#c9a84c] text-xs font-bold">
+            <span className="px-3 py-1 rounded-full bg-[#faf8f2] border border-[#c9a84c]/30 text-[#c9a84c] text-xs font-bold">
               مشرف عام
             </span>
           </div>
@@ -166,16 +166,16 @@ export default function AdminNotificationsPage() {
         <div className="bg-white border border-[#c9a84c]/20 rounded-3xl p-6 shadow-[0_8px_30px_rgba(10,15,30,0.06)]">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-[#c9a84c] font-bold text-lg">📋 قائمة المشتركين ({emails.length})</h2>
-            <button onClick={loadSubscribers} disabled={syncing} className="text-[#8a94a8] hover:text-[#c9a84c] text-sm transition-colors">
+            <button onClick={loadSubscribers} disabled={syncing} className="text-[#64748b] hover:text-[#c9a84c] text-sm transition-colors">
               🔄 تحديث
             </button>
           </div>
           {emails.length === 0 ? (
-            <p className="text-[#8a94a8] text-center py-8">لا توجد رسائل بريد إلكتروني بعد. تضاف تلقائياً عند تسجيل الدخول.</p>
+            <p className="text-[#64748b] text-center py-8">لا توجد رسائل بريد إلكتروني بعد. تضاف تلقائياً عند تسجيل الدخول.</p>
           ) : (
             <div className="space-y-2 max-h-80 overflow-y-auto">
               {emails.map(email => (
-                <div key={email} className="flex items-center justify-between bg-[#fdf9ef] rounded-xl px-4 py-3">
+                <div key={email} className="flex items-center justify-between bg-[#faf8f2] rounded-xl px-4 py-3">
                   <span className="text-[#0a0f1e] text-sm">{email}</span>
                   <button
                     onClick={() => removeEmail(email)}
@@ -194,12 +194,12 @@ export default function AdminNotificationsPage() {
         <div className="bg-white border border-[#c9a84c]/20 rounded-3xl p-6 shadow-[0_8px_30px_rgba(10,15,30,0.06)]">
           <h2 className="text-[#c9a84c] font-bold text-lg mb-4">📅 اللقاء القادم (يُرسل تلقائياً السبت)</h2>
           <div className="grid grid-cols-2 gap-4 text-sm">
-            <div><span className="text-[#8a94a8]">اللقاء:</span> <span className="text-[#0a0f1e] font-bold">اللقاء {MEETING.meetingNumber}</span></div>
-            <div><span className="text-[#8a94a8]">التاريخ:</span> <span className="text-[#0a0f1e] font-bold">{MEETING.dateStr}</span></div>
-            <div><span className="text-[#8a94a8]">الوقت:</span> <span className="text-[#0a0f1e] font-bold">بعد صلاة الجمعة</span></div>
-            <div><span className="text-[#8a94a8]">المكان:</span> <span className="text-[#0a0f1e] font-bold">ثمد كوفي</span></div>
+            <div><span className="text-[#64748b]">اللقاء:</span> <span className="text-[#0a0f1e] font-bold">اللقاء {MEETING.meetingNumber}</span></div>
+            <div><span className="text-[#64748b]">التاريخ:</span> <span className="text-[#0a0f1e] font-bold">{MEETING.dateStr}</span></div>
+            <div><span className="text-[#64748b]">الوقت:</span> <span className="text-[#0a0f1e] font-bold">بعد صلاة الجمعة</span></div>
+            <div><span className="text-[#64748b]">المكان:</span> <span className="text-[#0a0f1e] font-bold">ثمد كوفي</span></div>
           </div>
-          <div className="mt-4 p-4 bg-[#fdf9ef] rounded-xl text-sm text-[#4a5b78]">
+          <div className="mt-4 p-4 bg-[#faf8f2] rounded-xl text-sm text-[#64748b]">
             <span className="text-[#c9a84c] font-bold">🤖 تلقائي:</span> كل يوم سبت الساعة 8 صباحاً، يُرسل إشعار تذكيري لجميع المشتركين ({emails.length} مشترك) عن لقاء الجمعة القادم.
           </div>
         </div>

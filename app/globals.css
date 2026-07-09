@@ -3,6 +3,10 @@
 
 @import "tailwindcss";
 
+html {
+  scrollbar-gutter: stable;
+}
+
 /* ===== Theme: Dark (default marfa dashboard) ===== */
 .dark {
   --background: #0a0f1e;
@@ -420,32 +424,75 @@ html[dir="rtl"] body {
   height: 10px;
 }
 
+/* Light theme (default / .light) */
 ::-webkit-scrollbar-track {
-  background: var(--gray-100);
+  background: #faf8f2;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--gray-400);
+  background: #a0aec0;
   border-radius: var(--radius-full);
   transition: background var(--transition-fast);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--gray-500);
+  background: #64748b;
+}
+
+/* Dark theme */
+.dark ::-webkit-scrollbar-track {
+  background: #0a0f1e;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #64748b;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
 }
 
 @media (prefers-color-scheme: dark) {
   ::-webkit-scrollbar-track {
-    background: var(--gray-800);
+    background: #0a0f1e;
   }
-
   ::-webkit-scrollbar-thumb {
-    background: var(--gray-600);
+    background: #64748b;
   }
-
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--gray-500);
+    background: #a0aec0;
   }
+}
+
+/* ── Form controls cross-browser ── */
+input, select, textarea {
+  appearance: none;
+  -webkit-appearance: none;
+}
+/* Chrome autofill */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--background) inset !important;
+  -webkit-text-fill-color: var(--foreground) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+/* Number input — hide spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+/* Focus visible — gold ring, both themes */
+:focus-visible {
+  outline: 2px solid #c9a84c;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+/* Safari sticky fix */
+.sticky-parent {
+  overflow: visible !important;
 }
 
 /* ===== Utility Classes ===== */

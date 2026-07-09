@@ -26,16 +26,16 @@ function buildDigestHTML(email: string, name: string, data: {
   </div>
   <div style="padding:32px 24px">
     ${hasSignals ? `
-    <div style="border-radius:16px;padding:24px;background:#fdf9ef;margin-bottom:20px">
+    <div style="border-radius:16px;padding:24px;background:#faf8f2;margin-bottom:20px">
       ${data.views > 0 ? `<p style="color:#0a0f1e;font-size:15px;margin:0 0 12px">👀 ${data.views} مشاهدة لملفك هذا الأسبوع</p>` : ''}
       ${data.downloads > 0 ? `<p style="color:#0a0f1e;font-size:15px;margin:0 0 12px">📥 ${data.downloads} تحميل لعرضك</p>` : ''}
       ${data.interests > 0 ? `<p style="color:#0a0f1e;font-size:15px;margin:0">⭐ ${data.interests} مستثمر أبدى اهتماماً</p>` : ''}
     </div>` : `
-    <div style="border-radius:16px;padding:24px;background:#fdf9ef;margin-bottom:20px;text-align:center">
-      <p style="color:#4a5b78;font-size:14px;margin:0">أكمل ملفك الشخصي وارفع عرضك التقديمي لتظهر إحصائياتك هنا</p>
+    <div style="border-radius:16px;padding:24px;background:#faf8f2;margin-bottom:20px;text-align:center">
+      <p style="color:#64748b;font-size:14px;margin:0">أكمل ملفك الشخصي وارفع عرضك التقديمي لتظهر إحصائياتك هنا</p>
     </div>`}
 
-    <div style="border:2px solid #c9a84c;border-radius:16px;padding:24px;background:#fdf9ef;margin-bottom:20px;text-align:center">
+    <div style="border:2px solid #c9a84c;border-radius:16px;padding:24px;background:#faf8f2;margin-bottom:20px;text-align:center">
       <p style="color:#0a0f1e;font-size:15px;font-weight:bold;margin:0 0 8px">📊 مؤشر الجاهزية الاستثمارية</p>
       <p style="color:#c9a84c;font-size:32px;font-weight:900;margin:0">${data.totalScore}% — ${data.grade}</p>
     </div>
@@ -45,8 +45,8 @@ function buildDigestHTML(email: string, name: string, data: {
     </div>
 
     <div style="margin-top:32px;padding-top:20px;border-top:1px solid #c9a84c44;text-align:center">
-      <p style="color:#8a94a8;font-size:11px;margin:0">لإيقاف الملخص الأسبوعي، عدّل تفضيلاتك من صفحة ملفك الشخصي</p>
-      <p style="color:#8a94a8;font-size:11px;margin:4px 0 0">www.marfa.sa | منصة مرفأ الاستثمارية | حائل 🇸🇦</p>
+      <p style="color:#64748b;font-size:11px;margin:0">لإيقاف الملخص الأسبوعي، عدّل تفضيلاتك من صفحة ملفك الشخصي</p>
+      <p style="color:#64748b;font-size:11px;margin:4px 0 0">www.marfa.sa | منصة مرفأ الاستثمارية | حائل 🇸🇦</p>
     </div>
   </div>
 </div>

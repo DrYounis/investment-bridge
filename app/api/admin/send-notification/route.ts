@@ -54,35 +54,35 @@ function buildEmailHTML(name: string, isWelcome: boolean) {
     ${welcomeBlock}
 
     <!-- Meeting Card -->
-    <div style="border: 2px solid #c9a84c; border-radius: 16px; padding: 24px; background: #fdf9ef;">
+    <div style="border: 2px solid #c9a84c; border-radius: 16px; padding: 24px; background: #faf8f2;">
       <h2 style="color: #0a0f1e; font-size: 18px; margin: 0 0 16px 0; text-align: center;">
         📅 دعوة لحضور اللقاء ${MEETING_DETAILS.number}
       </h2>
 
       <table style="width: 100%; border-collapse: collapse;">
         <tr>
-          <td style="padding: 10px 12px; font-weight: bold; color: #4a5b78; width: 100px;">📅 التاريخ</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b; width: 100px;">📅 التاريخ</td>
           <td style="padding: 10px 12px; color: #0a0f1e; font-weight: bold;">${MEETING_DETAILS.date}</td>
         </tr>
         <tr>
-          <td style="padding: 10px 12px; font-weight: bold; color: #4a5b78;">🕐 الوقت</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">🕐 الوقت</td>
           <td style="padding: 10px 12px; color: #0a0f1e; font-weight: bold;">${MEETING_DETAILS.time}</td>
         </tr>
         <tr>
-          <td style="padding: 10px 12px; font-weight: bold; color: #4a5b78;">📍 المكان</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">📍 المكان</td>
           <td style="padding: 10px 12px; color: #0a0f1e; font-weight: bold;">${MEETING_DETAILS.location}</td>
         </tr>
         <tr>
-          <td style="padding: 10px 12px; font-weight: bold; color: #4a5b78;">📚 الموضوع</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">📚 الموضوع</td>
           <td style="padding: 10px 12px; color: #c9a84c; font-weight: bold;">${MEETING_DETAILS.topic}</td>
         </tr>
         <tr>
-          <td style="padding: 10px 12px; font-weight: bold; color: #4a5b78;">🏢 دراسة الحالة</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">🏢 دراسة الحالة</td>
           <td style="padding: 10px 12px; color: #0a0f1e;">${MEETING_DETAILS.case}</td>
         </tr>
         <tr>
-          <td style="padding: 10px 12px; font-weight: bold; color: #4a5b78; vertical-align: top;">🎯 التحدي</td>
-          <td style="padding: 10px 12px; color: #4a5b78; line-height: 1.7;">${MEETING_DETAILS.challenge}</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b; vertical-align: top;">🎯 التحدي</td>
+          <td style="padding: 10px 12px; color: #64748b; line-height: 1.7;">${MEETING_DETAILS.challenge}</td>
         </tr>
       </table>
     </div>
@@ -97,7 +97,7 @@ function buildEmailHTML(name: string, isWelcome: boolean) {
     <!-- Method -->
     <div style="margin-top: 24px; padding: 20px; background: #f5f5f5; border-radius: 12px;">
       <h3 style="color: #0a0f1e; font-size: 14px; margin: 0 0 8px 0;">🧠 منهجية اللقاء (90 دقيقة)</h3>
-      <p style="color: #4a5b78; font-size: 13px; line-height: 1.8; margin: 0;">
+      <p style="color: #64748b; font-size: 13px; line-height: 1.8; margin: 0;">
         1. عرض الحالة (15 دقيقة) &nbsp;|&nbsp;
         2. العصف الذهني (30 دقيقة) &nbsp;|&nbsp;
         3. تطبيق المحاكاة (30 دقيقة) &nbsp;|&nbsp;
@@ -107,10 +107,10 @@ function buildEmailHTML(name: string, isWelcome: boolean) {
 
     <!-- Footer -->
     <div style="margin-top: 32px; padding-top: 20px; border-top: 1px solid #c9a84c44; text-align: center;">
-      <p style="color: #8a94a8; font-size: 12px; margin: 0 0 4px 0;">
+      <p style="color: #64748b; font-size: 12px; margin: 0 0 4px 0;">
         📍 ثمد كوفي — بعد صلاة الجمعة من كل أسبوع
       </p>
-      <p style="color: #8a94a8; font-size: 11px; margin: 0;">
+      <p style="color: #64748b; font-size: 11px; margin: 0;">
         www.marfa.sa &nbsp;|&nbsp; منصة مرفأ الاستثمارية &nbsp;|&nbsp; حائل 🇸🇦
       </p>
     </div>

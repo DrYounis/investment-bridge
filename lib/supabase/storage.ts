@@ -1,3 +1,4 @@
+import 'server-only';
 import { createServiceClient } from './service';
 
 const PITCH_DECKS_BUCKET = 'pitch-decks';

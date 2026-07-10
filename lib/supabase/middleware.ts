@@ -44,10 +44,9 @@ export async function updateSession(request: NextRequest) {
         return NextResponse.redirect(url)
     }
 
-    // Admin routes: redirect to /admin/login, except for login and setup pages
+    // Admin routes: redirect to /admin/login, except for login page
     if (!user && request.nextUrl.pathname.startsWith('/admin') &&
-        !request.nextUrl.pathname.startsWith('/admin/login') &&
-        !request.nextUrl.pathname.startsWith('/admin/setup')) {
+        !request.nextUrl.pathname.startsWith('/admin/login')) {
         const url = request.nextUrl.clone()
         url.pathname = '/admin/login'
         url.searchParams.set('redirect', request.nextUrl.pathname)

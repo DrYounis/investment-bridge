@@ -31,7 +31,8 @@ const CREAM = rgb(0.847, 0.835, 0.800);
 
 const A4_W = 595, A4_H = 842;
 // Header height: 30mm ≈ 85pt — tall enough to fully cover original content + 8mm breathing gap below gold line
-const HEADER_H = 85;
+// Header height: 42mm ≈ 120pt — tall enough to fully cover original content + 16mm breathing gap
+const HEADER_H = 120;
 
 function filename(topic, isArabic) {
   return topic + (isArabic ? '_Arabic_Case_Study.pdf' : '_Case_Study.pdf');
@@ -99,18 +100,18 @@ async function main() {
 
             // Line 1: Arabic brand + English domain
             const arW = embeddedFont.widthOfTextAtSize(ar, 15);
-            page.drawText(ar, { x: 22, y: h - 18, size: 15, color: GOLD, font: embeddedFont });
-            page.drawText(en, { x: 22 + arW + 6, y: h - 18, size: 9, color: WHITE, font: embeddedFont });
+            page.drawText(ar, { x: 22, y: h - 22, size: 15, color: GOLD, font: embeddedFont });
+            page.drawText(en, { x: 22 + arW + 6, y: h - 22, size: 9, color: WHITE, font: embeddedFont });
 
             // Line 2: Arabic slogan + English tagline
             const arSloganW = embeddedFont.widthOfTextAtSize(arSlogan, 8);
-            page.drawText(arSlogan, { x: 22, y: h - 38, size: 8, color: CREAM, font: embeddedFont });
-            page.drawText(enSlogan, { x: 22 + arSloganW + 4, y: h - 38, size: 8, color: CREAM, font: embeddedFont });
+            page.drawText(arSlogan, { x: 22, y: h - 50, size: 8, color: CREAM, font: embeddedFont });
+            page.drawText(enSlogan, { x: 22 + arSloganW + 4, y: h - 50, size: 8, color: CREAM, font: embeddedFont });
           } else {
             // ── ENGLISH-ONLY fallback ──
-            page.drawText('MARFA.SA', { x: 22, y: h - 18, size: 15, color: GOLD });
+            page.drawText('MARFA.SA', { x: 22, y: h - 22, size: 15, color: GOLD });
             page.drawText('Where Ambitions Anchor \u2014 MBA Case Study', {
-              x: 22, y: h - 38, size: 8, color: CREAM,
+              x: 22, y: h - 50, size: 8, color: CREAM,
             });
           }
         }

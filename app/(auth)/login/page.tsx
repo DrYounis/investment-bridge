@@ -89,7 +89,10 @@ function LoginForm() {
             })
 
             setStep('success')
-            redirectTimeoutRef.current = setTimeout(() => { window.location.href = redirectUrl }, 800)
+            // Android Chrome needs more time to persist httpOnly cookies before redirect
+            const isAndroid = /android/i.test(navigator.userAgent)
+            const delay = isAndroid ? 2000 : 800
+            redirectTimeoutRef.current = setTimeout(() => { window.location.href = redirectUrl }, delay)
         } catch {
             setError('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
             setIsLoading(false)

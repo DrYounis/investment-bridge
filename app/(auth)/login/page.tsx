@@ -18,8 +18,21 @@ function LoginForm() {
     const [successMsg, setSuccessMsg] = useState('')
     const [fieldError, setFieldError] = useState('')
     const [redirectUrl, setRedirectUrl] = useState('/dashboard/hub')
+    const [checkingSession, setCheckingSession] = useState(true)
     const emailRef = useRef<HTMLInputElement>(null)
     const router = useRouter()
+
+    // ── Auto-redirect if already signed in ──
+    useEffect(() => {
+        const supabase = createClient()
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session && step === 'email') {
+                window.location.replace(redirectUrl || '/dashboard')
+            } else {
+                setCheckingSession(false)
+            }
+        }).catch(() => setCheckingSession(false))
+    }, [])
 
     useEffect(() => {
         return () => {
@@ -112,6 +125,9 @@ function LoginForm() {
 
     return (
         <div className="min-h-screen bg-background flex items-center justify-center p-4">
+            {checkingSession ? (
+                <div className="marfa-skeleton w-8 h-8 rounded-full" />
+            ) : (
             <div className="w-full max-w-md">
                 {step === 'email' && (
                     <div>
@@ -202,6 +218,7 @@ function LoginForm() {
                     </p>
                 )}
             </div>
+            )}
         </div>
     )
 }

@@ -102,8 +102,19 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
 
     const data = await res.json();
-    return NextResponse.json({ text: data.content[0].text });
-  } catch {
+
+    const text = Array.isArray(data.content)
+      ? data.content.filter((b: any) => b.type === 'text').map((b: any) => b.text).join('\n')
+      : '';
+
+    if (!text) {
+      console.error('CLAUDE_EMPTY_RESPONSE', JSON.stringify(data).slice(0, 200));
+      return NextResponse.json({ error: 'Empty response' }, { status: 502 });
+    }
+
+    return NextResponse.json({ text });
+  } catch (err) {
+    console.error('CLAUDE_REQUEST_FAIL', err instanceof Error ? err.message : err);
     return NextResponse.json(
       { error: 'An unexpected error occurred' },
       { status: 500 }

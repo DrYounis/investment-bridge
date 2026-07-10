@@ -5,10 +5,14 @@ import AuthAwarePathway from './components/AuthAwarePathway';
 import AuthAwareLinks from './components/AuthAwareLinks';
 
 export default async function Home() {
-  const supabase = await createClient();
-
-  const { data: { user } } = await supabase.auth.getUser();
-  const isAuthenticated = !!user;
+  let isAuthenticated = false;
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    isAuthenticated = !!user;
+  } catch (err) {
+    console.error('PAGE_DATA_FAIL homepage', err instanceof Error ? err.message : err);
+  }
 
   return (
     <div className="min-h-screen bg-[#0a0f1e] relative overflow-hidden" dir="rtl">

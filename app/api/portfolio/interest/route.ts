@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     // Validate project exists and is active
     const { data: project } = await svc
       .from('marfa_portfolio')
-      .select('id, name_ar, is_active')
+      .select('id, name_ar, is_active, access_token')
       .eq('id', portfolio_id)
       .single();
 
@@ -74,6 +74,7 @@ export async function POST(request: NextRequest) {
     // Send Resend email — fire and forget
     try {
       const resend = new Resend(process.env.RESEND_API_KEY);
+      const detailsUrl = `https://www.marfa.sa/portfolio/details/${project.access_token}`;
       await resend.emails.send({
         from: 'Marfa <noreply@marfa.sa>',
         to: SUPER_ADMIN_EMAILS[0],
@@ -84,6 +85,9 @@ export async function POST(request: NextRequest) {
           <p><strong>المستثمر:</strong> ${user.email}</p>
           <p><strong>الرسالة:</strong> ${safeMessage || '—'}</p>
           <p><strong>التوقيت:</strong> ${new Date().toLocaleString('ar-SA')}</p>
+          <hr style="border-color:#c9a84c20;margin:16px 0">
+          <p><strong>رابط التفاصيل الجاهز للمشاركة مع المستثمر:</strong></p>
+          <a href="${detailsUrl}" style="color:#c9a84c">${detailsUrl}</a>
         </div>`,
       });
     } catch { /* email failure must not fail request */ }

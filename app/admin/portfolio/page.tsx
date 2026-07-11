@@ -47,17 +47,17 @@ export default function AdminPortfolioPage() {
     loadProjects();
   }
 
-  async function regenToken(id: string) {
-    const token = [...Array(32)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
-    await supabase.from('marfa_portfolio').update({ access_token: token }).eq('id', id);
-    loadProjects();
+  function copyToken(id: string) {
+    fetch(`/api/admin/portfolio?id=${id}`).then(r => r.json()).then(d => {
+      if (d.url) navigator.clipboard.writeText(d.url);
+    });
   }
 
-  function copyToken(id: string) {
-    const project = projects.find(p => p.id === id);
-    if (project?.access_token) {
-      navigator.clipboard.writeText(`https://www.marfa.sa/portfolio/details/${project.access_token}`);
-    }
+  async function regenToken(id: string) {
+    const res = await fetch('/api/admin/portfolio', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
+    const data = await res.json();
+    if (data.url) navigator.clipboard.writeText(data.url);
+    loadProjects();
   }
 
   async function updateStatus(id: string, status: string) {

@@ -18,7 +18,7 @@ export default async function PortfolioPage() {
   const supabase = await createClient();
   const { data: items } = await supabase
     .from('marfa_portfolio')
-    .select('*')
+    .select('id, slug, name_ar, name_en, icon, sector_ar, stage_ar, is_featured, display_order, teaser_ar')
     .eq('is_active', true)
     .order('display_order', { ascending: true });
 

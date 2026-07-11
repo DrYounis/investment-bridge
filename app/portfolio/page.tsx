@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
-import Link from 'next/link';
+import InterestCTA from './InterestCTA';
 
 type PortfolioItem = {
   id: string;
@@ -19,6 +19,7 @@ export default async function PortfolioPage() {
   const { data: items } = await supabase
     .from('marfa_portfolio')
     .select('*')
+    .eq('is_active', true)
     .order('display_order', { ascending: true });
 
   const portfolio = (items || []) as PortfolioItem[];
@@ -75,39 +76,26 @@ function PortfolioCard({ item, featured }: { item: PortfolioItem; featured?: boo
     <div
       className={`group rounded-3xl p-6 transition-all duration-300 ${
         featured
-          ? 'bg-white border-2 border-[#c9a84c]/30 shadow-[0_8px_30px_rgba(10,15,30,0.08)] hover:border-[#c9a84c]/60 hover:shadow-[0_12px_40px_rgba(201,168,76,0.12)]'
-          : 'bg-white border border-[#c9a84c]/15 shadow-[0_4px_20px_rgba(10,15,30,0.04)] hover:shadow-[0_8px_30px_rgba(10,15,30,0.08)]'
+          ? 'bg-white border-2 border-[#c9a84c]/30 shadow-[0_8px_30px_rgba(10,15,30,0.08)] hover:border-[#c9a84c]/60'
+          : 'bg-white border border-[#c9a84c]/15 shadow-[0_4px_20px_rgba(10,15,30,0.04)]'
       }`}
     >
-      {/* Icon + Stage */}
       <div className="flex items-start justify-between mb-4">
         <span className="text-4xl">{item.icon}</span>
         <span className="text-xs px-3 py-1 rounded-full bg-[#fdf9ef] text-[#c9a84c] font-bold border border-[#c9a84c]/20" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
           {item.stage_ar}
         </span>
       </div>
-
-      {/* Name */}
       <h3 className="text-xl font-bold text-[#0a0f1e] mb-1" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
         {item.name_ar}
       </h3>
       <p className="text-xs text-[#64748b] mb-3" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
         {item.name_en} · {item.sector_ar}
       </p>
-
-      {/* Teaser */}
       <p className="text-sm text-[#4a5b78] leading-relaxed mb-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
         {item.teaser_ar}
       </p>
-
-      {/* CTA */}
-      <Link
-        href={`/portfolio/${item.slug}`}
-        className="inline-flex items-center gap-1 text-sm font-bold text-[#c9a84c] hover:text-[#d4a843] transition-colors"
-        style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
-      >
-        اكتشف الفرصة ←
-      </Link>
+      <InterestCTA projectId={item.id} projectName={item.name_ar} />
     </div>
   );
 }

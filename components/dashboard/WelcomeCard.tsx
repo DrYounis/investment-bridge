@@ -8,8 +8,8 @@ function getArabicGreeting(): string {
   const hour = new Date().getHours();
   if (hour >= 5 && hour < 12) return 'صباح الخير';
   if (hour >= 12 && hour < 17) return 'مساء الخير';
-  if (hour >= 17 && hour < 21) return 'مساء النور';
-  return 'تصبح على خير';
+  if (hour >= 17 && hour < 22) return 'مساء النور';
+  return 'مرحباً';
 }
 
 export default function WelcomeCard() {

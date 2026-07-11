@@ -6,13 +6,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Menu, X, Newspaper } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import { useAuth } from '@/app/context/AuthContext';
 import { createClient } from '@/lib/supabase/client';
 
-type HeaderProps = {
-  serverUser: { id: string; email: string } | null;
-};
-
-export default function Header({ serverUser }: HeaderProps) {
+export default function Header() {
+  const { user: serverUser, loading: authLoading } = useAuth();
   const loggedIn = !!serverUser;
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();

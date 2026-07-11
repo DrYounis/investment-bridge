@@ -1,11 +1,21 @@
+'use client';
+
 import Link from 'next/link';
+import { useAuth } from '@/app/context/AuthContext';
 
-interface AuthAwareLinksProps {
-  isAuthenticated: boolean;
-}
+export default function AuthAwareLinks() {
+  const { user, loading } = useAuth();
 
-export default function AuthAwareLinks({ isAuthenticated }: AuthAwareLinksProps) {
-  if (isAuthenticated) {
+  if (loading) {
+    return (
+      <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-12" style={{ zIndex: 10 }}>
+        <div className="marfa-skeleton h-16 w-48 rounded-2xl" />
+        <div className="marfa-skeleton h-16 w-48 rounded-2xl" />
+      </div>
+    );
+  }
+
+  if (user) {
     return (
       <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-12 relative" style={{ zIndex: 10 }}>
         <Link

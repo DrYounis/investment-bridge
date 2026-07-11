@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Tajawal } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { ToastProvider } from "@/components/ui/Toast";
-import { createClient as createServerClient } from "@/lib/supabase/server";
+import { AuthProvider } from "./context/AuthContext";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import "./globals.css";
@@ -89,14 +89,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Fetch session server-side so Header doesn't need client-side auth calls
-  let sessionUser: { id: string; email: string } | null = null;
-  try {
-    const supabase = await createServerClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) sessionUser = { id: user.id, email: user.email || '' };
-  } catch { /* ignore — user is not authenticated */ }
-
   return (
     <html lang="ar">
       <head>
@@ -107,9 +99,11 @@ export default async function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <ToastProvider>
-            <Header serverUser={sessionUser} />
-            {children}
-            <Footer />
+            <AuthProvider>
+              <Header />
+              {children}
+              <Footer />
+            </AuthProvider>
           </ToastProvider>
         </ThemeProvider>
 

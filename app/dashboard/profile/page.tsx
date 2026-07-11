@@ -115,7 +115,7 @@ export default function ProfilePage() {
         'bg-[#1a2540] text-[#a0aec0] border-[#1a2540]';
 
     return (
-        <div className="min-h-screen bg-[#0a0f1e]" dir="rtl">
+        <div className="min-h-screen bg-[#0a0f1e] p-4 md:p-8 pt-24 md:pt-32" dir="rtl">
             <div className="max-w-3xl mx-auto px-4 py-12 md:py-20">
                 {/* Back link */}
                 <Link

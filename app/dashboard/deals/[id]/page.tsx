@@ -155,7 +155,7 @@ export default function DealRoomPage() {
   const isActive = room.status === 'active'
 
   return (
-    <div className="min-h-screen bg-[#0a0f1e] flex flex-col" dir="rtl" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+    <div className="min-h-screen bg-[#0a0f1e] flex flex-col p-4 md:p-8 pt-24 md:pt-32" dir="rtl" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
       {/* Header */}
       <div className="bg-[#0d1628] border-b border-[#1a2540] p-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">

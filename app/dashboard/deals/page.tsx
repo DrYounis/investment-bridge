@@ -55,7 +55,7 @@ export default function DealsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0f1e] p-4 md:p-8 max-w-5xl mx-auto" dir="rtl" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+    <div className="min-h-screen bg-[#0a0f1e] p-4 md:p-8 pt-24 md:pt-32 max-w-5xl mx-auto" dir="rtl" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
       <Link
         href="/dashboard/hub"
         className="inline-flex items-center gap-2 text-[#a0aec0] hover:text-[#c9a84c] font-bold text-sm mb-8 transition-colors"

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import ShipHero from './components/ShipHero';
 import AuthAwarePathway from './components/AuthAwarePathway';
 import AuthAwareLinks from './components/AuthAwareLinks';
+import PortfolioTeaser from './components/PortfolioTeaser';
 
 export default function Home() {
   return (
@@ -78,6 +79,9 @@ export default function Home() {
             variant="dark"
           />
         </div>
+
+        {/* Portfolio Teaser */}
+        <PortfolioTeaser />
 
         {/* Elevator Speech Trainer */}
         <div className="max-w-6xl mx-auto w-full mb-24 animate-fade-in-up">

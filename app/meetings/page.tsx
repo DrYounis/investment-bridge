@@ -40,7 +40,7 @@ export default async function MeetingsPage() {
                         {[
                             { icon: '🎯', name: 'بصيرة', stage: 'منتج مُطلق ويعمل', teaser: 'في سوق المنافسات الحكومية، من يملك البيانات يملك الترسية. بصيرة تعرف الأسعار قبل أن تُعلن النتائج.' },
                             { icon: '📐', name: 'مقياس', stage: 'منتج مُطلق ويعمل', teaser: 'آلاف مصانع الألمنيوم في السعودية ما زالت تُسعّر بالورقة والقلم. مقياس يحوّل القياس إلى عرض سعر في دقائق.' },
-                            { icon: '🏺', name: 'تراثنا', stage: 'منتج جاهز', teaser: 'سوق رقمي يفتح للحِرفي السعودي أبواب العالم — تراثٌ أصيل يتحوّل إلى اقتصاد.' },
+                            { icon: '🏥', name: 'برو ميد إنشور', stage: 'يعمل ويخدم عملاء', teaser: 'كل مطالبة مرفوضة هي إيراد ضائع. برو ميد إنشور يحوّل خسائر المنشآت الطبية إلى أرباح — بخبرة سعودية متخصصة.' },
                         ].map((p) => (
                             <a key={p.name} href="/portfolio" className="group block bg-white rounded-2xl p-6 border border-[#c9a84c]/20 shadow-[0_8px_30px_rgba(10,15,30,0.06)] hover:border-[#c9a84c]/40 transition-all duration-300 hover:-translate-y-1">
                                 <div className="flex items-start justify-between mb-4">

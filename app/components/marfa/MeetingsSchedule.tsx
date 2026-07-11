@@ -209,7 +209,7 @@ export default function MeetingsSchedule() {
                         تبدأ من {formatDate(scheduleDates[0])} | كل يوم جمعة (أسبوعياً)
                     </p>
                 </div>
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto hidden md:block">
                     <table className="w-full text-right">
                         <thead className="bg-[#faf8f2] text-[#c9a84c]">
                             <tr>
@@ -268,6 +268,53 @@ export default function MeetingsSchedule() {
                             ))}
                         </tbody>
                     </table>
+                </div>
+
+                {/* ── Mobile: stacked cards ── */}
+                <div className="md:hidden divide-y divide-[#c9a84c]/10">
+                    {SCHEDULE_DATA.map((row, idx) => (
+                        <div key={idx} className="p-5 space-y-3">
+                            <div className="flex items-center justify-between gap-2">
+                                <span className="text-xs font-bold text-[#64748b] bg-[#faf8f2] border border-[#c9a84c]/20 rounded-full px-3 py-1">
+                                    {row.encounter}
+                                </span>
+                                <span className="text-sm text-[#c9a84c] font-bold whitespace-nowrap" dir="ltr">
+                                    {formatDate(scheduleDates[idx])}
+                                </span>
+                            </div>
+                            <div>
+                                <span className="text-xs font-bold text-[#c9a84c]">{row.topic}</span>
+                                <h4 className="font-bold text-[#0a0f1e] mt-1 leading-snug">{row.case}</h4>
+                            </div>
+                            <p className="text-sm text-[#64748b] leading-relaxed">{row.challenge}</p>
+                            {idx <= thisFridayIdx ? (
+                                <div className="flex gap-3 pt-1">
+                                    <a
+                                        href={row.pdf}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex-1 inline-flex items-center justify-center gap-1 px-3 py-3 bg-[#faf8f2] border border-[#c9a84c]/30 rounded-xl text-[#c9a84c] text-sm font-bold active:bg-[#c9a84c]/10 transition-colors"
+                                    >
+                                        📄 PDF
+                                    </a>
+                                    <a
+                                        href={row.arPdf}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex-1 inline-flex items-center justify-center gap-1 px-3 py-3 bg-[#faf8f2] border border-[#c9a84c]/30 rounded-xl text-[#c9a84c] text-sm font-bold active:bg-[#c9a84c]/10 transition-colors"
+                                    >
+                                        📄 عربي
+                                    </a>
+                                </div>
+                            ) : (
+                                <div className="flex pt-1">
+                                    <span className="flex-1 inline-flex items-center justify-center gap-1 px-3 py-3 bg-[#f5f5f5] border border-[#c9a84c]/10 rounded-xl text-[#64748b] text-sm">
+                                        🔒 قريباً
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+                    ))}
                 </div>
             </Card>
         </div>

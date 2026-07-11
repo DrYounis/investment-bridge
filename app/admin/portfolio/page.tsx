@@ -1,12 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
 
 type PortfolioRow = {
   id: string; slug: string; name_ar: string; name_en: string; icon: string;
   sector_ar: string; stage_ar: string; is_featured: boolean; is_active: boolean;
-  display_order: number; teaser_ar: string; access_token: string;
+  display_order: number; teaser_ar: string;
 };
 
 type InterestRow = {
@@ -20,14 +19,16 @@ export default function AdminPortfolioPage() {
   const [interests, setInterests] = useState<InterestRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [newCount, setNewCount] = useState(0);
-  const supabase = createClient();
 
   useEffect(() => { if (tab === 'projects') loadProjects(); else loadInterests(); }, [tab]);
 
   async function loadProjects() {
     setLoading(true);
-    const { data } = await supabase.from('marfa_portfolio').select('*').order('display_order');
-    setProjects((data || []) as PortfolioRow[]);
+    const res = await fetch('/api/admin/portfolio/list');
+    if (res.ok) {
+      const json = await res.json();
+      setProjects((json.projects || []) as PortfolioRow[]);
+    }
     setLoading(false);
   }
 
@@ -43,7 +44,10 @@ export default function AdminPortfolioPage() {
   }
 
   async function toggleField(id: string, field: 'is_active' | 'is_featured', value: boolean) {
-    await supabase.from('marfa_portfolio').update({ [field]: value }).eq('id', id);
+    await fetch('/api/admin/portfolio/list', {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, updates: { [field]: value } }),
+    });
     loadProjects();
   }
 
@@ -54,14 +58,20 @@ export default function AdminPortfolioPage() {
   }
 
   async function regenToken(id: string) {
-    const res = await fetch('/api/admin/portfolio', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
+    const res = await fetch('/api/admin/portfolio', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    });
     const data = await res.json();
     if (data.url) navigator.clipboard.writeText(data.url);
     loadProjects();
   }
 
   async function updateStatus(id: string, status: string) {
-    await supabase.from('portfolio_interest_requests').update({ status }).eq('id', id);
+    await fetch('/api/admin/portfolio-interests', {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, status }),
+    });
     loadInterests();
   }
 
@@ -92,8 +102,8 @@ export default function AdminPortfolioPage() {
                   <td className="p-2"><input type="checkbox" checked={p.is_active} onChange={() => toggleField(p.id, 'is_active', !p.is_active)} /></td>
                   <td className="p-2">
                     <div className="flex gap-1">
-                      <button onClick={() => copyToken(p.id)} className="px-2 py-1 text-xs bg-[#c9a84c]/10 text-[#c9a84c] rounded hover:bg-[#c9a84c]/20" title="نسخ الرابط السري">🔗 نسخ</button>
-                      <button onClick={() => regenToken(p.id)} className="px-2 py-1 text-xs bg-[#ef4444]/10 text-[#ef4444] rounded hover:bg-[#ef4444]/20" title="إعادة توليد الرابط">🔄</button>
+                      <button onClick={() => copyToken(p.id)} className="px-2 py-1 text-xs bg-[#c9a84c]/10 text-[#c9a84c] rounded hover:bg-[#c9a84c]/20">🔗 نسخ</button>
+                      <button onClick={() => regenToken(p.id)} className="px-2 py-1 text-xs bg-[#ef4444]/10 text-[#ef4444] rounded hover:bg-[#ef4444]/20">🔄</button>
                     </div>
                   </td>
                 </tr>

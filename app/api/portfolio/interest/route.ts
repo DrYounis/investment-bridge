@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createServiceClient } from '@/lib/supabase/service';
 import { createClient } from '@/lib/supabase/server';
-import { requireAdmin } from '@/lib/auth/requireAdmin';
 
 const SUPER_ADMIN_EMAILS = [
   'op.younis@gmail.com',

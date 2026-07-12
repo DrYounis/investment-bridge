@@ -47,7 +47,7 @@ export async function PATCH(request: NextRequest) {
   if (!(await checkAdmin())) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   const { id, updates } = await request.json();
   if (!id || !updates) return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
-  const filtered: Record<string, any> = {};
+  const filtered: Record<string, unknown> = {};
   for (const key of Object.keys(updates)) {
     if (ALLOWED_FIELDS.includes(key)) filtered[key] = updates[key];
   }

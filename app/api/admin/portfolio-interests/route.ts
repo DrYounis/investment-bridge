@@ -18,7 +18,7 @@ export async function GET() {
     .select('id, portfolio_id, investor_email, message, status, created_at, marfa_portfolio!inner(name_ar)')
     .order('created_at', { ascending: false });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  const interests = (data || []).map((r: any) => ({ ...r, project_name: r.marfa_portfolio?.name_ar }));
+  const interests = (data || []).map((r: Record<string, unknown>) => ({ ...r, project_name: (r as { marfa_portfolio?: { name_ar?: string } }).marfa_portfolio?.name_ar }));
   return NextResponse.json({ interests });
 }
 

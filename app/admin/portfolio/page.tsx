@@ -36,7 +36,7 @@ export default function AdminPortfolioPage() {
     if (res.ok) {
       const json = await res.json();
       setInterests(json.interests || []);
-      setNewCount((json.interests || []).filter((i: any) => i.status === 'new').length);
+      setNewCount((json.interests || []).filter((i: Record<string, unknown>) => i.status === 'new').length);
     }
     setLoading(false);
   }

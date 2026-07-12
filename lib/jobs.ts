@@ -5,14 +5,22 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 
 export interface Job {
   id: string;
+  slug: string;
   title: string;
   titleAr: string | null;
+  description: string;
   company: string;
   city: string;
   postedAt: string;
   applyLink: string;
   employerLogo: string | null;
   isLinkedIn: boolean;
+  employmentType: string | null;
+  publisher: string | null;
+  salaryMin: number | null;
+  salaryMax: number | null;
+  salaryPeriod: string | null;
+  isRemote: boolean;
 }
 
 interface JSearchJob {
@@ -25,6 +33,14 @@ interface JSearchJob {
   job_posted_at: string | null;
   job_apply_link: string;
   employer_logo: string | null;
+  job_description: string | null;
+  job_employment_type: string | null;
+  job_employment_types: string[] | null;
+  job_publisher: string | null;
+  job_min_salary: number | null;
+  job_max_salary: number | null;
+  job_salary_period: string | null;
+  job_is_remote: boolean | null;
 }
 
 interface JSearchV2Response {
@@ -66,16 +82,26 @@ function mapJob(raw: JSearchJob): Job | null {
   const applyLink = raw.job_apply_link;
   if (!applyLink) return null;
 
+  const desc = sanitizeTitle(raw.job_description || '').slice(0, 8000);
+
   return {
     id: raw.job_id,
+    slug: Buffer.from(raw.job_id).toString('base64url'),
     title: sanitizeTitle(raw.job_title),
-    titleAr: null, // populated later by translateTitles()
+    titleAr: null,
+    description: desc,
     company: raw.employer_name,
     city: extractCity(raw),
     postedAt: raw.job_posted_at_datetime_utc || raw.job_posted_at || '',
     applyLink,
     employerLogo: raw.employer_logo || null,
     isLinkedIn: applyLink.includes('linkedin.com'),
+    employmentType: raw.job_employment_type || null,
+    publisher: raw.job_publisher || null,
+    salaryMin: raw.job_min_salary ?? null,
+    salaryMax: raw.job_max_salary ?? null,
+    salaryPeriod: raw.job_salary_period || null,
+    isRemote: raw.job_is_remote ?? false,
   };
 }
 
@@ -242,4 +268,32 @@ export async function getCachedJobs(supabase: SupabaseClient): Promise<{
     jobs: (data.payload as Job[]) || [],
     fetchedAt: data.fetched_at,
   };
+}
+
+/**
+ * Find a single cached job by its slug across recent cache rows (≤ 7 days).
+ * Handles old cached rows where slug/description may be missing.
+ */
+export async function getCachedJobBySlug(
+  supabase: SupabaseClient,
+  slug: string
+): Promise<Job | null> {
+  const sevenDaysAgo = new Date(Date.now() - 7 * 86400000).toISOString();
+
+  const { data: rows } = await supabase
+    .from('marfa_jobs_cache')
+    .select('payload')
+    .gte('fetched_at', sevenDaysAgo)
+    .order('fetched_at', { ascending: false })
+    .limit(10);
+
+  if (!rows) return null;
+
+  for (const row of rows) {
+    const jobs = (row.payload as Job[]) || [];
+    const found = jobs.find((j) => j.slug === slug);
+    if (found) return found;
+  }
+
+  return null;
 }

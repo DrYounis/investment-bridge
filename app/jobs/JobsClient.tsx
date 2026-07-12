@@ -189,7 +189,33 @@ function JobCard({ job }: { job: Job }) {
           </div>
         )}
         <div className="min-w-0">
-          {job.titleAr ? (
+          {job.slug ? (
+            <a href={`/jobs/${job.slug}`} className="block group">
+              {job.titleAr ? (
+                <>
+                  <h3
+                    className="font-bold text-[#0a0f1e] leading-snug line-clamp-2 group-hover:text-[#c9a84c] transition-colors"
+                    style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
+                  >
+                    {job.titleAr}
+                  </h3>
+                  <p
+                    className="text-sm text-[#64748b] leading-snug mt-0.5 line-clamp-1 dir-ltr text-start"
+                    dir="ltr"
+                  >
+                    {job.title}
+                  </p>
+                </>
+              ) : (
+                <h3
+                  className="font-bold text-[#0a0f1e] leading-snug line-clamp-2 group-hover:text-[#c9a84c] transition-colors"
+                  style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
+                >
+                  {job.title}
+                </h3>
+              )}
+            </a>
+          ) : job.titleAr ? (
             <>
               <h3
                 className="font-bold text-[#0a0f1e] leading-snug line-clamp-2"

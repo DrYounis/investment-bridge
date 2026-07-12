@@ -82,6 +82,10 @@ export async function GET(request: Request) {
       callsUsed,
       quotaToday: quota.used,
       translated: unique.filter((j) => j.titleAr).length,
+      avgDescriptionLength: Math.round(
+        unique.reduce((sum, j) => sum + (j.description?.length || 0), 0) /
+          Math.max(unique.length, 1)
+      ),
     });
 
     return NextResponse.json({ refreshed: true, count: unique.length });

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
 import { rateLimit, getClientIP, isValidOrigin } from '@/lib/rate-limit';
-import { fetchSaudiJobs } from '@/lib/jobs';
+import { getCachedJobs } from '@/lib/jobs';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,15 +27,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     );
   }
 
-  if (!process.env.JSEARCH_API_KEY) {
-    return NextResponse.json({ error: 'service_unavailable' }, { status: 503 });
-  }
-
   try {
-    const jobs = await fetchSaudiJobs();
+    const supabase = await createClient();
+    const { jobs } = await getCachedJobs(supabase);
     return NextResponse.json({ jobs });
   } catch (err) {
-    console.error('JSEARCH_FETCH_FAIL', err instanceof Error ? err.message : err);
-    return NextResponse.json({ error: 'Upstream service unavailable' }, { status: 502 });
+    console.error('JOBS_API_FAIL', err instanceof Error ? err.message : err);
+    return NextResponse.json({ error: 'Service unavailable' }, { status: 502 });
   }
 }

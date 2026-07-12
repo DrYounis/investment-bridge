@@ -1,6 +1,8 @@
 // Server-side only — fetches job listings from JSearch (RapidAPI)
 // Do NOT import this file in client components
 
+import type { SupabaseClient } from '@supabase/supabase-js';
+
 export interface Job {
   id: string;
   title: string;
@@ -100,4 +102,59 @@ export async function fetchSaudiJobs(cursor?: string): Promise<Job[]> {
 
   console.log('JSEARCH_FETCH', { status: res.status, count: jobs.length });
   return jobs;
+}
+
+// ── Quota + cache (Supabase-backed) ────────────────────────────────────────
+
+/**
+ * Check and consume daily API quota. Upserts today's row in marfa_jobs_quota.
+ * Returns { allowed: false, used } if adding n would exceed the daily cap (6).
+ */
+export async function consumeQuota(
+  supabaseAdmin: SupabaseClient,
+  n: number
+): Promise<{ allowed: boolean; used: number }> {
+  const today = new Date().toISOString().split('T')[0];
+
+  const { data: current } = await supabaseAdmin
+    .from('marfa_jobs_quota')
+    .select('calls')
+    .eq('day', today)
+    .maybeSingle();
+
+  const currentCalls = current?.calls ?? 0;
+  const newTotal = currentCalls + n;
+
+  if (newTotal > 6) {
+    return { allowed: false, used: currentCalls };
+  }
+
+  await supabaseAdmin
+    .from('marfa_jobs_quota')
+    .upsert({ day: today, calls: newTotal }, { onConflict: 'day' });
+
+  return { allowed: true, used: newTotal };
+}
+
+/**
+ * Read the most recent cached jobs from Supabase.
+ * Returns { jobs: [], fetchedAt: null } when the cache is empty.
+ */
+export async function getCachedJobs(supabase: SupabaseClient): Promise<{
+  jobs: Job[];
+  fetchedAt: string | null;
+}> {
+  const { data } = await supabase
+    .from('marfa_jobs_cache')
+    .select('payload, fetched_at')
+    .order('fetched_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!data) return { jobs: [], fetchedAt: null };
+
+  return {
+    jobs: (data.payload as Job[]) || [],
+    fetchedAt: data.fetched_at,
+  };
 }

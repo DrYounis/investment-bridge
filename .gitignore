@@ -88,3 +88,6 @@ public/fonts/
 .swc/
 Claude.dmg
 .env*.local
+
+# Pitch decks
+*.pptx

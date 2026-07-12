@@ -8,7 +8,10 @@ export const metadata: Metadata = {
 };
 
 export default async function JobsPage() {
-  const jobs = await fetchSaudiJobs().catch(() => []);
+  const jobs = await fetchSaudiJobs().catch((err) => {
+    console.error('JOBS_PAGE_FETCH_FAIL', err instanceof Error ? err.message : 'unknown');
+    return [];
+  });
 
   return (
     <div className="min-h-screen bg-[#faf8f2]" dir="rtl">

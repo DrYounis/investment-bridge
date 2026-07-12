@@ -73,6 +73,9 @@ const SECTORS = [
 // ── Arabic relative time helper ────────────────────────────────────────────
 
 function timeAgoArabic(dateStr: string): string {
+  // v2 returns Arabic relative strings (e.g. "قبل يومين") — pass through unchanged
+  if (/[\u0600-\u06FF]/.test(dateStr)) return dateStr;
+
   const date = new Date(dateStr);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
@@ -141,7 +144,14 @@ export default function JobsClient({ jobs }: JobsClientProps) {
       </div>
 
       {/* Results */}
-      {filteredJobs.length > 0 ? (
+      {jobs.length === 0 ? (
+        <p
+          className="text-center text-[#8a94a8] text-lg py-20"
+          style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
+        >
+          الوظائف غير متاحة حالياً — حاول مرة أخرى لاحقاً
+        </p>
+      ) : filteredJobs.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredJobs.map((job) => (
             <JobCard key={job.id} job={job} />

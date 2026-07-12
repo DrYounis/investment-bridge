@@ -87,3 +87,4 @@ public/fonts/
 ._*
 .swc/
 Claude.dmg
+.env*.local

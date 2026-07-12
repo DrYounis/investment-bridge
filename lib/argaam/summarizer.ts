@@ -153,12 +153,13 @@ async function generateSEOTitle(
     return originalTitle.length > 60 ? originalTitle.slice(0, 60) : originalTitle;
   }
 
-  const message = await client.messages.create({
-    model: CLAUDE_MODEL,
-    max_tokens: 128,
-    temperature: 0.7,
-    messages: [{ role: 'user', content: buildTitlePrompt(originalTitle) }],
-  });
+  try {
+    const message = await client.messages.create({
+      model: CLAUDE_MODEL,
+      max_tokens: 128,
+      temperature: 0.7,
+      messages: [{ role: 'user', content: buildTitlePrompt(originalTitle) }],
+    });
 
     const rawText = message.content
       .filter((block) => block.type === 'text')

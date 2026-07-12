@@ -25,8 +25,7 @@ export default async function PortfolioTeaser() {
           </h2>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
-          {items.map((item: Record<string, unknown>) => { const i = item as { slug?: string; name_ar?: string; icon?: string; stage_ar?: string; teaser_ar?: string };
-            return (
+          {items.map((item) => (
             <Link
               key={item.slug}
               href="/portfolio"

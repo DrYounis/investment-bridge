@@ -41,6 +41,7 @@ export default function AdminPortfolioPage() {
     setLoading(false);
   }
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { if (tab === 'projects') loadProjects(); else loadInterests(); }, [tab]);
 
   async function toggleField(id: string, field: 'is_active' | 'is_featured', value: boolean) {

@@ -16,7 +16,7 @@ export interface SummarizedArticle {
 
 // ── Constants ──────────────────────────────────────────────────────
 
-const CLAUDE_MODEL = 'claude-sonnet-4-6';
+const CLAUDE_MODEL = 'claude-sonnet-4-20250514';
 
 // ── Sanitization ───────────────────────────────────────────────────
 

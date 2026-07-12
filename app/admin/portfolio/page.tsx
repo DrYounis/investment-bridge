@@ -20,8 +20,6 @@ export default function AdminPortfolioPage() {
   const [loading, setLoading] = useState(true);
   const [newCount, setNewCount] = useState(0);
 
-  useEffect(() => { if (tab === 'projects') loadProjects(); else loadInterests(); }, [tab]);
-
   async function loadProjects() {
     setLoading(true);
     const res = await fetch('/api/admin/portfolio/list');
@@ -42,6 +40,8 @@ export default function AdminPortfolioPage() {
     }
     setLoading(false);
   }
+
+  useEffect(() => { if (tab === 'projects') loadProjects(); else loadInterests(); }, [tab]);
 
   async function toggleField(id: string, field: 'is_active' | 'is_featured', value: boolean) {
     await fetch('/api/admin/portfolio/list', {

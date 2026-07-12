@@ -247,3 +247,25 @@ export async function getArticlesCount(): Promise<number> {
     return 0;
   }
 }
+
+export async function getLatestArticlesForEmail(limit = 10): Promise<
+  { slug: string; title: string; summary: string; article_date: string }[]
+> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from('financial_news_articles')
+    .select('slug, title, summary, article_date, created_at')
+    .order('article_date', { ascending: false })
+    .order('created_at', { ascending: false })
+    .limit(limit);
+  if (error) {
+    console.error('❌ getLatestArticlesForEmail:', error);
+    return [];
+  }
+  return (data || []).map((row) => ({
+    slug: row.slug,
+    title: row.title,
+    summary: (row.summary || '').slice(0, 120),
+    article_date: row.article_date || row.created_at?.slice(0, 10) || '',
+  }));
+}

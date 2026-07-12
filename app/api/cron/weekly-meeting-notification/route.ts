@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createServiceClient } from '@/lib/supabase/service';
+import { getLatestArticlesForEmail } from '@/lib/supabase/financial-news';
 
 function getResend() {
   return new Resend(process.env.RESEND_API_KEY);
@@ -52,7 +53,7 @@ function getUpcomingFriday(): { dateStr: string; meetingNumber: number; case: st
   return { dateStr, meetingNumber, ...entry };
 }
 
-function buildEmailHTML(email: string, name: string, isWelcome: boolean, meeting: ReturnType<typeof getUpcomingFriday>) {
+function buildEmailHTML(email: string, name: string, isWelcome: boolean, meeting: ReturnType<typeof getUpcomingFriday>, articles: { slug: string; title: string; summary: string; article_date: string }[] = []) {
   const welcomeBlock = isWelcome
     ? `<div style="background: linear-gradient(135deg, #0a0f1e, #1a2540); padding: 30px; border-radius: 16px; margin-bottom: 24px; text-align: center;">
       <h2 style="color: #c9a84c; margin: 0 0 12px 0; font-size: 22px;">🕌 أهلاً بك في مجتمع مرفأ الاستثماري</h2>
@@ -85,6 +86,28 @@ function buildEmailHTML(email: string, name: string, isWelcome: boolean, meeting
         <tr><td style="padding: 10px 12px; font-weight: bold; color: #64748b; vertical-align: top;">🎯 التحدي</td><td style="padding: 10px 12px; color: #64748b; line-height: 1.7;">${meeting.challenge}</td></tr>
       </table>
     </div>
+    ${articles.length > 0 ? `
+    <div style="margin-top: 28px;">
+      <h2 style="color: #0a0f1e; font-size: 17px; margin: 0 0 4px 0; text-align: center;">📰 أهم ١٠ أخبار مالية هذا الأسبوع</h2>
+      <p style="color: #64748b; font-size: 12px; margin: 0 0 16px 0; text-align: center;">تحليلات السوق السعودي من مرفأ</p>
+      ${articles.map((a, i) => `
+      <a href="https://www.marfa.sa/financial-news/${encodeURIComponent(a.slug)}"
+         style="display: block; text-decoration: none; background: #faf8f2; border: 1px solid #c9a84c33; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px;">
+        <table style="width: 100%; border-collapse: collapse;"><tr>
+          <td style="width: 32px; vertical-align: top;">
+            <span style="display: inline-block; width: 26px; height: 26px; line-height: 26px; text-align: center; background: #c9a84c; color: #0a0f1e; border-radius: 50%; font-weight: bold; font-size: 13px;">${i + 1}</span>
+          </td>
+          <td style="padding-right: 10px;">
+            <p style="color: #0a0f1e; font-weight: bold; font-size: 14px; margin: 0 0 4px 0; line-height: 1.6;">${a.title}</p>
+            <p style="color: #64748b; font-size: 12px; margin: 0; line-height: 1.6;">${a.summary}...</p>
+            ${a.article_date ? `<p style="color: #c9a84c; font-size: 11px; margin: 6px 0 0 0;">${a.article_date}</p>` : ''}
+          </td>
+        </tr></table>
+      </a>`).join('')}
+      <div style="text-align: center; margin-top: 14px;">
+        <a href="https://www.marfa.sa/financial-news" style="display: inline-block; border: 2px solid #c9a84c; color: #0a0f1e; padding: 10px 26px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 13px;">جميع الأخبار المالية ←</a>
+      </div>
+    </div>` : ''}
     <div style="margin-top: 24px; text-align: center;">
       <a href="https://www.marfa.sa/meetings" style="display: inline-block; background: #c9a84c; color: #0a0f1e; padding: 14px 32px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 15px;">📄 تصفح ملف PDF للقاء</a>
     </div>
@@ -116,6 +139,11 @@ export async function GET(request: Request) {
   try {
     const supabase = createServiceClient();
     const meeting = getUpcomingFriday();
+
+    // Fetch latest news with graceful degradation
+    let articles: Awaited<ReturnType<typeof getLatestArticlesForEmail>> = [];
+    try { articles = await getLatestArticlesForEmail(10); } catch { articles = []; }
+
     const { searchParams } = new URL(request.url);
     const singleEmail = searchParams.get('email');
     const isWelcome = searchParams.get('welcome') === '1';
@@ -148,8 +176,8 @@ export async function GET(request: Request) {
         const { error } = await resend.emails.send({
           from: 'Marfa Meetings <noreply@marfa.sa>',
           to: sub.email,
-          subject: `🔔 تذكير: لقاء مرفأ ${meeting.meetingNumber} — ${meeting.dateStr} | ${meeting.case}`,
-          html: buildEmailHTML(sub.email, name, isWelcome, meeting),
+          subject: `🔔 تذكير: لقاء مرفأ ${meeting.meetingNumber} — ${meeting.dateStr} | ${meeting.case}${articles.length > 0 ? ` + ${articles.length} أخبار مالية 📰` : ''}`,
+          html: buildEmailHTML(sub.email, name, isWelcome, meeting, articles),
         });
         results.push({ email: sub.email, status: error ? `فشل: ${error.message}` : 'تم الإرسال' });
       } catch (err: unknown) {

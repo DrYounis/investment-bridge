@@ -6,6 +6,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 export interface Job {
   id: string;
   title: string;
+  titleAr: string | null;
   company: string;
   city: string;
   postedAt: string;
@@ -43,13 +44,32 @@ function extractCity(raw: JSearchJob): string {
   return candidate || 'السعودية';
 }
 
+function sanitizeTitle(raw: string): string {
+  let t = raw
+    // Remove literal "null" word (any case) — garbage from some JSearch entries
+    .replace(/\bnull\b/gi, '')
+    // Collapse repeated whitespace
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  // Remove "الراتب ... ريال ... شهرياً" segments that lose meaning after null stripping
+  // Matches: " - الراتب ريال null شهرياً" or "الراتب null ريال شهرياً"
+  t = t.replace(
+    /\s*[-–—]?\s*الراتب\s*.{0,20}?\s*شهرياً/gi,
+    ''
+  ).trim();
+
+  return t;
+}
+
 function mapJob(raw: JSearchJob): Job | null {
   const applyLink = raw.job_apply_link;
   if (!applyLink) return null;
 
   return {
     id: raw.job_id,
-    title: raw.job_title,
+    title: sanitizeTitle(raw.job_title),
+    titleAr: null, // populated later by translateTitles()
     company: raw.employer_name,
     city: extractCity(raw),
     postedAt: raw.job_posted_at_datetime_utc || raw.job_posted_at || '',
@@ -101,6 +121,71 @@ export async function fetchSaudiJobs(cursor?: string): Promise<Job[]> {
   const jobs = data.jobs.map(mapJob).filter((j): j is Job => j !== null);
 
   console.log('JSEARCH_FETCH', { status: res.status, count: jobs.length });
+  return jobs;
+}
+
+// ── Translation ────────────────────────────────────────────────────────────
+
+function hasArabic(text: string): boolean {
+  return /[\u0600-\u06FF]/.test(text);
+}
+
+export async function translateTitles(jobs: Job[]): Promise<Job[]> {
+  // Only translate titles without Arabic already present
+  const toTranslate = jobs.filter((j) => !hasArabic(j.title));
+  if (toTranslate.length === 0) return jobs;
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    console.warn('JOBS_TRANSLATE_SKIP: ANTHROPIC_API_KEY not set');
+    return jobs;
+  }
+
+  try {
+    const Anthropic = (await import('@anthropic-ai/sdk')).default;
+    const client = new Anthropic({ apiKey });
+
+    const titles = toTranslate.map((j) => j.title);
+    const msg = await client.messages.create({
+      model: 'claude-haiku-4-5',
+      max_tokens: 2000,
+      messages: [
+        {
+          role: 'user',
+          content:
+            'You translate job titles from English to Modern Standard Arabic for a Saudi jobs board. Keep company names, certifications, and acronyms (IT, CAT III, ESS, HR, CEO...) in Latin as-is. Respond ONLY with a JSON array of strings in the same order as the input, no markdown, no preamble.\n\n' +
+            JSON.stringify(titles),
+        },
+      ],
+    });
+
+    const raw = msg.content
+      .filter((block) => block.type === 'text')
+      .map((block) => (block.type === 'text' ? block.text : ''))
+      .join('')
+      .trim();
+
+    // Strip markdown fences if present
+    const json = raw.replace(/^```(?:json)?\s*/, '').replace(/\s*```$/, '');
+
+    const translations: string[] = JSON.parse(json);
+
+    if (!Array.isArray(translations) || translations.length !== toTranslate.length) {
+      throw new Error(`Mismatch: expected ${toTranslate.length}, got ${translations?.length ?? 'non-array'}`);
+    }
+
+    // Map translations back by index
+    const translatedSet = new Set(toTranslate.map((j) => j.id));
+    for (const job of jobs) {
+      if (!translatedSet.has(job.id)) continue;
+      const idx = toTranslate.findIndex((t) => t.id === job.id);
+      if (idx >= 0) job.titleAr = translations[idx];
+    }
+  } catch (err) {
+    console.error('JOBS_TRANSLATE_FAIL', err instanceof Error ? err.message : err);
+    // Never throw — translation failure must not break the refresh
+  }
+
   return jobs;
 }
 

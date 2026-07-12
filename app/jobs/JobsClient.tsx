@@ -115,8 +115,9 @@ export default function JobsClient({ jobs }: JobsClientProps) {
 
     const keywords = sector.keywords;
     return jobs.filter((job) => {
-      const title = job.title.toLowerCase();
-      return keywords.some((kw) => title.includes(kw));
+      const title = (job.title || '').toLowerCase();
+      const titleAr = (job.titleAr || '').toLowerCase();
+      return keywords.some((kw) => title.includes(kw) || titleAr.includes(kw));
     });
   }, [jobs, activeSector]);
 
@@ -188,12 +189,29 @@ function JobCard({ job }: { job: Job }) {
           </div>
         )}
         <div className="min-w-0">
-          <h3
-            className="font-bold text-[#0a0f1e] leading-snug line-clamp-2"
-            style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
-          >
-            {job.title}
-          </h3>
+          {job.titleAr ? (
+            <>
+              <h3
+                className="font-bold text-[#0a0f1e] leading-snug line-clamp-2"
+                style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
+              >
+                {job.titleAr}
+              </h3>
+              <p
+                className="text-sm text-[#64748b] leading-snug mt-0.5 line-clamp-1 dir-ltr text-start"
+                dir="ltr"
+              >
+                {job.title}
+              </p>
+            </>
+          ) : (
+            <h3
+              className="font-bold text-[#0a0f1e] leading-snug line-clamp-2"
+              style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
+            >
+              {job.title}
+            </h3>
+          )}
         </div>
       </div>
 

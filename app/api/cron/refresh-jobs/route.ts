@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/service';
-import { fetchSaudiJobs, consumeQuota } from '@/lib/jobs';
+import { fetchSaudiJobs, consumeQuota, translateTitles } from '@/lib/jobs';
 
 function isCronAuthorized(request: Request): boolean {
   if (request.headers.get('x-vercel-cron')) return true;
@@ -54,11 +54,14 @@ export async function GET(request: Request) {
 
     // Dedupe by job id
     const seen = new Set<string>();
-    const unique = allJobs.filter((j) => {
+    let unique = allJobs.filter((j) => {
       if (seen.has(j.id)) return false;
       seen.add(j.id);
       return true;
     });
+
+    // Translate titles (one Claude call, batched)
+    unique = await translateTitles(unique);
 
     // Store in cache
     await supabase.from('marfa_jobs_cache').insert({
@@ -78,6 +81,7 @@ export async function GET(request: Request) {
       count: unique.length,
       callsUsed,
       quotaToday: quota.used,
+      translated: unique.filter((j) => j.titleAr).length,
     });
 
     return NextResponse.json({ refreshed: true, count: unique.length });

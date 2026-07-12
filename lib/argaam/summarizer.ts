@@ -16,7 +16,7 @@ export interface SummarizedArticle {
 
 // ── Constants ──────────────────────────────────────────────────────
 
-const CLAUDE_MODEL = 'claude-sonnet-4-20250514';
+const CLAUDE_MODEL = 'claude-sonnet-4-6';
 
 // ── Sanitization ───────────────────────────────────────────────────
 
@@ -116,12 +116,13 @@ async function generateSummary(
 
   console.log('   🤖 Requesting summary from Claude...');
 
-  const message = await client.messages.create({
-    model: CLAUDE_MODEL,
-    max_tokens: 1024,
-    temperature: 0.7,
-    messages: [{ role: 'user', content: buildSummaryPrompt(article) }],
-  });
+  try {
+    const message = await client.messages.create({
+      model: CLAUDE_MODEL,
+      max_tokens: 1024,
+      temperature: 0.7,
+      messages: [{ role: 'user', content: buildSummaryPrompt(article) }],
+    });
 
   const rawResponse = message.content
     .filter((block) => block.type === 'text')
@@ -134,6 +135,10 @@ async function generateSummary(
 
   // Final sanitization pass for any remaining source references
   return sanitizeContent(cleaned);
+  } catch (err) {
+    console.error('   ❌ Claude summary failed, falling back:', err instanceof Error ? err.message : String(err));
+    return content.slice(0, 500);
+  }
 }
 
 async function generateSEOTitle(
@@ -155,20 +160,24 @@ async function generateSEOTitle(
     messages: [{ role: 'user', content: buildTitlePrompt(originalTitle) }],
   });
 
-  const rawText = message.content
-    .filter((block) => block.type === 'text')
-    .map((block) => (block.type === 'text' ? block.text : ''))
-    .join('')
-    .trim();
+    const rawText = message.content
+      .filter((block) => block.type === 'text')
+      .map((block) => (block.type === 'text' ? block.text : ''))
+      .join('')
+      .trim();
 
-  // Strip prompt artifacts and sanitize
-  const cleaned = stripPromptArtifacts(rawText);
+    // Strip prompt artifacts and sanitize
+    const cleaned = stripPromptArtifacts(rawText);
 
-  // If Claude still returned a long analysis, extract just the first line
-  const firstLine = cleaned.split('\n')[0].trim();
+    // If Claude still returned a long analysis, extract just the first line
+    const firstLine = cleaned.split('\n')[0].trim();
 
-  const result = sanitizeContent(firstLine);
-  return result || sanitizeContent(originalTitle).slice(0, 60);
+    const result = sanitizeContent(firstLine);
+    return result || sanitizeContent(originalTitle).slice(0, 60);
+  } catch (err) {
+    console.error('   ❌ Claude SEO title failed, falling back:', err instanceof Error ? err.message : String(err));
+    return originalTitle.slice(0, 60);
+  }
 }
 
 // ── Public API ─────────────────────────────────────────────────────

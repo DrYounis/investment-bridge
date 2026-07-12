@@ -45,24 +45,37 @@ async function handleCronTrigger(req: Request): Promise<Response> {
     const maxArticles = 5;
     const articles = await scrapeArgaamNews(maxArticles);
     let savedCount = 0;
+    const errors: { article: string; stage: string; message: string }[] = [];
 
     for (const article of articles) {
       try {
         const summary = await summarizeArticle(article);
-        await saveArticle({
-          title: sanitizeTitle(summary.seo_title),
-          original_title: sanitizeTitle(summary.original_title),
-          summary: sanitizeContent(summary.seo_summary),
-          full_content: sanitizeContent(article.full_content || ''),
-          source_url: summary.source_url,
-          article_date: summary.article_date,
-          tags: summary.tags,
-          scraped_at: article.scraped_at,
-          video_url: summary.video_url,
+        try {
+          await saveArticle({
+            title: sanitizeTitle(summary.seo_title),
+            original_title: sanitizeTitle(summary.original_title),
+            summary: sanitizeContent(summary.seo_summary),
+            full_content: sanitizeContent(article.full_content || ''),
+            source_url: summary.source_url,
+            article_date: summary.article_date,
+            tags: summary.tags,
+            scraped_at: article.scraped_at,
+            video_url: summary.video_url,
+          });
+          savedCount++;
+        } catch (err) {
+          errors.push({
+            article: (summary.original_title || article.title || '').slice(0, 60),
+            stage: 'save',
+            message: err instanceof Error ? err.message : String(err),
+          });
+        }
+      } catch (err) {
+        errors.push({
+          article: (article.title || '').slice(0, 60),
+          stage: 'summarize',
+          message: err instanceof Error ? err.message : String(err),
         });
-        savedCount++;
-      } catch {
-        // Continue to next article on failure
       }
     }
 
@@ -71,20 +84,19 @@ async function handleCronTrigger(req: Request): Promise<Response> {
         success: true,
         total_scraped: articles.length,
         saved: savedCount,
+        failed: errors.length,
+        errors,
         timestamp: new Date().toISOString(),
       }),
-      {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      }
+      { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
-  } catch {
+  } catch (err) {
     return new Response(
-      JSON.stringify({ error: 'Cron job failed' }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      }
+      JSON.stringify({
+        error: 'Cron job failed',
+        message: err instanceof Error ? err.message : String(err),
+      }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
 }

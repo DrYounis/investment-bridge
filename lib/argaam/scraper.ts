@@ -54,11 +54,22 @@ async function fetchWithTimeout(url: string): Promise<string> {
       },
     });
     if (!res.ok) {
-      throw new Error(`HTTP ${res.status}`);
+      throw new Error(`HTTP ${res.status} for ${url}`);
     }
     return await res.text();
   } finally {
     clearTimeout(timeout);
+  }
+}
+
+async function fetchWithRetry(url: string): Promise<string> {
+  try {
+    return await fetchWithTimeout(url);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.warn(`   ⚠️ First attempt failed (${message}), retrying in 2s...`);
+    await new Promise(r => setTimeout(r, 2000));
+    return await fetchWithTimeout(url);
   }
 }
 
@@ -149,7 +160,7 @@ async function scrapeArticleContent(
 
   try {
     console.log(`📄 Fetching: ${url}`);
-    const html = await fetchWithTimeout(url);
+    const html = await fetchWithRetry(url);
     const $ = cheerio.load(html);
 
     // Strip <script>, <style>, <noscript> before any text extraction
@@ -229,7 +240,7 @@ export async function scrapeArgaamNews(
   console.log(`🔍 Starting Argaam scraper (cheerio) — targeting ${maxArticles} articles...`);
 
   console.log(`📰 Fetching ${ARGAAM_HOMEPAGE}...`);
-  const html = await fetchWithTimeout(ARGAAM_HOMEPAGE);
+  const html = await fetchWithRetry(ARGAAM_HOMEPAGE);
 
   if (!html || html.length < 500) {
     throw new Error('Argaam returned insufficient content');

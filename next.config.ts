@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
+  // Silence Turbopack workspace-root warning
+  turbopack: {
+    root: '.',
+  },
+
   images: {
     remotePatterns: [
       {

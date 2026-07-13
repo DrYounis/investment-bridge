@@ -50,9 +50,9 @@ export async function POST(request: NextRequest) {
       .join('')
       .trim();
 
-    // Extract first 2 sentences as summary — strip markdown chars so it's clean plain text
-    const sentences = content.replace(/\n/g, ' ').split('。').filter(Boolean);
-    const summary = sentences.slice(0, 2).join('。').replace(/[#*>\-|]/g, '').replace(/\s+/g, ' ').trim() + '。';
+    // Extract first 2 sentences — Arabic uses '.' and '۔' as sentence terminators
+    const sentences = content.replace(/\n/g, ' ').split(/[.۔。]/).filter((s) => s.trim().length > 10);
+    const summary = sentences.slice(0, 2).join('. ').replace(/[#*>\-|]/g, '').replace(/\s+/g, ' ').trim() + '.';
     const wordCount = content.split(/\s+/).length;
     const readingMinutes = Math.max(3, Math.ceil(wordCount / 200));
 

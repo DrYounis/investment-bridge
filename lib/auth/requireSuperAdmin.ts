@@ -52,18 +52,6 @@ export async function requireSuperAdmin(): Promise<
     };
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('user_type')
-    .eq('id', user.id)
-    .maybeSingle();
-
-  if (!profile || profile.user_type !== 'super_admin') {
-    return {
-      authorized: false,
-      response: NextResponse.json({ error: 'Forbidden' }, { status: 403 }),
-    };
-  }
-
+  // Email check is authoritative — profile user_type is not required
   return { authorized: true, userId: user.id };
 }

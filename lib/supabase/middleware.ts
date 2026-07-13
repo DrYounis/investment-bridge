@@ -6,7 +6,7 @@ const PROTECTED_PATHS = ['/dashboard', '/admin', '/meetings', '/advisor', '/serv
 export async function updateSession(request: NextRequest) {
   try {
     // Skip Supabase entirely for public pages
-    const publicPaths = ['/auth', '/api/auth', '/api/erasure', '/api/scrape', '/api/cron', '/api/health']
+    const publicPaths = ['/auth', '/api/auth', '/api/erasure', '/api/scrape', '/api/cron', '/api/health', '/admin/instructor', '/api/instructor']
     const isPublicPath = publicPaths.some(p => request.nextUrl.pathname === p || request.nextUrl.pathname.startsWith(p + '/'))
 
     if (isPublicPath) {

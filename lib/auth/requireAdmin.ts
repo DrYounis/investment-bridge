@@ -1,9 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
-
-const SUPER_ADMIN_EMAILS = [
-  process.env.SUPER_ADMIN_EMAIL || 'mohamedy2003@gmail.com',
-  'op.younis@gmail.com',
-].filter(Boolean);
+import { isSuperAdminEmail } from '@/lib/auth/adminEmails';
 
 /**
  * Server-side admin role check.
@@ -29,7 +25,7 @@ export async function requireAdmin(
     });
   }
 
-  const isAdmin = SUPER_ADMIN_EMAILS.includes(user.email || '');
+  const isAdmin = isSuperAdminEmail(user.email || '');
   if (!isAdmin) {
     if (mode === 'page') {
       throw new Response(null, {

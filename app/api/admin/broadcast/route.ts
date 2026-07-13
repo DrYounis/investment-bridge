@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient as createServerClient } from '@/lib/supabase/server';
 import { createServiceClient } from '@/lib/supabase/service';
 import { Resend } from 'resend';
+import { isSuperAdminEmail } from '@/lib/auth/adminEmails';
 
 function buildEmailHTML(name: string, title: string, body: string): string {
   return `
@@ -35,11 +36,8 @@ export async function POST(request: Request) {
   const supabaseServer = await createServerClient();
   const { data: { session } } = await supabaseServer.auth.getSession();
 
-  const superAdminEmails = ['op.younis@gmail.com', 'mohamedy2003@gmail.com', '10.younis@gmail.com'];
-  if (process.env.SUPER_ADMIN_EMAIL) {
-    superAdminEmails.push(...process.env.SUPER_ADMIN_EMAIL.split(',').map(e => e.trim()));
-  }
-  if (!session || !superAdminEmails.includes(session.user.email!)) {
+  const envEmails = (process.env.SUPER_ADMIN_EMAIL || '').split(',').map(e => e.trim()).filter(Boolean);
+  if (!session || !isSuperAdminEmail(session.user.email, envEmails)) {
     return NextResponse.json({ error: 'غير مصرح' }, { status: 403 });
   }
 

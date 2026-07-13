@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/service';
 import { createClient } from '@/lib/supabase/server';
+import { isSuperAdminEmail } from '@/lib/auth/adminEmails';
 import { TOPICS } from '@/lib/learn/taxonomy';
 
-const SUPER_ADMIN_EMAILS = ['op.younis@gmail.com', 'mohamedy2003@gmail.com', '10.younis@gmail.com'];
-if (process.env.SUPER_ADMIN_EMAIL) SUPER_ADMIN_EMAILS.push(...process.env.SUPER_ADMIN_EMAIL.split(',').map(e => e.trim()));
 
 async function checkAdmin() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  return user?.email && SUPER_ADMIN_EMAILS.includes(user.email);
+  const envEmails = (process.env.SUPER_ADMIN_EMAIL || '').split(',').map(e => e.trim()).filter(Boolean);
+  return isSuperAdminEmail(user?.email, envEmails);
 }
 
 export async function POST(request: NextRequest) {

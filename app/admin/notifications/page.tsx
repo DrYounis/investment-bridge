@@ -3,11 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
-
-const SUPER_ADMIN_EMAILS = ['op.younis@gmail.com', 'mohamedy2003@gmail.com'];
-if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL) {
-  SUPER_ADMIN_EMAILS.push(process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL);
-}
+import { isSuperAdminEmail } from '@/lib/auth/adminEmails';
 
 function getNextFriday(): { dateStr: string; meetingNumber: number } {
   const now = new Date();
@@ -59,7 +55,7 @@ export default function AdminNotificationsPage() {
         return;
       }
       setUserEmail(session.user.email);
-      if (!SUPER_ADMIN_EMAILS.includes(session.user.email)) {
+      if (!isSuperAdminEmail(session.user.email)) {
         setLoading(false);
         return;
       }
@@ -105,7 +101,7 @@ export default function AdminNotificationsPage() {
 
   if (loading) return <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center"><p className="text-[#64748b]">جاري التحميل...</p></div>;
 
-  if (userEmail && !SUPER_ADMIN_EMAILS.includes(userEmail)) {
+  if (userEmail && !isSuperAdminEmail(userEmail)) {
     return (
       <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center" dir="rtl">
         <div className="bg-white border border-red-200 rounded-3xl p-12 text-center max-w-md shadow-lg">

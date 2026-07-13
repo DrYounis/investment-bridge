@@ -2,14 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createServiceClient } from '@/lib/supabase/service';
 import { randomBytes } from 'crypto';
-
-const SUPER_ADMIN_EMAILS = ['op.younis@gmail.com', 'mohamedy2003@gmail.com'];
+import { isSuperAdminEmail } from '@/lib/auth/adminEmails';
 const ALLOWED_FIELDS = ['name_ar','name_en','icon','sector_ar','stage_ar','teaser_ar','is_featured','is_active','display_order','live_url','overview_ar','problem_ar','solution_ar','features_ar','status_ar','business_model_ar','why_now_ar'];
 
 async function checkAdmin() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  return user?.email && SUPER_ADMIN_EMAILS.includes(user.email);
+  return isSuperAdminEmail(user?.email);
 }
 
 // GET /api/admin/portfolio?id=... — copy secret link

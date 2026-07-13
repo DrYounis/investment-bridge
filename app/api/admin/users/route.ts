@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient as createServerClient } from '@/lib/supabase/server';
 import { createServiceClient } from '@/lib/supabase/service';
+import { isSuperAdminEmail } from '@/lib/auth/adminEmails';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,13 +16,8 @@ export async function GET() {
     }
 
     // 2. Verify super admin email
-    const superAdminEmails = ['op.younis@gmail.com', 'mohamedy2003@gmail.com', '10.younis@gmail.com'];
-    const envEmail = process.env.SUPER_ADMIN_EMAIL || process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL;
-    if (envEmail) {
-      superAdminEmails.push(...envEmail.split(',').map((e) => e.trim()));
-    }
-
-    if (!superAdminEmails.includes(user.email!)) {
+    const envEmails = (process.env.SUPER_ADMIN_EMAIL || process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL || '').split(',').map(e => e.trim()).filter(Boolean);
+    if (!isSuperAdminEmail(user.email, envEmails)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 

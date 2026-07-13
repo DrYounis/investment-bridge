@@ -1,13 +1,7 @@
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-
-const SUPER_ADMIN_EMAILS = [
-  'op.younis@gmail.com',
-  'mohamedy2003@gmail.com',
-  process.env.SUPER_ADMIN_EMAIL,
-  process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL,
-].filter(Boolean) as string[];
+import { isSuperAdminEmail } from '@/lib/auth/adminEmails';
 
 function getResend() {
   return new Resend(process.env.RESEND_API_KEY);
@@ -130,7 +124,7 @@ export async function POST(request: Request) {
     const apiKey = request.headers.get('x-api-key');
 
     const isAuthorized =
-      (session?.user?.email && SUPER_ADMIN_EMAILS.includes(session.user.email)) ||
+      (session?.user?.email && isSuperAdminEmail(session.user.email)) ||
       (apiKey && apiKey === process.env.RESEND_API_KEY);
 
     if (!isAuthorized) {
@@ -173,7 +167,7 @@ export async function POST(request: Request) {
     // Also send a copy to the super admin
     await resend.emails.send({
       from: 'Marfa Meetings <noreply@marfa.sa>',
-      to: SUPER_ADMIN_EMAILS[0],
+      to: 'op.younis@gmail.com',
       subject: `📋 تأكيد إرسال — لقاء ${MEETING_DETAILS.number} — تم الإرسال إلى ${emails.length} بريد`,
       html: `<div style="font-family: sans-serif; padding: 20px;"><h2>تم إرسال الإشعار</h2><pre>${JSON.stringify(results, null, 2)}</pre></div>`,
     }).catch(() => {});

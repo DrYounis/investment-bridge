@@ -119,7 +119,7 @@ export default function AdminNotificationsPage() {
   return (
     <div className="min-h-screen bg-[#0a0f1e]" dir="rtl">
       <header className="bg-white border-b border-[#c9a84c]/20 sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="max-w-4xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-3">
             <span className="text-2xl">📧</span>
             <div>

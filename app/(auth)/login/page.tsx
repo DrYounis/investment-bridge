@@ -126,7 +126,7 @@ function LoginForm() {
     }
 
     return (
-        <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div dir="rtl" className="min-h-screen bg-background flex items-center justify-center p-4">
             {checkingSession ? (
                 <div className="marfa-skeleton w-8 h-8 rounded-full" />
             ) : (

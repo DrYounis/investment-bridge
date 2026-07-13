@@ -63,7 +63,7 @@ export default function AdminLayoutShell({ children }: { children: React.ReactNo
   return (
     <div className="min-h-screen bg-[#0a0f1e] flex font-arabic" dir="rtl">
       {/* Sidebar */}
-      <aside className="w-64 bg-[#060c18] border-l border-[#1e2d4a] flex flex-col shrink-0">
+      <aside className="hidden lg:block w-64 bg-[#060c18] border-e border-[#1e2d4a] flex flex-col shrink-0">
         <div className="p-5 border-b border-[#1e2d4a]">
           <Link href="/" className="text-xl font-bold text-[#c9a84c]">مرفأ</Link>
           <p className="text-xs text-[#4a5a78] mt-1">لوحة الإدارة</p>
@@ -128,6 +128,9 @@ export default function AdminLayoutShell({ children }: { children: React.ReactNo
       {/* Main content */}
       <main className="flex-1 overflow-y-auto">
         <header className="h-16 border-b border-[#1e2d4a] flex items-center justify-between px-6 bg-[#0a0f1e]/80 backdrop-blur sticky top-0 z-40">
+          <button className="lg:hidden p-2 text-[#8a9bb8]" onClick={() => {}} aria-label="القائمة">
+            <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+          </button>
           <h1 className="text-lg font-bold text-white">
             {NAV_ITEMS.concat(ADMIN_ITEMS).find(i => i.href === pathname)?.label || 'لوحة التحكم'}
           </h1>

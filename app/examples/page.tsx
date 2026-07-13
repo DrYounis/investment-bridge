@@ -9,7 +9,7 @@ export default function Example() {
     <div className="min-h-screen bg-background p-8">
       {/* Hero Section with Animation */}
       <section className="max-w-6xl mx-auto mb-16 animate-fade-in-up">
-        <h1 className="text-6xl font-bold mb-4 text-gradient">
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold mb-4 text-gradient">
           Investment Bridge
         </h1>
         <p className="text-xl text-foreground/80 max-w-2xl">

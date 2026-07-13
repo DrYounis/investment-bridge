@@ -102,7 +102,7 @@ export default function InstructorPage() {
               return (
                 <div
                   key={entry.num}
-                  className={`flex items-center justify-between gap-4 p-5 rounded-2xl border transition-colors ${
+                  className={`flex flex-wrap items-center justify-between gap-4 p-5 rounded-2xl border transition-colors ${
                     isUploaded
                       ? 'bg-[#0d1628] border-[#1a2540]'
                       : 'bg-[#0d1628]/50 border-[#1a2540]/50 opacity-60'

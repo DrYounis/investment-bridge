@@ -1,6 +1,6 @@
 export default function Footer() {
     return (
-        <footer className="text-center text-slate-400 text-sm py-12 border-t border-gold/10 mt-auto w-full bg-deep-navy/95 backdrop-blur-sm">
+        <footer dir="rtl" className="text-center text-slate-400 text-sm py-12 border-t border-gold/10 mt-auto w-full bg-deep-navy/95 backdrop-blur-sm">
             <div className="flex flex-col md:flex-row items-center justify-center gap-2 mb-3">
                 <div className="text-lg font-bold text-luxury-gold">مرفأ</div>
                 <div className="w-1 h-1 bg-gold/50 rounded-full hidden md:block"></div>

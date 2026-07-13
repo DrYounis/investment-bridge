@@ -71,15 +71,10 @@ export const metadata: Metadata = {
     locale: 'ar_SA',
     url: 'https://www.marfa.sa',
     siteName: 'مرفأ | Marfa',
-    title: 'مرفأ | منصة استثمارية سعودية تربط رواد الأعمال بالمستثمرين',
-    description:
-      'اعرض مشروعك على مستثمرين موثوقين أو اكتشف فرصاً استثمارية واعدة في السعودية. حيث ترسو الطموحات.',
     images: [{ url: '/opengraph-image.png', width: 1200, height: 630, alt: 'مرفأ - منصة الاستثمار السعودية' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'مرفأ | منصة استثمارية سعودية تربط رواد الأعمال بالمستثمرين',
-    description: 'اعرض مشروعك أو اكتشف فرصاً استثمارية في السعودية. حيث ترسو الطموحات.',
     images: ['/twitter-image.png'],
   },
 };

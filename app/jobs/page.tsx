@@ -6,6 +6,16 @@ import JobsClient from './JobsClient';
 export const metadata: Metadata = {
   title: 'الوظائف | مرفأ',
   description: 'فرص وظيفية محدّثة من كبرى المنصات في السعودية — قدّم مباشرة عبر LinkedIn',
+  openGraph: {
+    title: 'الوظائف في السعودية | مرفأ',
+    description: 'فرص وظيفية محدّثة من كبرى المنصات — قدّم مباشرة عبر LinkedIn',
+    url: 'https://www.marfa.sa/jobs',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'الوظائف في السعودية | مرفأ',
+    description: 'فرص وظيفية محدّثة من كبرى المنصات — قدّم مباشرة عبر LinkedIn',
+  },
 };
 
 function lastUpdateArabic(iso: string): string {

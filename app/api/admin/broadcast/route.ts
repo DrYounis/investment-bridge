@@ -35,7 +35,11 @@ export async function POST(request: Request) {
   const supabaseServer = await createServerClient();
   const { data: { session } } = await supabaseServer.auth.getSession();
 
-  if (!session || session.user.email !== process.env.SUPER_ADMIN_EMAIL) {
+  const superAdminEmails = ['op.younis@gmail.com', 'mohamedy2003@gmail.com', '10.younis@gmail.com'];
+  if (process.env.SUPER_ADMIN_EMAIL) {
+    superAdminEmails.push(...process.env.SUPER_ADMIN_EMAIL.split(',').map(e => e.trim()));
+  }
+  if (!session || !superAdminEmails.includes(session.user.email!)) {
     return NextResponse.json({ error: 'غير مصرح' }, { status: 403 });
   }
 

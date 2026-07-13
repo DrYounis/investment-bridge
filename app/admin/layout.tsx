@@ -35,7 +35,7 @@ export default function AdminLayoutShell({ children }: { children: React.ReactNo
       const authUser = session?.user;
       if (!authUser?.email) { router.replace('/admin/login'); setLoading(false); return; }
 
-      const superAdminEmails = ['op.younis@gmail.com', 'mohamedy2003@gmail.com'];
+      const superAdminEmails = ['op.younis@gmail.com', 'mohamedy2003@gmail.com', '10.younis@gmail.com'];
       const envEmail = process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL;
       if (envEmail) superAdminEmails.push(envEmail);
       if (!superAdminEmails.includes(authUser.email!)) { router.replace('/admin/login'); setLoading(false); return; }

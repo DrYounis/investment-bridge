@@ -17,7 +17,7 @@ export async function requireSuperAdmin(): Promise<
   | { authorized: false; response: NextResponse }
 > {
   const superAdminEmail = process.env.SUPER_ADMIN_EMAIL;
-  if (!superAdminEmail) {
+  if (!superAdminEmail && !process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL) {
     return {
       authorized: false,
       response: NextResponse.json(
@@ -25,6 +25,14 @@ export async function requireSuperAdmin(): Promise<
         { status: 503 }
       ),
     };
+  }
+
+  const superAdminEmails = ['op.younis@gmail.com', 'mohamedy2003@gmail.com', '10.younis@gmail.com'];
+  if (superAdminEmail) {
+    superAdminEmails.push(...superAdminEmail.split(',').map(e => e.trim()));
+  }
+  if (process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL) {
+    superAdminEmails.push(...process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL.split(',').map(e => e.trim()));
   }
 
   const supabase = await createClient();
@@ -37,7 +45,7 @@ export async function requireSuperAdmin(): Promise<
     };
   }
 
-  if (user.email !== superAdminEmail) {
+  if (!superAdminEmails.includes(user.email!)) {
     return {
       authorized: false,
       response: NextResponse.json({ error: 'Forbidden' }, { status: 403 }),

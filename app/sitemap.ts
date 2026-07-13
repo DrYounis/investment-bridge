@@ -14,6 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/questionnaire`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${BASE_URL}/sponsorships/hail-marathon-2026`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${BASE_URL}/jobs`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
+    { url: `${BASE_URL}/learn`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
     { url: `${BASE_URL}/csr`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/csr/sponsorship-strategies`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/csr/technical-reports`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
@@ -49,6 +50,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   } catch {
     // DB hiccup — never break the sitemap
+  }
+
+  // Dynamic published learn articles
+  try {
+    const supabase = await createClient();
+    const { data: articles } = await supabase
+      .from('marfa_knowledge_articles')
+      .select('slug, category')
+      .eq('status', 'published');
+
+    if (articles) {
+      for (const article of articles) {
+        entries.push({
+          url: `${BASE_URL}/learn/${article.category}/${article.slug}`,
+          lastModified: now,
+          changeFrequency: 'weekly',
+          priority: 0.6,
+        });
+      }
+    }
+  } catch {
+    // never break the sitemap
   }
 
   return entries;

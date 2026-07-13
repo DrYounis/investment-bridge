@@ -69,9 +69,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ catego
           <MarkdownRenderer contentKey="article-markdown" />
         </div>
 
-        <script
+        <pre
           id="article-markdown"
-          type="text/plain"
+          hidden
+          style={{ display: 'none' }}
           dangerouslySetInnerHTML={{ __html: content }}
         />
 

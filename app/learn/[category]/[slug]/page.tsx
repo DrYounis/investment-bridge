@@ -4,7 +4,10 @@ import { getArticleBySlug, getRelatedArticles } from '@/lib/learn/articles';
 import { CATEGORIES } from '@/lib/learn/taxonomy';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import MarkdownRenderer from './MarkdownRenderer';
+import { unified } from 'unified';
+import remarkParse from 'remark-parse';
+import remarkGfm from 'remark-gfm';
+import remarkHtml from 'remark-html';
 
 export async function generateMetadata({ params }: { params: Promise<{ category: string; slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -31,6 +34,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ catego
   // Fix literal \n strings + strip leading H1 (page already has its own H1)
   let content = article.content_ar.replace(/\\n/g, '\n');
   content = content.replace(/^# .+\n+/, '');
+
+  // Render markdown to HTML server-side (no client hydration issues)
+  const htmlContent = (await unified().use(remarkParse).use(remarkGfm).use(remarkHtml).process(content)).toString();
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -65,9 +71,11 @@ export default async function ArticlePage({ params }: { params: Promise<{ catego
         </div>
 
         {/* Article body */}
-        <div className="bg-white rounded-2xl p-8 border border-[#c9a84c]/20 shadow-[0_8px_30px_rgba(10,15,30,0.04)]">
-          <MarkdownRenderer content={JSON.stringify(content)} />
-        </div>
+        <article
+          className="bg-white rounded-2xl p-8 border border-[#c9a84c]/20 shadow-[0_8px_30px_rgba(10,15,30,0.04)] prose-arabic"
+          style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
+          dangerouslySetInnerHTML={{ __html: htmlContent }}
+        />
 
         {/* Related */}
         {related.length > 0 && (

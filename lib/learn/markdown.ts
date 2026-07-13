@@ -1,7 +1,7 @@
 import 'server-only';
 
 export function renderMarkdown(md: string): string {
-  let html = md
+  const html = md
     // Escape HTML
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')

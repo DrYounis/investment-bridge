@@ -1,6 +1,5 @@
 import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { TOPICS } from './taxonomy';
 
 export interface KnowledgeArticle {
   id: string;

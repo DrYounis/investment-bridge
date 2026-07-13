@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
@@ -53,8 +53,8 @@ const GRADE_COLORS: Record<string, string> = { A: '#c9a84c', B: '#8fbf6f', C: '#
 
 // ── Confetti ────────────────────────────────────────────────────────────────
 
-function ConfettiBurst({ onDone }: { onDone: () => void }) {
-  const particles = Array.from({ length: 25 }, (_, i) => ({
+function generateParticles() {
+  return Array.from({ length: 25 }, (_, i) => ({
     id: i,
     x: Math.random() * 100,
     y: Math.random() * -20 - 10,
@@ -62,7 +62,12 @@ function ConfettiBurst({ onDone }: { onDone: () => void }) {
     size: Math.random() * 8 + 4,
     delay: Math.random() * 0.3,
     duration: Math.random() * 0.8 + 0.8,
+    rotation: Math.random() * 720 - 360,
   }));
+}
+
+function ConfettiBurst({ onDone }: { onDone: () => void }) {
+  const particles = useMemo(() => generateParticles(), []);
 
   return (
     <div className="fixed inset-0 pointer-events-none z-50" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
@@ -70,7 +75,7 @@ function ConfettiBurst({ onDone }: { onDone: () => void }) {
         <motion.div
           key={p.id}
           initial={{ x: `${p.x}vw`, y: `${p.y}vh`, opacity: 1, rotate: 0, scale: 1 }}
-          animate={{ y: '110vh', opacity: 0, rotate: Math.random() * 720 - 360, scale: 0.3 }}
+          animate={{ y: '110vh', opacity: 0, rotate: p.rotation, scale: 0.3 }}
           transition={{ duration: p.duration, delay: p.delay, ease: 'easeIn' }}
           onAnimationComplete={p.id === 0 ? onDone : undefined}
           className="absolute rounded-sm"
@@ -259,7 +264,7 @@ export default function VoyageJourney() {
           </div>
         )}
 
-        {PORTS.map((port, idx) => {
+        {PORTS.map((port, _idx) => {
           const done = checked[port.key];
           const isExpanded = expandedPort === port.key;
           return (

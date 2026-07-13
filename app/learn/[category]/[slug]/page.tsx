@@ -66,7 +66,12 @@ export default async function ArticlePage({ params }: { params: Promise<{ catego
 
         {/* Article body */}
         <div className="bg-white rounded-2xl p-8 border border-[#c9a84c]/20 shadow-[0_8px_30px_rgba(10,15,30,0.04)]">
-          <MarkdownRenderer content={content} />
+          <MarkdownRenderer contentKey="article-markdown" />
+          <script
+            id="article-markdown"
+            type="text/plain"
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
         </div>
 
         {/* Related */}

@@ -32,7 +32,7 @@ function formatDate(date: Date): string {
 }
 function getThisFridayIndex(): number {
   const now = new Date(); const dayOfWeek = now.getDay();
-  let friday = new Date(now);
+  const friday = new Date(now);
   if (dayOfWeek === 0) friday.setDate(friday.getDate() - 2);
   else if (dayOfWeek < 5) friday.setDate(friday.getDate() + (5 - dayOfWeek));
   const baseFriday = new Date(2026, 5, 19);
@@ -68,15 +68,6 @@ export default function AdminMeetingsPage() {
       setLoading(false);
     })();
   }, []);
-
-  const updateStatus = async (id: string, status: string) => {
-    const prev = [...requests];
-    setRequests(prev => prev.map(r => r.id === id ? { ...r, status } : r));
-    try {
-      const res = await fetch('/api/admin/meetings', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, status }) });
-      if (!res.ok) { setError((await res.json()).error || 'Failed'); setRequests(prev); }
-    } catch { setError('Failed'); setRequests(prev); }
-  };
 
   if (loading) return <div className="animate-pulse space-y-4" dir="rtl"><div className="h-8 bg-[#1a2540] rounded w-72" /><div className="h-64 bg-[#0d1628] rounded-2xl border border-[#1a2540]" /></div>;
 

@@ -45,8 +45,8 @@ export async function POST(request: NextRequest) {
     });
 
     const content = msg.content
-      .filter((block: any) => block.type === 'text')
-      .map((block: any) => block.text)
+      .filter((block: { type: string; text?: string }) => block.type === 'text')
+      .map((block: { type: string; text?: string }) => block.text ?? '')
       .join('')
       .trim();
 
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
     return NextResponse.json({ success: true, slug: topic.slug, reading_minutes: readingMinutes });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message || 'Generation failed' }, { status: 500 });
+  } catch (err: unknown) {
+    return NextResponse.json({ error: err instanceof Error ? err.message : 'Generation failed' }, { status: 500 });
   }
 }

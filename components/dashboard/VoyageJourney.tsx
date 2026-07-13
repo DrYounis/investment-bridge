@@ -264,7 +264,7 @@ export default function VoyageJourney() {
           </div>
         )}
 
-        {PORTS.map((port, _idx) => {
+        {PORTS.map((port) => {
           const done = checked[port.key];
           const isExpanded = expandedPort === port.key;
           return (

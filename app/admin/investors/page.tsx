@@ -38,6 +38,7 @@ export default function AdminInvestorsPage() {
     setLoading(false);
   };
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetchInvestors(); }, []);
 
   const updateStatus = async (profile_id: string, status: string) => {

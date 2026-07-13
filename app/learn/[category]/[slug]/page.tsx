@@ -34,14 +34,14 @@ export default async function ArticlePage({ params }: { params: Promise<{ catego
   content = content.replace(/^# .+\n+/, '');
 
   const markdownComponents = {
-    h2: ({ children, ...props }: any) => <h2 className="text-2xl font-bold mt-8 mb-3" style={{ color: '#0a0f1e', fontFamily: 'var(--font-tajawal), sans-serif' }} {...props}>{children}</h2>,
-    h3: ({ children, ...props }: any) => <h3 className="text-xl font-semibold mt-6 mb-2" style={{ color: '#0a0f1e', fontFamily: 'var(--font-tajawal), sans-serif' }} {...props}>{children}</h3>,
-    p: ({ children, ...props }: any) => <p className="leading-loose mb-4 text-start" style={{ color: '#4a5b78', fontFamily: 'var(--font-tajawal), sans-serif' }} {...props}>{children}</p>,
-    strong: ({ children, ...props }: any) => <strong className="font-bold" style={{ color: '#0a0f1e' }} {...props}>{children}</strong>,
-    ul: ({ children, ...props }: any) => <ul className="ms-6 mb-4 space-y-2 list-disc" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }} {...props}>{children}</ul>,
-    ol: ({ children, ...props }: any) => <ol className="ms-6 mb-4 space-y-2 list-decimal" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }} {...props}>{children}</ol>,
-    hr: (props: any) => <hr className="my-8" style={{ borderColor: 'rgba(201,168,76,0.3)' }} {...props} />,
-    a: ({ children, href, ...props }: any) => <a href={href} className="text-[#c9a84c] underline" target="_blank" rel="noopener noreferrer" {...props}>{children}</a>,
+    h2: ({ children, ...props }: React.ComponentPropsWithoutRef<'h2'>) => <h2 className="text-2xl font-bold mt-8 mb-3" style={{ color: '#0a0f1e', fontFamily: 'var(--font-tajawal), sans-serif' }} {...props}>{children}</h2>,
+    h3: ({ children, ...props }: React.ComponentPropsWithoutRef<'h3'>) => <h3 className="text-xl font-semibold mt-6 mb-2" style={{ color: '#0a0f1e', fontFamily: 'var(--font-tajawal), sans-serif' }} {...props}>{children}</h3>,
+    p: ({ children, ...props }: React.ComponentPropsWithoutRef<'p'>) => <p className="leading-loose mb-4 text-start" style={{ color: '#4a5b78', fontFamily: 'var(--font-tajawal), sans-serif' }} {...props}>{children}</p>,
+    strong: ({ children, ...props }: React.ComponentPropsWithoutRef<'strong'>) => <strong className="font-bold" style={{ color: '#0a0f1e' }} {...props}>{children}</strong>,
+    ul: ({ children, ...props }: React.ComponentPropsWithoutRef<'ul'>) => <ul className="ms-6 mb-4 space-y-2 list-disc" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }} {...props}>{children}</ul>,
+    ol: ({ children, ...props }: React.ComponentPropsWithoutRef<'ol'>) => <ol className="ms-6 mb-4 space-y-2 list-decimal" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }} {...props}>{children}</ol>,
+    hr: (props: React.ComponentPropsWithoutRef<'hr'>) => <hr className="my-8" style={{ borderColor: 'rgba(201,168,76,0.3)' }} {...props} />,
+    a: ({ children, href, ...props }: React.ComponentPropsWithoutRef<'a'>) => <a href={href} className="text-[#c9a84c] underline" target="_blank" rel="noopener noreferrer" {...props}>{children}</a>,
   };
 
   const jsonLd = {

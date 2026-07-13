@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Project {
   id: string; slug: string; name_ar: string; name_en: string; icon: string;
@@ -28,6 +28,7 @@ export default function AdminProjectsPage() {
     setLoading(false);
   };
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetchProjects(); }, []);
 
   const patchProject = async (id: string, updates: Partial<Project>, revert?: Project[]) => {

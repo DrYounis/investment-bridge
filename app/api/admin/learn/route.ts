@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/service';
 import { createClient } from '@/lib/supabase/server';
-import { getAllArticles, upsertArticle, deleteArticle, getArticleById } from '@/lib/learn/articles';
+import { getAllArticles, upsertArticle, deleteArticle } from '@/lib/learn/articles';
 
 const SUPER_ADMIN_EMAILS = ['op.younis@gmail.com', 'mohamedy2003@gmail.com', '10.younis@gmail.com'];
 if (process.env.SUPER_ADMIN_EMAIL) SUPER_ADMIN_EMAILS.push(...process.env.SUPER_ADMIN_EMAIL.split(',').map(e => e.trim()));
@@ -24,7 +24,7 @@ export async function PATCH(request: NextRequest) {
   const { id, updates } = await request.json();
   if (!id || !updates) return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
   const svc = createServiceClient();
-  const ok = await upsertArticle(svc, { id, ...updates, updated_at: new Date().toISOString() } as any);
+  const ok = await upsertArticle(svc, { id, ...updates, updated_at: new Date().toISOString() } as Record<string, unknown>);
   if (!ok) return NextResponse.json({ error: 'Update failed' }, { status: 500 });
   return NextResponse.json({ success: true });
 }

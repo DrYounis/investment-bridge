@@ -152,7 +152,7 @@ export default function Lighthouse() {
   useEffect(() => { fetchTip(); }, [fetchTip]);
 
   // ── Beam 2: Signals ──
-  const [signals, setSignals] = useState<any[]>([]);
+  const [signals, setSignals] = useState<Array<{ id: string; signal_type: string; sector: string | null; created_at: string }>>([]);
   const [signalsLoading, setSignalsLoading] = useState(true);
 
   useEffect(() => {
@@ -165,14 +165,14 @@ export default function Lighthouse() {
     })();
   }, [supabase]);
 
-  function formatLabel(s: any): string {
+  function formatLabel(s: { signal_type: string; sector: string | null }): string {
     let label = SIGNAL_LABELS[s.signal_type] || '📌 إشارة جديدة';
     if (s.signal_type === 'sector_view' && s.sector) label = label.replace('{sector}', s.sector);
     return label;
   }
 
   // ── Beam 3: Meeting ──
-  const [meeting, setMeeting] = useState<any>(null);
+  const [meeting, setMeeting] = useState<{ title?: string; meeting_date: string; meeting_url?: string } | null>(null);
   const [remaining, setRemaining] = useState<ReturnType<typeof calcRemaining> | null>(null);
   const [meetingLoading, setMeetingLoading] = useState(true);
 
@@ -200,8 +200,6 @@ export default function Lighthouse() {
     intervalRef.current = setInterval(() => setBeam(b => (b + 1) % 3), 8000);
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [paused]);
-
-  const beamLoading = beam === 0 ? tipLoading : beam === 1 ? signalsLoading : meetingLoading;
 
   return (
     <GlassCard

@@ -40,7 +40,7 @@ export async function GET() {
     }
 
     // 4. Fetch investor approval statuses (best-effort)
-    let investorStatuses: Record<string, string> = {};
+    const investorStatuses: Record<string, string> = {};
     try {
       const { data: investors } = await supabaseAdmin
         .from('investor_profiles')

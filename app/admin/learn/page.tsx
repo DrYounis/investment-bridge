@@ -25,6 +25,7 @@ export default function AdminLearnPage() {
     setLoading(false);
   };
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetchArticles(); }, []);
 
   const toggleStatus = async (article: Article) => {
@@ -74,7 +75,7 @@ export default function AdminLearnPage() {
       {/* Filter */}
       <div className="flex flex-wrap gap-2 mb-4">
         {[{ key: 'all', label: 'الكل' }, { key: 'draft', label: 'مسودة' }, { key: 'published', label: 'منشور' }].map(f => (
-          <button key={f.key} onClick={() => setFilter(f.key as any)} className="px-3 py-1.5 rounded-lg text-xs font-bold"
+          <button key={f.key} onClick={() => setFilter(f.key as typeof filter)} className="px-3 py-1.5 rounded-lg text-xs font-bold"
             style={{ background: filter === f.key ? '#c9a84c' : '#060c18', color: filter === f.key ? '#0a0f1e' : '#8a9bb8', border: filter === f.key ? '1px solid #c9a84c' : '1px solid #1e2d4a' }}>
             {f.label}
           </button>

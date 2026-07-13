@@ -40,14 +40,22 @@ export async function POST(request: Request) {
   }
 
   // 2. Parse request body
-  let reqBody: { title: string; body: string; audience: string; sendInApp: boolean; sendEmail: boolean };
+  let reqBody: {
+    title: string;
+    body: string;
+    audience: string;
+    sendInApp: boolean;
+    sendEmail: boolean;
+    recipientIds?: string[];
+    customEmails?: string[];
+  };
   try {
     reqBody = await request.json();
   } catch {
     return NextResponse.json({ error: 'طلب غير صالح' }, { status: 400 });
   }
 
-  const { title, body, audience, sendInApp, sendEmail } = reqBody;
+  const { title, body, audience, sendInApp, sendEmail, recipientIds, customEmails } = reqBody;
   if (!title?.trim() || !body?.trim()) {
     return NextResponse.json({ error: 'العنوان والنص مطلوبان' }, { status: 400 });
   }
@@ -55,13 +63,40 @@ export async function POST(request: Request) {
   // 3. Fetch target profiles using service_role
   const supabaseAdmin = createServiceClient();
 
-  let profilesQuery = supabaseAdmin.from('profiles').select('id,email,full_name');
-  if (audience === 'investor') profilesQuery = profilesQuery.eq('role', 'investor');
-  else if (audience === 'entrepreneur') profilesQuery = profilesQuery.eq('role', 'entrepreneur');
+  let profiles: Array<{ id: string; email: string; full_name: string | null }> | null;
 
-  const { data: profiles, error: profilesError } = await profilesQuery;
-  if (profilesError || !profiles) {
-    return NextResponse.json({ error: 'فشل في جلب المستخدمين' }, { status: 500 });
+  if (audience === 'individual' && recipientIds && recipientIds.length > 0) {
+    // Individual mode — fetch only selected recipients
+    const { data, error } = await supabaseAdmin
+      .from('profiles')
+      .select('id,email,full_name')
+      .in('id', recipientIds);
+    if (error || !data) {
+      return NextResponse.json({ error: 'فشل في جلب المستخدمين' }, { status: 500 });
+    }
+    profiles = data;
+  } else {
+    // Audience mode — fetch by role filter
+    let profilesQuery = supabaseAdmin.from('profiles').select('id,email,full_name');
+    if (audience === 'investor') profilesQuery = profilesQuery.eq('role', 'investor');
+    else if (audience === 'entrepreneur') profilesQuery = profilesQuery.eq('role', 'entrepreneur');
+
+    const { data, error } = await profilesQuery;
+    if (error || !data) {
+      return NextResponse.json({ error: 'فشل في جلب المستخدمين' }, { status: 500 });
+    }
+    profiles = data;
+  }
+
+  // Merge custom emails (individual, non-registered)
+  if (customEmails && customEmails.length > 0) {
+    const validEmails = customEmails.filter((e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
+    const custom = validEmails.map((email, i) => ({
+      id: `custom_${Date.now()}_${i}`,
+      email,
+      full_name: email.split('@')[0],
+    }));
+    profiles = [...profiles, ...custom];
   }
 
   const recipientCount = profiles.length;
@@ -69,21 +104,24 @@ export async function POST(request: Request) {
   let emailSent = 0;
   let emailFailed = 0;
 
-  // 4. In-app notifications (bulk insert in chunks of 100)
+  // 4. In-app notifications (only for registered users with real ids)
   if (sendInApp && recipientCount > 0) {
-    const rows = profiles.map((p) => ({
-      user_id: p.id,
-      message: title.trim(),
-      is_read: false,
-    }));
+    const registered = profiles.filter((p) => !p.id.startsWith('custom_'));
+    if (registered.length > 0) {
+      const rows = registered.map((p) => ({
+        user_id: p.id,
+        message: title.trim(),
+        is_read: false,
+      }));
 
-    for (let i = 0; i < rows.length; i += 100) {
-      const chunk = rows.slice(i, i + 100);
-      const { error } = await supabaseAdmin.from('notifications').insert(chunk);
-      if (error) {
-        console.error('[broadcast] notifications insert failed:', error.message);
-      } else {
-        inAppSent += chunk.length;
+      for (let i = 0; i < rows.length; i += 100) {
+        const chunk = rows.slice(i, i + 100);
+        const { error } = await supabaseAdmin.from('notifications').insert(chunk);
+        if (error) {
+          console.error('[broadcast] notifications insert failed:', error.message);
+        } else {
+          inAppSent += chunk.length;
+        }
       }
     }
   }

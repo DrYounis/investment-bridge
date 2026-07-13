@@ -91,3 +91,6 @@ Claude.dmg
 
 # Pitch decks
 *.pptx
+
+# Instructor guides (generated locally, uploaded to Supabase — never in git)
+instructor-guides-local/

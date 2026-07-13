@@ -62,21 +62,14 @@ export default function Home() {
           <AuthAwareLinks />
         </div>
 
-        {/* The Two Pathways */}
-        <div className="grid md:grid-cols-2 gap-8 w-full max-w-6xl mx-auto mb-24">
+        {/* Entrepreneur Pathway */}
+        <div className="w-full max-w-2xl mx-auto mb-24">
           <AuthAwarePathway
             label="لدي فكرة مشروع"
             subLabel="هل تبحث عن تمويل؟ أو تريد التأكد من جدوى فكرتك؟ ابدأ رحلتك هنا لتحويل الفكرة إلى شركة ناشئة"
             icon="💡"
             protectedHref="/marfa"
             variant="light"
-          />
-          <AuthAwarePathway
-            label="أنا مستثمر"
-            subLabel="اكتشف فرصاً استثمارية مدروسة ومفلترة بعناية. لوحة تحكم ذكية لعرض العائد وتحليل المخاطر"
-            icon="📈"
-            protectedHref="/dashboard/investor"
-            variant="dark"
           />
         </div>
 

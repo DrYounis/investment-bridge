@@ -5,6 +5,13 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import Skeleton from '@/components/ui/Skeleton';
 
+interface Recipient {
+  id: string;
+  email: string;
+  full_name: string | null;
+  role?: string;
+}
+
 export default function BroadcastComposer() {
   const router = useRouter();
   const supabase = createClient();
@@ -20,6 +27,17 @@ export default function BroadcastComposer() {
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState('');
+
+  // Individual mode
+  const [mode, setMode] = useState<'audience' | 'individual'>('audience');
+  const [recipients, setRecipients] = useState<Recipient[]>([]);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [loadingRecipients, setLoadingRecipients] = useState(false);
+  const [recipientSearch, setRecipientSearch] = useState('');
+
+  // Custom email input
+  const [customEmailInput, setCustomEmailInput] = useState('');
+  const [customEmails, setCustomEmails] = useState<string[]>([]);
 
   // Super admin gate
   const SUPER_ADMIN = process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL || 'mohamedy2003@gmail.com';
@@ -49,8 +67,53 @@ export default function BroadcastComposer() {
   }, [audience, supabase]);
 
   useEffect(() => {
-    if (authed) fetchCount();
-  }, [authed, fetchCount]);
+    if (authed && mode === 'audience') fetchCount();
+    if (authed && mode === 'individual') fetchRecipients();
+  }, [authed, fetchCount, mode]);
+
+  // Fetch individual recipients list
+  const fetchRecipients = useCallback(async () => {
+    setLoadingRecipients(true);
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id,email,full_name,role');
+      if (!error && data) setRecipients(data as Recipient[]);
+    } catch {
+      setRecipients([]);
+    }
+    setLoadingRecipients(false);
+  }, [supabase]);
+
+  const toggleRecipient = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const selectAll = () => {
+    const all = recipients.map((r) => r.id);
+    setSelectedIds(new Set(all));
+  };
+
+  const deselectAll = () => {
+    setSelectedIds(new Set());
+  };
+
+  const addCustomEmail = () => {
+    const email = customEmailInput.trim().toLowerCase();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
+    if (customEmails.includes(email)) return;
+    setCustomEmails((prev) => [...prev, email]);
+    setCustomEmailInput('');
+  };
+
+  const removeCustomEmail = (email: string) => {
+    setCustomEmails((prev) => prev.filter((e) => e !== email));
+  };
 
   const handleSend = async () => {
     if (!title.trim() || !body.trim()) return;
@@ -59,10 +122,16 @@ export default function BroadcastComposer() {
     setResult(null);
 
     try {
+      const payload: any = { title: title.trim(), body: body.trim(), audience, sendInApp, sendEmail };
+      if (mode === 'individual') {
+        payload.audience = 'individual';
+        payload.recipientIds = Array.from(selectedIds);
+        payload.customEmails = customEmails;
+      }
       const res = await fetch('/api/admin/broadcast', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: title.trim(), body: body.trim(), audience, sendInApp, sendEmail }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -167,48 +236,202 @@ export default function BroadcastComposer() {
           />
         </div>
 
-        {/* Audience selector */}
+        {/* Mode toggle */}
         <div className="mb-5">
           <label className="block text-sm text-[#a0aec0] text-right mb-2" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-            الجمهور المستهدف
+            طريقة الإرسال
           </label>
-          <div className="flex flex-wrap gap-3 justify-end">
-            {([
-              { value: 'all', label: 'الكل' },
-              { value: 'investor', label: 'المستثمرون' },
-              { value: 'entrepreneur', label: 'رواد الأعمال' },
-            ] as const).map((opt) => (
-              <button
-                key={opt.value}
-                onClick={() => setAudience(opt.value)}
-                className="px-5 py-2 rounded-lg text-sm font-bold transition-all duration-150"
-                style={{
-                  fontFamily: 'var(--font-tajawal), sans-serif',
-                  background: audience === opt.value ? '#c9a84c' : 'transparent',
-                  color: audience === opt.value ? '#0a0f1e' : '#a0aec0',
-                  border: audience === opt.value ? '1px solid #c9a84c' : '1px solid #1a2540',
-                }}
-              >
-                {opt.label}
-              </button>
-            ))}
+          <div className="flex gap-3 justify-end mb-4">
+            <button
+              onClick={() => { setMode('audience'); setSelectedIds(new Set()); }}
+              className="px-5 py-2 rounded-lg text-sm font-bold transition-all"
+              style={{
+                background: mode === 'audience' ? '#c9a84c' : 'transparent',
+                color: mode === 'audience' ? '#0a0f1e' : '#a0aec0',
+                border: mode === 'audience' ? '1px solid #c9a84c' : '1px solid #1a2540',
+              }}
+            >
+              عام
+            </button>
+            <button
+              onClick={() => { setMode('individual'); }}
+              className="px-5 py-2 rounded-lg text-sm font-bold transition-all"
+              style={{
+                background: mode === 'individual' ? '#c9a84c' : 'transparent',
+                color: mode === 'individual' ? '#0a0f1e' : '#a0aec0',
+                border: mode === 'individual' ? '1px solid #c9a84c' : '1px solid #1a2540',
+              }}
+            >
+              مخصص
+            </button>
           </div>
-        </div>
 
-        {/* Recipient count */}
-        <div className="mb-6">
-          <div className="rounded-lg px-4 py-3 flex justify-between items-center border border-[#1a2540]" style={{ background: '#0a0f1e' }}>
-            <span className="text-sm text-[#a0aec0]" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-              سيصل الإشعار إلى
-            </span>
-            {loadingCount ? (
-              <Skeleton width="80px" height="28px" />
-            ) : (
-              <span className="text-lg font-bold text-[#c9a84c]" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-                {recipientCount} مستخدم
-              </span>
-            )}
-          </div>
+          {mode === 'audience' ? (
+            <>
+              <label className="block text-sm text-[#a0aec0] text-right mb-2" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+                الجمهور المستهدف
+              </label>
+              <div className="flex flex-wrap gap-3 justify-end">
+                {([
+                  { value: 'all', label: 'الكل' },
+                  { value: 'entrepreneur', label: 'رواد الأعمال' },
+                ] as const).map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => setAudience(opt.value)}
+                    className="px-5 py-2 rounded-lg text-sm font-bold transition-all duration-150"
+                    style={{
+                      fontFamily: 'var(--font-tajawal), sans-serif',
+                      background: audience === opt.value ? '#c9a84c' : 'transparent',
+                      color: audience === opt.value ? '#0a0f1e' : '#a0aec0',
+                      border: audience === opt.value ? '1px solid #c9a84c' : '1px solid #1a2540',
+                    }}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Recipient count */}
+              <div className="mt-4 rounded-lg px-4 py-3 flex justify-between items-center border border-[#1a2540]" style={{ background: '#0a0f1e' }}>
+                <span className="text-sm text-[#a0aec0]" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+                  سيصل الإشعار إلى
+                </span>
+                {loadingCount ? (
+                  <Skeleton width="80px" height="28px" />
+                ) : (
+                  <span className="text-lg font-bold text-[#c9a84c]" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+                    {recipientCount} مستخدم
+                  </span>
+                )}
+              </div>
+            </>
+          ) : (
+            <>
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex gap-2">
+                  <button
+                    onClick={selectAll}
+                    className="text-xs px-3 py-1 rounded border border-[#c9a84c]/30 text-[#c9a84c] hover:bg-[#c9a84c]/10 transition-colors"
+                    style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
+                  >
+                    تحديد الكل
+                  </button>
+                  <button
+                    onClick={deselectAll}
+                    className="text-xs px-3 py-1 rounded border border-[#1a2540] text-[#64748b] hover:bg-[#1a2540] transition-colors"
+                    style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
+                  >
+                    إلغاء الكل
+                  </button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-[#a0aec0]" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+                    سيصل الإشعار إلى
+                  </span>
+                  <span className="text-lg font-bold text-[#c9a84c]" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+                    {selectedIds.size} مستخدم
+                  </span>
+                </div>
+              </div>
+
+              <input
+                type="text"
+                value={recipientSearch}
+                onChange={(e) => setRecipientSearch(e.target.value)}
+                placeholder="بحث بالبريد أو الاسم..."
+                className="w-full rounded-lg px-3 py-2 text-sm text-white text-right outline-none border border-[#1a2540] focus:border-[#c9a84c] mb-2"
+                style={{ background: '#0a0f1e', fontFamily: 'var(--font-tajawal), sans-serif' }}
+              />
+
+              <div className="max-h-64 overflow-y-auto rounded-lg border border-[#1a2540]" style={{ background: '#0a0f1e' }}>
+                {loadingRecipients ? (
+                  <div className="p-4 space-y-2">
+                    {new Array(4).fill(null).map((_, i) => (
+                      <div key={i} className="animate-pulse h-8 rounded" style={{ background: '#1a2540' }} />
+                    ))}
+                  </div>
+                ) : (
+                  recipients
+                    .filter((r) => {
+                      if (!recipientSearch.trim()) return true;
+                      const s = recipientSearch.toLowerCase();
+                      return (r.email || '').toLowerCase().includes(s) || (r.full_name || '').toLowerCase().includes(s);
+                    })
+                    .map((r) => {
+                      const isSelected = selectedIds.has(r.id);
+                      return (
+                        <label
+                          key={r.id}
+                          className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-[#c9a84c]/5 transition-colors border-b border-[#1a2540] last:border-b-0"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleRecipient(r.id)}
+                            className="accent-[#c9a84c] shrink-0"
+                          />
+                          <div className="min-w-0 text-right flex-1">
+                            <p className="text-sm text-white truncate" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+                              {r.full_name || 'مستخدم'}
+                            </p>
+                            <p className="text-xs text-[#64748b] truncate">{r.email}</p>
+                          </div>
+                          {r.role && (
+                            <span className="text-xs px-2 py-0.5 rounded-full bg-[#c9a84c]/10 text-[#c9a84c] shrink-0">
+                              {r.role === 'investor' ? 'مستثمر' : 'رائد أعمال'}
+                            </span>
+                          )}
+                        </label>
+                      );
+                    })
+                )}
+              </div>
+            </div>
+
+            <div className="mt-3">
+              <label className="block text-sm text-[#a0aec0] text-right mb-1" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+                إضافة بريد إلكتروني
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  value={customEmailInput}
+                  onChange={(e) => setCustomEmailInput(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && addCustomEmail()}
+                  placeholder="example@domain.com"
+                  dir="ltr"
+                  className="flex-1 rounded-lg px-3 py-2 text-sm text-white outline-none border border-[#1a2540] focus:border-[#c9a84c]"
+                  style={{ background: '#0a0f1e', fontFamily: 'var(--font-tajawal), sans-serif' }}
+                />
+                <button
+                  onClick={addCustomEmail}
+                  className="shrink-0 px-4 py-2 rounded-lg text-sm font-bold transition-all"
+                  style={{ background: '#c9a84c', color: '#0a0f1e' }}
+                >
+                  ➕ إضافة
+                </button>
+              </div>
+              {customEmails.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {customEmails.map((email) => (
+                    <span
+                      key={email}
+                      className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs border"
+                      style={{ background: '#c9a84c10', borderColor: '#c9a84c40', color: '#c9a84c' }}
+                    >
+                      {email}
+                      <button onClick={() => removeCustomEmail(email)} className="hover:text-red-400 ml-1">
+                        ✕
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </>
+          )}
         </div>
 
         {/* Delivery toggles */}

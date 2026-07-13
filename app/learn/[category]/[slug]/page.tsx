@@ -4,9 +4,7 @@ import { getArticleBySlug, getRelatedArticles } from '@/lib/learn/articles';
 import { CATEGORIES } from '@/lib/learn/taxonomy';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import dynamic from 'next/dynamic';
-
-const MarkdownRenderer = dynamic(() => import('./MarkdownRenderer'), { ssr: false });
+import MarkdownRenderer from './MarkdownRenderer';
 
 export async function generateMetadata({ params }: { params: Promise<{ category: string; slug: string }> }): Promise<Metadata> {
   const { slug } = await params;

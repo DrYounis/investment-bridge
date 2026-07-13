@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -16,6 +17,19 @@ const components = {
 };
 
 export default function MarkdownRenderer({ content }: { content: string }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
+
+  if (!mounted) {
+    return <div className="space-y-3 animate-pulse">
+      <div className="h-4 bg-[#e5e5e5] rounded w-3/4" />
+      <div className="h-4 bg-[#e5e5e5] rounded w-full" />
+      <div className="h-4 bg-[#e5e5e5] rounded w-2/3" />
+      <div className="h-4 bg-[#e5e5e5] rounded w-5/6" />
+    </div>;
+  }
+
   return (
     <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
       {content}

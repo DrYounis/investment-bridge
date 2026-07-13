@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { isSuperAdminEmail } from '@/lib/auth/adminEmails'
 
 const PROTECTED_PATHS = ['/dashboard', '/admin', '/meetings', '/advisor', '/services/pitch-deck']
 
@@ -50,6 +51,17 @@ export async function updateSession(request: NextRequest) {
       url.pathname = '/admin/login'
       url.searchParams.set('redirect', path)
       return NextResponse.redirect(url)
+    }
+
+    // Logged-in but not a super-admin: block /admin (except the login page)
+    if (user && path.startsWith('/admin') && !path.startsWith('/admin/login')) {
+      const envEmails = (process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL || '')
+        .split(',').map(e => e.trim()).filter(Boolean)
+      if (!isSuperAdminEmail(user.email, envEmails)) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/'
+        return NextResponse.redirect(url)
+      }
     }
 
     return supabaseResponse

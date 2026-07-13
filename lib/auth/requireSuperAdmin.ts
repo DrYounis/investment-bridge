@@ -1,6 +1,7 @@
 import 'server-only';
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
+import { isSuperAdminEmail } from '@/lib/auth/adminEmails';
 
 /**
  * Server-side super-admin auth gate.
@@ -27,12 +28,10 @@ export async function requireSuperAdmin(): Promise<
     };
   }
 
-  const superAdminEmails = ['op.younis@gmail.com', 'mohamedy2003@gmail.com', '10.younis@gmail.com'];
-  if (superAdminEmail) {
-    superAdminEmails.push(...superAdminEmail.split(',').map(e => e.trim()));
-  }
+  const envEmails: string[] = [];
+  if (superAdminEmail) envEmails.push(...superAdminEmail.split(',').map(e => e.trim()));
   if (process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL) {
-    superAdminEmails.push(...process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL.split(',').map(e => e.trim()));
+    envEmails.push(...process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL.split(',').map(e => e.trim()));
   }
 
   const supabase = await createClient();
@@ -45,7 +44,7 @@ export async function requireSuperAdmin(): Promise<
     };
   }
 
-  if (!superAdminEmails.includes(user.email!)) {
+  if (!isSuperAdminEmail(user.email, envEmails)) {
     return {
       authorized: false,
       response: NextResponse.json({ error: 'Forbidden' }, { status: 403 }),

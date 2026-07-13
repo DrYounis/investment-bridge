@@ -77,6 +77,8 @@ export function isValidOrigin(request: Request): boolean {
   const origin = request.headers.get('origin');
   const referer = request.headers.get('referer');
   const host = request.headers.get('host') || '';
+  const extraHosts = (process.env.ALLOWED_ORIGIN_HOSTS || '')
+    .split(',').map(h => h.trim()).filter(Boolean);
 
   // Allow localhost in development
   if (host.includes('localhost') || host.includes('127.0.0.1')) {
@@ -90,8 +92,7 @@ export function isValidOrigin(request: Request): boolean {
       if (url.hostname === 'marfa.sa' || url.hostname.endsWith('.marfa.sa')) {
         return true;
       }
-      // Also allow vercel preview deployments
-      if (url.hostname.endsWith('.vercel.app')) {
+      if (extraHosts.includes(url.hostname)) {
         return true;
       }
     } catch {
@@ -106,7 +107,7 @@ export function isValidOrigin(request: Request): boolean {
       if (url.hostname === 'marfa.sa' || url.hostname.endsWith('.marfa.sa')) {
         return true;
       }
-      if (url.hostname.endsWith('.vercel.app')) {
+      if (extraHosts.includes(url.hostname)) {
         return true;
       }
     } catch {

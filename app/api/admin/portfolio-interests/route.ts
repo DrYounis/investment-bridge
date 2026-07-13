@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/service';
 import { createClient } from '@/lib/supabase/server';
-
-const SUPER_ADMIN_EMAILS = ['op.younis@gmail.com', 'mohamedy2003@gmail.com'];
+import { isSuperAdminEmail } from '@/lib/auth/adminEmails';
 
 async function checkAdmin() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  return user?.email && SUPER_ADMIN_EMAILS.includes(user.email);
+  return isSuperAdminEmail(user?.email);
 }
 
 export async function GET() {

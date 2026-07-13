@@ -24,8 +24,8 @@ export default function AdminLayoutShell({ children }: { children: React.ReactNo
   const pathname = usePathname();
 
   useEffect(() => {
-    // Skip auth check on the login page itself
-    if (pathname === '/admin/login') {
+    // Skip auth check on login & instructor pages (instructor is self-protected via API)
+    if (pathname === '/admin/login' || pathname === '/admin/instructor') {
       setLoading(false);
       return;
     }

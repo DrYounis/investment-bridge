@@ -145,6 +145,7 @@ export default function VoyageJourney() {
   const [expandedPort, setExpandedPort] = useState<string | null>(null);
   const [readiness, setReadiness] = useState<{ total_score: number; grade: string } | null>(null);
   const [confetti, setConfetti] = useState(false);
+  const [userName, setUserName] = useState('');
 
   // ── Profile completion checks (verbatim from NextStepsChecklist) ──
   useEffect(() => {
@@ -159,6 +160,7 @@ export default function VoyageJourney() {
         const { data: profile } = await supabase.from('profiles').select('full_name,bio,avatar_url,phone').eq('id', uid).single();
         result.profile = !!(profile?.full_name && profile?.bio && profile?.avatar_url);
         result.phone = !!profile?.phone;
+        setUserName(profile?.full_name || '');
       } catch { result.profile = false; result.phone = false; }
 
       try {
@@ -226,6 +228,11 @@ export default function VoyageJourney() {
           <h2 className="text-xl font-bold text-white" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
             🚢 رحلة الإبحار
           </h2>
+          {userName && (
+            <p className="text-sm text-[#c9a84c] mt-0.5" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+              أهلاً بك في مرساك يا {userName} — حيث تَرسو طموحاتك
+            </p>
+          )}
           <p className="text-sm text-[#a0aec0]" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
             {completed} من {PORTS.length} موانئ مكتملة — من المرسى إلى المنارة
           </p>

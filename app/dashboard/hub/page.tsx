@@ -55,7 +55,7 @@ export default function HubPage() {
       <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center" dir="rtl">
         <div className="text-center">
           <p className="text-[#8a9bb8] mb-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-            يجب تسجيل الدخول للوصول إلى لوحة التحكم
+            يجب تسجيل الدخول للوصول إلى مرساك
           </p>
           <Link href="/login" className="text-[#c9a84c] font-bold hover:underline" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
             تسجيل الدخول

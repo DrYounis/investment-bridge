@@ -63,7 +63,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ catego
         {/* Header */}
         <span className="text-xs font-bold text-[#c9a84c] bg-[#fdf9ef] px-2 py-1 rounded-full mb-4 inline-block">{categoryLabel}</span>
         <h1 className="text-3xl md:text-4xl font-bold text-[#0a0f1e] mb-3" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>{article.title_ar}</h1>
-        <p className="text-[#4a5b78] text-lg mb-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>{article.summary_ar}</p>
+        <p className="text-[#4a5b78] text-lg mb-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+          {article.summary_ar.replace(/[#*>\-|]/g, '').replace(/\s+/g, ' ').trim()}
+        </p>
         <div className="flex items-center gap-4 text-xs text-[#8a94a8] mb-10" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
           <span>{article.reading_minutes} دقائق قراءة</span>
           <span>·</span>

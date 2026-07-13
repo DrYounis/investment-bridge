@@ -2,9 +2,10 @@ import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { getArticleBySlug, getRelatedArticles } from '@/lib/learn/articles';
 import { CATEGORIES } from '@/lib/learn/taxonomy';
-import { renderMarkdown } from '@/lib/learn/markdown';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export async function generateMetadata({ params }: { params: Promise<{ category: string; slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -27,7 +28,21 @@ export default async function ArticlePage({ params }: { params: Promise<{ catego
 
   const related = await getRelatedArticles(supabase, article.category, article.slug);
   const categoryLabel = CATEGORIES.find(c => c.slug === article.category)?.label || article.category;
-  const htmlContent = renderMarkdown(article.content_ar);
+
+  // Fix literal \n strings + strip leading H1 (page already has its own H1)
+  let content = article.content_ar.replace(/\\n/g, '\n');
+  content = content.replace(/^# .+\n+/, '');
+
+  const markdownComponents = {
+    h2: ({ children, ...props }: any) => <h2 className="text-2xl font-bold mt-8 mb-3" style={{ color: '#0a0f1e', fontFamily: 'var(--font-tajawal), sans-serif' }} {...props}>{children}</h2>,
+    h3: ({ children, ...props }: any) => <h3 className="text-xl font-semibold mt-6 mb-2" style={{ color: '#0a0f1e', fontFamily: 'var(--font-tajawal), sans-serif' }} {...props}>{children}</h3>,
+    p: ({ children, ...props }: any) => <p className="leading-loose mb-4 text-start" style={{ color: '#4a5b78', fontFamily: 'var(--font-tajawal), sans-serif' }} {...props}>{children}</p>,
+    strong: ({ children, ...props }: any) => <strong className="font-bold" style={{ color: '#0a0f1e' }} {...props}>{children}</strong>,
+    ul: ({ children, ...props }: any) => <ul className="ms-6 mb-4 space-y-2 list-disc" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }} {...props}>{children}</ul>,
+    ol: ({ children, ...props }: any) => <ol className="ms-6 mb-4 space-y-2 list-decimal" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }} {...props}>{children}</ol>,
+    hr: (props: any) => <hr className="my-8" style={{ borderColor: 'rgba(201,168,76,0.3)' }} {...props} />,
+    a: ({ children, href, ...props }: any) => <a href={href} className="text-[#c9a84c] underline" target="_blank" rel="noopener noreferrer" {...props}>{children}</a>,
+  };
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -62,10 +77,12 @@ export default async function ArticlePage({ params }: { params: Promise<{ catego
         </div>
 
         {/* Article body */}
-        <div className="prose-custom bg-white rounded-2xl p-8 border border-[#c9a84c]/20 shadow-[0_8px_30px_rgba(10,15,30,0.04)]"
-          style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
-          dangerouslySetInnerHTML={{ __html: htmlContent }}
-        />
+        <div className="bg-white rounded-2xl p-8 border border-[#c9a84c]/20 shadow-[0_8px_30px_rgba(10,15,30,0.04)]"
+          style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+          <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+            {content}
+          </ReactMarkdown>
+        </div>
 
         {/* Related */}
         {related.length > 0 && (

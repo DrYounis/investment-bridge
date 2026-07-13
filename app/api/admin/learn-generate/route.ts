@@ -56,7 +56,8 @@ export async function POST(request: NextRequest) {
     const wordCount = content.split(/\s+/).length;
     const readingMinutes = Math.max(3, Math.ceil(wordCount / 200));
 
-    // Save to DB
+    // Fix double-escaped newlines from JSON serialization
+    const cleanContent = content.replace(/\\n/g, '\n');
     const svc = createServiceClient();
     const { error } = await svc
       .from('marfa_knowledge_articles')
@@ -65,7 +66,7 @@ export async function POST(request: NextRequest) {
         title_ar: topic.title_ar,
         category: topic.category,
         summary_ar: summary,
-        content_ar: content,
+        content_ar: cleanContent,
         reading_minutes: readingMinutes,
         status: 'draft',
         updated_at: new Date().toISOString(),

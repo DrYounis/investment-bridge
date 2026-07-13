@@ -66,7 +66,7 @@ export default function AdminSetupPage() {
                 options: {
                     data: {
                         full_name: 'Super Admin',
-                        user_type: 'admin',
+                        // user_type is no longer read from metadata (hardened trigger)
                     }
                 }
             });

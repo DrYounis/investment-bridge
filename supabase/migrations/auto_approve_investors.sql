@@ -18,7 +18,8 @@ BEGIN
   v_name := NEW.raw_user_meta_data ->> 'full_name';
   v_email := NEW.email;
   v_phone := NEW.raw_user_meta_data ->> 'phone';
-  v_role := NEW.raw_user_meta_data ->> 'user_type';
+  -- FIX: Never read user_type from metadata — privilege escalation vector.
+  v_role := 'entrepreneur';
   v_commercial_register := NEW.raw_user_meta_data ->> 'commercial_register';
 
   -- Insert into profiles

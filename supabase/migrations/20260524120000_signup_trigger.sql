@@ -51,7 +51,9 @@ BEGIN
     meta := '{}'::jsonb;
   END IF;
 
-  u_role := COALESCE(meta->>'user_type', meta->>'role', 'investor');
+  -- FIX: Never read user_type/role from user metadata — privilege escalation vector.
+  -- All new users default to 'entrepreneur'. Investor status is admin-assigned.
+  u_role := 'entrepreneur';
   u_full_name := meta->>'full_name';
   u_phone := meta->>'phone';
 

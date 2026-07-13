@@ -27,7 +27,9 @@ function LoginForm() {
         const supabase = createClient()
         supabase.auth.getSession().then(({ data: { session } }) => {
             if (session && step === 'email') {
-                window.location.replace(redirectUrl || '/dashboard')
+                const params = new URLSearchParams(window.location.search)
+                const redirect = params.get('redirect') || '/dashboard/hub'
+                window.location.replace(redirect)
             } else {
                 setCheckingSession(false)
             }

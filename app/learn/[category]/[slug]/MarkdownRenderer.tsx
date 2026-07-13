@@ -16,15 +16,14 @@ const components = {
   blockquote: ({ children, ...props }: React.ComponentPropsWithoutRef<'blockquote'>) => <blockquote className="border-s-4 border-[#c9a84c]/40 bg-[#fdf9ef] p-4 my-4 rounded-e-lg" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }} {...props}>{children}</blockquote>,
 };
 
-export default function MarkdownRenderer({ contentKey }: { contentKey: string }) {
+export default function MarkdownRenderer({ content: contentJson }: { content: string }) {
   const [content, setContent] = useState('');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const el = document.getElementById(contentKey);
-    if (el) setContent(el.textContent || '');
+    try { setContent(JSON.parse(contentJson)); } catch { setContent(contentJson); }
     setMounted(true);
-  }, [contentKey]);
+  }, [contentJson]);
 
   if (!mounted) {
     return <div className="space-y-3 animate-pulse">

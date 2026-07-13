@@ -67,8 +67,9 @@ export default function ProfilePage() {
             setMessage({ type: 'success', text: 'تم حفظ التغييرات بنجاح' });
 
             setTimeout(() => setMessage(null), 3000);
-        } catch {
-            setMessage({ type: 'error', text: 'حدث خطأ أثناء الحفظ. حاول مرة أخرى.' });
+        } catch (err) {
+            console.error('Profile save error:', err);
+            setMessage({ type: 'error', text: `حدث خطأ أثناء الحفظ: ${err instanceof Error ? err.message : 'خطأ غير معروف'}` });
         } finally {
             setSaving(false);
         }
@@ -290,10 +291,17 @@ export default function ProfilePage() {
                             onClick={async () => {
                                 const next = !weeklyDigest;
                                 setWeeklyDigest(next);
-                                await supabase
-                                    .from('profiles')
-                                    .update({ weekly_digest_enabled: next })
-                                    .eq('id', profile.id);
+                                try {
+                                    await supabase
+                                        .from('profiles')
+                                        .update({ weekly_digest_enabled: next })
+                                        .eq('id', profile.id);
+                                } catch (err) {
+                                    console.error('Weekly digest toggle error:', err);
+                                    setWeeklyDigest(!next); // revert
+                                    setMessage({ type: 'error', text: `فشل التحديث: ${err instanceof Error ? err.message : 'خطأ غير معروف'}` });
+                                    setTimeout(() => setMessage(null), 4000);
+                                }
                             }}
                             className={`relative w-12 h-7 rounded-full transition-colors ${weeklyDigest ? 'bg-[#c9a84c]' : 'bg-[#1a2540]'}`}
                         >

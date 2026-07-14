@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo } from 'react';
+import Link from 'next/link';
 import Card from '../ui/Card';
 
 function getWeeklyFridaySchedule() {
@@ -264,6 +265,14 @@ export default function MeetingsSchedule() {
                                             </span>
                                         )}
                                     </td>
+                                    <td className="p-4">
+                                        <Link
+                                            href={`/meetings/majlis/${idx + 1}`}
+                                            className="inline-flex items-center gap-1 px-3 py-2 bg-[#c9a84c]/10 border border-[#c9a84c]/30 rounded-lg text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/20 transition-colors"
+                                        >
+                                            🏛️ المجلس
+                                        </Link>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -305,6 +314,12 @@ export default function MeetingsSchedule() {
                                     >
                                         📄 عربي
                                     </a>
+                                    <Link
+                                        href={`/meetings/majlis/${idx + 1}`}
+                                        className="flex-1 inline-flex items-center justify-center gap-1 px-3 py-3 bg-[#c9a84c]/10 border border-[#c9a84c]/30 rounded-xl text-[#c9a84c] text-sm font-bold active:bg-[#c9a84c]/20 transition-colors"
+                                    >
+                                        🏛️ المجلس
+                                    </Link>
                                 </div>
                             ) : (
                                 <div className="flex pt-1">

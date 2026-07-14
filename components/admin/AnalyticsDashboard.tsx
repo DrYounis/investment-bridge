@@ -44,6 +44,12 @@ export default function AnalyticsDashboard() {
   const isLoading = !raw || raw._range !== range;
   const data = raw;
 
+  if (error) {
+    return (
+      <div dir="rtl" className="text-center py-16 text-red-400">{error}</div>
+    );
+  }
+
   if (isLoading) {
     return (
       <div className="space-y-4 animate-pulse" dir="rtl">
@@ -56,13 +62,7 @@ export default function AnalyticsDashboard() {
     );
   }
 
-  if (error || !data) {
-    return (
-      <div dir="rtl" className="text-center py-16 text-red-400">
-        {error || 'فشل تحميل البيانات'}
-      </div>
-    );
-  }
+  if (!data) return null;
 
   const viewChange = pctChange(data.totalViews, data.prevTotalViews);
   const visitorChange = pctChange(data.uniqueVisitors, data.prevUniqueVisitors);

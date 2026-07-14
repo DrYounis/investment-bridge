@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { isSuperAdminEmail } from '@/lib/auth/adminEmails';
 import { useRouter } from 'next/navigation';
 
 // Types
@@ -31,30 +32,17 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
                     return;
                 }
 
-                const superAdminEmail = process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL || 'mohamedy2003@gmail.com';
-                if (user.email !== superAdminEmail) {
+                const envEmails = (process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL || '')
+                    .split(',')
+                    .map((e) => e.trim())
+                    .filter(Boolean);
+                if (!isSuperAdminEmail(user.email, envEmails)) {
                     router.push('/admin/login');
                     return;
                 }
 
-                const { data: profile, error: profileError } = await supabase
-                    .from('profiles')
-                    .select('user_type')
-                    .eq('id', user.id)
-                    .maybeSingle();
-
-                if (profileError) {
-                    console.error('Error fetching admin profile:', profileError);
-                    router.push('/admin/login');
-                    return;
-                }
-
-                if (!profile || (profile.user_type !== 'admin' && profile.user_type !== 'super_admin')) {
-                    router.push('/admin/login');
-                } else {
-                    setIsCheckingAuth(false); // Only allow rendering if admin
-                    fetchInvestors();
-                }
+                setIsCheckingAuth(false);
+                fetchInvestors();
             } catch (err) {
                 console.error('Admin auth check failed:', err);
                 router.push('/admin/login');

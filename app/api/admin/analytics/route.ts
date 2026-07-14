@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
     }));
 
     // Aggregation helpers
-    const top = <T>(map: Map<string, number>, limit = 10) =>
+    const top = (map: Map<string, number>, limit = 10) =>
       [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, limit).map(([k, v]) => ({ key: k, views: v }));
 
     const pageMap = new Map<string, number>();

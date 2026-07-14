@@ -13,6 +13,7 @@ interface AnalyticsData {
   topReferrers: { referrer: string; views: number }[];
   countries: { country: string; views: number }[];
   devices: { device: string; views: number }[];
+  _range?: string;
 }
 
 function pctChange(current: number, previous: number): string {
@@ -22,24 +23,26 @@ function pctChange(current: number, previous: number): string {
 
 export default function AnalyticsDashboard() {
   const [range, setRange] = useState<'7d' | '30d'>('7d');
-  const [data, setData] = useState<AnalyticsData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [raw, setRaw] = useState<AnalyticsData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
-    fetch(`/api/admin/analytics?range=${range}`)
+    const controller = new AbortController();
+    fetch(`/api/admin/analytics?range=${range}`, { signal: controller.signal })
       .then((r) => r.json())
       .then((d) => {
-        if (d.error) { setError(d.error); setLoading(false); return; }
-        setData(d);
-        setLoading(false);
+        if (d.error) { setError(d.error); return; }
+        setError(null);
+        setRaw({ ...d, _range: range });
       })
-      .catch((err) => { setError(err.message); setLoading(false); });
+      .catch((err) => {
+        if (err.name !== 'AbortError') setError(err.message);
+      });
+    return () => controller.abort();
   }, [range]);
 
-  if (loading) {
+  const isLoading = !raw || raw._range !== range;
+  const data = raw;
     return (
       <div className="space-y-4 animate-pulse" dir="rtl">
         <div className="h-8 bg-[#1a2540] rounded w-48" />

@@ -228,6 +228,9 @@ const AdminDashboardClient = ({ children }: { children: React.ReactNode }) => {
                     <div onClick={() => router.push('/admin/instructor')} className="text-gray-400 hover:text-white cursor-pointer p-2 transition-colors flex items-center gap-2">
                         <span>📖</span> أدلّة المدرّب
                     </div>
+                    <div onClick={() => router.push('/admin/analytics')} className="text-gray-400 hover:text-white cursor-pointer p-2 transition-colors flex items-center gap-2">
+                        <span>📊</span> التحليلات
+                    </div>
                     <div className="mt-8 pt-8 border-t border-slate-700">
                         <div onClick={() => router.push('/')} className="text-gray-500 hover:text-white cursor-pointer text-sm">
                             ← العودة للرئيسية

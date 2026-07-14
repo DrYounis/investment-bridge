@@ -4,6 +4,7 @@ import { ThemeProvider } from "next-themes";
 import { ToastProvider } from "@/components/ui/Toast";
 import { AuthProvider } from "./context/AuthContext";
 import Header from "./components/layout/Header";
+import PageTracker from "@/app/components/PageTracker";
 import Footer from "./components/layout/Footer";
 import "./globals.css";
 import "../styles/marfa-interactions.css";
@@ -97,6 +98,7 @@ export default async function RootLayout({
             <AuthProvider>
               <Header />
               {children}
+              <PageTracker />
               <Footer />
             </AuthProvider>
           </ToastProvider>

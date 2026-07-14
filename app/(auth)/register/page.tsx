@@ -176,6 +176,14 @@ function RegisterForm() {
                                     <span>أوافق على <Link href="/privacy" className="text-info hover:underline">سياسة الخصوصية</Link></span>
                                 </label>
 
+                                <label className="flex items-start gap-2 text-sm cursor-pointer">
+                                    <input type="checkbox" required className="mt-1 accent-gold" />
+                                    <span>
+                                        أوافق على <Link href="/nda" className="text-info hover:underline">سياسة عدم الإفصاح</Link> (اتفاقية متبادلة موقّعة من الطرفين)
+                                        <span className="block text-xs text-foreground/50 mt-1">ملاحظة: ما يُناقش في اللقاءات والجلسات العامة غير مشمول بسياسة عدم الإفصاح</span>
+                                    </span>
+                                </label>
+
                                 {error && (
                                     <div className="bg-error/10 border border-error/30 text-error p-3 rounded-lg text-sm flex items-center gap-2">
                                         <span>⚠️</span> {error}

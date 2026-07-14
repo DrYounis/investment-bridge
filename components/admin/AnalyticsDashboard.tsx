@@ -43,6 +43,8 @@ export default function AnalyticsDashboard() {
 
   const isLoading = !raw || raw._range !== range;
   const data = raw;
+
+  if (isLoading) {
     return (
       <div className="space-y-4 animate-pulse" dir="rtl">
         <div className="h-8 bg-[#1a2540] rounded w-48" />

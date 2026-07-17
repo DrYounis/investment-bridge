@@ -210,6 +210,12 @@ export default function MajlisQuiz({ meetingNumber, userId, displayName, isAdvis
       setError('تعذّر إرسال الإجابة — حاول مرة أخرى');
     } else if (data) {
       setMyAnswer(data as QuizAnswer);
+      // Fire-and-forget: notify advisor + super admins
+      fetch('/api/majlis-quiz/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ meetingNumber, displayName, answer: trimmed }),
+      }).catch(() => {});
     }
     setSaving(false);
   };

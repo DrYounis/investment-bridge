@@ -28,6 +28,10 @@
     {
       "path": "/api/cron/weekly-analytics",
       "schedule": "30 6 * * 0"
+    },
+    {
+      "path": "/api/cron/majlis-quiz-reminder",
+      "schedule": "0 16 * * 6"
     }
   ]
 }

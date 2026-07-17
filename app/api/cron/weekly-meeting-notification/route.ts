@@ -136,6 +136,11 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  // Guard: only run on Saturday (Vercel can trigger on deploy)
+  if (new Date().getUTCDay() !== 6) {
+    return NextResponse.json({ skipped: true, reason: 'Not Saturday' });
+  }
+
   try {
     const supabase = createServiceClient();
     const meeting = getUpcomingFriday();

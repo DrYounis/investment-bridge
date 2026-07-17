@@ -20,7 +20,7 @@ export default function AdvisorProfile({ variant }: AdvisorProfileProps) {
           style={{ width: 40, height: 40 }}
         />
         <p className="text-sm text-[#4a5b78] leading-relaxed">
-          يشرف على هذا المجلس ويقيّم الإجابات: <span className="font-bold text-[#0a0f1e]">د. ريمي أرباوي</span> — المستشار الأول للأعمال
+          يشرف على هذا المجلس ويقيّم الإجابات: <span className="font-bold text-[#0a0f1e]">د. ريمي أرباوي</span> — رئيس المجلس الاستشاري
         </p>
       </div>
     );
@@ -33,7 +33,7 @@ export default function AdvisorProfile({ variant }: AdvisorProfileProps) {
         <span className="inline-block px-4 py-1 rounded-full bg-[#faf8f2] border border-[#c9a84c]/30 text-[#c9a84c] text-xs font-bold mb-2">
           🏛️ المجلس الاستشاري
         </span>
-        <p className="text-sm text-[#8a94a8]">إشراف وتقييم مباشر من مستشارنا الأول</p>
+        <p className="text-sm text-[#8a94a8]">إشراف وتقييم مباشر من رئيس المجلس الاستشاري</p>
       </div>
 
       <div className="bg-white rounded-2xl p-6 border border-[#c9a84c]/20 shadow-[0_8px_30px_rgba(10,15,30,0.06)]">
@@ -51,7 +51,7 @@ export default function AdvisorProfile({ variant }: AdvisorProfileProps) {
             <div className="flex items-center gap-3 mb-3 flex-wrap">
               <h3 className="text-xl font-black text-[#0a0f1e]">د. ريمي أرباوي</h3>
               <span className="inline-block px-3 py-1 rounded-full bg-[#fdf9ef] border border-[#c9a84c]/30 text-[#c9a84c] text-xs font-bold">
-                المستشار الأول للأعمال
+                رئيس المجلس الاستشاري
               </span>
             </div>
 

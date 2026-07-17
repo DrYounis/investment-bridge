@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'تواصل معنا | مرفأ',
-  description: 'تواصل مع فريق مرفأ — البريد الإلكتروني للمنصة، الرئيس التنفيذي، والمستشار الأول.',
+  description: 'تواصل مع فريق مرفأ — البريد الإلكتروني للمنصة، الرئيس التنفيذي، المدير التقني، ورئيس المجلس الاستشاري.',
 };
 
 export default function ContactPage() {
@@ -83,7 +83,7 @@ export default function ContactPage() {
           <div className="bg-white rounded-2xl p-6 border border-[#c9a84c]/20 shadow-[0_8px_30px_rgba(10,15,30,0.04)] text-center">
             <div className="text-4xl mb-4">🏛️</div>
             <h3 className="font-bold text-[#0a0f1e] text-lg mb-2" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-              المستشار الأول
+              رئيس المجلس الاستشاري
             </h3>
             <p className="text-sm text-[#4a5b78] mb-1" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
               د. ريمي أرباوي

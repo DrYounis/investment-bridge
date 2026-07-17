@@ -6,6 +6,7 @@ export const SUPER_ADMIN_EMAILS = [
   'op.younis@gmail.com',
   'mohamedy2003@gmail.com',
   '10.younis@gmail.com',
+  'remy.arbaoui@gmail.com',
 ] as const;
 
 export function isSuperAdminEmail(

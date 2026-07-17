@@ -60,6 +60,14 @@ export async function GET(request: Request) {
       return true;
     });
 
+    if (unique.length === 0) {
+      console.error('JOBS_REFRESH_EMPTY: JSearch returned no jobs — keeping last good cache');
+      return NextResponse.json(
+        { error: 'empty_result', refreshed: false },
+        { status: 502 }
+      );
+    }
+
     // Translate titles (one Claude call, batched)
     unique = await translateTitles(unique);
 

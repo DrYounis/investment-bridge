@@ -248,26 +248,31 @@ export async function consumeQuota(
 }
 
 /**
- * Read the most recent cached jobs from Supabase.
- * Returns { jobs: [], fetchedAt: null } when the cache is empty.
+ * Read the most recent non-empty cached jobs from Supabase.
+ * Scans up to 5 recent rows to survive a single bad cron run inserting an
+ * empty payload. Returns { jobs: [], fetchedAt: null } when all rows are
+ * empty or the cache is missing.
  */
 export async function getCachedJobs(supabase: SupabaseClient): Promise<{
   jobs: Job[];
   fetchedAt: string | null;
 }> {
-  const { data } = await supabase
+  const { data: rows } = await supabase
     .from('marfa_jobs_cache')
     .select('payload, fetched_at')
     .order('fetched_at', { ascending: false })
-    .limit(1)
-    .maybeSingle();
+    .limit(5);
 
-  if (!data) return { jobs: [], fetchedAt: null };
+  if (!rows || rows.length === 0) return { jobs: [], fetchedAt: null };
 
-  return {
-    jobs: (data.payload as Job[]) || [],
-    fetchedAt: data.fetched_at,
-  };
+  for (const row of rows) {
+    const jobs = (row.payload as Job[]) || [];
+    if (jobs.length > 0) {
+      return { jobs, fetchedAt: row.fetched_at };
+    }
+  }
+
+  return { jobs: [], fetchedAt: null };
 }
 
 /**

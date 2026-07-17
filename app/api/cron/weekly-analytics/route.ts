@@ -22,6 +22,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  // Guard: only run on Sunday (Vercel can trigger on deploy)
+  if (new Date().getUTCDay() !== 0) {
+    return NextResponse.json({ skipped: true, reason: 'Not Sunday' });
+  }
+
   const errors: string[] = [];
 
   try {

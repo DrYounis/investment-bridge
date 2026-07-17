@@ -69,6 +69,11 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  // Guard: only run on Sunday (Vercel can trigger on deploy)
+  if (new Date().getUTCDay() !== 0) {
+    return NextResponse.json({ skipped: true, reason: 'Not Sunday' });
+  }
+
   try {
     const supabase = createServiceClient()
     const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString()

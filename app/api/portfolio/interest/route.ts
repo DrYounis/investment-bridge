@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createServiceClient } from '@/lib/supabase/service';
 import { createClient } from '@/lib/supabase/server';
+import { escapeHtml } from '@/lib/security';
 
 const SUPER_ADMIN_EMAILS = [
   'op.younis@gmail.com',
@@ -80,9 +81,9 @@ export async function POST(request: NextRequest) {
         subject: `طلب اهتمام جديد — ${project.name_ar}`,
         html: `<div dir="rtl" style="font-family:Tajawal,sans-serif">
           <h2 style="color:#c9a84c">طلب اهتمام جديد</h2>
-          <p><strong>المشروع:</strong> ${project.name_ar}</p>
-          <p><strong>المستثمر:</strong> ${user.email}</p>
-          <p><strong>الرسالة:</strong> ${safeMessage || '—'}</p>
+          <p><strong>المشروع:</strong> ${escapeHtml(project.name_ar)}</p>
+          <p><strong>المستثمر:</strong> ${escapeHtml(user.email || '')}</p>
+          <p><strong>الرسالة:</strong> ${escapeHtml(safeMessage || '—')}</p>
           <p><strong>التوقيت:</strong> ${new Date().toLocaleString('ar-SA')}</p>
           <hr style="border-color:#c9a84c20;margin:16px 0">
           <p><strong>رابط التفاصيل الجاهز للمشاركة مع المستثمر:</strong></p>

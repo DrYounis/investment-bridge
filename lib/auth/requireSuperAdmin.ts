@@ -18,7 +18,7 @@ export async function requireSuperAdmin(): Promise<
   | { authorized: false; response: NextResponse }
 > {
   const superAdminEmail = process.env.SUPER_ADMIN_EMAIL;
-  if (!superAdminEmail && !process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL) {
+  if (!superAdminEmail) {
     return {
       authorized: false,
       response: NextResponse.json(
@@ -28,11 +28,7 @@ export async function requireSuperAdmin(): Promise<
     };
   }
 
-  const envEmails: string[] = [];
-  if (superAdminEmail) envEmails.push(...superAdminEmail.split(',').map(e => e.trim()));
-  if (process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL) {
-    envEmails.push(...process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL.split(',').map(e => e.trim()));
-  }
+  const envEmails: string[] = superAdminEmail.split(',').map(e => e.trim());
 
   const supabase = await createClient();
   const { data: { user }, error: userError } = await supabase.auth.getUser();

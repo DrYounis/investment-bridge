@@ -5,8 +5,8 @@ import { createServiceClient } from '@/lib/supabase/service';
 
 export async function GET() {
   const supabase = await createClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  const isAuthorized = isSuperAdminEmail(session?.user?.email);
+  const { data: { user } } = await supabase.auth.getUser();
+  const isAuthorized = isSuperAdminEmail(user?.email);
   if (!isAuthorized) {
     return NextResponse.json({ error: 'غير مصرح' }, { status: 403 });
   }

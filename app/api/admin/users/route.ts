@@ -16,7 +16,7 @@ export async function GET() {
     }
 
     // 2. Verify super admin email
-    const envEmails = (process.env.SUPER_ADMIN_EMAIL || process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL || '').split(',').map(e => e.trim()).filter(Boolean);
+    const envEmails = (process.env.SUPER_ADMIN_EMAIL || '').split(',').map(e => e.trim()).filter(Boolean);
     if (!isSuperAdminEmail(user.email, envEmails)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }

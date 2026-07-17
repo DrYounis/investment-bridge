@@ -38,7 +38,11 @@ export async function POST(request: NextRequest) {
       )
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      if (error.code === '23505') {
+        return NextResponse.json({ success: true })
+      }
+      console.error('SUBSCRIBE_ERROR', error.message)
+      return NextResponse.json({ error: 'حدث خطأ، حاول لاحقاً' }, { status: 500 })
     }
 
     return NextResponse.json({ success: true })

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getArticleBySlug } from '@/lib/supabase/financial-news';
+import { escapeHtml } from '@/lib/security';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,7 +11,10 @@ interface Props {
 }
 
 function renderContent(summary: string, fullContent?: string | null): string {
-  const body = fullContent || summary;
+  let body = fullContent || summary;
+
+  // Escape HTML entities first — before any markdown transforms
+  body = escapeHtml(body);
 
   return (
     body
@@ -22,9 +26,9 @@ function renderContent(summary: string, fullContent?: string | null): string {
       .replace(/\*\*(.+?)\*\*/g, '<strong class="font-bold text-slate-200">$1</strong>')
       // Italic
       .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      // Links
+      // Links — only emit <a> for https? URLs
       .replace(
-        /\[([^\]]+)\]\(([^)]+)\)/g,
+        /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g,
         '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-gold hover:underline">$1</a>'
       )
       // Horizontal rules

@@ -34,10 +34,10 @@ function buildEmailHTML(name: string, title: string, body: string): string {
 export async function POST(request: Request) {
   // 1. Verify super admin via session cookie
   const supabaseServer = await createServerClient();
-  const { data: { session } } = await supabaseServer.auth.getSession();
+  const { data: { user } } = await supabaseServer.auth.getUser();
 
   const envEmails = (process.env.SUPER_ADMIN_EMAIL || '').split(',').map(e => e.trim()).filter(Boolean);
-  if (!session || !isSuperAdminEmail(session.user.email, envEmails)) {
+  if (!user || !isSuperAdminEmail(user.email, envEmails)) {
     return NextResponse.json({ error: 'غير مصرح' }, { status: 403 });
   }
 
@@ -154,7 +154,7 @@ export async function POST(request: Request) {
 
   // 6. Save broadcast record
   await supabaseAdmin.from('broadcasts').insert({
-    sent_by: session.user.id,
+    sent_by: user.id,
     title: title.trim(),
     body: body.trim(),
     audience,

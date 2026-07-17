@@ -15,14 +15,10 @@ export async function POST(req: Request): Promise<Response> {
 
 async function handleCronTrigger(req: Request): Promise<Response> {
   try {
-    // Auth: allow Vercel cron (x-vercel-cron header) OR valid token
-    const isVercelCron = req.headers.get('x-vercel-cron') !== null;
-    const url = new URL(req.url);
-    const token = url.searchParams.get('token');
+    // Auth: Bearer token only
     const authHeader = req.headers.get('authorization');
     const cronSecret = process.env.CRON_SECRET;
 
-    // If no CRON_SECRET is configured, reject all requests
     if (!cronSecret) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
@@ -30,12 +26,8 @@ async function handleCronTrigger(req: Request): Promise<Response> {
       });
     }
 
-    // Allow Vercel cron OR valid token (query or Bearer header)
-    const isTokenValid =
-      token === cronSecret ||
-      authHeader === `Bearer ${cronSecret}`;
-
-    if (!isVercelCron && !isTokenValid) {
+    const isAuthorized = authHeader === `Bearer ${cronSecret}`;
+    if (!isAuthorized) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' },

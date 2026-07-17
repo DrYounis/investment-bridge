@@ -120,12 +120,12 @@ export async function POST(request: Request) {
   try {
     // Auth check — session or API key
     const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { user } } = await supabase.auth.getUser();
     const apiKey = request.headers.get('x-api-key');
 
     const isAuthorized =
-      (session?.user?.email && isSuperAdminEmail(session.user.email)) ||
-      (apiKey && apiKey === process.env.RESEND_API_KEY);
+      (user?.email && isSuperAdminEmail(user.email)) ||
+      Boolean(apiKey && process.env.INTERNAL_API_SECRET && apiKey === process.env.INTERNAL_API_SECRET);
 
     if (!isAuthorized) {
       return NextResponse.json({ error: 'غير مصرح' }, { status: 403 });

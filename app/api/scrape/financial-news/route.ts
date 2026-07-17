@@ -35,7 +35,8 @@ export async function GET(): Promise<NextResponse> {
       total_articles: total,
       latest_files: filesWithMeta,
     });
-  } catch {
+  } catch (err) {
+    console.error('SCRAPE_STATUS_FAIL', err instanceof Error ? err.message : err);
     return NextResponse.json(
       { error: 'Failed to fetch status' },
       { status: 500 }
@@ -72,7 +73,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       if (parsed.success) {
         maxArticles = parsed.data.maxArticles;
       }
-    } catch {
+    } catch (err) {
+      console.error('SCRAPE_BODY_PARSE', err instanceof Error ? err.message : err);
       // No body or invalid JSON — use default
     }
 
@@ -117,7 +119,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           slug: saved.slug,
           title: summary.seo_title,
         });
-      } catch {
+      } catch (err) {
+        console.error('SCRAPE_ARTICLE_FAIL', err instanceof Error ? err.message : err);
         failedCount++;
         results.push({
           success: false,
@@ -135,7 +138,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       failed: failedCount,
       results,
     });
-  } catch {
+  } catch (err) {
+    console.error('SCRAPE_TOP_FAIL', err instanceof Error ? err.message : err);
     return NextResponse.json(
       { success: false, error: 'Scraping job failed' },
       { status: 500 }

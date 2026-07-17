@@ -84,7 +84,7 @@ export default async function JobDetailPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(buildJsonLd(job)),
+          __html: JSON.stringify(buildJsonLd(job)).replace(/</g, '\\u003c'),
         }}
       />
 

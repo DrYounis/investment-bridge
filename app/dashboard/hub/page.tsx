@@ -8,6 +8,7 @@ import NotificationBell from '@/components/dashboard/NotificationBell';
 import ThemeToggle from '@/components/dashboard/ThemeToggle';
 import ParticleBackground from '@/components/dashboard/ParticleBackground';
 import QuickActionFAB from '@/components/dashboard/QuickActionFAB';
+import MonthlyGrade from '@/components/dashboard/MonthlyGrade';
 import { NewsProvider } from '@/app/context/NewsContext';
 import { createClient } from '@/lib/supabase/client';
 
@@ -83,6 +84,11 @@ export default function HubPage() {
             {/* Row 2: Lighthouse (centered, 2/3 width on desktop) */}
             <div className="max-w-2xl mx-auto">
               <Lighthouse />
+            </div>
+
+            {/* Monthly Grade */}
+            <div className="max-w-2xl mx-auto">
+              <MonthlyGrade userId={currentUser.id} />
             </div>
           </div>
         </div>

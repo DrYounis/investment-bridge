@@ -94,3 +94,4 @@ Claude.dmg
 
 # Instructor guides (generated locally, uploaded to Supabase — never in git)
 instructor-guides-local/
+.env.prod

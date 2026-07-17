@@ -40,6 +40,7 @@ export default function MajlisRoom({ meetingNumber, userId, displayName }: Majli
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [likes, setLikes] = useState<Record<string, { count: number; liked: boolean }>>({});
   const bottomRef = useRef<HTMLDivElement>(null);
   const [autoScroll, setAutoScroll] = useState(true);
 
@@ -56,6 +57,25 @@ export default function MajlisRoom({ meetingNumber, userId, displayName }: Majli
         setLoading(false);
       });
   }, [meetingNumber, supabase]);
+
+  // Load likes
+  useEffect(() => {
+    supabase
+      .from('majlis_message_likes')
+      .select('message_id, user_id')
+      .eq('meeting_number', meetingNumber)
+      .then(({ data }) => {
+        if (!data) return;
+        const map: Record<string, { count: number; liked: boolean }> = {};
+        for (const row of data) {
+          const mid = row.message_id;
+          if (!map[mid]) map[mid] = { count: 0, liked: false };
+          map[mid].count++;
+          if (row.user_id === userId) map[mid].liked = true;
+        }
+        setLikes(map);
+      });
+  }, [meetingNumber, userId, supabase]);
 
   // Realtime
   useEffect(() => {
@@ -76,6 +96,50 @@ export default function MajlisRoom({ meetingNumber, userId, displayName }: Majli
 
     return () => { supabase.removeChannel(channel).catch(() => {}); };
   }, [meetingNumber, supabase]);
+
+  // Realtime likes
+  useEffect(() => {
+    const channel = supabase
+      .channel(`majlis-likes-${meetingNumber}`)
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'majlis_message_likes', filter: `meeting_number=eq.${meetingNumber}` },
+        (payload) => {
+          const row = payload.new as { message_id: string; user_id: string };
+          setLikes((prev) => {
+            const cur = prev[row.message_id] || { count: 0, liked: false };
+            return {
+              ...prev,
+              [row.message_id]: {
+                count: cur.count + 1,
+                liked: cur.liked || row.user_id === userId,
+              },
+            };
+          });
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'DELETE', schema: 'public', table: 'majlis_message_likes', filter: `meeting_number=eq.${meetingNumber}` },
+        (payload) => {
+          const row = payload.old as { message_id: string; user_id: string };
+          setLikes((prev) => {
+            const cur = prev[row.message_id];
+            if (!cur) return prev;
+            return {
+              ...prev,
+              [row.message_id]: {
+                count: Math.max(0, cur.count - 1),
+                liked: row.user_id === userId ? false : cur.liked,
+              },
+            };
+          });
+        }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel).catch(() => {}); };
+  }, [meetingNumber, userId, supabase]);
 
   // Auto-scroll
   useEffect(() => {
@@ -127,6 +191,37 @@ export default function MajlisRoom({ meetingNumber, userId, displayName }: Majli
     }
   };
 
+  const toggleLike = async (messageId: string) => {
+    const cur = likes[messageId] || { count: 0, liked: false };
+
+    // Optimistic update
+    setLikes((prev) => ({
+      ...prev,
+      [messageId]: {
+        count: cur.liked ? Math.max(0, cur.count - 1) : cur.count + 1,
+        liked: !cur.liked,
+      },
+    }));
+
+    if (cur.liked) {
+      const { error: delErr } = await supabase
+        .from('majlis_message_likes')
+        .delete()
+        .eq('message_id', messageId)
+        .eq('user_id', userId);
+      if (delErr) {
+        setLikes((prev) => ({ ...prev, [messageId]: cur }));
+      }
+    } else {
+      const { error: insErr } = await supabase
+        .from('majlis_message_likes')
+        .insert({ message_id: messageId, user_id: userId, meeting_number: meetingNumber });
+      if (insErr) {
+        setLikes((prev) => ({ ...prev, [messageId]: cur }));
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className="space-y-3 animate-pulse" dir="rtl">
@@ -164,18 +259,34 @@ export default function MajlisRoom({ meetingNumber, userId, displayName }: Majli
                   <span className="text-xs text-[#8a94a8]">{relativeTime(m.created_at)}</span>
                 </div>
                 <p className="text-sm text-[#4a5b78] whitespace-pre-wrap leading-relaxed">{m.body}</p>
-                {isOwn && m.id.length > 5 && (
-                  <div className="mt-2 text-start">
-                    {deleteConfirm === m.id ? (
-                      <span className="text-xs">
-                        <button onClick={() => del(m.id)} className="text-red-500 font-bold mx-1">تأكيد الحذف</button>
-                        <button onClick={() => setDeleteConfirm(null)} className="text-[#8a94a8] mx-1">إلغاء</button>
-                      </span>
-                    ) : (
-                      <button onClick={() => setDeleteConfirm(m.id)} className="text-xs text-[#8a94a8] hover:text-red-400 transition">🗑️</button>
-                    )}
-                  </div>
-                )}
+                <div className="mt-2 flex items-center justify-between gap-2">
+                  {/* Like button */}
+                  <button
+                    onClick={() => toggleLike(m.id)}
+                    className={`inline-flex items-center gap-1 text-xs rounded-full px-2 py-1 transition ${
+                      (likes[m.id]?.liked)
+                        ? 'bg-red-50 text-red-500 border border-red-200'
+                        : 'text-[#8a94a8] hover:text-red-400 hover:bg-red-50'
+                    }`}
+                  >
+                    {(likes[m.id]?.liked) ? '❤️' : '🤍'}
+                    {likes[m.id]?.count ? <span>{likes[m.id].count}</span> : null}
+                  </button>
+
+                  {/* Delete (own messages only) */}
+                  {isOwn && m.id.length > 5 && (
+                    <div className="text-start">
+                      {deleteConfirm === m.id ? (
+                        <span className="text-xs">
+                          <button onClick={() => del(m.id)} className="text-red-500 font-bold mx-1">تأكيد الحذف</button>
+                          <button onClick={() => setDeleteConfirm(null)} className="text-[#8a94a8] mx-1">إلغاء</button>
+                        </span>
+                      ) : (
+                        <button onClick={() => setDeleteConfirm(m.id)} className="text-xs text-[#8a94a8] hover:text-red-400 transition">🗑️</button>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             );
           })

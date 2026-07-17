@@ -21,7 +21,7 @@ export default function ContactPage() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Platform */}
           <div className="bg-white rounded-2xl p-6 border border-[#c9a84c]/20 shadow-[0_8px_30px_rgba(10,15,30,0.04)] text-center">
             <div className="text-4xl mb-4">⚓</div>
@@ -56,6 +56,26 @@ export default function ContactPage() {
               className="inline-flex items-center gap-2 px-4 py-2 bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-full text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition"
             >
               ✉️ ceo@marfa.sa
+            </a>
+          </div>
+
+          {/* CTO */}
+          <div className="bg-white rounded-2xl p-6 border border-[#c9a84c]/20 shadow-[0_8px_30px_rgba(10,15,30,0.04)] text-center">
+            <div className="text-4xl mb-4">⚙️</div>
+            <h3 className="font-bold text-[#0a0f1e] text-lg mb-2" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+              المدير التقني
+            </h3>
+            <p className="text-sm text-[#4a5b78] mb-1" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+              م. أحمد يونس
+            </p>
+            <p className="text-xs text-[#8a94a8] mb-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+              Eng Ahmad Younis
+            </p>
+            <a
+              href="mailto:cto@marfa.sa"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-full text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition"
+            >
+              ✉️ cto@marfa.sa
             </a>
           </div>
 

@@ -1,5 +1,6 @@
 import MeetingsSchedule from '../components/marfa/MeetingsSchedule';
 import InvestorMeetingForm from '../components/marfa/InvestorMeetingForm';
+import AdvisorProfile from '../components/marfa/AdvisorProfile';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,6 +30,8 @@ export default async function MeetingsPage() {
                 <MeetingsSchedule />
 
                 <InvestorMeetingForm />
+
+                <AdvisorProfile variant="full" />
 
                 {/* Portfolio Opportunities Teaser */}
                 <section className="mt-24 mb-8">

@@ -4,6 +4,7 @@ import { isSuperAdminEmail } from '@/lib/auth/adminEmails';
 import { SCHEDULE_DATA, formatDate, getFridayDates } from '@/app/components/marfa/scheduleData';
 import MajlisRoom from '@/app/components/marfa/MajlisRoom';
 import MajlisQuiz from '@/app/components/marfa/MajlisQuiz';
+import AdvisorProfile from '@/app/components/marfa/AdvisorProfile';
 
 export default async function MajlisPage({ params }: { params: Promise<{ meetingNumber: string }> }) {
   const { meetingNumber: nStr } = await params;
@@ -38,6 +39,10 @@ export default async function MajlisPage({ params }: { params: Promise<{ meeting
           <p className="text-sm text-[#8a94a8] mt-1" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
             {formatDate(fridayDate)}
           </p>
+        </div>
+
+        <div className="mb-6">
+          <AdvisorProfile variant="compact" />
         </div>
 
         {/* Quiz Section */}

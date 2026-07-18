@@ -51,12 +51,23 @@ export default function ContactPage() {
             <p className="text-xs text-[#8a94a8] mb-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
               Dr Mohamad Younis
             </p>
-            <a
-              href="mailto:ceo@marfa.sa"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-full text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition"
-            >
-              ✉️ ceo@marfa.sa
-            </a>
+            <div className="flex items-center justify-center gap-2">
+              <a
+                href="mailto:ceo@marfa.sa"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-full text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition"
+              >
+                ✉️ ceo@marfa.sa
+              </a>
+              <a
+                href="https://www.linkedin.com/in/7gp/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-3 py-2 bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-full text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition"
+                title="LinkedIn"
+              >
+                💼
+              </a>
+            </div>
           </div>
 
           {/* CTO */}
@@ -71,12 +82,23 @@ export default function ContactPage() {
             <p className="text-xs text-[#8a94a8] mb-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
               Eng Ahmad Younis
             </p>
-            <a
-              href="mailto:cto@marfa.sa"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-full text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition"
-            >
-              ✉️ cto@marfa.sa
-            </a>
+            <div className="flex items-center justify-center gap-2">
+              <a
+                href="mailto:cto@marfa.sa"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-full text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition"
+              >
+                ✉️ cto@marfa.sa
+              </a>
+              <a
+                href="https://www.linkedin.com/in/ahmad-younis-1110a5b1/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-3 py-2 bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-full text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition"
+                title="LinkedIn"
+              >
+                💼
+              </a>
+            </div>
           </div>
 
           {/* Advisor */}
@@ -91,12 +113,23 @@ export default function ContactPage() {
             <p className="text-xs text-[#8a94a8] mb-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
               Dr Remy Arbaoui
             </p>
-            <a
-              href="mailto:remy.arbaoui@marfa.sa"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-full text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition"
-            >
-              ✉️ remy.arbaoui@marfa.sa
-            </a>
+            <div className="flex items-center justify-center gap-2">
+              <a
+                href="mailto:remy.arbaoui@marfa.sa"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-full text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition"
+              >
+                ✉️ remy.arbaoui@marfa.sa
+              </a>
+              <a
+                href="https://www.linkedin.com/in/remyarbaoui/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-3 py-2 bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-full text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition"
+                title="LinkedIn"
+              >
+                💼
+              </a>
+            </div>
           </div>
         </div>
       </main>

@@ -110,9 +110,7 @@ ${formatMarkdown(lesson.content)}
         <div className="text-5xl mb-4">🔐</div>
         <h3 className="text-xl font-black text-[#0a0f1e] mb-2">دخول المدرّب فقط</h3>
         <p className="text-[#4a5b78] mb-6">هذه الصفحة مخصصة لمدرّب البرنامج. الرجاء تسجيل الدخول.</p>
-        <button onClick={() => supabase.auth.signInWithOtp({ email: '' }).catch(() => {})} className="px-6 py-3 bg-[#c9a84c] text-[#0a0f1e] rounded-full font-bold">
-          تسجيل الدخول
-        </button>
+        <a href="/login?redirect=/teacher" className="inline-block px-6 py-3 bg-[#c9a84c] text-[#0a0f1e] rounded-full font-bold">تسجيل الدخول</a>
       </div>
     );
   }

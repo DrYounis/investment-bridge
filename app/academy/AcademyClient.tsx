@@ -85,7 +85,7 @@ export default function AcademyClient({ programs, bankAccount }: { programs: Pro
     'vibe-coding': '1,950',
     'medical-insurance': '4,750',
     'rcm-advanced': '',
-    'entrepreneurship': '100',
+    'entrepreneurship': '150',
     'ai-professionals': '1,000',
   };
 

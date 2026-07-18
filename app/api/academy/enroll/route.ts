@@ -28,6 +28,7 @@ export async function POST(request: NextRequest) {
     'rcm-advanced',
     'entrepreneurship',
     'ai-professionals',
+    'teacher-vibe-coding',
   ];
   if (!validPrograms.includes(program)) {
     return NextResponse.json({ error: 'برنامج غير صالح' }, { status: 400 });
@@ -35,6 +36,41 @@ export async function POST(request: NextRequest) {
 
   try {
     const svc = createServiceClient();
+
+    // teacher-vibe-coding goes to teacher_enrollments table
+    if (program === 'teacher-vibe-coding') {
+      const { data, error } = await svc
+        .from('teacher_enrollments')
+        .upsert({
+          user_id: user.id,
+          full_name,
+          email: email || user.email,
+          phone: phone || null,
+          status: 'active',
+        }, { onConflict: 'user_id' })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('[academy-enroll] teacher insert error', error);
+        return NextResponse.json({ error: 'تعذر التسجيل — حاول مرة أخرى' }, { status: 500 });
+      }
+
+      // Notify admin
+      try {
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        await resend.emails.send({
+          from: 'Marfa Academy <noreply@marfa.sa>',
+          to: 'ceo@marfa.sa',
+          subject: `📝 تسجيل جديد — Vibe Coding بالعربي | ${full_name}`,
+          html: `<div dir="rtl" style="font-family:sans-serif;padding:20px"><h2>تسجيل جديد في Vibe Coding بالعربي</h2><p><strong>الاسم:</strong> ${full_name}</p><p><strong>البريد:</strong> ${email || user.email}</p><p><strong>الجوال:</strong> ${phone || '—'}</p><hr><p style="color:#888">الحالة: مسجل — الدروس تفتح تدريجياً</p></div>`,
+        });
+      } catch (err) { console.error('[academy-enroll] teacher notify failed', err); }
+
+      return NextResponse.json({ success: true, id: data.id });
+    }
+
+    // Other programs go to academy_enrollments table
 
     const { data, error } = await svc
       .from('academy_enrollments')

@@ -75,6 +75,9 @@ export default function Header() {
             <Link href="/contact" className={`${navColor} hover:text-gold transition-colors font-bold tracking-wide`}>
               تواصل معنا
             </Link>
+            <Link href="/academy" className={`${navColor} hover:text-gold transition-colors font-bold tracking-wide flex items-center gap-1`}>
+              <span>🎓</span> الأكاديمية
+            </Link>
             {loggedIn ? (
               <div className="flex gap-3">
                 <Link href="/dashboard/hub" className="px-5 py-2 bg-gradient-to-r from-gold to-gold-dark text-deep-navy text-sm font-black rounded-full hover:shadow-lg hover:shadow-gold/20 transition-all duration-300 inline-block">
@@ -167,6 +170,14 @@ export default function Header() {
                 onClick={() => setMenuOpen(false)}
               >
                 تواصل معنا
+              </Link>
+
+              <Link
+                href="/academy"
+                className="text-gold font-bold text-lg hover:opacity-80 transition-opacity"
+                onClick={() => setMenuOpen(false)}
+              >
+                🎓 الأكاديمية
               </Link>
 
               {loggedIn ? (

@@ -16,8 +16,13 @@ interface Enrollment {
   created_at: string;
 }
 
+interface TeacherUser {
+  id: string;
+  email?: string | null;
+}
+
 export default function TeacherClient({ lessons: initialLessons }: { lessons: Lesson[] }) {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<TeacherUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [selectedDay, setSelectedDay] = useState<number | null>(null);

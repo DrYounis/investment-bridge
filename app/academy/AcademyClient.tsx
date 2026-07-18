@@ -73,14 +73,6 @@ export default function AcademyClient({ programs, bankAccount }: { programs: Pro
     setSubmitting(false);
   };
 
-  const programNames: Record<string, string> = {
-    'vibe-coding': 'Vibe Coding',
-    'medical-insurance': 'أساسيات التأمين الطبي في السعودية',
-    'rcm-advanced': 'RCM المتقدمة',
-    'entrepreneurship': 'أساسيات ريادة الأعمال',
-    'ai-professionals': 'الذكاء الاصطناعي للمهنيين',
-  };
-
   const programPrices: Record<string, string> = {
     'vibe-coding': '1,950',
     'medical-insurance': '4,750',

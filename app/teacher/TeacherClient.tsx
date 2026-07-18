@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import type { Lesson } from './page';
 
 const ADMIN_EMAILS = ['op.younis@gmail.com', '10.younis@gmail.com', 'mohamedy2003@gmail.com', 'remy.arbaoui@gmail.com'];
+const TEACHER_EMAIL = '10.younis@gmail.com';
 
 interface Enrollment {
   id: string;
@@ -25,6 +26,7 @@ export default function TeacherClient({ lessons: initialLessons }: { lessons: Le
   const [user, setUser] = useState<TeacherUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isTeacher, setIsTeacher] = useState(false);
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [adminMode, setAdminMode] = useState(false);
   const [editingDay, setEditingDay] = useState<number | null>(null);
@@ -41,6 +43,7 @@ export default function TeacherClient({ lessons: initialLessons }: { lessons: Le
       if (u) {
         const admin = ADMIN_EMAILS.includes(u.email || '');
         setIsAdmin(admin);
+        setIsTeacher(u.email === TEACHER_EMAIL);
         if (admin) {
           fetch('/api/admin/teacher?type=enrollments').then(r => r.json()).then(d => {
             if (d.enrollments) setEnrollments(d.enrollments);
@@ -219,17 +222,19 @@ ${formatMarkdown(lesson.content)}
               )}
             </div>
 
-            {/* Lesson Editor */}
-            <div className="bg-white rounded-2xl p-6 border border-[#c9a84c]/20">
-              <h3 className="font-black text-[#0a0f1e] mb-4">✏️ تعديل الدروس</h3>
-              <div className="space-y-2">
-                {lessons.map((l) => (
-                  <button key={l.day} onClick={() => openEditor(l.day)} className="w-full text-start p-3 rounded-xl border border-[#c9a84c]/10 hover:border-[#c9a84c]/30 transition text-sm">
-                    <span className="text-[#c9a84c] font-bold">اليوم {l.day}:</span> {l.title}
-                  </button>
-                ))}
+            {/* Lesson Editor — teacher only */}
+            {isTeacher && (
+              <div className="bg-white rounded-2xl p-6 border border-[#c9a84c]/20">
+                <h3 className="font-black text-[#0a0f1e] mb-4">✏️ تعديل الدروس</h3>
+                <div className="space-y-2">
+                  {lessons.map((l) => (
+                    <button key={l.day} onClick={() => openEditor(l.day)} className="w-full text-start p-3 rounded-xl border border-[#c9a84c]/10 hover:border-[#c9a84c]/30 transition text-sm">
+                      <span className="text-[#c9a84c] font-bold">اليوم {l.day}:</span> {l.title}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
       </div>

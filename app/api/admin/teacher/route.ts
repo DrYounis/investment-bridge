@@ -41,7 +41,7 @@ export async function PUT(request: NextRequest) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!isSuperAdminEmail(user.email)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (user.email !== '10.younis@gmail.com') return NextResponse.json({ error: 'Only the course teacher can edit' }, { status: 403 });
 
   let body: { day?: number; title?: string; icon?: string; content?: string };
   try { body = await request.json(); } catch { return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }); }

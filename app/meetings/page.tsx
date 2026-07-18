@@ -21,7 +21,7 @@ export default async function MeetingsPage() {
                         لقاءات <span className="text-[#c9a84c]">مرفأ</span>
                     </h1>
                     <p className="text-lg text-[#64748b] max-w-2xl mx-auto leading-relaxed">
-                        منصة حصرية لربط رواد الأعمال بالمستثمرين من خلال لقاءات مجدولة ومنظمة.
+                        تدرّب على عرض مشروعك أمام جمهور من روّاد الأعمال والمختصين واحصل على تغذية راجعة.
                         <br />
                         <span className="font-medium text-[#c9a84c]">تصفح الجدول</span> واحجز موعدك الآن.
                     </p>
@@ -36,8 +36,8 @@ export default async function MeetingsPage() {
                 {/* Portfolio Opportunities Teaser */}
                 <section className="mt-24 mb-8">
                     <div className="text-center mb-10">
-                        <span className="inline-block px-4 py-1 rounded-full bg-[#faf8f2] border border-[#c9a84c]/30 text-[#c9a84c] text-xs font-bold mb-3">💼 فرص مميزة</span>
-                        <h2 className="text-3xl font-black text-[#0a0f1e]">مشاريع تبحث عن شريك يؤمن بها</h2>
+                        <span className="inline-block px-4 py-1 rounded-full bg-[#faf8f2] border border-[#c9a84c]/30 text-[#c9a84c] text-xs font-bold mb-3">🛠️ مشاريع بُنيت في مرفأ</span>
+                        <h2 className="text-3xl font-black text-[#0a0f1e]">منتجات بناها فريقنا ومتدربونا</h2>
                     </div>
                     <div className="grid md:grid-cols-3 gap-6">
                         {[
@@ -57,7 +57,7 @@ export default async function MeetingsPage() {
                         ))}
                     </div>
                     <div className="text-center mt-8">
-                        <a href="/portfolio" className="inline-flex items-center gap-2 px-8 py-3 bg-[#c9a84c] text-white font-bold rounded-full hover:bg-[#d4a843] transition-colors text-sm">استكشف جميع الفرص ←</a>
+                        <a href="/portfolio" className="inline-flex items-center gap-2 px-8 py-3 bg-[#c9a84c] text-white font-bold rounded-full hover:bg-[#d4a843] transition-colors text-sm">استكشف جميع المشاريع ←</a>
                     </div>
                 </section>
 

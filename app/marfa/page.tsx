@@ -18,7 +18,7 @@ export default async function MarfaLandingPage() {
                             فكرتك لا تموت، بل تُصقل.
                         </h1>
                         <p className="text-xl text-[#a0aec0] leading-relaxed">
-                            الجسر الآمن الذي ينقل فكرتك من مجرد "خاطرة" إلى "مشروع استثماري" متكامل مبني على الأرقام وحقائق السوق، وليس الأحلام فقط.
+                            المساحة التي تنقل فكرتك من مجرد "خاطرة" إلى مشروع متكامل مبني على الأرقام وحقائق السوق، بالتدريب والأدوات الذكية.
                         </p>
                         <div className="flex gap-4 pt-4">
                             <Link href="/executive-summary" className="px-8 py-4 bg-[#c9a84c] hover:bg-[#d4a843] text-[#0a0f1e] rounded-2xl font-bold shadow-lg transition-all hover:-translate-y-1">
@@ -53,8 +53,8 @@ export default async function MarfaLandingPage() {
                                 />
                                 <StepCard
                                     num="03"
-                                    title="بطاقة المستثمر"
-                                    desc="توليد ملف استثماري احترافي جاهز للتمويل."
+                                    title="ملف المشروع"
+                                    desc="توليد ملف احترافي جاهز للعرض."
                                     icon={<FileCheckIcon />}
                                     color="bg-[#c9a84c]/15 text-[#c9a84c]"
                                 />
@@ -94,11 +94,11 @@ export default async function MarfaLandingPage() {
                             🏛️ Marfa Studio Ventures
                         </div>
                         <h2 className="text-3xl font-bold text-white">
-                            فرص استثمارية{' '}
+                            مشاريع{' '}
                             <span className="text-[#c9a84c]">من مشغل المنصة</span>
                         </h2>
                         <p className="text-[#a0aec0]">
-                            فرص مدروسة ومصدرها Marfa Studio — خضعت للتحليل الداخلي وجاهزة للمستثمرين المعتمدين.
+                            مشاريع مدروسة بُنيت في Marfa Studio — خضعت للتحليل الداخلي وجاهزة للعرض.
                         </p>
                     </div>
 
@@ -157,7 +157,7 @@ export default async function MarfaLandingPage() {
                             href="/dashboard/investor"
                             className="inline-flex items-center gap-2 px-8 py-4 bg-[#0d1628] border-2 border-[#c9a84c]/40 text-[#c9a84c] rounded-2xl font-bold hover:bg-[#c9a84c]/10 hover:border-[#c9a84c] transition-all text-lg"
                         >
-                            تصفح جميع الفرص الاستثمارية ←
+                            تصفح جميع المشاريع ←
                         </Link>
                     </div>
                 </div>
@@ -187,7 +187,7 @@ export default async function MarfaLandingPage() {
                             <span className="text-[#c9a84c]">للتحليل</span>
                         </h2>
                         <p className="text-[#a0aec0]">
-                            احصل على تقييم خبير لفكرة مشروعك. فريقنا يقيّم الإمكانات السوقية، الجدوى التقنية، وجاهزية الاستثمار.
+                            احصل على تقييم خبير لفكرة مشروعك. فريقنا يقيّم الإمكانات السوقية، الجدوى التقنية، وجاهزية المشروع.
                         </p>
                     </div>
                     <IdeaValidator />

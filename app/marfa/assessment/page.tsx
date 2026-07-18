@@ -535,7 +535,7 @@ export default function AssessmentPage() {
 
         <footer className="page-footer">
           <div className="container">
-            <p>© 2026 Marfa — Investment Bridge &nbsp;|&nbsp; صُنع بحب في حائل ❤️</p>
+            <p>© 2026 Marfa — Entrepreneurship Hub &nbsp;|&nbsp; صُنع بحب في حائل ❤️</p>
           </div>
         </footer>
       </div>

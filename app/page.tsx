@@ -53,10 +53,10 @@ export default function Home() {
           <p className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-medium relative" style={{ color: '#a0aec0', lineHeight: 1.75, zIndex: 1 }}>
             لسنا مجرد منصة. نحن الوجهة التي يصل إليها{' '}
             <span style={{ color: '#c9a84c', fontWeight: 700 }}>كل مشروع استثنائي</span>{' '}
-            باحثاً عن شريك يؤمن بطموحاته — و
+            يبدأ منها رحلته من فكرة إلى منتج — و
             <span style={{ color: '#c9a84c', fontWeight: 700 }}>يبني معه إرثاً</span>.
             <br />
-            الجسر الذكي بين رأس المال الجريء والأفكار التي تُغيّر المشهد الاستثماري في المنطقة.
+            المساحة التي تتحول فيها الأفكار إلى منتجات حقيقية بالتدريب والأدوات الذكية.
           </p>
 
           <AuthAwareLinks />
@@ -66,7 +66,7 @@ export default function Home() {
         <div className="w-full max-w-2xl mx-auto mb-24">
           <AuthAwarePathway
             label="لدي فكرة مشروع"
-            subLabel="هل تبحث عن تمويل؟ أو تريد التأكد من جدوى فكرتك؟ ابدأ رحلتك هنا لتحويل الفكرة إلى شركة ناشئة"
+            subLabel="هل لديك فكرة وتريد تحويلها لمشروع؟ أو تريد التأكد من جدوى فكرتك؟ ابدأ رحلتك هنا لتحويل الفكرة إلى شركة ناشئة"
             icon="💡"
             protectedHref="/marfa"
             variant="light"
@@ -224,7 +224,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto w-full mb-24 animate-fade-in-up">
           <div className="text-center mb-10">
             <h3 className="text-3xl font-bold text-white mb-2">أدوات متميزة للنجاح</h3>
-            <p className="text-[#a0aec0]">خدمات احترافية لتسريع رحلتك الاستثمارية</p>
+            <p className="text-[#a0aec0]">خدمات احترافية لتسريع رحلتك الريادية</p>
           </div>
 
           <Link href="/services/pitch-deck" className="block group">

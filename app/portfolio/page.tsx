@@ -31,12 +31,21 @@ export default async function PortfolioPage() {
       {/* Hero */}
       <section className="bg-[#0a0f1e] pt-32 pb-20 px-6 text-center">
         <h1 className="text-4xl md:text-5xl font-black text-[#c9a84c] mb-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-          محفظة مرفأ الاستثمارية
+          معرض مشاريع مرفأ
         </h1>
         <p className="text-[#a0aec0] max-w-2xl mx-auto text-lg leading-relaxed" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-          مشاريع سعودية طموحة نؤمن بها — من الذكاء الاصطناعي إلى التراث، من المصانع إلى المنافسات الحكومية.
+          منتجات حقيقية بناها فريق مرفأ ومتدربو برامجنا — من الفكرة إلى السوق.
         </p>
       </section>
+
+      {/* CMA compliance disclaimer */}
+      <div className="max-w-6xl mx-auto px-4 md:px-8 pt-6">
+        <div className="bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-2xl p-4 text-center">
+          <p className="text-sm text-[#4a5b78]" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+            هذه الصفحة تعرض مخرجات برامج مرفأ التدريبية والمشاريع التي طورها فريقنا. مرفأ لا يقدم خدمات طرح أو ترتيب أوراق مالية ولا يتوسط في عمليات استثمار.
+          </p>
+        </div>
+      </div>
 
       <div className="max-w-6xl mx-auto px-4 md:px-8 py-16 space-y-16">
         {/* Featured */}

@@ -4,7 +4,7 @@ export default function Footer() {
             <div className="flex flex-col md:flex-row items-center justify-center gap-2 mb-3">
                 <div className="text-lg font-bold text-luxury-gold">مرفأ</div>
                 <div className="w-1 h-1 bg-gold/50 rounded-full hidden md:block"></div>
-                <span className="text-gold/80 italic">Investment Bridge</span>
+                <span className="text-gold/80 italic">Entrepreneurship Hub</span>
             </div>
             <p className="flex flex-col md:flex-row flex-wrap justify-center items-center gap-2">
                 <span>© 2026 Marfa. جميع الحقوق محفوظة</span>

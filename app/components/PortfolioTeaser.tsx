@@ -18,10 +18,10 @@ export default async function PortfolioTeaser() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10">
           <span className="inline-block px-4 py-1 rounded-full bg-[#c9a84c]/10 text-[#c9a84c] text-xs font-bold mb-3" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-            💼 فرص مميزة
+            🛠️ من مخرجات مرفأ
           </span>
           <h2 className="text-3xl font-black text-[#c9a84c] mb-2" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-            مشاريع تبحث عن شريك يؤمن بها
+            مشاريع بُنيت وتطورت في مرفأ
           </h2>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
@@ -52,7 +52,7 @@ export default async function PortfolioTeaser() {
             className="inline-flex items-center gap-2 text-sm font-bold text-[#c9a84c] hover:text-[#d4a843] transition-colors"
             style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
           >
-            استكشف جميع الفرص ←
+            استكشف جميع المشاريع ←
           </Link>
         </div>
       </div>

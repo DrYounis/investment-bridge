@@ -44,7 +44,7 @@ export const MAX_INVESTMENT_AMOUNT = 10000000; // SAR
 
 export const USER_ROLES = [
     { value: 'investor', label: 'Investor', label_ar: 'مستثمر' },
-    { value: 'opportunity_provider', label: 'Opportunity Provider', label_ar: 'مقدم فرصة' },
+    { value: 'entrepreneur', label: 'Entrepreneur', label_ar: 'رائد أعمال' },
     { value: 'admin', label: 'Admin', label_ar: 'مدير النظام' },
 ] as const;
 

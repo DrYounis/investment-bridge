@@ -107,7 +107,7 @@ export default async function FinancialNewsPage() {
             <Link href="/" className="text-gold hover:underline">
               marfa.sa
             </Link>{' '}
-            — منصة الاستثمار الذكي في المملكة العربية السعودية
+            — منصة التحليل المالي الذكي في المملكة العربية السعودية
           </p>
         </footer>
       </div>

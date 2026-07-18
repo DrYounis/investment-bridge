@@ -172,7 +172,7 @@ export default async function ArticlePage({ params }: Props) {
           <Link href="/" className="text-gold hover:underline">
             marfa.sa
           </Link>{' '}
-          — منصة الاستثمار الذكي في المملكة العربية السعودية
+          — منصة التحليل المالي الذكي في المملكة العربية السعودية
         </p>
       </footer>
     </main>

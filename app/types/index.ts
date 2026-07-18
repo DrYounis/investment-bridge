@@ -5,7 +5,7 @@
 
 // ==================== User Types ====================
 
-export type UserRole = 'investor' | 'opportunity_provider' | 'admin';
+export type UserRole = 'investor' | 'entrepreneur' | 'admin';
 
 export type UserStatus = 'active' | 'pending' | 'suspended' | 'inactive';
 
@@ -71,7 +71,7 @@ export interface QuestionnaireSubmission {
     completed_at?: string | null;
 }
 
-// ==================== Investment Opportunity Types ====================
+// ==================== Portfolio Types ====================
 
 export type OpportunityStatus = 'draft' | 'published' | 'closed' | 'archived';
 

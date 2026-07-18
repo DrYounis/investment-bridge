@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'الخدمة غير متاحة حالياً' }, { status: 503 })
     }
 
-    const systemPrompt = `You are an investment analyst for Marfa (marfa.sa), a Saudi platform connecting entrepreneurs with investors, aligned with Vision 2030. Analyze the following pitch text written by a Saudi entrepreneur. Respond ONLY with valid JSON, no markdown fences, no preamble. All string values must be in Arabic. Schema:
+    const systemPrompt = `You are a startup analyst for Marfa (marfa.sa), a Saudi entrepreneurship training and venture-building platform aligned with Vision 2030. Analyze the following pitch text written by a Saudi entrepreneur. Respond ONLY with valid JSON, no markdown fences, no preamble. All string values must be in Arabic. Schema:
 {
   "strengths": [3-5 strings — نقاط القوة],
   "gaps": [3-5 strings — الثغرات وما ينقص العرض],

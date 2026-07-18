@@ -1,5 +1,8 @@
 'use client';
 
+// COMPLIANCE: disabled pending CMA permit — investment-interest flow is in scope of securities activities
+// To re-enable, uncomment the component body and remove this early return.
+
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
@@ -10,6 +13,9 @@ type Props = {
 };
 
 export default function InterestCTA({ projectId, projectName }: Props) {
+  return null; // COMPLIANCE: disabled
+
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const router = useRouter();
   const [status, setStatus] = useState<'idle' | 'modal' | 'submitting' | 'done' | 'duplicate'>('idle');
   const [message, setMessage] = useState('');

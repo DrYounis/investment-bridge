@@ -10,10 +10,10 @@ export default function Example() {
       {/* Hero Section with Animation */}
       <section className="max-w-6xl mx-auto mb-16 animate-fade-in-up">
         <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold mb-4 text-gradient">
-          Investment Bridge
+          Marfa — Entrepreneurship Hub
         </h1>
         <p className="text-xl text-foreground/80 max-w-2xl">
-          منصة احترافية لربط المستثمرين بالفرص الاستثمارية
+          منصة احترافية لتدريب رواد الأعمال وتطوير المشاريع
         </p>
       </section>
 

@@ -68,9 +68,9 @@ const PROGRAMS = [
 ];
 
 const BANK_ACCOUNT = {
-  bank: 'البنك الأهلي السعودي (SNB)',
-  iban: 'SA00 0000 0000 0000 0000 000',
-  accountName: 'مؤسسة مرفأ للتدريب',
+  bank: 'البنك السعودي الأول (SAB)',
+  iban: 'SA57 4500 0000 1631 9938 3001',
+  accountName: 'شركة نظم الهندسة المبتكرة',
 };
 
 export default function AcademyPage() {

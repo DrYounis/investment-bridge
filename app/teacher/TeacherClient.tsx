@@ -4,7 +4,19 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { Lesson } from './page';
 
-export default function TeacherClient({ lessons }: { lessons: Lesson[] }) {
+const ADMIN_EMAILS = ['op.younis@gmail.com', '10.younis@gmail.com', 'mohamedy2003@gmail.com', 'remy.arbaoui@gmail.com'];
+
+interface Enrollment {
+  id: string;
+  user_id: string;
+  full_name: string;
+  email: string | null;
+  phone: string | null;
+  status: string;
+  created_at: string;
+}
+
+export default function TeacherClient({ lessons: initialLessons }: { lessons: Lesson[] }) {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [enrolled, setEnrolled] = useState(false);
@@ -15,6 +27,14 @@ export default function TeacherClient({ lessons }: { lessons: Lesson[] }) {
   const [done, setDone] = useState(false);
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [enrollmentDate, setEnrollmentDate] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [adminMode, setAdminMode] = useState(false);
+  const [editingDay, setEditingDay] = useState<number | null>(null);
+  const [editForm, setEditForm] = useState({ title: '', icon: '', content: '' });
+  const [editSaving, setEditSaving] = useState(false);
+  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
+  const [adminLessons, setAdminLessons] = useState<Lesson[]>(initialLessons);
+  const [lessons, setLessons] = useState<Lesson[]>(initialLessons);
 
   const supabase = createClient();
 
@@ -22,6 +42,17 @@ export default function TeacherClient({ lessons }: { lessons: Lesson[] }) {
     supabase.auth.getUser().then(({ data: { user: u } }) => {
       setUser(u);
       if (u) {
+        const admin = ADMIN_EMAILS.includes(u.email || '');
+        setIsAdmin(admin);
+        if (admin) {
+          // Fetch admin data
+          fetch('/api/admin/teacher?type=enrollments').then(r => r.json()).then(d => {
+            if (d.enrollments) setEnrollments(d.enrollments);
+          }).catch(() => {});
+          fetch('/api/admin/teacher').then(r => r.json()).then(d => {
+            if (d.lessons?.length) { setAdminLessons(d.lessons); setLessons(d.lessons); }
+          }).catch(() => {});
+        }
         supabase.from('teacher_enrollments').select('created_at').eq('user_id', u.id).maybeSingle().then(({ data }) => {
           if (data) {
             setEnrolled(true);
@@ -55,6 +86,33 @@ export default function TeacherClient({ lessons }: { lessons: Lesson[] }) {
       setEnrollmentDate(new Date().toISOString());
     } catch (e) { setError(e instanceof Error ? e.message : 'حدث خطأ'); }
     setEnrolling(false);
+  };
+
+  const saveLesson = async () => {
+    if (!editingDay || !editForm.title.trim()) return;
+    setEditSaving(true);
+    try {
+      const res = await fetch('/api/admin/teacher', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ day: editingDay, ...editForm }),
+        credentials: 'include',
+      });
+      if (res.ok) {
+        // Refresh lessons
+        const r = await fetch('/api/admin/teacher');
+        const d = await r.json();
+        if (d.lessons?.length) { setAdminLessons(d.lessons); setLessons(d.lessons); }
+        setEditingDay(null);
+      }
+    } catch (e) { console.error(e); }
+    setEditSaving(false);
+  };
+
+  const openEditor = (day: number) => {
+    const lesson = lessons[day - 1];
+    setEditingDay(day);
+    setEditForm({ title: lesson.title, icon: lesson.icon, content: lesson.content });
   };
 
   const getUnlockedDays = () => {
@@ -233,6 +291,80 @@ export default function TeacherClient({ lessons }: { lessons: Lesson[] }) {
                 </button>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Admin Panel */}
+      {isAdmin && (
+        <div className="mt-12 border-t border-[#c9a84c]/20 pt-8">
+          <button
+            onClick={() => { setAdminMode(!adminMode); if (!adminMode) { fetch('/api/admin/teacher?type=enrollments').then(r => r.json()).then(d => { if (d.enrollments) setEnrollments(d.enrollments); }).catch(() => {}); } }}
+            className="text-sm font-bold text-[#c9a84c] hover:underline mb-4"
+          >
+            {adminMode ? '✕ إخفاء لوحة الإدارة' : '🔧 لوحة إدارة البرنامج'}
+          </button>
+
+          {adminMode && (
+            <div className="space-y-6">
+              {/* Enrollments */}
+              <div className="bg-white rounded-2xl p-6 border border-[#c9a84c]/20">
+                <h3 className="font-black text-[#0a0f1e] mb-4">📋 المسجلون ({enrollments.length})</h3>
+                {enrollments.length === 0 ? (
+                  <p className="text-sm text-[#8a94a8]">لا يوجد مسجلون بعد</p>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead><tr className="border-b border-[#c9a84c]/10 text-[#8a94a8]"><td className="p-2 font-bold">الاسم</td><td className="p-2 font-bold">البريد</td><td className="p-2 font-bold">الجوال</td><td className="p-2 font-bold">تاريخ التسجيل</td></tr></thead>
+                      <tbody>
+                        {enrollments.map((e: Enrollment) => (
+                          <tr key={e.id} className="border-b border-[#c9a84c]/5 text-[#4a5b78]">
+                            <td className="p-2">{e.full_name}</td>
+                            <td className="p-2" dir="ltr" style={{ textAlign: 'right' }}>{e.email}</td>
+                            <td className="p-2" dir="ltr" style={{ textAlign: 'right' }}>{e.phone || '—'}</td>
+                            <td className="p-2 text-xs">{new Date(e.created_at).toLocaleDateString('ar-SA')}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+
+              {/* Lesson Editor */}
+              <div className="bg-white rounded-2xl p-6 border border-[#c9a84c]/20">
+                <h3 className="font-black text-[#0a0f1e] mb-4">✏️ تعديل الدروس</h3>
+                <div className="space-y-2">
+                  {lessons.map((l) => (
+                    <button
+                      key={l.day}
+                      onClick={() => openEditor(l.day)}
+                      className="w-full text-start p-3 rounded-xl border border-[#c9a84c]/10 hover:border-[#c9a84c]/30 transition text-sm"
+                    >
+                      <span className="text-[#c9a84c] font-bold">اليوم {l.day}:</span> {l.title}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Lesson Editor Modal */}
+      {editingDay && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={() => setEditingDay(null)}>
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl" onClick={e => e.stopPropagation()} dir="rtl" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+            <button onClick={() => setEditingDay(null)} className="float-start text-[#8a94a8] text-xl">✕</button>
+            <h3 className="text-lg font-black text-[#0a0f1e] mb-4">تعديل — اليوم {editingDay}</h3>
+            <div className="space-y-4">
+              <input value={editForm.title} onChange={e => setEditForm({...editForm, title: e.target.value})} placeholder="العنوان" className="w-full rounded-xl border border-[#c9a84c]/20 px-4 py-2.5 text-sm outline-none focus:border-[#c9a84c]" />
+              <input value={editForm.icon} onChange={e => setEditForm({...editForm, icon: e.target.value})} placeholder="الأيقونة" className="w-full rounded-xl border border-[#c9a84c]/20 px-4 py-2.5 text-sm outline-none focus:border-[#c9a84c]" />
+              <textarea value={editForm.content} onChange={e => setEditForm({...editForm, content: e.target.value})} rows={15} className="w-full rounded-xl border border-[#c9a84c]/20 px-4 py-2.5 text-sm outline-none focus:border-[#c9a84c] resize-none font-mono" dir="ltr" />
+            </div>
+            <button onClick={saveLesson} disabled={editSaving} className="w-full mt-4 px-6 py-3 bg-[#c9a84c] hover:bg-[#d4a843] text-[#0a0f1e] rounded-full font-bold text-sm disabled:opacity-50 transition">
+              {editSaving ? 'جاري الحفظ...' : 'حفظ التعديلات'}
+            </button>
           </div>
         </div>
       )}

@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 
 type UserType = 'all' | 'entrepreneur' | 'investor' | 'super_admin';
+type SortMode = 'newest' | 'active' | 'lastVisit';
 
 interface User {
   id: string;
@@ -10,7 +11,11 @@ interface User {
   email: string;
   user_type: string;
   created_at: string;
+  phone: string | null;
   approval_status: string | null;
+  last_sign_in_at: string | null;
+  last_visit: string | null;
+  visit_count: number;
 }
 
 const TYPE_LABELS: Record<string, string> = {
@@ -26,12 +31,29 @@ const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   rejected: { label: 'مرفوض', color: '#ef4444' },
 };
 
+function formatArabicDate(dateStr: string | null): string {
+  if (!dateStr) return '—';
+  return new Date(dateStr).toLocaleDateString('ar-SA');
+}
+
+function formatWhatsAppLink(phone: string | null): string | null {
+  if (!phone) return null;
+  const digits = phone.replace(/\D/g, '');
+  if (!digits) return null;
+  // Saudi: 05... → 966...
+  if (digits.startsWith('0') && digits.length >= 9) {
+    return `https://wa.me/966${digits.slice(1)}`;
+  }
+  return `https://wa.me/${digits}`;
+}
+
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<UserType>('all');
+  const [sort, setSort] = useState<SortMode>('newest');
 
   useEffect(() => {
     (async () => {
@@ -64,8 +86,19 @@ export default function AdminUsersPage() {
           (u.email || '').toLowerCase().includes(q)
       );
     }
+    // Sort
+    if (sort === 'active') {
+      list = [...list].sort((a, b) => (b.visit_count || 0) - (a.visit_count || 0));
+    } else if (sort === 'lastVisit') {
+      list = [...list].sort((a, b) => {
+        const aDate = a.last_visit || a.created_at || '';
+        const bDate = b.last_visit || b.created_at || '';
+        return bDate.localeCompare(aDate);
+      });
+    }
+    // 'newest' is default — already sorted by created_at desc from API
     return list;
-  }, [users, search, filter]);
+  }, [users, search, filter, sort]);
 
   const stats = useMemo(() => {
     const total = users.length;
@@ -103,6 +136,12 @@ export default function AdminUsersPage() {
     { key: 'super_admin', label: 'مدراء' },
   ];
 
+  const SORT_TOGGLES: { key: SortMode; label: string }[] = [
+    { key: 'newest', label: 'الأحدث تسجيلاً' },
+    { key: 'active', label: 'الأكثر نشاطاً' },
+    { key: 'lastVisit', label: 'آخر زيارة' },
+  ];
+
   return (
     <div dir="rtl" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
       {/* Header */}
@@ -133,7 +172,7 @@ export default function AdminUsersPage() {
       </div>
 
       {/* Search + filter row */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row gap-4 mb-4">
         <input
           type="text"
           value={search}
@@ -162,6 +201,24 @@ export default function AdminUsersPage() {
         </div>
       </div>
 
+      {/* Sort toggle */}
+      <div className="flex gap-1 mb-6">
+        {SORT_TOGGLES.map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setSort(t.key)}
+            className="px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all"
+            style={{
+              background: sort === t.key ? '#1e2d4a' : '#060c18',
+              color: sort === t.key ? '#c9a84c' : '#4a5a78',
+              border: '1px solid #1e2d4a',
+            }}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
       {/* Error banner (non-fatal) */}
       {error && (
         <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
@@ -174,73 +231,108 @@ export default function AdminUsersPage() {
         <table className="w-full border-collapse">
           <thead>
             <tr className="border-b border-[#1e2d4a] text-right">
-              <th className="py-3 px-4 text-xs font-bold text-[#4a5a78]">الاسم</th>
-              <th className="py-3 px-4 text-xs font-bold text-[#4a5a78]">البريد الإلكتروني</th>
-              <th className="py-3 px-4 text-xs font-bold text-[#4a5a78]">النوع</th>
-              <th className="py-3 px-4 text-xs font-bold text-[#4a5a78]">حالة الاعتماد</th>
+              <th className="py-3 px-4 text-xs font-bold text-[#4a5a78]">المستخدم</th>
+              <th className="py-3 px-4 text-xs font-bold text-[#4a5a78]">الدور</th>
               <th className="py-3 px-4 text-xs font-bold text-[#4a5a78]">تاريخ التسجيل</th>
+              <th className="py-3 px-4 text-xs font-bold text-[#4a5a78]">آخر زيارة</th>
+              <th className="py-3 px-4 text-xs font-bold text-[#4a5a78]">تكرار الدخول</th>
+              <th className="py-3 px-4 text-xs font-bold text-[#4a5a78]">إجراءات</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={5} className="py-16 text-center text-[#4a5a78]">
+                <td colSpan={6} className="py-16 text-center text-[#4a5a78]">
                   لا يوجد مستخدمون
                 </td>
               </tr>
             ) : (
-              filtered.map((u) => (
-                <tr
-                  key={u.id}
-                  className="border-b border-[#1e2d4a]/50 hover:bg-[#c9a84c]/5 transition-colors"
-                >
-                  <td className="py-3 px-4 text-sm text-white">{u.full_name || '—'}</td>
-                  <td className="py-3 px-4 text-sm text-[#8a9bb8]" dir="ltr" style={{ textAlign: 'right' }}>
-                    {u.email}
-                  </td>
-                  <td className="py-3 px-4">
-                    <span
-                      className="inline-block px-2.5 py-0.5 rounded-full text-xs font-bold"
-                      style={{
-                        background:
-                          u.user_type === 'super_admin'
-                            ? '#c9a84c20'
-                            : u.user_type === 'investor'
-                            ? '#60a5fa20'
-                            : '#8a9bb820',
-                        color:
-                          u.user_type === 'super_admin'
-                            ? '#c9a84c'
-                            : u.user_type === 'investor'
-                            ? '#60a5fa'
-                            : '#8a9bb8',
-                      }}
-                    >
-                      {TYPE_LABELS[u.user_type] || u.user_type}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4">
-                    {u.user_type === 'investor' && u.approval_status ? (
+              filtered.map((u) => {
+                const waLink = formatWhatsAppLink(u.phone);
+                return (
+                  <tr
+                    key={u.id}
+                    className="border-b border-[#1e2d4a]/50 hover:bg-[#c9a84c]/5 transition-colors"
+                  >
+                    {/* المستخدم — name + email + investor badge */}
+                    <td className="py-3 px-4">
+                      <div className="text-sm text-white font-bold">{u.full_name || '—'}</div>
+                      <div className="text-xs text-[#8a9bb8]" dir="ltr" style={{ textAlign: 'right' }}>
+                        {u.email}
+                      </div>
+                      {u.user_type === 'investor' && u.approval_status && (
+                        <span
+                          className="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold"
+                          style={{
+                            background: `${STATUS_LABELS[u.approval_status]?.color || '#64748b'}20`,
+                            color: STATUS_LABELS[u.approval_status]?.color || '#64748b',
+                          }}
+                        >
+                          {STATUS_LABELS[u.approval_status]?.label || u.approval_status}
+                        </span>
+                      )}
+                    </td>
+                    {/* الدور */}
+                    <td className="py-3 px-4">
                       <span
                         className="inline-block px-2.5 py-0.5 rounded-full text-xs font-bold"
                         style={{
-                          background: `${STATUS_LABELS[u.approval_status]?.color || '#64748b'}20`,
-                          color: STATUS_LABELS[u.approval_status]?.color || '#64748b',
+                          background:
+                            u.user_type === 'super_admin'
+                              ? '#c9a84c20'
+                              : u.user_type === 'investor'
+                              ? '#60a5fa20'
+                              : '#8a9bb820',
+                          color:
+                            u.user_type === 'super_admin'
+                              ? '#c9a84c'
+                              : u.user_type === 'investor'
+                              ? '#60a5fa'
+                              : '#8a9bb8',
                         }}
                       >
-                        {STATUS_LABELS[u.approval_status]?.label || u.approval_status}
+                        {TYPE_LABELS[u.user_type] || u.user_type}
                       </span>
-                    ) : (
-                      <span className="text-[#4a5a78] text-xs">—</span>
-                    )}
-                  </td>
-                  <td className="py-3 px-4 text-sm text-[#8a9bb8]">
-                    {u.created_at
-                      ? new Date(u.created_at).toLocaleDateString('ar-SA')
-                      : '—'}
-                  </td>
-                </tr>
-              ))
+                    </td>
+                    {/* تاريخ التسجيل */}
+                    <td className="py-3 px-4 text-sm text-[#8a9bb8]">
+                      {formatArabicDate(u.created_at)}
+                    </td>
+                    {/* آخر زيارة */}
+                    <td className="py-3 px-4 text-sm text-[#8a9bb8]">
+                      {formatArabicDate(u.last_visit)}
+                    </td>
+                    {/* تكرار الدخول */}
+                    <td className="py-3 px-4">
+                      {u.visit_count > 0 ? (
+                        <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1e2d4a] text-[#8a9bb8]">
+                          {u.visit_count.toLocaleString('ar-SA')}x
+                        </span>
+                      ) : (
+                        <span className="text-[#4a5a78] text-xs">—</span>
+                      )}
+                    </td>
+                    {/* إجراءات */}
+                    <td className="py-3 px-4">
+                      {waLink ? (
+                        <a
+                          href={waLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#25D366] hover:bg-[#1ebe5c] transition-colors"
+                          title="واتساب"
+                        >
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                          </svg>
+                        </a>
+                      ) : (
+                        <span className="text-[#4a5a78] text-xs">—</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>
@@ -251,50 +343,77 @@ export default function AdminUsersPage() {
         {filtered.length === 0 ? (
           <p className="text-center text-[#4a5a78] py-16">لا يوجد مستخدمون</p>
         ) : (
-          filtered.map((u) => (
-            <div
-              key={u.id}
-              className="bg-[#060c18] border border-[#1e2d4a] rounded-lg p-4 space-y-2"
-            >
-              <div className="flex justify-between items-start">
-                <span className="text-white font-bold">{u.full_name || '—'}</span>
-                <span
-                  className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold"
-                  style={{
-                    background:
-                      u.user_type === 'super_admin'
-                        ? '#c9a84c20'
-                        : u.user_type === 'investor'
-                        ? '#60a5fa20'
-                        : '#8a9bb820',
-                    color:
-                      u.user_type === 'super_admin'
-                        ? '#c9a84c'
-                        : u.user_type === 'investor'
-                        ? '#60a5fa'
-                        : '#8a9bb8',
-                  }}
-                >
-                  {TYPE_LABELS[u.user_type] || u.user_type}
-                </span>
+          filtered.map((u) => {
+            const waLink = formatWhatsAppLink(u.phone);
+            return (
+              <div
+                key={u.id}
+                className="bg-[#060c18] border border-[#1e2d4a] rounded-lg p-4 space-y-2"
+              >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <span className="text-white font-bold">{u.full_name || '—'}</span>
+                    {u.user_type === 'investor' && u.approval_status && (
+                      <span
+                        className="inline-block mr-2 px-2 py-0.5 rounded-full text-[10px] font-bold"
+                        style={{
+                          background: `${STATUS_LABELS[u.approval_status]?.color || '#64748b'}20`,
+                          color: STATUS_LABELS[u.approval_status]?.color || '#64748b',
+                        }}
+                      >
+                        {STATUS_LABELS[u.approval_status]?.label || u.approval_status}
+                      </span>
+                    )}
+                  </div>
+                  <span
+                    className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold"
+                    style={{
+                      background:
+                        u.user_type === 'super_admin'
+                          ? '#c9a84c20'
+                          : u.user_type === 'investor'
+                          ? '#60a5fa20'
+                          : '#8a9bb820',
+                      color:
+                        u.user_type === 'super_admin'
+                          ? '#c9a84c'
+                          : u.user_type === 'investor'
+                          ? '#60a5fa'
+                          : '#8a9bb8',
+                    }}
+                  >
+                    {TYPE_LABELS[u.user_type] || u.user_type}
+                  </span>
+                </div>
+                <p className="text-sm text-[#8a9bb8]" dir="ltr" style={{ textAlign: 'right' }}>
+                  {u.email}
+                </p>
+                <div className="flex justify-between text-xs text-[#4a5a78]">
+                  <span>آخر زيارة: {formatArabicDate(u.last_visit)}</span>
+                  <span>
+                    {u.visit_count > 0
+                      ? `${u.visit_count.toLocaleString('ar-SA')}x`
+                      : '—'}
+                  </span>
+                </div>
+                {waLink && (
+                  <div className="pt-1">
+                    <a
+                      href={waLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-xs text-[#25D366] hover:text-[#1ebe5c]"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                      </svg>
+                      واتساب
+                    </a>
+                  </div>
+                )}
               </div>
-              <p className="text-sm text-[#8a9bb8]" dir="ltr" style={{ textAlign: 'right' }}>
-                {u.email}
-              </p>
-              <div className="flex justify-between text-xs text-[#4a5a78]">
-                <span>
-                  {u.user_type === 'investor' && u.approval_status
-                    ? STATUS_LABELS[u.approval_status]?.label || u.approval_status
-                    : '—'}
-                </span>
-                <span>
-                  {u.created_at
-                    ? new Date(u.created_at).toLocaleDateString('ar-SA')
-                    : '—'}
-                </span>
-              </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>

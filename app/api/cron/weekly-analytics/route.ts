@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/service';
+import { generateWithDeepSeek } from '@/lib/ai/deepseek';
 import { Resend } from 'resend';
 
 function isCronAuthorized(request: Request): boolean {
@@ -34,7 +35,7 @@ export async function GET(request: NextRequest) {
 
     const { data: rows, error: fetchError } = await svc
       .from('page_views')
-      .select('path,referrer,country,device,visitor_hash,created_at')
+      .select('path,referrer,country,device,visitor_hash,user_hash,utm_source,created_at')
       .gte('created_at', prevSince)
       .order('created_at', { ascending: false });
 
@@ -55,21 +56,125 @@ export async function GET(request: NextRequest) {
     const viewChange = prevTotalViews ? ((totalViews - prevTotalViews) / prevTotalViews * 100).toFixed(0) : '—';
     const visitorChange = prevUniqueVisitors ? ((uniqueVisitors - prevUniqueVisitors) / prevUniqueVisitors * 100).toFixed(0) : '—';
 
-    // Top pages
+    // Top pages + auth split + UTM
     const pageMap = new Map<string, number>();
+    const pageAnonMap = new Map<string, number>();
+    const pageAuthMap = new Map<string, number>();
     const referrerMap = new Map<string, number>();
     const countryMap = new Map<string, number>();
+    const utmSourceMap = new Map<string, number>();
+    let authTotal = 0;
+    let anonTotal = 0;
+
+    // Daily series for last 14 days
+    const dailySeries: Record<string, number> = {};
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date(Date.now() - i * 86400000).toISOString().split('T')[0];
+      dailySeries[d] = 0;
+    }
+    const current7dDays = new Set<string>();
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(Date.now() - i * 86400000).toISOString().split('T')[0];
+      current7dDays.add(d);
+    }
+
     for (const r of current) {
       pageMap.set(r.path, (pageMap.get(r.path) || 0) + 1);
+      if (r.user_hash) {
+        pageAuthMap.set(r.path, (pageAuthMap.get(r.path) || 0) + 1);
+        authTotal++;
+      } else {
+        pageAnonMap.set(r.path, (pageAnonMap.get(r.path) || 0) + 1);
+        anonTotal++;
+      }
       const ref = r.referrer ? new URL(r.referrer).hostname : 'مباشر';
       referrerMap.set(ref, (referrerMap.get(ref) || 0) + 1);
       if (r.country) countryMap.set(r.country, (countryMap.get(r.country) || 0) + 1);
+      if (r.utm_source) utmSourceMap.set(r.utm_source, (utmSourceMap.get(r.utm_source) || 0) + 1);
+      const d = r.created_at.split('T')[0];
+      if (dailySeries[d] !== undefined) dailySeries[d]++;
     }
 
+    const topN = (m: Map<string, number>, limit = 5) =>
+      [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, limit);
+
     const top = (m: Map<string, number>, limit = 5) =>
-      [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, limit)
+      topN(m, limit)
         .map(([k, v]) => `<tr><td style="text-align:right;padding:4px 8px">${k}</td><td style="text-align:start;padding:4px 8px;color:#c9a84c;font-weight:bold">${v}</td></tr>`)
         .join('');
+
+    // ── AI Insights ──────────────────────────────────────────────
+
+    let insightsHtml = '';
+
+    try {
+      const dailyEntries = Object.entries(dailySeries).map(([date, views]) => ({ date, views }));
+      const current7dViews = dailyEntries.filter((d) => current7dDays.has(d.date)).reduce((s, d) => s + d.views, 0);
+      const prev7dViews = dailyEntries.filter((d) => !current7dDays.has(d.date)).reduce((s, d) => s + d.views, 0);
+      const wowGrowth = prev7dViews ? Math.round(((current7dViews - prev7dViews) / prev7dViews) * 100) : 0;
+
+      const top8Pages = topN(pageMap, 8).map(([path, views]) => ({
+        path, views,
+        anonViews: pageAnonMap.get(path) || 0,
+        authViews: pageAuthMap.get(path) || 0,
+      }));
+      const top5Referrers = topN(referrerMap, 5).map(([k, v]) => ({ domain: k, views: v }));
+      const top5Utm = topN(utmSourceMap, 5).map(([k, v]) => ({ source: k, views: v }));
+
+      const prompt = `You are a growth analyst for marfa.sa, a Saudi entrepreneurship platform. Given these aggregated web analytics, write 3–5 concise English insights in the style: growth trend, strongest organic acquisition page ("SEO goldmine"), where anonymous readers concentrate and what CTA to add, one actionable recommendation. Plain sentences, no markdown headers.
+
+Stats:
+- Total views (last 7 days): ${totalViews}
+- Unique visitors (last 7 days): ${uniqueVisitors}
+- Week-over-week growth: ${wowGrowth}%
+- Authenticated views: ${authTotal}
+- Anonymous views: ${anonTotal}
+- Daily view series (last 14 days): ${JSON.stringify(dailyEntries)}
+- Top 8 pages: ${JSON.stringify(top8Pages)}
+- Top 5 referrer domains: ${JSON.stringify(top5Referrers)}
+- Top 5 UTM sources: ${JSON.stringify(top5Utm)}`;
+
+      let insights: string;
+      try {
+        insights = await generateWithDeepSeek(prompt);
+      } catch (deepseekErr) {
+        console.error('DEEPSEEK_FALLBACK', deepseekErr instanceof Error ? deepseekErr.message : String(deepseekErr));
+        // Fall back to Anthropic Claude Haiku
+        const Anthropic = (await import('@anthropic-ai/sdk')).default;
+        const anthropicKey = process.env.ANTHROPIC_API_KEY;
+        if (anthropicKey) {
+          const client = new Anthropic({ apiKey: anthropicKey });
+          const msg = await client.messages.create({
+            model: 'claude-haiku-4-5-20251001',
+            max_tokens: 600,
+            messages: [{ role: 'user', content: prompt }],
+          });
+          insights = msg.content
+            .filter((block) => block.type === 'text')
+            .map((block) => (block as { type: 'text'; text: string }).text)
+            .join('')
+            .trim();
+        } else {
+          throw new Error('No Anthropic key for fallback');
+        }
+      }
+
+      if (insights) {
+        const paragraphs = insights
+          .split('\n')
+          .filter((l) => l.trim())
+          .map((l) => l.replace(/^[-*]\s*/, '').trim())
+          .filter(Boolean);
+        insightsHtml = `
+    <div style="background:linear-gradient(135deg,#fdf9ef,#faf6e7);border:1px solid #c9a84c44;border-radius:16px;padding:24px;margin-bottom:24px">
+      <h2 style="color:#b8933a;font-size:16px;margin:0 0 16px 0;text-align:start">🤖 AI Insights</h2>
+      ${paragraphs.map((p) => `<p style="color:#4a5b78;font-size:14px;line-height:1.7;margin:0 0 12px 0;text-align:start">${p}</p>`).join('')}
+    </div>`;
+      }
+    } catch (aiErr) {
+      console.error('AI_INSIGHTS_FAILED', aiErr instanceof Error ? aiErr.message : String(aiErr));
+      // Send email without insights — stats email must always go out
+    }
 
     const html = `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"></head>
 <body style="font-family:'Tajawal','Cairo',sans-serif;direction:rtl;background:#faf8f2;padding:30px;margin:0">
@@ -78,7 +183,7 @@ export async function GET(request: NextRequest) {
     <h1 style="color:#c9a84c;font-size:24px;margin:0 0 8px 0">⚓ مرفأ — تقرير زيارات الموقع الأسبوعي</h1>
     <p style="color:#a0aec0;font-size:13px;margin:0">${new Date().toLocaleDateString('ar-SA')}</p>
   </div>
-  <div style="padding:32px 24px">
+  <div style="padding:32px 24px">${insightsHtml}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
       <div style="background:#faf8f2;border-radius:12px;padding:16px;text-align:center">
         <p style="color:#64748b;font-size:12px;margin:0">المشاهدات</p>

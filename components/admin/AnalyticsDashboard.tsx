@@ -9,10 +9,12 @@ interface AnalyticsData {
   prevTotalViews: number;
   prevUniqueVisitors: number;
   daily: { date: string; views: number; visitors: number }[];
-  topPages: { path: string; views: number }[];
+  topPages: { path: string; views: number; anonViews: number; authViews: number }[];
   topReferrers: { referrer: string; views: number }[];
   countries: { country: string; views: number }[];
   devices: { device: string; views: number }[];
+  authSplit?: { authenticated: number; anonymous: number };
+  topUtmSources?: { source: string; views: number }[];
   _range?: string;
 }
 
@@ -108,6 +110,25 @@ export default function AnalyticsDashboard() {
             </p>
           </div>
         ))}
+        {data.authSplit && (() => {
+          const total = data.authSplit.authenticated + data.authSplit.anonymous || 1;
+          const authPct = Math.round((data.authSplit.authenticated / total) * 100);
+          const anonPct = 100 - authPct;
+          return (
+            <>
+              <div className="bg-[#060c18] border border-[#1e2d4a] rounded-lg p-4">
+                <p className="text-xs text-[#4a5a78] mb-1">مسجّلون</p>
+                <p className="text-2xl font-black text-white">{data.authSplit.authenticated.toLocaleString()}</p>
+                <p className="text-xs mt-1 text-[#10b981]">{authPct}%</p>
+              </div>
+              <div className="bg-[#060c18] border border-[#1e2d4a] rounded-lg p-4">
+                <p className="text-xs text-[#4a5a78] mb-1">زوّار</p>
+                <p className="text-2xl font-black text-white">{data.authSplit.anonymous.toLocaleString()}</p>
+                <p className="text-xs mt-1 text-[#4a5a78]">{anonPct}%</p>
+              </div>
+            </>
+          );
+        })()}
       </div>
 
       {/* Chart */}
@@ -128,10 +149,10 @@ export default function AnalyticsDashboard() {
       {/* Detail grids */}
       <div className="grid md:grid-cols-2 gap-6">
         {[
-          { title: 'أهم الصفحات', items: data.topPages, key: 'path' as const, empty: 'لا توجد بيانات' },
-          { title: 'مصادر الزيارات', items: data.topReferrers, key: 'referrer' as const, empty: 'لا توجد بيانات' },
-          { title: 'الدول', items: data.countries, key: 'country' as const, empty: 'لا توجد بيانات' },
-          { title: 'الأجهزة', items: data.devices, key: 'device' as const, empty: 'لا توجد بيانات' },
+          { title: 'أهم الصفحات', items: data.topPages as unknown as Record<string, unknown>[], key: 'path' as const, empty: 'لا توجد بيانات', showSplit: true },
+          { title: 'مصادر الزيارات', items: data.topReferrers as unknown as Record<string, unknown>[], key: 'referrer' as const, empty: 'لا توجد بيانات', showSplit: false },
+          { title: 'الدول', items: data.countries as unknown as Record<string, unknown>[], key: 'country' as const, empty: 'لا توجد بيانات', showSplit: false },
+          { title: 'الأجهزة', items: data.devices as unknown as Record<string, unknown>[], key: 'device' as const, empty: 'لا توجد بيانات', showSplit: false },
         ].map((section) => (
           <div key={section.title} className="bg-[#060c18] border border-[#1e2d4a] rounded-lg p-4">
             <h3 className="text-sm font-bold text-[#8a9bb8] mb-3">{section.title}</h3>
@@ -142,11 +163,20 @@ export default function AnalyticsDashboard() {
                 {section.items.map((item: Record<string, unknown>, i: number) => {
                   const label = String(item[section.key] || '');
                   const views = Number(item.views || 0);
+                  const anonViews = Number(item.anonViews || 0);
+                  const authViews = Number(item.authViews || 0);
                   return (
                     <div key={i} className="flex items-center gap-2">
-                      <span className="text-xs text-[#8a9bb8] truncate flex-1 min-w-0" dir={section.key === 'referrer' ? 'ltr' : undefined}>
-                        {label}
-                      </span>
+                      <div className="flex-1 min-w-0">
+                        <span className="text-xs text-[#8a9bb8] truncate block" dir={section.key === 'referrer' ? 'ltr' : undefined}>
+                          {label}
+                        </span>
+                        {section.showSplit && (anonViews > 0 || authViews > 0) && (
+                          <span className="text-[10px] text-[#4a5a78]">
+                            {anonViews.toLocaleString()} زائر · {authViews.toLocaleString()} مسجّل
+                          </span>
+                        )}
+                      </div>
                       <span className="text-xs text-[#c9a84c] font-bold shrink-0">{views.toLocaleString()}</span>
                       <div className="w-16 h-1.5 rounded-full bg-[#1e2d4a] shrink-0 overflow-hidden">
                         <div className="h-full rounded-full" style={{ width: `${(views / maxBar) * 100}%`, background: '#c9a84c' }} />
@@ -159,6 +189,29 @@ export default function AnalyticsDashboard() {
           </div>
         ))}
       </div>
+
+      {/* UTM Sources */}
+      {data.topUtmSources && data.topUtmSources.length > 0 && (
+        <div className="mt-6 bg-[#060c18] border border-[#1e2d4a] rounded-lg p-4">
+          <h3 className="text-sm font-bold text-[#8a9bb8] mb-3">مصادر UTM</h3>
+          <div className="space-y-2">
+            {data.topUtmSources.map((item, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <span className="text-xs text-[#8a9bb8] truncate flex-1 min-w-0">
+                  {item.source}
+                </span>
+                <span className="text-xs text-[#c9a84c] font-bold shrink-0">{item.views.toLocaleString()}</span>
+                <div className="w-16 h-1.5 rounded-full bg-[#1e2d4a] shrink-0 overflow-hidden">
+                  <div
+                    className="h-full rounded-full"
+                    style={{ width: `${(item.views / maxBar) * 100}%`, background: '#c9a84c' }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

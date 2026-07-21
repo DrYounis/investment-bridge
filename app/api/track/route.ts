@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/service';
+import { createClient } from '@/lib/supabase/server';
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
 
@@ -8,6 +9,8 @@ export const runtime = 'nodejs';
 const TrackSchema = z.object({
   path: z.string().min(1).max(300).startsWith('/'),
   referrer: z.string().max(500).optional(),
+  utm_source: z.string().max(100).optional(),
+  utm_campaign: z.string().max(100).optional(),
 });
 
 const BOT_RE = /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|whatsapp|telegram|preview|headless|lighthouse|gptbot|claudebot|perplexity/i;
@@ -22,7 +25,7 @@ export async function POST(request: NextRequest) {
     const parsed = TrackSchema.safeParse(body);
     if (!parsed.success) return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
 
-    const { path, referrer } = parsed.data;
+    const { path, referrer, utm_source, utm_campaign } = parsed.data;
 
     // Skip admin and API paths
     if (path.startsWith('/admin') || path.startsWith('/api')) {
@@ -33,6 +36,18 @@ export async function POST(request: NextRequest) {
     const ua = request.headers.get('user-agent') || '';
     if (BOT_RE.test(ua)) {
       return new NextResponse(null, { status: 204 });
+    }
+
+    // Auth check — non-blocking: compute user_hash if logged in
+    let userHash: string | null = null;
+    try {
+      const supabase = await createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user?.id) {
+        userHash = createHash('sha256').update(user.id).digest('hex');
+      }
+    } catch (e) {
+      console.error('TRACK_AUTH_CHECK', e instanceof Error ? e.message : String(e));
     }
 
     // Visitor hash: SHA256(ip|ua|date) — never store raw IP
@@ -51,6 +66,9 @@ export async function POST(request: NextRequest) {
       country,
       device,
       visitor_hash: hash,
+      user_hash: userHash,
+      utm_source: utm_source || null,
+      utm_campaign: utm_campaign || null,
     });
 
     if (error) {

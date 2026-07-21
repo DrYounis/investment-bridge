@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     // Fetch rows for current + previous period
     const { data: rows, error } = await svc
       .from('page_views')
-      .select('path,referrer,country,device,visitor_hash,created_at')
+      .select('path,referrer,country,device,visitor_hash,user_hash,utm_source,created_at')
       .gte('created_at', prevSince)
       .order('created_at', { ascending: false });
 
@@ -62,21 +62,33 @@ export async function GET(request: NextRequest) {
       visitors: v.visitors.size,
     }));
 
+    const authenticated = current.filter((r) => r.user_hash).length;
+    const anonymous = current.length - authenticated;
+
     // Aggregation helpers
     const top = (map: Map<string, number>, limit = 10) =>
       [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, limit).map(([k, v]) => ({ key: k, views: v }));
 
     const pageMap = new Map<string, number>();
+    const pageAnonMap = new Map<string, number>();
+    const pageAuthMap = new Map<string, number>();
     const referrerMap = new Map<string, number>();
     const countryMap = new Map<string, number>();
     const deviceMap = new Map<string, number>();
+    const utmSourceMap = new Map<string, number>();
 
     for (const r of current) {
       pageMap.set(r.path, (pageMap.get(r.path) || 0) + 1);
+      if (r.user_hash) {
+        pageAuthMap.set(r.path, (pageAuthMap.get(r.path) || 0) + 1);
+      } else {
+        pageAnonMap.set(r.path, (pageAnonMap.get(r.path) || 0) + 1);
+      }
       const ref = r.referrer ? new URL(r.referrer).hostname : 'مباشر';
       referrerMap.set(ref, (referrerMap.get(ref) || 0) + 1);
       if (r.country) countryMap.set(r.country, (countryMap.get(r.country) || 0) + 1);
       deviceMap.set(r.device, (deviceMap.get(r.device) || 0) + 1);
+      if (r.utm_source) utmSourceMap.set(r.utm_source, (utmSourceMap.get(r.utm_source) || 0) + 1);
     }
 
     return NextResponse.json({
@@ -85,10 +97,17 @@ export async function GET(request: NextRequest) {
       prevTotalViews,
       prevUniqueVisitors,
       daily,
-      topPages: top(pageMap).map(({ key, views }) => ({ path: key, views })),
+      authSplit: { authenticated, anonymous },
+      topPages: top(pageMap).map(({ key, views }) => ({
+        path: key,
+        views,
+        anonViews: pageAnonMap.get(key) || 0,
+        authViews: pageAuthMap.get(key) || 0,
+      })),
       topReferrers: top(referrerMap).map(({ key, views }) => ({ referrer: key, views })),
       countries: top(countryMap).map(({ key, views }) => ({ country: key, views })),
       devices: [...deviceMap.entries()].map(([device, views]) => ({ device, views })),
+      topUtmSources: top(utmSourceMap).map(({ key, views }) => ({ source: key, views })),
     });
   } catch (err) {
     return NextResponse.json({ error: err instanceof Error ? err.message : 'Internal error' }, { status: 500 });

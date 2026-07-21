@@ -12,7 +12,18 @@ export default function PageTracker() {
     if (pathname === lastPath.current) return;
     lastPath.current = pathname;
 
-    const body = JSON.stringify({ path: pathname, referrer: document.referrer || undefined });
+    const searchParams = new URLSearchParams(window.location.search);
+    const utm_source = searchParams.get('utm_source');
+    const utm_campaign = searchParams.get('utm_campaign');
+
+    const payload: Record<string, string | undefined> = {
+      path: pathname,
+      referrer: document.referrer || undefined,
+    };
+    if (utm_source) payload.utm_source = utm_source;
+    if (utm_campaign) payload.utm_campaign = utm_campaign;
+
+    const body = JSON.stringify(payload);
     try {
       if (navigator.sendBeacon) {
         navigator.sendBeacon('/api/track', new Blob([body], { type: 'application/json' }));

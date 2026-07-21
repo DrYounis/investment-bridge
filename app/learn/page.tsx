@@ -48,6 +48,19 @@ export default async function LearnHubPage() {
           </div>
         </section>
 
+        {/* Glossary card */}
+        <section className="mb-16">
+          <Link href="/learn/glossary"
+            className="block bg-white rounded-3xl p-8 border border-[#c9a84c]/25 shadow-[0_8px_30px_rgba(10,15,30,0.06)] hover:shadow-[0_8px_30px_rgba(10,15,30,0.10)] hover:border-[#c9a84c]/50 transition-all text-center">
+            <h3 className="text-[#0a0f1e] font-bold text-xl mb-2" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+              📚 قاموس المصطلحات التجارية
+            </h3>
+            <p className="text-[#4a5b78] text-sm" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+              ٣٠٠ مصطلح تجاري واستثماري — ثنائي اللغة (عربي / English) مع شرح موسع
+            </p>
+          </Link>
+        </section>
+
         {/* Latest articles */}
         {articles.length > 0 && (
           <section>

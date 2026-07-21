@@ -4,9 +4,26 @@
  * Usage: npx tsx scripts/import-glossary.ts
  * Requires: SUPABASE_SERVICE_ROLE_KEY in .env.local
  */
-import { createServiceClient } from '../lib/supabase/service';
+import { createClient } from '@supabase/supabase-js';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { config } from 'dotenv';
+import { resolve } from 'node:path';
+
+// Load .env.local before reading env vars
+config({ path: resolve(process.cwd(), '.env.local') });
+
+// Read env vars directly — no Next.js lib imports (avoids server-only crash)
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+
+function createServiceClient() {
+  if (!SUPABASE_URL || !SUPABASE_KEY) {
+    console.error('Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env.local');
+    process.exit(1);
+  }
+  return createClient(SUPABASE_URL, SUPABASE_KEY);
+}
 
 interface GlossaryTerm {
   term_number: number;

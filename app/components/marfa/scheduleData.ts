@@ -27,13 +27,28 @@ export function getThisFridayIndex(): number {
   return Math.round(diffMs / (7 * 86400000));
 }
 
-export const SCHEDULE_DATA = [
+export interface YouTubeLink {
+  label: string;
+  url: string;
+}
+
+export interface ScheduleEntry {
+  encounter: string;
+  topic: string;
+  case: string;
+  challenge: string;
+  pdf: string;
+  arPdf: string;
+  youtubeLinks?: YouTubeLink[];
+}
+
+export const SCHEDULE_DATA: ScheduleEntry[] = [
   { encounter: "اللقاء 1",  topic: "الاستراتيجية",        case: 'حالة "Airbnb" في البدايات',               challenge: "كيف تقنع المستثمر بفكرة \"تأجير خيام أو غرف\" بينما يوجد فنادق؟ (إسقاط على سياحة حائل).",         pdf: "/case-studies/Airbnb_Strategy_Case_Study.pdf", arPdf: "/case-studies/Airbnb_Strategy_Arabic_Case_Study.pdf" },
   { encounter: "اللقاء 2",  topic: "القيادة",             case: 'حالة "Zappos" في خدمة العملاء',            challenge: "هل يمكن بناء ثقافة مؤسسية تجعل الموظف يضحي من أجل العميل؟ وكيف نطبق ذلك في مشاريعنا؟",            pdf: "/case-studies/Zappos_Leadership_Case_Study.pdf", arPdf: "/case-studies/Zappos_Leadership_Arabic_Case_Study.pdf" },
   { encounter: "اللقاء 3",  topic: "المالية",             case: 'حالة "WeWork" (الفشل المالي)',             challenge: "كيف تحولت شركة بمليارات الدولارات إلى الإفلاس؟ فهم الفرق بين \"النمو\" و\"الربحية\".",           pdf: "/case-studies/WeWork_Finance_Case_Study.pdf", arPdf: "/case-studies/WeWork_Finance_Arabic_Case_Study.pdf" },
   { encounter: "اللقاء 4",  topic: "التسويق",             case: 'حالة "Liquid Death" (تسويق المياه)',       challenge: "كيف تبيع منتجاً عادياً جداً (ماء) ببراند عبقري؟ درس في التميز البصري.",                         pdf: "/case-studies/Liquid_Death_Marketing_Case_Study.pdf", arPdf: "/case-studies/Liquid_Death_Marketing_Arabic_Case_Study.pdf" },
   { encounter: "اللقاء 5",  topic: "العمليات",            case: 'حالة "Amazon Logistics"',                  challenge: "كيف تدار العمليات لتقليل الهدر؟ (مناقشة تطبيقها في توريد الأغذية والمشروبات لسلسلة مقاهي).", pdf: "/case-studies/Amazon_Operations_Case_Study.pdf", arPdf: "/case-studies/Amazon_Operations_Arabic_Case_Study.pdf" },
-  { encounter: "اللقاء 6",  topic: "التفاوض",             case: 'حالة "Shark Tank"',                        challenge: "تحليل صفقات حقيقية: لماذا رفض المستثمر فكرة عبقرية؟ ولماذا قبل فكرة بسيطة؟",                  pdf: "/case-studies/SharkTank_Negotiation_Case_Study.pdf", arPdf: "/case-studies/SharkTank_Negotiation_Arabic_Case_Study.pdf" },
+  { encounter: "اللقاء 6",  topic: "التفاوض",             case: 'حالة "Shark Tank"',                        challenge: "تحليل صفقات حقيقية: لماذا رفض المستثمر فكرة عبقرية؟ ولماذا قبل فكرة بسيطة؟",                  pdf: "/case-studies/SharkTank_Negotiation_Case_Study.pdf", arPdf: "/case-studies/SharkTank_Negotiation_Arabic_Case_Study.pdf", youtubeLinks: [{ label: "Scrub Daddy (S4E7)", url: "https://www.youtube.com/watch?v=um-iVXiXedc" }, { label: "Ring (S5E9)", url: "https://www.youtube.com/watch?v=ae5MssJ8en4" }] },
   { encounter: "اللقاء 7",  topic: "حوكمة الشركات",       case: 'حالة "Saudi German Health"',               challenge: "إدانة 11 عضو مجلس إدارة ولجنة مراجعة بتضخيم إيرادات بـ 358 مليون ريال.",                     pdf: "/case-studies/SaudiGermanHealth_Governance_Case_Study.pdf", arPdf: "/case-studies/SaudiGermanHealth_Governance_Arabic_Case_Study.pdf" },
   { encounter: "اللقاء 8",  topic: "الابتكار",            case: 'حالة "Netflix" في الابتكار',               challenge: "كيف تُقدم على تدمير نموذج عملك الناجح حالياً لتبني نموذجاً جديداً، قبل أن يفعلها منافس؟",    pdf: "/case-studies/Netflix_Innovation_Case_Study.pdf", arPdf: "/case-studies/Netflix_Innovation_Arabic_Case_Study.pdf" },
   { encounter: "اللقاء 9",  topic: "الموارد البشرية",     case: 'حالة "Google Project Aristotle"',          challenge: "ما الذي يصنع فريقاً عالي الأداء فعلاً؟ الأمان النفسي مقابل \"تجميع النجوم\".",               pdf: "/case-studies/Google_HR_Case_Study.pdf", arPdf: "/case-studies/Google_HR_Arabic_Case_Study.pdf" },

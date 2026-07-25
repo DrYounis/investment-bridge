@@ -75,6 +75,9 @@ export default function Header() {
             <Link href="/contact" className={`${navColor} hover:text-gold transition-colors font-bold tracking-wide`}>
               تواصل معنا
             </Link>
+            <Link href="/consultation" className={`${navColor} hover:text-gold transition-colors font-bold tracking-wide`}>
+              استشارة
+            </Link>
             <Link href="/academy" className={`${navColor} hover:text-gold transition-colors font-bold tracking-wide flex items-center gap-1`}>
               <span>🎓</span> الأكاديمية
             </Link>
@@ -170,6 +173,14 @@ export default function Header() {
                 onClick={() => setMenuOpen(false)}
               >
                 تواصل معنا
+              </Link>
+
+              <Link
+                href="/consultation"
+                className="text-gold font-bold text-lg hover:opacity-80 transition-opacity"
+                onClick={() => setMenuOpen(false)}
+              >
+                استشارة
               </Link>
 
               <Link

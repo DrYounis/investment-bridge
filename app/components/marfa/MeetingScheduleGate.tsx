@@ -71,11 +71,11 @@ export default function MeetingScheduleGate() {
     return <MeetingsSchedule />;
   }
 
-  // Blurred schedule + subscription CTA
+  // Blurred schedule + subscription CTA — visible enough for FOMO, unreadable
   return (
     <div className="relative" dir="rtl">
       {/* Blur overlay */}
-      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#faf8f2]/80 backdrop-blur-[6px] rounded-3xl">
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#faf8f2]/60 rounded-3xl">
         <div className="text-center px-6 max-w-sm">
           <div className="text-4xl mb-4">🔒</div>
           <h3 className="text-xl font-black text-[#0a0f1e] mb-3" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
@@ -96,8 +96,8 @@ export default function MeetingScheduleGate() {
         </div>
       </div>
 
-      {/* Blurred schedule underneath */}
-      <div className="select-none pointer-events-none opacity-20 blur-[8px]">
+      {/* Blurred schedule underneath — visible but unreadable → FOMO */}
+      <div className="select-none pointer-events-none blur-[3px]">
         <MeetingsSchedule />
       </div>
     </div>

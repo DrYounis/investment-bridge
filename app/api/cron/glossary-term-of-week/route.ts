@@ -5,6 +5,73 @@ import { SCHEDULE_DATA, formatDate } from '@/app/components/marfa/scheduleData';
 
 export const dynamic = 'force-dynamic';
 
+function buildMultiTermHTML(
+  terms: Array<{
+    english_term: string;
+    arabic_term: string;
+    arabic_def: string;
+    short_desc_ar?: string | null;
+    example_ar?: string | null;
+  }>,
+  meetingNumber: number,
+) {
+  const meetingEntry = SCHEDULE_DATA[meetingNumber - 1];
+
+  const termsHTML = terms.map((term) => `
+    <div style="border: 2px solid #c9a84c33; border-radius: 20px; padding: 24px; background: #ffffff; margin-bottom: 20px;">
+      <div style="text-align: center; margin-bottom: 16px;">
+        <p style="color: #0a0f1e; font-size: 24px; font-weight: 900; margin: 0 0 4px 0;" dir="ltr">${term.english_term}</p>
+        <p style="color: #c9a84c; font-size: 20px; font-weight: 800; margin: 0;">${term.arabic_term}</p>
+      </div>
+      ${term.short_desc_ar ? `
+      <div style="border: 1px solid #c9a84c33; border-radius: 12px; padding: 14px; background: #faf8f2; margin-bottom: 12px; text-align: center;">
+        <p style="color: #4a5b78; font-size: 14px; line-height: 1.8; margin: 0;">${term.short_desc_ar}</p>
+      </div>` : ''}
+      <div style="border: 1px solid #c9a84c33; border-radius: 12px; padding: 14px; background: #ffffff; margin-bottom: 12px;">
+        <h4 style="color: #0a0f1e; font-size: 13px; margin: 0 0 6px 0; text-align: center;">📝 التعريف الكامل</h4>
+        <p style="color: #4a5b78; font-size: 13px; line-height: 1.8; margin: 0;">${term.arabic_def}</p>
+      </div>
+      ${term.example_ar ? `
+      <div style="border: 1px solid #c9a84c33; border-radius: 12px; padding: 14px; background: #fdf9ef;">
+        <h4 style="color: #0a0f1e; font-size: 13px; margin: 0 0 6px 0; text-align: center;">💡 مثال من الواقع</h4>
+        <p style="color: #4a5b78; font-size: 13px; line-height: 1.8; margin: 0;">${term.example_ar}</p>
+      </div>` : ''}
+    </div>
+  `).join('');
+
+  return `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head><meta charset="UTF-8"></head>
+<body style="font-family: 'Tajawal', 'Cairo', sans-serif; direction: rtl; background: #faf8f2; padding: 30px; margin: 0;">
+<div style="max-width: 600px; margin: auto; background: #ffffff; border: 1px solid #c9a84c33; border-radius: 24px; overflow: hidden; box-shadow: 0 8px 30px rgba(10,15,30,0.06);">
+  <div style="background: linear-gradient(135deg, #0a0f1e, #0d1628); padding: 32px 24px; text-align: center;">
+    <h1 style="color: #c9a84c; font-size: 22px; margin: 0 0 6px 0;">📖 مصطلحات الأسبوع — مرفأ</h1>
+    <p style="color: #a0aec0; font-size: 13px; margin: 0;">حيث تَرسو المعرفة</p>
+  </div>
+  <div style="padding: 32px 24px;">
+    <div style="text-align: center; margin-bottom: 24px;">
+      <p style="color: #4a5b78; font-size: 14px; line-height: 1.8; margin: 0;">
+        استعداداً للقاء الجمعة القادمة عن <strong>${meetingEntry?.topic || ''}</strong> — ${terms.length} مصطلحات أساسية لفهم حالة ${meetingEntry?.case || ''} قبل الحضور.
+      </p>
+    </div>
+    ${termsHTML}
+    ${meetingEntry ? `
+    <div style="background: linear-gradient(135deg, #0a0f1e, #0d1628); border-radius: 16px; padding: 20px; margin-bottom: 24px; text-align: center;">
+      <p style="color: #c9a84c; font-size: 15px; font-weight: bold; margin: 0 0 6px 0;">🔭 الجمعة القادمة — ${meetingEntry.encounter}</p>
+      <p style="color: #a0aec0; font-size: 14px; margin: 0;">${meetingEntry.case} — ${meetingEntry.topic}</p>
+    </div>` : ''}
+    <div style="text-align: center; margin-bottom: 24px;">
+      <a href="https://www.marfa.sa/learn/glossary" style="display: inline-block; background: #c9a84c; color: #0a0f1e; padding: 12px 28px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 14px;">تصفح القاموس كاملاً (٣٠٠ مصطلح) ←</a>
+    </div>
+    <div style="padding-top: 20px; border-top: 1px solid #c9a84c44; text-align: center;">
+      <p style="color: #64748b; font-size: 10px; margin: 0;">📖 مصطلحات الأسبوع — تصلك كل اثنين صباحاً لتحضيرك للقاء الجمعة</p>
+      <p style="color: #64748b; font-size: 10px; margin: 4px 0 0 0;">www.marfa.sa &nbsp;|&nbsp; منصة مرفأ الاستثمارية &nbsp;|&nbsp; حائل 🇸🇦</p>
+    </div>
+  </div>
+</div>
+</body></html>`;
+}
+
 function buildTermOfWeekHTML(
   term: {
     english_term: string;
@@ -113,16 +180,16 @@ export async function GET() {
       return NextResponse.json({ skipped: true, reason: `No scheduled meeting for #${nextMeetingNumber}` });
     }
 
-    // ── Find featured term for this meeting ──
-    const { data: termRow, error: termErr } = await supabase
+    // ── Find all unsent featured terms for this meeting ──
+    const { data: termRows, error: termErr } = await supabase
       .from('marfa_glossary_terms')
       .select('*')
       .eq('featured_meeting', nextMeetingNumber)
       .is('sent_at', null)
-      .maybeSingle();
+      .order('term_number', { ascending: true });
 
-    if (termErr || !termRow) {
-      return NextResponse.json({ skipped: true, reason: `No unsent featured term for meeting ${nextMeetingNumber}` });
+    if (termErr || !termRows || termRows.length === 0) {
+      return NextResponse.json({ skipped: true, reason: `No unsent featured terms for meeting ${nextMeetingNumber}` });
     }
 
     // ── Fetch subscribers ──
@@ -135,9 +202,15 @@ export async function GET() {
       return NextResponse.json({ message: 'No subscribers' });
     }
 
+    // ── Build subject ──
+    const termNames = termRows.map(t => t.arabic_term).join('، ');
+    const singleTerm = termRows.length === 1;
+    const subject = singleTerm
+      ? `📖 مصطلح الأسبوع — ${termRows[0].arabic_term} | ${termRows[0].english_term}`
+      : `📖 مصطلحات الأسبوع — ${termNames} | استعداداً للقاء ${nextMeetingNumber}`;
+
     // ── Send emails ──
     const resend = new Resend(process.env.RESEND_API_KEY);
-    const subject = `📖 مصطلح الأسبوع — ${termRow.arabic_term} | ${termRow.english_term}`;
 
     let sent = 0;
     let failed = 0;
@@ -148,7 +221,9 @@ export async function GET() {
           from: 'Marfa Learn <noreply@marfa.sa>',
           to: sub.email,
           subject,
-          html: buildTermOfWeekHTML(termRow, nextMeetingNumber),
+          html: singleTerm
+            ? buildTermOfWeekHTML(termRows[0], nextMeetingNumber)
+            : buildMultiTermHTML(termRows, nextMeetingNumber),
         });
         if (error) { failed++; } else { sent++; }
       } catch {
@@ -157,11 +232,14 @@ export async function GET() {
       await new Promise(r => setTimeout(r, 600));
     }
 
-    // ── Mark as sent ──
-    await supabase
-      .from('marfa_glossary_terms')
-      .update({ sent_at: new Date().toISOString() })
-      .eq('term_number', termRow.term_number);
+    // ── Mark all as sent ──
+    const now = new Date().toISOString();
+    for (const term of termRows) {
+      await supabase
+        .from('marfa_glossary_terms')
+        .update({ sent_at: now })
+        .eq('term_number', term.term_number);
+    }
 
     return NextResponse.json({
       success: true,
@@ -169,7 +247,7 @@ export async function GET() {
       failed,
       total: subscribers.length,
       meeting: nextMeetingNumber,
-      term: termRow.english_term,
+      terms: termRows.map(t => t.english_term),
     });
   } catch (err: unknown) {
     console.error('[glossary-term-of-week]', err);

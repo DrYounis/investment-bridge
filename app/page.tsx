@@ -3,6 +3,7 @@ import ShipHero from './components/ShipHero';
 import AuthAwarePathway from './components/AuthAwarePathway';
 import AuthAwareLinks from './components/AuthAwareLinks';
 import PortfolioTeaser from './components/PortfolioTeaser';
+import RegistrationBanner from './components/marfa/RegistrationBanner';
 
 export default function Home() {
   return (
@@ -71,6 +72,11 @@ export default function Home() {
             protectedHref="/marfa"
             variant="light"
           />
+        </div>
+
+        {/* Registration campaign — converts anonymous visitors */}
+        <div className="max-w-2xl mx-auto mb-24">
+          <RegistrationBanner variant="hero" context="home" />
         </div>
 
         {/* Portfolio Teaser */}

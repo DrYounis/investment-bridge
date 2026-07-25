@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { getPublishedArticles } from '@/lib/learn/articles';
 import { CATEGORIES, TOPICS } from '@/lib/learn/taxonomy';
 import Link from 'next/link';
+import RegistrationBanner from '@/app/components/marfa/RegistrationBanner';
 
 export const metadata: Metadata = {
   title: 'مركز المعرفة | مرفأ',
@@ -59,6 +60,11 @@ export default async function LearnHubPage() {
               ٣٠٠ مصطلح تجاري واستثماري — ثنائي اللغة (عربي / English) مع شرح موسع
             </p>
           </Link>
+        </section>
+
+        {/* Registration CTA */}
+        <section className="mb-16 max-w-md mx-auto">
+          <RegistrationBanner variant="card" context="learn" />
         </section>
 
         {/* Latest articles */}

@@ -1,6 +1,7 @@
 import MeetingsSchedule from '../components/marfa/MeetingsSchedule';
 import InvestorMeetingForm from '../components/marfa/InvestorMeetingForm';
 import AdvisorProfile from '../components/marfa/AdvisorProfile';
+import RegistrationBanner from '../components/marfa/RegistrationBanner';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,6 +29,11 @@ export default async function MeetingsPage() {
                 </div>
 
                 <MeetingsSchedule />
+
+                {/* Registration CTA */}
+                <div className="max-w-md mx-auto my-16">
+                  <RegistrationBanner variant="card" context="meetings" />
+                </div>
 
                 <InvestorMeetingForm />
 

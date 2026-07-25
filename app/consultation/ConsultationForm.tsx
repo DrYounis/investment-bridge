@@ -56,6 +56,7 @@ interface ConsultationFormProps {
 
 export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
   const [isFirstTime, setIsFirstTime] = useState(true);
+  const [paymentMode, setPaymentMode] = useState<'pay' | 'equity'>('pay');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -67,7 +68,8 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
 
   const [processing, setProcessing] = useState(false);
 
-  const price = isFirstTime ? 100 : 350;
+  const isEquity = paymentMode === 'equity';
+  const price = isEquity ? 0 : (isFirstTime ? 100 : 350);
   const minutes = 75;
   const freeMinutes = isFirstTime ? 15 : 0;
   const paidMinutes = minutes - freeMinutes;
@@ -102,7 +104,32 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
     setProcessing(true);
     setError('');
 
-    // Store booking details for success page
+    // Equity mode: skip payment, notify admin directly
+    if (isEquity) {
+      try {
+        const res = await fetch('/api/consultation/notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name, email, phone, isFirstTime: true,
+            price: 0, day: selectedDay, slot: selectedSlot, minutes,
+            notes: `SAFE 3% EQUITY — ${notes}`,
+          }),
+        });
+        if (res.ok) {
+          localStorage.setItem('consultation_equity_booked', 'true');
+          window.location.href = '/consultation?equity=success';
+        } else {
+          throw new Error('فشل إرسال الطلب');
+        }
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'حدث خطأ');
+        setProcessing(false);
+      }
+      return;
+    }
+
+    // Payment mode: create Paymob intention
     localStorage.setItem('consultation_booking', JSON.stringify({
       name, email, phone, isFirstTime, price, day: selectedDay, slot: selectedSlot, minutes, notes,
     }));
@@ -132,19 +159,19 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
   if (step === 'confirm') {
     return (
       <div className="bg-white rounded-3xl p-8 border border-[#c9a84c]/30 shadow-[0_8px_30px_rgba(10,15,30,0.06)] text-center">
-        <div className="text-5xl mb-4">💳</div>
+        <div className="text-5xl mb-4">{isEquity ? '🤝' : '💳'}</div>
         <h2 className="text-xl font-black text-[#0a0f1e] mb-2" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-          تأكيد الحجز والدفع
+          {isEquity ? 'طلب حصة — تأكيد الموعد' : 'تأكيد الحجز والدفع'}
         </h2>
         <p className="text-[#4a5b78] text-sm mb-6" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-          راجع تفاصيل حجزك ثم أكمل الدفع
+          {isEquity ? 'سيتواصل معك المهندس أحمد لمناقشة اتفاقية الحصة' : 'راجع تفاصيل حجزك ثم أكمل الدفع'}
         </p>
 
         <div className="bg-[#faf8f2] rounded-xl p-4 mb-6 text-right">
           <p className="text-sm text-[#4a5b78]"><strong>الموعد:</strong> {selectedDay} | {selectedSlot}</p>
           <p className="text-sm text-[#4a5b78]"><strong>المدة:</strong> {minutes} دقيقة ({paidMinutes} + {freeMinutes > 0 ? `${freeMinutes} مجانية` : ''})</p>
-          <p className="text-sm text-[#4a5b78]"><strong>النوع:</strong> {isFirstTime ? 'أول مرة' : 'متابعة'}</p>
-          <p className="text-sm text-[#0a0f1e] font-bold mt-2"><strong>الإجمالي:</strong> {price} ريال</p>
+          <p className="text-sm text-[#4a5b78]"><strong>النوع:</strong> {isEquity ? 'مقابل حصة 3%' : (isFirstTime ? 'أول مرة' : 'متابعة')}</p>
+          <p className="text-sm text-[#0a0f1e] font-bold mt-2"><strong>الإجمالي:</strong> {isEquity ? '3% حصة (SAFE)' : `${price} ريال`}</p>
         </div>
 
         {error && (
@@ -157,11 +184,11 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
           className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#c9a84c] to-[#d4a843] text-[#0a0f1e] font-bold text-lg hover:shadow-xl hover:shadow-[#c9a84c]/30 transition-all duration-300 disabled:opacity-50"
           style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
         >
-          {processing ? 'جاري التوجيه للدفع...' : `🔒 ادفع الآن — ${price} ريال`}
+          {processing ? 'جاري الإرسال...' : (isEquity ? '🤝 قدّم طلب الحصة' : `🔒 ادفع الآن — ${price} ريال`)}
         </button>
 
         <p className="text-xs text-[#8a94a8] mt-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-          دفع آمن عبر Paymob — Apple Pay مدعوم
+          {isEquity ? 'سيتم التواصل معك خلال 24 ساعة' : 'دفع آمن عبر Paymob — Apple Pay مدعوم'}
         </p>
 
         <button
@@ -252,18 +279,34 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
 
       <div className="flex gap-2 mb-6">
         <button
-          onClick={() => setIsFirstTime(true)}
-          className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${isFirstTime ? 'bg-[#10b981] text-white' : 'bg-[#faf8f2] text-[#4a5b78] border border-[#c9a84c]/20'}`}
+          onClick={() => { setIsFirstTime(true); setPaymentMode('pay'); }}
+          className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${isFirstTime && !isEquity ? 'bg-[#10b981] text-white' : 'bg-[#faf8f2] text-[#4a5b78] border border-[#c9a84c]/20'}`}
           style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
         >
           🎉 أول مرة — ١٠٠ ريال
         </button>
         <button
-          onClick={() => setIsFirstTime(false)}
-          className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${!isFirstTime ? 'bg-[#c9a84c] text-[#0a0f1e]' : 'bg-[#faf8f2] text-[#4a5b78] border border-[#c9a84c]/20'}`}
+          onClick={() => { setIsFirstTime(false); setPaymentMode('pay'); }}
+          className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${!isFirstTime && !isEquity ? 'bg-[#c9a84c] text-[#0a0f1e]' : 'bg-[#faf8f2] text-[#4a5b78] border border-[#c9a84c]/20'}`}
           style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
         >
           🔁 متابعة — ٣٥٠ ريال
+        </button>
+      </div>
+
+      {/* Payment Mode — Cash or Equity */}
+      <div className="flex gap-2 mb-6">
+        <button
+          onClick={() => { setPaymentMode('pay'); setIsFirstTime(true); }}
+          className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all ${paymentMode === 'pay' ? 'bg-[#faf8f2] text-[#0a0f1e] border-2 border-[#c9a84c]' : 'bg-[#faf8f2] text-[#8a94a8] border border-[#c9a84c]/10'}`}
+        >
+          💳 دفع نقدي
+        </button>
+        <button
+          onClick={() => setPaymentMode('equity')}
+          className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all ${isEquity ? 'bg-[#c9a84c] text-[#0a0f1e] border-2 border-[#c9a84c]' : 'bg-[#faf8f2] text-[#8a94a8] border border-[#c9a84c]/10'}`}
+        >
+          🤝 مقابل حصة 3%
         </button>
       </div>
 

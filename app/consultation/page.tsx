@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import ConsultationForm from './ConsultationForm';
+import EquitySuccessBanner from './EquitySuccessBanner';
 
 export const metadata: Metadata = {
   title: 'استشارة خاصة | مرفأ',
@@ -165,6 +166,7 @@ export default function ConsultationPage() {
 
       {/* Booking Form */}
       <section className="max-w-2xl mx-auto px-4 py-16">
+        <EquitySuccessBanner />
         <ConsultationForm />
       </section>
 

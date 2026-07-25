@@ -181,15 +181,71 @@ export async function GET() {
     }
 
     // ── Find all unsent featured terms for this meeting ──
-    const { data: termRows, error: termErr } = await supabase
+    let { data: termRows, error: termErr } = await supabase
       .from('marfa_glossary_terms')
       .select('*')
       .eq('featured_meeting', nextMeetingNumber)
       .is('sent_at', null)
       .order('term_number', { ascending: true });
 
-    if (termErr || !termRows || termRows.length === 0) {
-      return NextResponse.json({ skipped: true, reason: `No unsent featured terms for meeting ${nextMeetingNumber}` });
+    if (termErr) {
+      return NextResponse.json({ error: termErr.message }, { status: 500 });
+    }
+
+    // ── Auto-select from glossary if no terms manually tagged ──
+    if (!termRows || termRows.length === 0) {
+      const entry = SCHEDULE_DATA[nextMeetingNumber - 1];
+      const keywords = entry?.glossaryKeywords;
+
+      if (keywords && keywords.length > 0) {
+        // Fetch ALL glossary terms
+        const { data: allTerms } = await supabase
+          .from('marfa_glossary_terms')
+          .select('*')
+          .order('term_number', { ascending: true });
+
+        if (allTerms) {
+          // Score each term by how many keywords match in arabic_term + arabic_def
+          const scored = allTerms.map((t) => {
+            const haystack = `${t.arabic_term} ${t.arabic_def} ${t.english_term}`;
+            let score = 0;
+            for (const kw of keywords) {
+              if (haystack.includes(kw)) score++;
+            }
+            return { term: t, score };
+          });
+
+          // Pick top 3 matching terms
+          const top = scored
+            .filter(s => s.score > 0)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 3);
+
+          if (top.length > 0) {
+            // Tag them for this meeting
+            for (const { term } of top) {
+              await supabase
+                .from('marfa_glossary_terms')
+                .update({ featured_meeting: nextMeetingNumber })
+                .eq('term_number', term.term_number);
+            }
+
+            // Re-fetch the newly tagged terms
+            const { data: fresh } = await supabase
+              .from('marfa_glossary_terms')
+              .select('*')
+              .eq('featured_meeting', nextMeetingNumber)
+              .is('sent_at', null)
+              .order('term_number', { ascending: true });
+
+            termRows = fresh;
+          }
+        }
+      }
+    }
+
+    if (!termRows || termRows.length === 0) {
+      return NextResponse.json({ skipped: true, reason: `No terms for meeting ${nextMeetingNumber}` });
     }
 
     // ── Fetch subscribers ──

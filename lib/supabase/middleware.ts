@@ -2,7 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { isSuperAdminEmail } from '@/lib/auth/adminEmails'
 
-const PROTECTED_PATHS = ['/dashboard', '/admin', '/meetings', '/advisor', '/services/pitch-deck']
+const PROTECTED_PATHS = ['/dashboard', '/admin', '/advisor', '/services/pitch-deck']
 
 export async function updateSession(request: NextRequest) {
   try {

@@ -40,6 +40,14 @@
     {
       "path": "/api/cron/user-journey-analysis",
       "schedule": "0 8 * * 0"
+    },
+    {
+      "path": "/api/cron/reengagement",
+      "schedule": "0 7 * * 1"
+    },
+    {
+      "path": "/api/cron/majlis-quiz-reminder-midweek",
+      "schedule": "0 5 * * 3"
     }
   ]
 }

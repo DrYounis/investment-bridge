@@ -2,8 +2,6 @@
 
 import { useState, useMemo } from 'react';
 
-const WHATSAPP_NUMBER = '966555056545';
-
 // ── Availability rules ──
 // Weekdays (Sun-Thu): 7 PM - 9 PM, 2 hours
 // Weekends (Fri-Sat): 5 PM - 7 PM, 2 hours
@@ -67,7 +65,9 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
   const [selectedDay, setSelectedDay] = useState('');
   const [error, setError] = useState('');
 
-  const price = isFirstTime ? 20 : 100;
+  const [processing, setProcessing] = useState(false);
+
+  const price = isFirstTime ? 100 : 350;
   const minutes = 75;
   const freeMinutes = isFirstTime ? 15 : 0;
   const paidMinutes = minutes - freeMinutes;
@@ -96,60 +96,72 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
     }
     setStep('confirm');
     onBooked?.();
-
-    // Fire-and-forget: notify admin email
-    fetch('/api/consultation/notify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name,
-        email,
-        phone,
-        isFirstTime,
-        price,
-        day: selectedDay,
-        slot: selectedSlot,
-        minutes,
-        notes,
-      }),
-    }).catch(() => {});
   };
 
-  const waMsg = encodeURIComponent(
-    `السلام عليكم أستاذ أحمد،\n\nحجز استشارة جديد:\n- الاسم: ${name}\n- الإيميل: ${email}\n- الجوال: ${phone}\n- النوع: ${isFirstTime ? 'أول مرة' : 'متابعة'}\n- السعر: ${price}$\n- الموعد: ${selectedDay} | ${selectedSlot}\n${notes ? `- ملاحظات: ${notes}\n` : ''}\nمستعد للدفع — أرسل طريقة الدفع من فضلك.`
-  );
+  const handlePay = async () => {
+    setProcessing(true);
+    setError('');
 
-  // ── Step 3: Confirmation ──
+    // Store booking details for success page
+    localStorage.setItem('consultation_booking', JSON.stringify({
+      name, email, phone, isFirstTime, price, day: selectedDay, slot: selectedSlot, minutes, notes,
+    }));
+
+    try {
+      const res = await fetch('/api/paymob/consultation-intention', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: price, name, email, phone, day: selectedDay, slot: selectedSlot, minutes, notes, isFirstTime }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'فشل في إنشاء جلسة الدفع');
+      if (data.client_secret) {
+        const publicKey = process.env.NEXT_PUBLIC_PAYMOB_PUBLIC_KEY;
+        window.location.href = `https://ksa.paymob.com/unifiedcheckout/?publicKey=${publicKey}&clientSecret=${data.client_secret}`;
+      } else {
+        throw new Error('Missing payment session');
+      }
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'حدث خطأ في الدفع');
+      setProcessing(false);
+      localStorage.removeItem('consultation_booking');
+    }
+  };
+
+  // ── Step 3: Confirmation + Payment ──
   if (step === 'confirm') {
     return (
-      <div className="bg-white rounded-3xl p-8 border border-[#10b981]/30 shadow-[0_8px_30px_rgba(10,15,30,0.06)] text-center">
-        <div className="text-5xl mb-4">📅</div>
+      <div className="bg-white rounded-3xl p-8 border border-[#c9a84c]/30 shadow-[0_8px_30px_rgba(10,15,30,0.06)] text-center">
+        <div className="text-5xl mb-4">💳</div>
         <h2 className="text-xl font-black text-[#0a0f1e] mb-2" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-          تم اختيار الموعد — أكمل الدفع
+          تأكيد الحجز والدفع
         </h2>
+        <p className="text-[#4a5b78] text-sm mb-6" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+          راجع تفاصيل حجزك ثم أكمل الدفع
+        </p>
 
         <div className="bg-[#faf8f2] rounded-xl p-4 mb-6 text-right">
           <p className="text-sm text-[#4a5b78]"><strong>الموعد:</strong> {selectedDay} | {selectedSlot}</p>
           <p className="text-sm text-[#4a5b78]"><strong>المدة:</strong> {minutes} دقيقة ({paidMinutes} + {freeMinutes > 0 ? `${freeMinutes} مجانية` : ''})</p>
-          <p className="text-sm text-[#4a5b78]"><strong>السعر:</strong> {price}$</p>
+          <p className="text-sm text-[#4a5b78]"><strong>النوع:</strong> {isFirstTime ? 'أول مرة' : 'متابعة'}</p>
+          <p className="text-sm text-[#0a0f1e] font-bold mt-2"><strong>الإجمالي:</strong> {price} ريال</p>
         </div>
 
-        <p className="text-[#4a5b78] text-sm mb-6" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-          أرسل هذه الرسالة للمهندس أحمد لإتمام الحجز والدفع:
-        </p>
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-sm mb-4">{error}</div>
+        )}
 
-        <a
-          href={`https://wa.me/${WHATSAPP_NUMBER}?text=${waMsg}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block w-full py-4 rounded-2xl bg-[#25D366] text-white font-bold text-lg hover:bg-[#1ebe5d] transition-colors shadow-lg shadow-[#25D366]/20"
+        <button
+          onClick={handlePay}
+          disabled={processing}
+          className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#c9a84c] to-[#d4a843] text-[#0a0f1e] font-bold text-lg hover:shadow-xl hover:shadow-[#c9a84c]/30 transition-all duration-300 disabled:opacity-50"
           style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
         >
-          💬 أكمل الحجز عبر واتساب
-        </a>
+          {processing ? 'جاري التوجيه للدفع...' : `🔒 ادفع الآن — ${price} ريال`}
+        </button>
 
         <p className="text-xs text-[#8a94a8] mt-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-          سيتم تأكيد موعدك بعد إتمام الدفع
+          دفع آمن عبر Paymob — Apple Pay مدعوم
         </p>
 
         <button
@@ -172,7 +184,7 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
             اختر موعد الاستشارة
           </h2>
           <p className="text-[#4a5b78] text-sm" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-            {isFirstTime ? `${paidMinutes} دقيقة + ${freeMinutes} دقيقة مجانية` : `${minutes} دقيقة`} — {price}$
+            {isFirstTime ? `${paidMinutes} دقيقة + ${freeMinutes} دقيقة مجانية` : `${minutes} دقيقة`} — {price} ريال
           </p>
         </div>
 
@@ -244,14 +256,14 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
           className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${isFirstTime ? 'bg-[#10b981] text-white' : 'bg-[#faf8f2] text-[#4a5b78] border border-[#c9a84c]/20'}`}
           style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
         >
-          🎉 أول مرة — ${20}
+          🎉 أول مرة — ١٠٠ ريال
         </button>
         <button
           onClick={() => setIsFirstTime(false)}
           className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${!isFirstTime ? 'bg-[#c9a84c] text-[#0a0f1e]' : 'bg-[#faf8f2] text-[#4a5b78] border border-[#c9a84c]/20'}`}
           style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
         >
-          🔁 متابعة — ${100}
+          🔁 متابعة — ٣٥٠ ريال
         </button>
       </div>
 

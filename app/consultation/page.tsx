@@ -21,6 +21,9 @@ export default function ConsultationPage() {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#c9a84c]/10 border border-[#c9a84c]/20 text-[#c9a84c] text-sm font-bold mb-6">
             🎯 استشارة خاصة — One-on-One
           </div>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#ef4444]/10 border border-[#ef4444]/20 text-[#ef4444] text-xs font-bold mb-6 mr-3">
+            ⚡ متاح ساعتين فقط يومياً
+          </div>
           <h1 className="text-4xl md:text-6xl font-black text-white mb-4 leading-tight" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
             استشارة خاصة —<br />
             <span className="text-[#c9a84c]">حلّل فكرتك وخطط لمشروعك</span>
@@ -176,9 +179,9 @@ export default function ConsultationPage() {
         <div className="space-y-4">
           {[
             { step: '١', title: 'احجز استشارتك', desc: 'املأ اسمك وإيميلك وجوالك — واختر نوع الاستشارة (أول مرة أو متابعة).' },
-            { step: '٢', title: 'ادفع وتواصل مباشرة', desc: 'بعد تعبئة بياناتك، تتواصل مباشرة مع د. محمد يونس عبر واتساب. يتم الدفع وتأكيد الموعد في نفس المحادثة.' },
-            { step: '٣', title: 'احضر الجلسة', desc: 'الجلسة أونلاين — سيتم إرسال رابط الاجتماع قبل الموعد. حضر فكرتك وأسئلتك.' },
-            { step: '٤', title: 'استلم الخلاصة', desc: 'بعد الجلسة، نرسل لك ملخصاً مكتوباً بالنقاط الرئيسية وخطة العمل.' },
+            { step: '٢', title: 'اختر موعدك', desc: 'المواعيد المتاحة تظهر مباشرة — ساعتين فقط يومياً. أيام العمل: بعد ٥ م، الويكند: ٨ ص - ١٠ م.' },
+            { step: '٣', title: 'أكد الحجز وادفع', desc: 'بعد اختيار الموعد، تتواصل مع د. محمد مباشرة عبر واتساب لإتمام الدفع وتأكيد الحجز.' },
+            { step: '٤', title: 'احضر الجلسة', desc: 'الجلسة أونلاين — سيتم إرسال رابط الاجتماع. حضر فكرتك وأسئلتك.' },
           ].map((s) => (
             <div key={s.step} className="flex items-start gap-4 bg-white rounded-2xl p-5 border border-[#c9a84c]/15 shadow-[0_4px_16px_rgba(10,15,30,0.03)]">
               <div className="w-10 h-10 rounded-full bg-[#c9a84c] text-[#0a0f1e] flex items-center justify-center font-black text-sm shrink-0">

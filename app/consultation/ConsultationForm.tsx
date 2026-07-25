@@ -2,14 +2,16 @@
 
 import { useState } from 'react';
 
+const WHATSAPP_NUMBER = '966555056545';
+const WHATSAPP_MSG = encodeURIComponent('السلام عليكم د. محمد، تم حجز استشارة عبر موقع مرفأ وأرغب في تحديد الموعد.');
+
 export default function ConsultationForm() {
   const [isFirstTime, setIsFirstTime] = useState(true);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [notes, setNotes] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState<'form' | 'pay'>('form');
   const [error, setError] = useState('');
 
   const price = isFirstTime ? 20 : 100;
@@ -17,7 +19,7 @@ export default function ConsultationForm() {
   const freeMinutes = isFirstTime ? 15 : 0;
   const paidMinutes = minutes - freeMinutes;
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleContinue = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -26,48 +28,54 @@ export default function ConsultationForm() {
       return;
     }
 
-    setLoading(true);
-    try {
-      const res = await fetch('/api/consultation/book', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: name.trim(),
-          email: email.trim().toLowerCase(),
-          phone: phone.trim(),
-          notes: notes.trim(),
-          isFirstTime,
-          price,
-          durationMinutes: minutes,
-        }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || 'فشل في إرسال الطلب');
-      }
-
-      setSubmitted(true);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'حدث خطأ — حاول مرة أخرى');
-    }
-    setLoading(false);
+    setStep('pay');
   };
 
-  if (submitted) {
+  // Build WhatsApp message with user details
+  const waMsg = encodeURIComponent(
+    `السلام عليكم د. محمد،\n\nتم حجز استشارة عبر موقع مرفأ:\n- الاسم: ${name}\n- الإيميل: ${email}\n- الجوال: ${phone}\n- النوع: ${isFirstTime ? 'أول مرة (20$)' : 'متابعة (100$)'}\n- المدة: ${minutes} دقيقة\n${notes ? `- ملاحظات: ${notes}\n` : ''}\nأرغب في تحديد الموعد.`
+  );
+
+  if (step === 'pay') {
     return (
-      <div className="bg-white rounded-3xl p-8 border border-[#10b981]/30 shadow-[0_8px_30px_rgba(10,15,30,0.06)] text-center">
-        <div className="text-5xl mb-4">✅</div>
-        <h3 className="text-xl font-black text-[#0a0f1e] mb-2" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-          تم استلام طلبك!
-        </h3>
-        <p className="text-[#4a5b78] text-sm mb-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-          سنتواصل معك خلال ٢٤ ساعة لتأكيد الموعد. بعد التأكيد، حوّل {price}$ إلى الحساب البنكي لتأكيد الحجز.
+      <div className="bg-white rounded-3xl p-8 border border-[#c9a84c]/20 shadow-[0_8px_30px_rgba(10,15,30,0.06)] text-center">
+        <div className="text-4xl mb-4">💳</div>
+        <h2 className="text-xl font-black text-[#0a0f1e] mb-2" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+          الخطوة الأخيرة — الدفع
+        </h2>
+        <p className="text-[#4a5b78] text-sm mb-6" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+          {paidMinutes} دقيقة استشارة{freeMinutes > 0 ? ` + ${freeMinutes} دقيقة مجانية` : ''} = {minutes} دقيقة
         </p>
-        <div className="inline-block text-right bg-[#faf8f2] rounded-2xl p-4 border border-[#c9a84c]/20">
-          <p className="text-xs text-[#4a5b78]" dir="ltr">IBAN: SA4745000000163199380001</p>
-          <p className="text-xs text-[#4a5b78] mt-1">Saudi Awwal Bank — Mohamad Younis</p>
+
+        <div className="text-4xl font-black text-[#0a0f1e] mb-2">
+          <span className="text-xl">$</span>{price}
         </div>
+        <p className="text-[#8a94a8] text-xs mb-8">لمرة واحدة — يفتح التواصل المباشر</p>
+
+        {/* Payment via Stripe or direct WhatsApp */}
+        <div className="space-y-3">
+          <a
+            href={`https://wa.me/${WHATSAPP_NUMBER}?text=${waMsg}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full py-4 rounded-2xl bg-[#25D366] text-white font-bold text-lg hover:bg-[#1ebe5d] transition-colors shadow-lg shadow-[#25D366]/20"
+            style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
+          >
+            💬 ادفع واحجز عبر واتساب
+          </a>
+
+          <p className="text-xs text-[#8a94a8]" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+            بعد الضغط، سيتم فتح محادثة واتساب مع د. محمد يونس مباشرة — أرسل الرسالة الجاهزة لتأكيد حجزك واستلام معلومات الدفع.
+          </p>
+        </div>
+
+        <button
+          onClick={() => setStep('form')}
+          className="mt-6 text-xs text-[#8a94a8] hover:text-[#0a0f1e] transition-colors"
+          style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
+        >
+          ← تعديل المعلومات
+        </button>
       </div>
     );
   }
@@ -102,11 +110,10 @@ export default function ConsultationForm() {
           {paidMinutes} دقيقة استشارة
           {freeMinutes > 0 && <span className="text-[#c9a84c] font-bold"> + {freeMinutes} دقيقة مجانية</span>}
           {' = '}<strong className="text-[#0a0f1e]">{minutes} دقيقة</strong>
-          {' — '}<strong className="text-[#0a0f1e]">${price}</strong>
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleContinue} className="space-y-4">
         <div>
           <label className="block text-sm font-bold text-[#0a0f1e] mb-1" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
             الاسم الكامل *
@@ -130,7 +137,7 @@ export default function ConsultationForm() {
             value={email}
             onChange={e => setEmail(e.target.value)}
             required
-            className="w-full px-4 py-3 rounded-xl border border-[#c9a84c]/20 bg-[#faf8f2] text-[#0a0f1e] text-sm focus:outline-none focus:border-[#c9a84c] focus:ring-1 focus:ring-[#c9a84c]/30 transition-all dir-ltr text-left"
+            className="w-full px-4 py-3 rounded-xl border border-[#c9a84c]/20 bg-[#faf8f2] text-[#0a0f1e] text-sm focus:outline-none focus:border-[#c9a84c] focus:ring-1 focus:ring-[#c9a84c]/30 transition-all"
             style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
             placeholder="email@example.com"
             dir="ltr"
@@ -145,7 +152,7 @@ export default function ConsultationForm() {
             value={phone}
             onChange={e => setPhone(e.target.value)}
             required
-            className="w-full px-4 py-3 rounded-xl border border-[#c9a84c]/20 bg-[#faf8f2] text-[#0a0f1e] text-sm focus:outline-none focus:border-[#c9a84c] focus:ring-1 focus:ring-[#c9a84c]/30 transition-all dir-ltr text-left"
+            className="w-full px-4 py-3 rounded-xl border border-[#c9a84c]/20 bg-[#faf8f2] text-[#0a0f1e] text-sm focus:outline-none focus:border-[#c9a84c] focus:ring-1 focus:ring-[#c9a84c]/30 transition-all"
             style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
             placeholder="05xxxxxxxx"
             dir="ltr"
@@ -173,15 +180,14 @@ export default function ConsultationForm() {
 
         <button
           type="submit"
-          disabled={loading}
-          className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#c9a84c] to-[#d4a843] text-[#0a0f1e] font-bold text-sm hover:shadow-lg hover:shadow-[#c9a84c]/20 transition-all duration-300 disabled:opacity-50"
+          className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#c9a84c] to-[#d4a843] text-[#0a0f1e] font-bold text-sm hover:shadow-lg hover:shadow-[#c9a84c]/20 transition-all duration-300"
           style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
         >
-          {loading ? 'جاري الإرسال...' : `احجز استشارتك — ${price}$`}
+          متابعة للدفع ←
         </button>
 
         <p className="text-center text-xs text-[#8a94a8]" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-          بعد الإرسال، سنتواصل معك لتأكيد الموعد المناسب
+          الخطوة التالية: الدفع والتواصل المباشر مع د. محمد يونس
         </p>
       </form>
     </div>

@@ -175,9 +175,9 @@ export default function ConsultationPage() {
         </h2>
         <div className="space-y-4">
           {[
-            { step: '١', title: 'احجز موعدك', desc: 'املأ النموذج واختر الوقت المناسب — سنتواصل معك لتأكيد الموعد.' },
-            { step: '٢', title: 'حوّل الرسوم', desc: 'بعد تأكيد الموعد، حوّل المبلغ إلى حساب مرفأ البنكي. التحويل يثبت الحجز.' },
-            { step: '٣', title: 'احضر الجلسة', desc: 'الجلسة أونلاين — سنرسل لك رابط الاجتماع قبل الموعد. حضر فكرتك وأسئلتك.' },
+            { step: '١', title: 'احجز استشارتك', desc: 'املأ اسمك وإيميلك وجوالك — واختر نوع الاستشارة (أول مرة أو متابعة).' },
+            { step: '٢', title: 'ادفع وتواصل مباشرة', desc: 'بعد تعبئة بياناتك، تتواصل مباشرة مع د. محمد يونس عبر واتساب. يتم الدفع وتأكيد الموعد في نفس المحادثة.' },
+            { step: '٣', title: 'احضر الجلسة', desc: 'الجلسة أونلاين — سيتم إرسال رابط الاجتماع قبل الموعد. حضر فكرتك وأسئلتك.' },
             { step: '٤', title: 'استلم الخلاصة', desc: 'بعد الجلسة، نرسل لك ملخصاً مكتوباً بالنقاط الرئيسية وخطة العمل.' },
           ].map((s) => (
             <div key={s.step} className="flex items-start gap-4 bg-white rounded-2xl p-5 border border-[#c9a84c]/15 shadow-[0_4px_16px_rgba(10,15,30,0.03)]">
@@ -193,20 +193,27 @@ export default function ConsultationPage() {
         </div>
       </section>
 
-      {/* Bank details */}
+      {/* Direct contact */}
       <section className="max-w-2xl mx-auto px-4 pb-20">
         <div className="bg-white rounded-3xl p-8 border border-[#c9a84c]/20 shadow-[0_8px_30px_rgba(10,15,30,0.06)] text-center">
           <h3 className="text-lg font-black text-[#0a0f1e] mb-2" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-            🏦 معلومات التحويل البنكي
+            💬 تواصل مباشر
           </h3>
           <p className="text-sm text-[#4a5b78] mb-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-            بعد تأكيد حجزك، حوّل المبلغ إلى:
+            للاستفسارات قبل الحجز:
           </p>
-          <div className="inline-block text-right bg-[#faf8f2] rounded-2xl p-5 border border-[#c9a84c]/20">
-            <p className="text-sm text-[#4a5b78]" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>البنك: <strong className="text-[#0a0f1e]">Saudi Awwal Bank (SAB)</strong></p>
-            <p className="text-sm text-[#4a5b78] mt-1" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>المستفيد: <strong className="text-[#0a0f1e]">Mohamad Younis</strong></p>
-            <p className="text-sm text-[#4a5b78] mt-1" dir="ltr">IBAN: <strong className="text-[#0a0f1e]">SA4745000000163199380001</strong></p>
-          </div>
+          <a
+            href="https://wa.me/966555056545"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-[#25D366] text-white font-bold text-sm hover:bg-[#1ebe5d] transition-colors shadow-lg shadow-[#25D366]/20"
+            style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
+          >
+            💬 واتساب: 055 505 6545
+          </a>
+          <p className="text-xs text-[#8a94a8] mt-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+            أو إيميل: ceo@marfa.sa
+          </p>
         </div>
       </section>
     </main>

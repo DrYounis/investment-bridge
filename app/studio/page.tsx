@@ -29,20 +29,20 @@ export default function StudioPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-[60%] bg-[#c9a84c]/5 blur-[100px] rounded-full" />
         <div className="relative z-10 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#c9a84c]/10 border border-[#c9a84c]/20 text-[#c9a84c] text-sm font-bold mb-6">
-            🛠️ استوديو مرفأ
+            🛠️ استوديو مرفأ — مدعوم بالذكاء الاصطناعي
           </div>
           <h1 className="text-4xl md:text-6xl font-black text-white mb-4 leading-tight" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-            طوّر مشروعك<br />
-            <span className="text-[#c9a84c]">من الفكرة للإطلاق</span>
+            ابني مشروعك<br />
+            <span className="text-[#c9a84c]">بقوة الذكاء الاصطناعي</span>
           </h1>
           <p className="text-[#a0aec0] text-lg max-w-xl mx-auto leading-relaxed" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-            استوديو مرفأ يبني مشروعك التقني من الصفر — نوظّف فريق التطوير، ندير العمل أسبوعياً، ونضمن جودة المنتج النهائي. أنت تركّز على الرؤية والسوق.
+            نستخدم الوكلاء الأذكياء (Claude, Copilot, Gemini) لبناء MVP مشروعك بسرعة وبتكلفة أقل بـ ٧٠٪ من السوق. ادفع نقداً — أو انضم للصيادين وادفع حصة 1-2%.
           </p>
           <div className="flex flex-wrap justify-center gap-3 mt-6">
-            <span className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#a0aec0] text-xs">React / Next.js</span>
-            <span className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#a0aec0] text-xs">Flutter</span>
-            <span className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#a0aec0] text-xs">Supabase</span>
-            <span className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#a0aec0] text-xs">Python / AI</span>
+            <span className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#a0aec0] text-xs">🤖 Claude / Copilot</span>
+            <span className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#a0aec0] text-xs">⚡ Low-Code MVPs</span>
+            <span className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#a0aec0] text-xs">🌏 فريق QA عالمي</span>
+            <span className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#a0aec0] text-xs">🎯 حصة 1-2%</span>
           </div>
         </div>
       </section>
@@ -120,16 +120,24 @@ export default function StudioPage() {
             ابدأ مشروعك اليوم
           </h2>
           <p className="text-[#4a5b78] text-sm mb-8" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-            الجلسة الأولى مجانية — نناقش فكرتك ونحدد خطة التطوير
+            ادفع ٣٠٠٠ ريال شهرياً — أو انضم للصيادين وادفع حصة 1-2% فقط
           </p>
-          <a
-            href="/consultation"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-[#c9a84c] text-[#0a0f1e] font-bold text-lg rounded-2xl hover:bg-[#d4a843] transition-colors shadow-lg shadow-[#c9a84c]/20"
-          >
-            احجز جلستك المجانية ←
-          </a>
+          <div className="flex flex-col md:flex-row gap-3 justify-center">
+            <a
+              href="/consultation"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#c9a84c] text-[#0a0f1e] font-bold text-lg rounded-2xl hover:bg-[#d4a843] transition-colors shadow-lg shadow-[#c9a84c]/20"
+            >
+              💳 ادفع نقداً ←
+            </a>
+            <a
+              href="/hunters"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#0a0f1e] text-[#c9a84c] font-bold text-lg rounded-2xl hover:bg-[#1a2540] transition-colors border border-[#c9a84c]/30"
+            >
+              🎯 انضم للصيادين (حصة) ←
+            </a>
+          </div>
           <p className="text-xs text-[#8a94a8] mt-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-            لا توجد التزامات — الجلسة استشارية بحتة
+            الجلسة الأولى مجانية — نناقش فكرتك ونحدد خطة التطوير
           </p>
         </div>
       </section>

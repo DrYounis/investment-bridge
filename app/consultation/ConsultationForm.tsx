@@ -159,23 +159,24 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
   if (step === 'confirm') {
     return (
       <div className="bg-white rounded-3xl p-8 border border-[#c9a84c]/30 shadow-[0_8px_30px_rgba(10,15,30,0.06)] text-center">
-        <div className="text-5xl mb-4">{isEquity ? '🤝' : '💳'}</div>
+        <div className="text-5xl mb-4">{isEquity ? '🎯' : '💳'}</div>
         <h2 className="text-xl font-black text-[#0a0f1e] mb-2" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-          {isEquity ? 'طلب حصة 3% — استشارات لا نهائية' : 'تأكيد الحجز والدفع'}
+          {isEquity ? 'انضم إلى الصيادين — Marfa SAFE-Air' : 'تأكيد الحجز والدفع'}
         </h2>
         <p className="text-[#4a5b78] text-sm mb-6" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
           {isEquity
-            ? '١٠ ساعات استشارة أسبوعياً مع فريق مرفأ. التسجيل بعد توقيع النسبة وتعديل عقد التأسيس.'
+            ? 'استشارات لا نهائية — ١٠ ساعات أسبوعياً مع فريق مرفأ. التوقيع على Marfa SAFE-Air (3%) وتعديل عقد التأسيس.'
             : 'راجع تفاصيل حجزك ثم أكمل الدفع'}
         </p>
 
         {isEquity ? (
           <div className="bg-[#faf8f2] rounded-xl p-4 mb-6 text-right">
+            <p className="text-sm text-[#4a5b78]"><strong>البرنامج:</strong> الصيادين Venture Collective</p>
             <p className="text-sm text-[#4a5b78]"><strong>الباقة:</strong> استشارات لا نهائية</p>
             <p className="text-sm text-[#4a5b78]"><strong>المعدل:</strong> ١٠ ساعات أسبوعياً</p>
             <p className="text-sm text-[#4a5b78]"><strong>الفريق:</strong> فريق مرفأ</p>
             <p className="text-sm text-[#4a5b78]"><strong>الموعد الأول:</strong> {selectedDay} | {selectedSlot}</p>
-            <p className="text-sm text-[#0a0f1e] font-bold mt-2"><strong>المقابل:</strong> 3% حصة (SAFE)</p>
+            <p className="text-sm text-[#0a0f1e] font-bold mt-2"><strong>المقابل:</strong> Marfa SAFE-Air (3% حصة)</p>
           </div>
         ) : (
           <div className="bg-[#faf8f2] rounded-xl p-4 mb-6 text-right">
@@ -196,7 +197,7 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
           className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#c9a84c] to-[#d4a843] text-[#0a0f1e] font-bold text-lg hover:shadow-xl hover:shadow-[#c9a84c]/30 transition-all duration-300 disabled:opacity-50"
           style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
         >
-          {processing ? 'جاري الإرسال...' : (isEquity ? '🤝 قدّم طلب الحصة' : `🔒 ادفع الآن — ${price} ريال`)}
+          {processing ? 'جاري الإرسال...' : (isEquity ? '🎯 قدّم طلب الانضمام للصيادين' : `🔒 ادفع الآن — ${price} ريال`)}
         </button>
 
         <p className="text-xs text-[#8a94a8] mt-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
@@ -318,17 +319,20 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
           onClick={() => setPaymentMode('equity')}
           className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all ${isEquity ? 'bg-[#c9a84c] text-[#0a0f1e] border-2 border-[#c9a84c]' : 'bg-[#faf8f2] text-[#8a94a8] border border-[#c9a84c]/10'}`}
         >
-          🤝 مقابل حصة 3% — غير محدود
+          🎯 الصيادين — Marfa SAFE-Air
         </button>
       </div>
 
       {isEquity && (
         <div className="bg-[#c9a84c]/5 border border-[#c9a84c]/20 rounded-xl p-4 mb-6 text-center">
           <p className="text-sm text-[#0a0f1e] font-bold mb-2" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-            🚀 استشارات لا نهائية — ١٠ ساعات أسبوعياً مع فريق مرفأ
+            🎯 الصيادين — Al-Sayyadeen Venture Collective
+          </p>
+          <p className="text-xs text-[#4a5b78] leading-relaxed mb-2">
+            استشارات لا نهائية — ١٠ ساعات أسبوعياً مع فريق مرفأ
           </p>
           <p className="text-xs text-[#4a5b78] leading-relaxed">
-            التسجيل بعد اكتمال توقيع نسبة الـ 3٪ وتعديل عقد التأسيس
+            الانضمام بعد توقيع Marfa SAFE-Air (اتفاقية تمويل موحدة 3%) وتعديل عقد التأسيس
           </p>
         </div>
       )}

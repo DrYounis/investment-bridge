@@ -9,6 +9,14 @@ import Card from '../../components/ui/Card'
 import OtpVerification from '../../components/ui/OtpVerification'
 import { createClient } from '../../../lib/supabase/client'
 
+const VALUE_PROPS = [
+  { emoji: '🏛️', text: 'انضم للمجلس الاستشاري — ١٤ لقاء تدريبي مع تقييم شهري من مستشارين معتمدين' },
+  { emoji: '🛠️', text: 'أدوات ذكاء اصطناعي مجانية: مستشار 360°، خطاب المصعد، تحليل الفكرة' },
+  { emoji: '📚', text: 'مركز معرفة بـ ٣٠٠ مصطلح تجاري + قاموس ثنائي اللغة + مقالات أصلية' },
+  { emoji: '💼', text: 'تنبيهات وظيفية أسبوعية — تصلك أحدث الوظائف في السعودية' },
+  { emoji: '📧', text: 'مصطلح الأسبوع على إيميلك كل اثنين — يحضّرك للقاء الجمعة' },
+]
+
 function LoginForm() {
     const [step, setStep] = useState<'email' | 'otp' | 'success'>('email')
     const [email, setEmail] = useState('')
@@ -130,7 +138,32 @@ function LoginForm() {
             {checkingSession ? (
                 <div className="marfa-skeleton w-8 h-8 rounded-full" />
             ) : (
-            <div className="w-full max-w-md">
+            <div className="w-full max-w-5xl">
+                <div className="flex flex-col lg:flex-row gap-8 items-center lg:items-start">
+                    
+                {/* ── Value props sidebar (hidden on mobile) ── */}
+                <div className="hidden lg:block lg:w-1/2 lg:sticky lg:top-8">
+                    <div className="bg-card/50 rounded-3xl p-8 border border-border/20">
+                        <div className="text-right mb-6">
+                            <h2 className="text-2xl font-black text-foreground mb-2">ماذا تحصل عند تسجيل الدخول؟</h2>
+                            <p className="text-sm text-foreground/50">كل هذا مجاني — بدون بطاقة ائتمان</p>
+                        </div>
+                        <div className="space-y-4">
+                            {VALUE_PROPS.map((prop, i) => (
+                                <div key={i} className="flex items-start gap-3 text-right">
+                                    <span className="text-xl shrink-0 mt-0.5">{prop.emoji}</span>
+                                    <span className="text-sm text-foreground/70 leading-relaxed">{prop.text}</span>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="mt-8 pt-6 border-t border-border/20">
+                            <p className="text-xs text-foreground/40 text-center">أقل من دقيقة • بريدك الإلكتروني فقط</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* ── Form ── */}
+                <div className="w-full lg:w-1/2 max-w-md mx-auto">
                 {step === 'email' && (
                     <div>
                         <div className="text-center mb-8">
@@ -139,6 +172,16 @@ function LoginForm() {
                             </div>
                             <h2 className="text-2xl font-bold text-foreground mb-1">تسجيل الدخول</h2>
                             <p className="text-sm text-foreground/50">أدخل بريدك الإلكتروني للمتابعة</p>
+                        </div>
+
+                        {/* Mobile value props */}
+                        <div className="lg:hidden mb-6 bg-card/50 rounded-2xl p-4 border border-border/20">
+                            <div className="flex flex-wrap gap-3 justify-center">
+                                {VALUE_PROPS.map((prop, i) => (
+                                    <span key={i} className="text-sm">{prop.emoji}</span>
+                                ))}
+                            </div>
+                            <p className="text-xs text-foreground/40 text-center mt-2">أدوات مجانية + مجلس استشاري + قاموس + وظائف</p>
                         </div>
 
                         <Card glass className="p-8">
@@ -219,6 +262,8 @@ function LoginForm() {
                         <Link href="/" className="text-sm text-foreground/50 hover:text-foreground transition-colors">← العودة للصفحة الرئيسية</Link>
                     </p>
                 )}
+                </div>{/* /form column */}
+                </div>{/* /flex row */}
             </div>
             )}
         </div>

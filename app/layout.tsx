@@ -230,6 +230,42 @@ export default async function RootLayout({
           }}
         />
 
+        {/* Structured Data — helps Google + AI crawlers understand the site */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@graph': [
+                {
+                  '@type': 'Organization',
+                  '@id': 'https://www.marfa.sa/#organization',
+                  name: 'مرفأ | Marfa',
+                  alternateName: 'Marfa Entrepreneurship Hub',
+                  url: 'https://www.marfa.sa',
+                  logo: 'https://www.marfa.sa/logo.png',
+                  description: 'مجتمع تدريبي سعودي لرواد الأعمال — أدوات ذكاء اصطناعي مجانية، مجلس استشاري، لقاءات أسبوعية، ومركز معرفة بـ ٣٠٠ مصطلح.',
+                  email: 'info@marfa.sa',
+                  address: { '@type': 'PostalAddress', addressLocality: 'حائل', addressCountry: 'SA' },
+                  sameAs: ['https://x.com/marfa_sa'],
+                },
+                {
+                  '@type': 'WebSite',
+                  '@id': 'https://www.marfa.sa/#website',
+                  url: 'https://www.marfa.sa',
+                  name: 'مرفأ | Marfa',
+                  inLanguage: 'ar-SA',
+                  potentialAction: {
+                    '@type': 'SearchAction',
+                    target: 'https://www.marfa.sa/learn/glossary?search={search_term_string}',
+                    'query-input': 'required name=search_term_string',
+                  },
+                },
+              ],
+            }),
+          }}
+        />
+
         {/* Floating WhatsApp Button */}
         <a
           href="https://wa.me/966555056545"

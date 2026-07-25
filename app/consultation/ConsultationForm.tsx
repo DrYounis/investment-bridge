@@ -99,7 +99,7 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
   };
 
   const waMsg = encodeURIComponent(
-    `السلام عليكم د. محمد،\n\nحجز استشارة جديد:\n- الاسم: ${name}\n- الإيميل: ${email}\n- الجوال: ${phone}\n- النوع: ${isFirstTime ? 'أول مرة' : 'متابعة'}\n- السعر: ${price}$\n- الموعد: ${selectedDay} | ${selectedSlot}\n${notes ? `- ملاحظات: ${notes}\n` : ''}\nمستعد للدفع — أرسل طريقة الدفع من فضلك.`
+    `السلام عليكم أستاذ أحمد،\n\nحجز استشارة جديد:\n- الاسم: ${name}\n- الإيميل: ${email}\n- الجوال: ${phone}\n- النوع: ${isFirstTime ? 'أول مرة' : 'متابعة'}\n- السعر: ${price}$\n- الموعد: ${selectedDay} | ${selectedSlot}\n${notes ? `- ملاحظات: ${notes}\n` : ''}\nمستعد للدفع — أرسل طريقة الدفع من فضلك.`
   );
 
   // ── Step 3: Confirmation ──
@@ -118,7 +118,7 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
         </div>
 
         <p className="text-[#4a5b78] text-sm mb-6" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-          أرسل هذه الرسالة للدكتور محمد لإتمام الحجز والدفع:
+          أرسل هذه الرسالة للمهندس أحمد لإتمام الحجز والدفع:
         </p>
 
         <a

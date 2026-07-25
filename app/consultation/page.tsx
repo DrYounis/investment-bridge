@@ -119,34 +119,34 @@ export default function ConsultationPage() {
         <div className="bg-white rounded-3xl p-8 md:p-10 border border-[#c9a84c]/20 shadow-[0_8px_30px_rgba(10,15,30,0.06)]">
           <div className="text-center mb-8">
             <div className="w-20 h-20 bg-gradient-to-br from-[#c9a84c] to-[#d4a843] rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-lg shadow-[#c9a84c]/20">
-              🎯
+              ⚙️
             </div>
             <h2 className="text-2xl font-black text-[#0a0f1e] mb-1" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-              د. محمد يونس
+              م. أحمد يونس
             </h2>
             <p className="text-[#c9a84c] text-sm font-bold" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-              مؤسس مرفأ — مستشار ريادة الأعمال
+              المدير التقني — مستشار تقني وهندسي
             </p>
           </div>
 
           <div className="space-y-4 text-right" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
             <p className="text-[#4a5b78] leading-relaxed">
-              أنا لا أبيع نظريات. <strong className="text-[#0a0f1e]">أنا رائد أعمال يبني مشاريع حقيقية.</strong> في مرفأ، بنيتُ ثلاث منصات تعمل اليوم في السوق السعودي — بصيرة (تحليل المنافسات الحكومية بالذكاء الاصطناعي)، مقياس (تسعير مصانع الألمنيوم)، وبرو ميد إنشور (إدارة المطالبات الطبية).
+              أنا لا أبيع كلام. <strong className="text-[#0a0f1e]">أنا مهندس برمجيات أبني منتجات حقيقية.</strong> في مرفأ، بنيتُ ثلاث منصات تعمل اليوم في السوق السعودي — بصيرة (تحليل المنافسات الحكومية بالذكاء الاصطناعي)، مقياس (تسعير مصانع الألمنيوم)، وبرو ميد إنشور (إدارة المطالبات الطبية).
             </p>
 
             <p className="text-[#4a5b78] leading-relaxed">
-              كل أسبوع، أجلس مع رواد أعمال في <strong className="text-[#0a0f1e]">المجلس الاستشاري</strong> — ١٤ لقاء تدريبي نناقش فيها حالات حقيقية من Airbnb إلى Netflix إلى Saudi German Health. أرى بأنفسهم: من ينجح؟ ولماذا يفشل الآخرون؟
+              كل أسبوع، أدير البنية التقنية لـ <strong className="text-[#0a0f1e]">المجلس الاستشاري</strong> — ١٤ لقاء تدريبي. وأدرّس دورة <strong className="text-[#0a0f1e]">Vibe Coding بالعربي</strong> لتعليم رواد الأعمال كيف يبنون منتجاتهم بأنفسهم بدون فريق تقني.
             </p>
 
             <p className="text-[#4a5b78] leading-relaxed">
-              <strong className="text-[#0a0f1e]">الفرق بين اللي ينجح واللي يفشل ليس الفكرة.</strong> الفرق هو: هل تعرف الأرقام الثلاثة اللي تحفظها قبل ما تفتح فمك؟ هل تعرف من هو عميلك فعلاً؟ هل تعرف متى تتوقف؟
+              <strong className="text-[#0a0f1e]">الفرق بين اللي يبني واللي ينتظر ليس الميزانية.</strong> الفرق هو: هل تعرف كيف تبني MVP بتكلفة صفر؟ هل تعرف متى تحتاج مبرمج ومتى تقدر تسويها بنفسك؟
             </p>
           </div>
 
           <div className="grid sm:grid-cols-3 gap-3 mt-8">
             {[
               { num: '٣', label: 'منتجات مبنية من الصفر' },
-              { num: '١٤', label: 'لقاء تدريبي في المجلس' },
+              { num: '١٠', label: 'دروس Vibe Coding' },
               { num: '٧٥', label: 'دقيقة معك — وجهاً لوجه' },
             ].map((s) => (
               <div key={s.label} className="text-center bg-[#faf8f2] rounded-xl p-4">
@@ -157,8 +157,8 @@ export default function ConsultationPage() {
           </div>
 
           <p className="text-center text-sm text-[#4a5b78] mt-8 leading-relaxed" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-            الاستشارة ليست محاضرة. <strong className="text-[#0a0f1e]">هي ساعة تفكير مركزة على مشروعك أنت.</strong>
-            <br />نجيب على السؤال الحقيقي: ماذا تفعل غداً؟
+            الاستشارة ليست محاضرة. <strong className="text-[#0a0f1e]">هي ساعة تفكير تقني وهندسي على مشروعك أنت.</strong>
+            <br />نجيب على السؤال الحقيقي: كيف تبني منتجك غداً؟
           </p>
         </div>
       </section>
@@ -200,7 +200,7 @@ export default function ConsultationPage() {
             💬 تواصل مباشر
           </h3>
           <p className="text-sm text-[#4a5b78] mb-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-            للاستفسارات قبل الحجز:
+            للاستفسارات قبل الحجز — م. أحمد يونس:
           </p>
           <a
             href="https://wa.me/966555056545"
@@ -212,7 +212,7 @@ export default function ConsultationPage() {
             💬 واتساب: 055 505 6545
           </a>
           <p className="text-xs text-[#8a94a8] mt-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-            أو إيميل: ceo@marfa.sa
+            أو إيميل: cto@marfa.sa
           </p>
         </div>
       </section>

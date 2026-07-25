@@ -26,7 +26,9 @@ const SECTORS = [
     label: 'الصحة',
     keywords: [
       'health', 'medical', 'nurse', 'doctor', 'pharma', 'hospital',
-      'طبيب', 'صحة', 'تمريض',
+      'insurance', 'rcm', 'claims', 'revenue', 'billing', 'patient',
+      'clinical', 'coding', 'fraud', 'approvals',
+      'طبيب', 'صحة', 'تمريض', 'تأمين', 'مطالبات', 'إيرادات', 'مريض',
     ],
   },
   {

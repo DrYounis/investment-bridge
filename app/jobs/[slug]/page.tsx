@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { getCachedJobBySlug, type Job } from '@/lib/jobs';
+import { MANUAL_JOBS_BY_SLUG } from '@/lib/manual-jobs';
 import JobRegistrationCTA from '@/app/components/marfa/JobRegistrationCTA';
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -55,7 +56,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const supabase = await createClient();
-  const job = await getCachedJobBySlug(supabase, slug);
+  let job = await getCachedJobBySlug(supabase, slug);
+  if (!job) job = MANUAL_JOBS_BY_SLUG.get(slug) ?? null;
   if (!job) return { title: 'الوظيفة غير متاحة | مرفأ' };
   const desc = (job.description || '').slice(0, 155);
   return {
@@ -73,7 +75,8 @@ export default async function JobDetailPage({
 }) {
   const { slug } = await params;
   const supabase = await createClient();
-  const job = await getCachedJobBySlug(supabase, slug);
+  let job = await getCachedJobBySlug(supabase, slug);
+  if (!job) job = MANUAL_JOBS_BY_SLUG.get(slug) ?? null;
   if (!job) notFound();
 
   const postedTime = job.postedAt ? relativeTimeArabic(job.postedAt) : null;

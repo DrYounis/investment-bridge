@@ -29,6 +29,8 @@ export default async function MeetingsPage() {
                     </p>
                 </div>
 
+                <MeetingSubscribeCard />
+
                 <MeetingsSchedule />
 
                 {/* Registration CTA */}
@@ -67,8 +69,6 @@ export default async function MeetingsPage() {
                         <a href="/portfolio" className="inline-flex items-center gap-2 px-8 py-3 bg-[#c9a84c] text-white font-bold rounded-full hover:bg-[#d4a843] transition-colors text-sm">استكشف جميع المشاريع ←</a>
                     </div>
                 </section>
-
-                <MeetingSubscribeCard />
 
             </main>
         </div>

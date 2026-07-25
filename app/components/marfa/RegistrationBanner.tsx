@@ -53,7 +53,7 @@ export default function RegistrationBanner({ variant = 'card', context = 'home' 
             ))}
           </div>
           <Link
-            href="/login"
+            href="/join"
             className="inline-block px-10 py-3.5 rounded-full bg-gradient-to-r from-[#c9a84c] to-[#d4a843] text-[#0a0f1e] font-bold text-base hover:shadow-xl hover:shadow-[#c9a84c]/25 transition-all duration-300"
             style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
           >
@@ -85,7 +85,7 @@ export default function RegistrationBanner({ variant = 'card', context = 'home' 
         ))}
       </div>
       <Link
-        href="/login"
+        href="/join"
         className="block w-full text-center py-2.5 rounded-full bg-gradient-to-r from-[#c9a84c] to-[#d4a843] text-[#0a0f1e] text-sm font-bold hover:shadow-lg hover:shadow-[#c9a84c]/25 transition-all duration-300"
         style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
       >

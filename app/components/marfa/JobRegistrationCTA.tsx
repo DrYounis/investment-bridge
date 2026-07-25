@@ -21,7 +21,7 @@ export default function JobRegistrationCTA() {
         أنشئ حسابك المجاني لتصلك أحدث الوظائف أولاً بأول — وتابع تقدمك المهني مع مرفأ
       </p>
       <Link
-        href="/login"
+        href="/join"
         className="inline-block px-8 py-2.5 rounded-full bg-gradient-to-r from-[#c9a84c] to-[#d4a843] text-[#0a0f1e] text-sm font-bold hover:shadow-lg hover:shadow-[#c9a84c]/25 transition-all duration-300"
       >
         سجّل الآن مجاناً ←

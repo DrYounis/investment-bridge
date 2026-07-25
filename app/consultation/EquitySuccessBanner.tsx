@@ -24,7 +24,7 @@ function EquityBannerInner() {
         تم استلام طلب الحصة بنجاح
       </h3>
       <p className="text-[#4a5b78] text-sm" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-        سيتواصل معك المهندس أحمد خلال 24 ساعة لمناقشة اتفاقية SAFE
+        سيتواصل معك الفريق خلال 24 ساعة لمناقشة اتفاقية 3% وتعديل عقد التأسيس
       </p>
     </div>
   );

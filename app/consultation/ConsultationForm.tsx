@@ -161,18 +161,30 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
       <div className="bg-white rounded-3xl p-8 border border-[#c9a84c]/30 shadow-[0_8px_30px_rgba(10,15,30,0.06)] text-center">
         <div className="text-5xl mb-4">{isEquity ? '🤝' : '💳'}</div>
         <h2 className="text-xl font-black text-[#0a0f1e] mb-2" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-          {isEquity ? 'طلب حصة — تأكيد الموعد' : 'تأكيد الحجز والدفع'}
+          {isEquity ? 'طلب حصة 3% — استشارات لا نهائية' : 'تأكيد الحجز والدفع'}
         </h2>
         <p className="text-[#4a5b78] text-sm mb-6" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-          {isEquity ? 'سيتواصل معك المهندس أحمد لمناقشة اتفاقية الحصة' : 'راجع تفاصيل حجزك ثم أكمل الدفع'}
+          {isEquity
+            ? '١٠ ساعات استشارة أسبوعياً مع فريق مرفأ. التسجيل بعد توقيع النسبة وتعديل عقد التأسيس.'
+            : 'راجع تفاصيل حجزك ثم أكمل الدفع'}
         </p>
 
-        <div className="bg-[#faf8f2] rounded-xl p-4 mb-6 text-right">
-          <p className="text-sm text-[#4a5b78]"><strong>الموعد:</strong> {selectedDay} | {selectedSlot}</p>
-          <p className="text-sm text-[#4a5b78]"><strong>المدة:</strong> {minutes} دقيقة ({paidMinutes} + {freeMinutes > 0 ? `${freeMinutes} مجانية` : ''})</p>
-          <p className="text-sm text-[#4a5b78]"><strong>النوع:</strong> {isEquity ? 'مقابل حصة 3%' : (isFirstTime ? 'أول مرة' : 'متابعة')}</p>
-          <p className="text-sm text-[#0a0f1e] font-bold mt-2"><strong>الإجمالي:</strong> {isEquity ? '3% حصة (SAFE)' : `${price} ريال`}</p>
-        </div>
+        {isEquity ? (
+          <div className="bg-[#faf8f2] rounded-xl p-4 mb-6 text-right">
+            <p className="text-sm text-[#4a5b78]"><strong>الباقة:</strong> استشارات لا نهائية</p>
+            <p className="text-sm text-[#4a5b78]"><strong>المعدل:</strong> ١٠ ساعات أسبوعياً</p>
+            <p className="text-sm text-[#4a5b78]"><strong>الفريق:</strong> فريق مرفأ</p>
+            <p className="text-sm text-[#4a5b78]"><strong>الموعد الأول:</strong> {selectedDay} | {selectedSlot}</p>
+            <p className="text-sm text-[#0a0f1e] font-bold mt-2"><strong>المقابل:</strong> 3% حصة (SAFE)</p>
+          </div>
+        ) : (
+          <div className="bg-[#faf8f2] rounded-xl p-4 mb-6 text-right">
+            <p className="text-sm text-[#4a5b78]"><strong>الموعد:</strong> {selectedDay} | {selectedSlot}</p>
+            <p className="text-sm text-[#4a5b78]"><strong>المدة:</strong> {minutes} دقيقة ({paidMinutes} + {freeMinutes > 0 ? `${freeMinutes} مجانية` : ''})</p>
+            <p className="text-sm text-[#4a5b78]"><strong>النوع:</strong> {isFirstTime ? 'أول مرة' : 'متابعة'}</p>
+            <p className="text-sm text-[#0a0f1e] font-bold mt-2"><strong>الإجمالي:</strong> {price} ريال</p>
+          </div>
+        )}
 
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-sm mb-4">{error}</div>
@@ -188,7 +200,7 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
         </button>
 
         <p className="text-xs text-[#8a94a8] mt-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-          {isEquity ? 'سيتم التواصل معك خلال 24 ساعة' : 'دفع آمن عبر Paymob — Apple Pay مدعوم'}
+          {isEquity ? 'سيتم التواصل معك خلال 24 ساعة لإتمام الاتفاقية' : 'دفع آمن عبر Paymob — Apple Pay مدعوم'}
         </p>
 
         <button
@@ -300,15 +312,26 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
           onClick={() => { setPaymentMode('pay'); setIsFirstTime(true); }}
           className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all ${paymentMode === 'pay' ? 'bg-[#faf8f2] text-[#0a0f1e] border-2 border-[#c9a84c]' : 'bg-[#faf8f2] text-[#8a94a8] border border-[#c9a84c]/10'}`}
         >
-          💳 دفع نقدي
+          💳 دفع نقدي — جلسة واحدة
         </button>
         <button
           onClick={() => setPaymentMode('equity')}
           className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all ${isEquity ? 'bg-[#c9a84c] text-[#0a0f1e] border-2 border-[#c9a84c]' : 'bg-[#faf8f2] text-[#8a94a8] border border-[#c9a84c]/10'}`}
         >
-          🤝 مقابل حصة 3%
+          🤝 مقابل حصة 3% — غير محدود
         </button>
       </div>
+
+      {isEquity && (
+        <div className="bg-[#c9a84c]/5 border border-[#c9a84c]/20 rounded-xl p-4 mb-6 text-center">
+          <p className="text-sm text-[#0a0f1e] font-bold mb-2" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+            🚀 استشارات لا نهائية — ١٠ ساعات أسبوعياً مع فريق مرفأ
+          </p>
+          <p className="text-xs text-[#4a5b78] leading-relaxed">
+            التسجيل بعد اكتمال توقيع نسبة الـ 3٪ وتعديل عقد التأسيس
+          </p>
+        </div>
+      )}
 
       <div className="text-center mb-6 bg-[#faf8f2] rounded-xl p-3">
         <p className="text-sm text-[#4a5b78]" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>

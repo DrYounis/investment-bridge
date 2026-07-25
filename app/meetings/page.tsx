@@ -2,6 +2,7 @@ import MeetingsSchedule from '../components/marfa/MeetingsSchedule';
 import InvestorMeetingForm from '../components/marfa/InvestorMeetingForm';
 import AdvisorProfile from '../components/marfa/AdvisorProfile';
 import RegistrationBanner from '../components/marfa/RegistrationBanner';
+import MeetingSubscribeCard from '../components/marfa/MeetingSubscribeCard';
 
 export const dynamic = 'force-dynamic';
 
@@ -66,6 +67,8 @@ export default async function MeetingsPage() {
                         <a href="/portfolio" className="inline-flex items-center gap-2 px-8 py-3 bg-[#c9a84c] text-white font-bold rounded-full hover:bg-[#d4a843] transition-colors text-sm">استكشف جميع المشاريع ←</a>
                     </div>
                 </section>
+
+                <MeetingSubscribeCard />
 
             </main>
         </div>

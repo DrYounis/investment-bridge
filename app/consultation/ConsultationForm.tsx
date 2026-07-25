@@ -96,6 +96,23 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
     }
     setStep('confirm');
     onBooked?.();
+
+    // Fire-and-forget: notify admin email
+    fetch('/api/consultation/notify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        email,
+        phone,
+        isFirstTime,
+        price,
+        day: selectedDay,
+        slot: selectedSlot,
+        minutes,
+        notes,
+      }),
+    }).catch(() => {});
   };
 
   const waMsg = encodeURIComponent(

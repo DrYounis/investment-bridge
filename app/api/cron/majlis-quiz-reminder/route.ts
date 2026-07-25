@@ -36,6 +36,7 @@ function buildMajlisReminderHTML(
   deadlineDate: string,
   nextN: number,
   youtubeLinks?: YouTubeLink[],
+  glossaryTerms?: Array<{ arabic_term: string; english_term: string }>,
 ) {
   const nextEntry = nextN >= 1 && nextN <= 14 ? SCHEDULE_DATA[nextN - 1] : null;
 
@@ -90,6 +91,21 @@ function buildMajlisReminderHTML(
       <a href="https://www.marfa.sa/meetings/majlis/${meeting.meetingNumber}" style="display: inline-block; background: #c9a84c; color: #0a0f1e; padding: 14px 32px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 15px;">أجب الآن في المجلس الاستشاري ←</a>
       <p style="color: #8a94a8; font-size: 11px; margin: 8px 0 0 0;">تحتاج تسجيل الدخول بحسابك في مرفأ</p>
     </div>
+
+    ${glossaryTerms && glossaryTerms.length > 0 ? `
+    <!-- Related glossary terms -->
+    <div style="border: 1px solid #c9a84c33; border-radius: 16px; padding: 20px; background: #ffffff; margin-bottom: 24px; text-align: center;">
+      <h3 style="color: #0a0f1e; font-size: 14px; margin: 0 0 12px 0;">📚 مصطلحات مفيدة لهذه الحالة</h3>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
+        ${glossaryTerms.map(t => `
+        <span style="display: inline-block; background: #faf8f2; border: 1px solid #c9a84c33; border-radius: 20px; padding: 6px 14px; font-size: 13px; color: #0a0f1e;">
+          ${t.arabic_term}
+        </span>
+        `).join('')}
+      </div>
+      <a href="https://www.marfa.sa/learn/glossary" style="display: inline-block; margin-top: 12px; color: #c9a84c; font-size: 12px; font-weight: bold; text-decoration: none;">تصفح القاموس كاملاً (٣٠٠ مصطلح) ←</a>
+    </div>
+    ` : ''}
 
     ${nextEntry ? `
     <!-- Next week teaser -->
@@ -233,6 +249,32 @@ export async function GET(request: Request) {
     }
 
     const youtubeLinks = SCHEDULE_DATA[finishedN - 1]?.youtubeLinks;
+    const glossaryKeywords = SCHEDULE_DATA[finishedN - 1]?.glossaryKeywords;
+
+    // ── Fetch related glossary terms ──
+    let glossaryTerms: Array<{ arabic_term: string; english_term: string }> = [];
+    if (glossaryKeywords && glossaryKeywords.length > 0) {
+      const { data: allTerms } = await supabase
+        .from('marfa_glossary_terms')
+        .select('arabic_term, english_term')
+        .order('term_number', { ascending: true });
+
+      if (allTerms) {
+        const scored = allTerms.map((t) => {
+          const haystack = `${t.arabic_term} ${t.english_term}`;
+          let score = 0;
+          for (const kw of glossaryKeywords) {
+            if (haystack.includes(kw)) score++;
+          }
+          return { term: t, score };
+        });
+        glossaryTerms = scored
+          .filter(s => s.score > 0)
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 5)
+          .map(s => s.term);
+      }
+    }
 
     const subject = `🏛️ المجلس الاستشاري بانتظار قرارك — سؤال حالة اللقاء ${finishedN} | آخر موعد ${deadlineDate}`;
 
@@ -242,7 +284,7 @@ export async function GET(request: Request) {
           from: 'Marfa Advisory <noreply@marfa.sa>',
           to: r.email,
           subject,
-          html: buildMajlisReminderHTML(r.email, meeting, questionText, deadlineDate, nextN, youtubeLinks),
+          html: buildMajlisReminderHTML(r.email, meeting, questionText, deadlineDate, nextN, youtubeLinks, glossaryTerms),
         });
         results.push({ email: r.email, status: error ? `فشل: ${error.message}` : 'تم الإرسال' });
       } catch (err: unknown) {

@@ -221,6 +221,8 @@ export default function MeetingsSchedule() {
                                 <th className="p-4 min-w-[300px]">التحدي الذي سنناقشه</th>
                                 <th className="p-4 whitespace-nowrap">ملف PDF</th>
                                 <th className="p-4 whitespace-nowrap">النسخة العربية</th>
+                                <th className="p-4 whitespace-nowrap">المجلس</th>
+                                <th className="p-4 whitespace-nowrap">قاموس</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-[#c9a84c]/10">
@@ -273,6 +275,14 @@ export default function MeetingsSchedule() {
                                             🏛️ المجلس الاستشاري
                                         </Link>
                                     </td>
+                                    <td className="p-4">
+                                        <Link
+                                            href="/learn/glossary"
+                                            className="inline-flex items-center gap-1 px-3 py-2 bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-lg text-[#c9a84c] text-sm font-bold hover:bg-[#c9a84c]/10 transition-colors"
+                                        >
+                                            📚 مصطلحات
+                                        </Link>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -319,6 +329,12 @@ export default function MeetingsSchedule() {
                                         className="flex-1 inline-flex items-center justify-center gap-1 px-3 py-3 bg-[#c9a84c]/10 border border-[#c9a84c]/30 rounded-xl text-[#c9a84c] text-sm font-bold active:bg-[#c9a84c]/20 transition-colors"
                                     >
                                         🏛️ المجلس الاستشاري
+                                    </Link>
+                                    <Link
+                                        href="/learn/glossary"
+                                        className="inline-flex items-center justify-center gap-1 px-3 py-3 bg-[#fdf9ef] border border-[#c9a84c]/30 rounded-xl text-[#c9a84c] text-sm font-bold active:bg-[#c9a84c]/10 transition-colors"
+                                    >
+                                        📚
                                     </Link>
                                 </div>
                             ) : (

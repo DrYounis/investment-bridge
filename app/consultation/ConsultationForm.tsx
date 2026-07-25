@@ -5,13 +5,11 @@ import { useState, useMemo } from 'react';
 const WHATSAPP_NUMBER = '966555056545';
 
 // ── Availability rules ──
-// Weekdays (Sun-Thu): only after 5 PM, 2 hours of slots
-// Weekends (Fri-Sat): 8 AM - 10 PM, 2 hours of slots
-// Always exactly 2 hours per day available
+// Weekdays (Sun-Thu): 7 PM - 9 PM, 2 hours
+// Weekends (Fri-Sat): 5 PM - 7 PM, 2 hours
 const HOURS_PER_DAY = 2;
-const WEEKDAY_START = 17; // 5 PM
-const WEEKEND_START = 8;
-const WEEKEND_END = 22; // 10 PM
+const WEEKDAY_START = 19; // 7 PM
+const WEEKEND_START = 17; // 5 PM
 
 function generateSlots(daysAhead = 14): { date: Date; label: string; slots: string[] }[] {
   const days: { date: Date; label: string; slots: string[] }[] = [];
@@ -30,10 +28,10 @@ function generateSlots(daysAhead = 14): { date: Date; label: string; slots: stri
 
     if (isWeekend) {
       startHour = WEEKEND_START;
-      endHour = WEEKEND_END;
+      endHour = startHour + HOURS_PER_DAY; // 5 PM - 7 PM
     } else {
       startHour = WEEKDAY_START;
-      endHour = startHour + HOURS_PER_DAY; // 5 PM - 7 PM
+      endHour = startHour + HOURS_PER_DAY; // 7 PM - 9 PM
     }
 
     const slots: string[] = [];

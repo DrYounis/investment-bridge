@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { Building2 } from 'lucide-react';
 import type { Job } from '@/lib/jobs';
+import JobRegistrationCTA from '@/app/components/marfa/JobRegistrationCTA';
 
 // ── Sector filter definitions ──────────────────────────────────────────────
 
@@ -153,11 +154,18 @@ export default function JobsClient({ jobs }: JobsClientProps) {
           الوظائف غير متاحة حالياً — حاول مرة أخرى لاحقاً
         </p>
       ) : filteredJobs.length > 0 ? (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <>
+          {/* Registration CTA */}
+          <div className="mb-8 max-w-md mx-auto">
+            <JobRegistrationCTA />
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredJobs.map((job) => (
             <JobCard key={job.id} job={job} />
           ))}
         </div>
+        </>
       ) : (
         <p
           className="text-center text-[#8a94a8] text-lg py-20"

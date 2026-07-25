@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { getCachedJobBySlug, type Job } from '@/lib/jobs';
+import JobRegistrationCTA from '@/app/components/marfa/JobRegistrationCTA';
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -165,6 +166,11 @@ export default async function JobDetailPage({
             </p>
           </div>
         )}
+
+        {/* Registration CTA for anonymous visitors */}
+        <div className="max-w-md mx-auto mb-8">
+          <JobRegistrationCTA />
+        </div>
 
         {/* Apply CTA */}
         <div className="sticky bottom-6">

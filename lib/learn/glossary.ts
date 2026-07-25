@@ -10,6 +10,12 @@ export interface GlossaryTerm {
   arabic_def: string;
   batch_number: number;
   batch_label: string;
+  short_desc_en?: string | null;
+  short_desc_ar?: string | null;
+  example_en?: string | null;
+  example_ar?: string | null;
+  featured_meeting?: number | null;
+  sent_at?: string | null;
 }
 
 export async function getAllTerms(supabase: SupabaseClient): Promise<GlossaryTerm[]> {

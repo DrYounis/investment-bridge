@@ -32,6 +32,10 @@
     {
       "path": "/api/cron/majlis-quiz-reminder",
       "schedule": "0 16 * * 6"
+    },
+    {
+      "path": "/api/cron/glossary-term-of-week",
+      "schedule": "0 5 * * 1"
     }
   ]
 }

@@ -21,9 +21,6 @@ export default function ConsultationPage() {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#c9a84c]/10 border border-[#c9a84c]/20 text-[#c9a84c] text-sm font-bold mb-6">
             🎯 استشارة خاصة — One-on-One
           </div>
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#ef4444]/10 border border-[#ef4444]/20 text-[#ef4444] text-xs font-bold mb-6 mr-3">
-            ⚡ متاح ساعتين فقط يومياً
-          </div>
           <h1 className="text-4xl md:text-6xl font-black text-white mb-4 leading-tight" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
             استشارة خاصة —<br />
             <span className="text-[#c9a84c]">حلّل فكرتك وخطط لمشروعك</span>

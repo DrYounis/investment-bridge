@@ -157,9 +157,6 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
           <p className="text-[#4a5b78] text-sm" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
             {isFirstTime ? `${paidMinutes} دقيقة + ${freeMinutes} دقيقة مجانية` : `${minutes} دقيقة`} — {price}$
           </p>
-          <div className="inline-flex items-center gap-2 mt-2 bg-[#fdf9ef] border border-[#c9a84c]/20 rounded-full px-3 py-1">
-            <span className="text-xs text-[#c9a84c]">⚡ متاح ساعتين فقط يومياً</span>
-          </div>
         </div>
 
         <div className="space-y-4 max-h-96 overflow-y-auto">
@@ -294,7 +291,7 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
         </button>
 
         <p className="text-center text-xs text-[#8a94a8]" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-          ⚡ متاح ساعتين فقط يومياً — احجز قبل ما تروح
+          اختر الموعد المناسب لك
         </p>
       </form>
     </div>

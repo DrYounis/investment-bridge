@@ -1,4 +1,4 @@
-import MeetingsSchedule from '../components/marfa/MeetingsSchedule';
+import MeetingScheduleGate from '../components/marfa/MeetingScheduleGate';
 import InvestorMeetingForm from '../components/marfa/InvestorMeetingForm';
 import AdvisorProfile from '../components/marfa/AdvisorProfile';
 import RegistrationBanner from '../components/marfa/RegistrationBanner';
@@ -31,7 +31,7 @@ export default async function MeetingsPage() {
 
                 <MeetingSubscribeCard />
 
-                <MeetingsSchedule />
+                <MeetingScheduleGate />
 
                 {/* Registration CTA */}
                 <div className="max-w-md mx-auto my-16">

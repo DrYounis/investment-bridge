@@ -431,7 +431,7 @@ export async function GET() {
 
       const engagementScore = computeEngagementScore(journey);
       const churnRisk = computeChurnRisk({ ...journey, engagementScore, churnRisk: '', behaviorSegment: '', recommendedAction: '' }, prevUserViews.length);
-      const behaviorSegment = classifySegment({ ...journey, engagementScore }, prevUserViews.length);
+      const behaviorSegment = classifySegment({ ...journey, engagementScore, churnRisk }, prevUserViews.length);
 
       const fullJourney: UserJourney = {
         ...journey,

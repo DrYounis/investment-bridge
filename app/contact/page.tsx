@@ -5,7 +5,23 @@ export const metadata: Metadata = {
   description: 'تواصل مع فريق مرفأ — البريد الإلكتروني للمنصة، الرئيس التنفيذي، المدير التقني، ورئيس المجلس الاستشاري.',
 };
 
-const CONTACTS = [
+interface ContactLink {
+  href: string;
+  label: string;
+  external?: boolean;
+}
+
+interface ContactCard {
+  emoji: string;
+  title: string;
+  subtitle: string;
+  subtitleEn?: string;
+  email: string;
+  emailLabel: string;
+  links: ContactLink[];
+}
+
+const CONTACTS: ContactCard[] = [
   {
     emoji: '⚓',
     title: 'المنصة',

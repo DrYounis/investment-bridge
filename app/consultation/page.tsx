@@ -114,6 +114,55 @@ export default function ConsultationPage() {
         </div>
       </section>
 
+      {/* About the Consultant */}
+      <section className="max-w-3xl mx-auto px-4 py-16">
+        <div className="bg-white rounded-3xl p-8 md:p-10 border border-[#c9a84c]/20 shadow-[0_8px_30px_rgba(10,15,30,0.06)]">
+          <div className="text-center mb-8">
+            <div className="w-20 h-20 bg-gradient-to-br from-[#c9a84c] to-[#d4a843] rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-lg shadow-[#c9a84c]/20">
+              🎯
+            </div>
+            <h2 className="text-2xl font-black text-[#0a0f1e] mb-1" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+              د. محمد يونس
+            </h2>
+            <p className="text-[#c9a84c] text-sm font-bold" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+              مؤسس مرفأ — مستشار ريادة الأعمال
+            </p>
+          </div>
+
+          <div className="space-y-4 text-right" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+            <p className="text-[#4a5b78] leading-relaxed">
+              أنا لا أبيع نظريات. <strong className="text-[#0a0f1e]">أنا رائد أعمال يبني مشاريع حقيقية.</strong> في مرفأ، بنيتُ ثلاث منصات تعمل اليوم في السوق السعودي — بصيرة (تحليل المنافسات الحكومية بالذكاء الاصطناعي)، مقياس (تسعير مصانع الألمنيوم)، وبرو ميد إنشور (إدارة المطالبات الطبية).
+            </p>
+
+            <p className="text-[#4a5b78] leading-relaxed">
+              كل أسبوع، أجلس مع رواد أعمال في <strong className="text-[#0a0f1e]">المجلس الاستشاري</strong> — ١٤ لقاء تدريبي نناقش فيها حالات حقيقية من Airbnb إلى Netflix إلى Saudi German Health. أرى بأنفسهم: من ينجح؟ ولماذا يفشل الآخرون؟
+            </p>
+
+            <p className="text-[#4a5b78] leading-relaxed">
+              <strong className="text-[#0a0f1e]">الفرق بين اللي ينجح واللي يفشل ليس الفكرة.</strong> الفرق هو: هل تعرف الأرقام الثلاثة اللي تحفظها قبل ما تفتح فمك؟ هل تعرف من هو عميلك فعلاً؟ هل تعرف متى تتوقف؟
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-3 gap-3 mt-8">
+            {[
+              { num: '٣', label: 'منتجات مبنية من الصفر' },
+              { num: '١٤', label: 'لقاء تدريبي في المجلس' },
+              { num: '٧٥', label: 'دقيقة معك — وجهاً لوجه' },
+            ].map((s) => (
+              <div key={s.label} className="text-center bg-[#faf8f2] rounded-xl p-4">
+                <p className="text-2xl font-black text-[#c9a84c]">{s.num}</p>
+                <p className="text-xs text-[#4a5b78] mt-1">{s.label}</p>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-center text-sm text-[#4a5b78] mt-8 leading-relaxed" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+            الاستشارة ليست محاضرة. <strong className="text-[#0a0f1e]">هي ساعة تفكير مركزة على مشروعك أنت.</strong>
+            <br />نجيب على السؤال الحقيقي: ماذا تفعل غداً؟
+          </p>
+        </div>
+      </section>
+
       {/* Booking Form */}
       <section className="max-w-2xl mx-auto px-4 py-16">
         <ConsultationForm />

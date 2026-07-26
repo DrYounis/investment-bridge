@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Menu, X, Newspaper } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useAuth } from '@/app/context/AuthContext';
 import { createClient } from '@/lib/supabase/client';
@@ -61,16 +61,6 @@ export default function Header() {
           <div className="hidden md:flex items-center gap-6">
             <Link href="/meetings" className={`${navColor} hover:text-gold transition-colors font-bold tracking-wide`}>
               لقاءات مرفأ
-            </Link>
-            <Link href="/financial-news" className={`${navColor} hover:text-gold transition-colors font-bold tracking-wide flex items-center gap-1.5`}>
-              <Newspaper size={16} />
-              الأخبار المالية
-            </Link>
-            <Link href="/jobs" className={`${navColor} hover:text-gold transition-colors font-bold tracking-wide`}>
-              الوظائف
-            </Link>
-            <Link href="/learn" className={`${navColor} hover:text-gold transition-colors font-bold tracking-wide`}>
-              مركز المعرفة
             </Link>
             <Link href="/contact" className={`${navColor} hover:text-gold transition-colors font-bold tracking-wide`}>
               تواصل معنا
@@ -142,29 +132,6 @@ export default function Header() {
                 onClick={() => setMenuOpen(false)}
               >
                 لقاءات مرفأ
-              </Link>
-              <Link
-                href="/financial-news"
-                className="text-gold font-bold text-lg hover:opacity-80 transition-opacity flex items-center gap-2"
-                onClick={() => setMenuOpen(false)}
-              >
-                <Newspaper size={18} />
-                الأخبار المالية
-              </Link>
-              <Link
-                href="/jobs"
-                className="text-gold font-bold text-lg hover:opacity-80 transition-opacity"
-                onClick={() => setMenuOpen(false)}
-              >
-                الوظائف
-              </Link>
-
-              <Link
-                href="/learn"
-                className="text-gold font-bold text-lg hover:opacity-80 transition-opacity"
-                onClick={() => setMenuOpen(false)}
-              >
-                مركز المعرفة
               </Link>
 
               <Link

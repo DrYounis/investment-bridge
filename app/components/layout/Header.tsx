@@ -52,7 +52,7 @@ export default function Header() {
                 alt="مرفأ"
                 width={100}
                 height={100}
-                className="object-contain h-16 w-auto drop-shadow-luxury"
+                className="object-contain h-20 w-auto drop-shadow-luxury"
               />
             </Link>
           </div>

@@ -43,7 +43,7 @@ export default function Header() {
 
   return (
     <>
-      <header className={`relative md:absolute top-0 left-0 w-full z-50 p-6 ${isLight ? 'bg-[#faf8f2]/90' : 'bg-[#0a0f1e]/90'} backdrop-blur-sm`} dir="rtl">
+      <header className={`relative md:absolute top-0 left-0 w-full z-50 py-3 px-6 ${isLight ? 'bg-[#faf8f2]/90' : 'bg-[#0a0f1e]/90'} backdrop-blur-sm`} dir="rtl">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Link href="/" className="hover:opacity-80 transition-opacity">
@@ -52,7 +52,7 @@ export default function Header() {
                 alt="مرفأ"
                 width={100}
                 height={100}
-                className="object-contain h-24 w-auto drop-shadow-luxury"
+                className="object-contain h-16 w-auto drop-shadow-luxury"
               />
             </Link>
           </div>

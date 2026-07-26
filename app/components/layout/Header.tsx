@@ -43,7 +43,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="relative md:absolute top-0 left-0 w-full z-50 p-6" dir="rtl">
+      <header className={`relative md:absolute top-0 left-0 w-full z-50 p-6 ${isLight ? 'bg-[#faf8f2]/90' : 'bg-[#0a0f1e]/90'} backdrop-blur-sm`} dir="rtl">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Link href="/" className="hover:opacity-80 transition-opacity">

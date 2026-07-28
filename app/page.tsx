@@ -62,6 +62,120 @@ export default function Home() {
           <AuthAwareLinks />
         </div>
 
+        {/* منهجية المراحل الخمس — رحلة الرسو */}
+        <section className="w-full max-w-6xl mx-auto mb-24 animate-fade-in-up">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#c9a84c]/10 border border-[#c9a84c]/20 text-[#c9a84c] text-sm font-bold mb-4">
+              ⚓ <span className="tracking-wide uppercase">منهجية المراحل الخمس — رحلة الرسو</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-4 leading-tight">
+              كيف <span className="text-[#c9a84c]">نرسو</span> مع كل سفينة
+            </h2>
+            <p className="text-[#a0aec0] text-lg max-w-2xl mx-auto leading-relaxed">
+              لكل شركة تصل إلى مرفأ رحلة من خمس مراحل — من لحظة الإيمان بالفكرة حتى الإبحار معاً في الحياة
+            </p>
+          </div>
+
+          {/* Five Stages */}
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-16">
+            {[
+              {
+                num: '١',
+                title: 'الإيمان',
+                subtitle: 'نرى الشراع في الأفق 🌅',
+                body: 'لا نستقبل أي سفينة. نؤمن بالفكرة أولاً أو نعتذر بصدق. الإيمان شرط الدخول — لأن من لا يؤمن بفكرتك سيعطيك خدمة، ومن يؤمن بها سيعطيك نفسه.',
+              },
+              {
+                num: '٢',
+                title: 'الفهم',
+                subtitle: 'نرسو ونفحص ⚓',
+                body: 'قبل أي كلمة نصيحة: نغوص في العمل نفسه — السوق، الأرقام، الفريق، النموذج. نفهم الشركة كما يفهم الربّان سفينته، لا كما يقرأ الزائر كتيّبها.',
+              },
+              {
+                num: '٣',
+                title: 'الرد',
+                subtitle: 'نجيب على ما طرحوه هم 🧭',
+                body: 'لا نأتي بأجندة جاهزة. هم طرحوا أسئلتهم وتحدياتهم — ونحن نرد عليها بالتحديد. احترام سؤال العميل قبل فرض رؤيتنا.',
+              },
+              {
+                num: '٤',
+                title: 'الغوص',
+                subtitle: 'ننزل الحوض الجاف معهم 🔧',
+                body: 'هنا التنقية: كل سفينة تتراكم على هيكلها عوالق تبطئها دون أن يشعر ربانها — ونحن ننظف الفكرة والشركة من الشوائب ونقاط الفشل. كل تدخل نقدمه يخضع لثلاثية: مؤثر · منطقي · قابل للتنفيذ.',
+              },
+              {
+                num: '٥',
+                title: 'الحياة',
+                subtitle: 'نبحر معهم 🌊',
+                body: 'لا نسلّم تقريراً ونختفي. نعيش التطوير على أرض الواقع، نطوّر الأشياء وهي تعمل، ونبقى على متن الرحلة حتى تثبت النتائج.',
+              },
+            ].map((stage, i) => (
+              <div
+                key={i}
+                className="relative bg-[#0d1628] border border-[#1a2540] rounded-3xl p-6 group hover:border-[#c9a84c]/40 transition-all duration-500 hover:-translate-y-1"
+              >
+                {/* Stage number — gold circle */}
+                <div className="w-12 h-12 rounded-full bg-[#c9a84c]/10 border border-[#c9a84c]/30 flex items-center justify-center mb-4 group-hover:bg-[#c9a84c]/20 transition-colors">
+                  <span className="text-[#c9a84c] font-black text-lg">{stage.num}</span>
+                </div>
+
+                <h3 className="text-white font-black text-lg mb-1">{stage.title}</h3>
+                <p className="text-[#c9a84c] text-sm font-bold mb-3">{stage.subtitle}</p>
+                <p className="text-[#8a94a8] text-sm leading-relaxed">{stage.body}</p>
+
+                {/* Connecting line between stages (hidden on mobile) */}
+                {i < 4 && (
+                  <div className="hidden md:block absolute -left-2 top-12 w-4 h-[1px] bg-[#c9a84c]/20">
+                    <div className="absolute -right-1 -top-[3px] w-[7px] h-[7px] rounded-full bg-[#c9a84c]/30"></div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* عقيدة مرفأ */}
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#c9a84c]/5 to-transparent border border-[#c9a84c]/15 p-8 md:p-12">
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+              <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#c9a84c]/3 rounded-full blur-3xl"></div>
+            </div>
+
+            <div className="relative z-10">
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#c9a84c]/10 border border-[#c9a84c]/20 text-[#c9a84c] text-sm font-bold mb-4">
+                  🏛️ <span className="tracking-wide uppercase">عقيدة مرفأ</span>
+                </div>
+                <h3 className="text-2xl md:text-3xl font-black text-white mb-2">
+                  ما نحن <span className="text-[#c9a84c]">وما لسنا</span>
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-[#0d1628]/80 backdrop-blur rounded-2xl border border-[#1a2540] p-6 text-center group hover:border-[#c9a84c]/30 transition-all duration-300">
+                  <div className="text-4xl mb-4">🤝</div>
+                  <p className="text-[#a0aec0] leading-relaxed">
+                    لسنا <span className="text-[#c9a84c] font-bold">coach</span> ولسنا جهة تجارية —{' '}
+                    <span className="text-white font-bold">نحن شركاء نجاح حقيقيون</span>
+                  </p>
+                </div>
+                <div className="bg-[#0d1628]/80 backdrop-blur rounded-2xl border border-[#1a2540] p-6 text-center group hover:border-[#c9a84c]/30 transition-all duration-300">
+                  <div className="text-4xl mb-4">🧱</div>
+                  <p className="text-[#a0aec0] leading-relaxed">
+                    لسنا مصنعاً للنصائح —{' '}
+                    <span className="text-white font-bold">النصيحة الجاهزة تباع بالجملة، والشراكة تُبنى بالقطعة</span>
+                  </p>
+                </div>
+                <div className="bg-[#0d1628]/80 backdrop-blur rounded-2xl border border-[#1a2540] p-6 text-center group hover:border-[#c9a84c]/30 transition-all duration-300">
+                  <div className="text-4xl mb-4">⚡</div>
+                  <p className="text-[#a0aec0] leading-relaxed">
+                    كل شركة عندنا <span className="text-[#c9a84c] font-bold">شخصية معنوية</span> لا يشبهها أحد —{' '}
+                    <span className="text-white font-bold">لا قوالب، لا حلول منسوخة، لا &quot;أفضل الممارسات&quot; تُلصق على الجميع</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Entrepreneur Pathway */}
         <div className="w-full max-w-2xl mx-auto mb-24">
           <AuthAwarePathway

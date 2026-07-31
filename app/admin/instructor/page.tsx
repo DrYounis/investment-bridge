@@ -11,13 +11,16 @@ const SCHEDULE = [
   { num: '05', encounter: 'اللقاء 5', topic: 'العمليات', case: 'Amazon Logistics', file: 'Instructor_Guide_05_operations.pdf' },
   { num: '06', encounter: 'اللقاء 6', topic: 'التفاوض', case: 'Shark Tank', file: 'Instructor_Guide_06_negotiation.pdf' },
   { num: '07', encounter: 'اللقاء 7', topic: 'حوكمة الشركات', case: 'Saudi German Health', file: 'Instructor_Guide_07_governance.pdf' },
-  { num: '08', encounter: 'اللقاء 8', topic: 'الابتكار', case: 'Netflix', file: 'Instructor_Guide_08_innovation.pdf' },
-  { num: '09', encounter: 'اللقاء 9', topic: 'الموارد البشرية', case: 'Google Project Aristotle', file: 'Instructor_Guide_09_hr.pdf' },
-  { num: '10', encounter: 'اللقاء 10', topic: 'إدارة المخاطر', case: 'Theranos', file: 'Instructor_Guide_10_risk.pdf' },
-  { num: '11', encounter: 'اللقاء 11', topic: 'التوسع الدولي', case: 'IKEA', file: 'Instructor_Guide_11_expansion.pdf' },
-  { num: '12', encounter: 'اللقاء 12', topic: 'إدارة الأزمات', case: 'Johnson & Johnson', file: 'Instructor_Guide_12_crisis.pdf' },
-  { num: '13', encounter: 'اللقاء 13', topic: 'الاستدامة والمسؤولية', case: 'Patagonia', file: 'Instructor_Guide_13_sustainability.pdf' },
-  { num: '14', encounter: 'اللقاء 14', topic: 'دراسة الجدوى', case: 'Quibi', file: 'Instructor_Guide_14_feasibility.pdf' },
+  { num: '08', encounter: 'اللقاء 8', topic: 'تآكل الهوامش', case: 'Nice One', file: 'Instructor_Guide_08_margins.pdf' },
+  { num: '09', encounter: 'اللقاء 9', topic: 'الابتكار', case: 'Netflix', file: 'Instructor_Guide_09_innovation.pdf' },
+  { num: '10', encounter: 'اللقاء 10', topic: 'الاندماج والاستحواذ', case: 'Elm', file: 'Instructor_Guide_10_mergers.pdf' },
+  { num: '11', encounter: 'اللقاء 11', topic: 'الموارد البشرية', case: 'Google Project Aristotle', file: 'Instructor_Guide_11_hr.pdf' },
+  { num: '12', encounter: 'اللقاء 12', topic: 'اقتصاديات التأمين', case: 'Tawuniya', file: 'Instructor_Guide_12_insurance.pdf' },
+  { num: '13', encounter: 'اللقاء 13', topic: 'إدارة المخاطر', case: 'Theranos', file: 'Instructor_Guide_13_risk.pdf' },
+  { num: '14', encounter: 'اللقاء 14', topic: 'التوسع الدولي', case: 'IKEA', file: 'Instructor_Guide_14_expansion.pdf' },
+  { num: '15', encounter: 'اللقاء 15', topic: 'إدارة الأزمات', case: 'Johnson & Johnson', file: 'Instructor_Guide_15_crisis.pdf' },
+  { num: '16', encounter: 'اللقاء 16', topic: 'الاستدامة والمسؤولية', case: 'Patagonia', file: 'Instructor_Guide_16_sustainability.pdf' },
+  { num: '17', encounter: 'اللقاء 17', topic: 'دراسة الجدوى', case: 'Quibi', file: 'Instructor_Guide_17_feasibility.pdf' },
 ];
 
 interface FileInfo {
@@ -78,7 +81,7 @@ export default function InstructorPage() {
       <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-black text-[#c9a84c] mb-2">أدلّة المدرّب</h1>
         <p className="text-[#64748b] mb-10">
-          مراجع تعليمية خاصة بمدرب البرنامج — ١٤ دليلاً لمرافقة دراسات الحالة الأسبوعية
+          مراجع تعليمية خاصة بمدرب البرنامج — ١٧ دليلاً لمرافقة دراسات الحالة الأسبوعية
         </p>
 
         {error && (

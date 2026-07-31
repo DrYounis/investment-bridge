@@ -45,6 +45,41 @@ export default async function MajlisPage({ params }: { params: Promise<{ meeting
           <AdvisorProfile variant="compact" />
         </div>
 
+        {/* Case Study Resources */}
+        <div className="bg-white rounded-2xl p-6 border border-[#c9a84c]/20 shadow-[0_8px_30px_rgba(10,15,30,0.04)] mb-6">
+          <h2 className="text-lg font-bold text-[#0a0f1e] mb-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
+            📄 ملفات الجلسة
+          </h2>
+          <div className="flex flex-wrap gap-3">
+            <a
+              href={meeting.pdf}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-3 bg-[#faf8f2] border border-[#c9a84c]/30 rounded-xl text-[#c9a84c] font-bold hover:bg-[#c9a84c]/10 transition-colors"
+            >
+              📄 PDF (English)
+            </a>
+            <a
+              href={meeting.arPdf}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-3 bg-[#faf8f2] border border-[#c9a84c]/30 rounded-xl text-[#c9a84c] font-bold hover:bg-[#c9a84c]/10 transition-colors"
+            >
+              📄 PDF (عربي)
+            </a>
+            {meeting.studyGuide && (
+              <a
+                href={meeting.studyGuide}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-3 bg-[#c9a84c]/10 border border-[#c9a84c]/40 rounded-xl text-[#c9a84c] font-bold hover:bg-[#c9a84c]/20 transition-colors"
+              >
+                📖 دليل الطالب
+              </a>
+            )}
+          </div>
+        </div>
+
         {/* Quiz Section */}
         <div className="bg-white rounded-2xl p-6 border border-[#c9a84c]/20 shadow-[0_8px_30px_rgba(10,15,30,0.04)] mb-6">
           <h2 className="text-lg font-bold text-[#0a0f1e] mb-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>

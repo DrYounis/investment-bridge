@@ -11,11 +11,17 @@ function getResend() {
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!isSuperAdminEmail(user.email)) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  // Allow internal API secret as auth bypass for one-off admin operations
+  const apiKey = request.headers.get('x-api-key');
+  const isInternal = Boolean(apiKey && process.env.INTERNAL_API_SECRET && apiKey === process.env.INTERNAL_API_SECRET);
+
+  if (!isInternal) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!isSuperAdminEmail(user.email)) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
   }
 
   const supabaseService = createServiceClient();

@@ -1,7 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { isSuperAdminEmail } from '@/lib/auth/adminEmails';
-import { SCHEDULE_DATA, formatDate, getFridayDates } from '@/app/components/marfa/scheduleData';
+import { SCHEDULE_DATA, formatDate, getFridayDates, TOTAL_MEETINGS } from '@/app/components/marfa/scheduleData';
 import MajlisRoom from '@/app/components/marfa/MajlisRoom';
 import MajlisQuiz from '@/app/components/marfa/MajlisQuiz';
 import AdvisorProfile from '@/app/components/marfa/AdvisorProfile';
@@ -9,7 +9,7 @@ import AdvisorProfile from '@/app/components/marfa/AdvisorProfile';
 export default async function MajlisPage({ params }: { params: Promise<{ meetingNumber: string }> }) {
   const { meetingNumber: nStr } = await params;
   const n = parseInt(nStr, 10);
-  if (isNaN(n) || n < 1 || n > 14) notFound();
+  if (isNaN(n) || n < 1 || n > TOTAL_MEETINGS) notFound();
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();

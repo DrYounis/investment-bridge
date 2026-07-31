@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { SCHEDULE_DATA } from '@/app/components/marfa/scheduleData';
+import { SCHEDULE_DATA, TOTAL_MEETINGS } from '@/app/components/marfa/scheduleData';
 
 interface QuizQuestion {
   id: string;
@@ -76,7 +76,7 @@ export default function AdminMajlisPage() {
       const aMap: Record<number, QuizAnswer[]> = {};
       const qtMap: Record<number, string> = {};
 
-      for (let n = 1; n <= 14; n++) {
+      for (let n = 1; n <= TOTAL_MEETINGS; n++) {
         aMap[n] = [];
 
         const res = await fetch(`/api/admin/majlis-quiz?meeting=${n}`);

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createServiceClient } from '@/lib/supabase/service';
-import { SCHEDULE_DATA, getFridayDates, formatDate } from '@/app/components/marfa/scheduleData';
+import { SCHEDULE_DATA, getFridayDates, formatDate, TOTAL_MEETINGS } from '@/app/components/marfa/scheduleData';
 
 export const dynamic = 'force-dynamic';
 
@@ -87,13 +87,13 @@ export async function GET() {
     const meeting = getLastFriday();
     const finishedN = meeting.meetingNumber;
 
-    if (finishedN < 1 || finishedN > 14) {
+    if (finishedN < 1 || finishedN > TOTAL_MEETINGS) {
       return NextResponse.json({ skipped: true, reason: 'no active meeting' });
     }
 
     const nextN = finishedN + 1;
     let deadlineDate: string;
-    if (nextN <= 14) {
+    if (nextN <= TOTAL_MEETINGS) {
       const fridayDates = getFridayDates();
       deadlineDate = formatDate(fridayDates[nextN - 1]);
     } else {

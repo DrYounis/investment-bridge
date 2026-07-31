@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/service';
 import { createClient } from '@/lib/supabase/server';
 import { isSuperAdminEmail } from '@/lib/auth/adminEmails';
+import { TOTAL_MEETINGS } from '@/app/components/marfa/scheduleData';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,8 +15,8 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const meetingStr = searchParams.get('meeting');
   const meeting = parseInt(meetingStr || '', 10);
-  if (isNaN(meeting) || meeting < 1 || meeting > 14) {
-    return NextResponse.json({ error: 'Meeting must be 1–14' }, { status: 400 });
+  if (isNaN(meeting) || meeting < 1 || meeting > TOTAL_MEETINGS) {
+    return NextResponse.json({ error: `Meeting must be 1–${TOTAL_MEETINGS}` }, { status: 400 });
   }
 
   try {
@@ -64,8 +65,8 @@ export async function PUT(request: NextRequest) {
   }
 
   const { meeting_number, question } = body;
-  if (typeof meeting_number !== 'number' || meeting_number < 1 || meeting_number > 14) {
-    return NextResponse.json({ error: 'meeting_number must be a number 1–14' }, { status: 400 });
+  if (typeof meeting_number !== 'number' || meeting_number < 1 || meeting_number > TOTAL_MEETINGS) {
+    return NextResponse.json({ error: `meeting_number must be a number 1–${TOTAL_MEETINGS}` }, { status: 400 });
   }
   if (typeof question !== 'string' || question.trim().length === 0) {
     return NextResponse.json({ error: 'Question is required' }, { status: 400 });

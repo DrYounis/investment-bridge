@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createServiceClient } from '@/lib/supabase/service';
-import { SCHEDULE_DATA, getFridayDates, formatDate, type YouTubeLink } from '@/app/components/marfa/scheduleData';
+import { SCHEDULE_DATA, getFridayDates, formatDate, TOTAL_MEETINGS, type YouTubeLink } from '@/app/components/marfa/scheduleData';
 
 function getResend() {
   return new Resend(process.env.RESEND_API_KEY);
@@ -38,7 +38,7 @@ function buildMajlisReminderHTML(
   youtubeLinks?: YouTubeLink[],
   glossaryTerms?: Array<{ arabic_term: string; english_term: string }>,
 ) {
-  const nextEntry = nextN >= 1 && nextN <= 14 ? SCHEDULE_DATA[nextN - 1] : null;
+  const nextEntry = nextN >= 1 && nextN <= TOTAL_MEETINGS ? SCHEDULE_DATA[nextN - 1] : null;
 
   return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -152,15 +152,15 @@ export async function GET(request: Request) {
     const meeting = getLastFriday();
     const finishedN = meeting.meetingNumber;
 
-    if (finishedN < 1 || finishedN > 14) {
+    if (finishedN < 1 || finishedN > TOTAL_MEETINGS) {
       return NextResponse.json({ skipped: true, reason: 'no active meeting' });
     }
 
     const nextN = finishedN + 1;
 
-    // ── Deadline: upcoming Friday, or finished Friday + 7 days if past meeting 14 ──
+    // ── Deadline: upcoming Friday, or finished Friday + 7 days if past last meeting ──
     let deadlineDate: string;
-    if (nextN <= 14) {
+    if (nextN <= TOTAL_MEETINGS) {
       const fridayDates = getFridayDates();
       deadlineDate = formatDate(fridayDates[nextN - 1]);
     } else {

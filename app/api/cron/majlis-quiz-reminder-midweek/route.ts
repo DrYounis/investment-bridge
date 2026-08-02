@@ -76,7 +76,19 @@ function buildMidweekHTML(
 </body></html>`;
 }
 
-export async function GET() {
+function isCronAuthorized(request: Request): boolean {
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret) return false;
+  const authHeader = request.headers.get('authorization');
+  if (authHeader === `Bearer ${cronSecret}`) return true;
+  return false;
+}
+
+export async function GET(request: Request) {
+  if (!isCronAuthorized(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   // Guard: Wednesday only
   if (new Date().getUTCDay() !== 3) {
     return NextResponse.json({ skipped: true, reason: 'Not Wednesday' });
@@ -176,6 +188,14 @@ export async function GET() {
       } catch { failed++; }
       await new Promise(r => setTimeout(r, 600));
     }
+
+    // ── Admin report ──
+    resend.emails.send({
+      from: 'Marfa Advisory <noreply@marfa.sa>',
+      to: 'op.younis@gmail.com',
+      subject: `📋 تقرير تذكير منتصف الأسبوع — تم إرسال ${sent}/${targeted.length} تذكير للقاء ${finishedN}`,
+      html: `<div style="font-family: sans-serif; padding: 20px;"><h2>تقرير تذكير منتصف الأسبوع للمجلس</h2><p>اللقاء: ${finishedN} — ${meeting.dateStr}</p><p>السؤال: ${questionRow.question}</p><pre>${JSON.stringify({ sent, failed, answered: answeredCount, total: subscribers.length }, null, 2)}</pre></div>`,
+    }).catch(e => console.error('[majlis-midweek] admin report', e));
 
     return NextResponse.json({ success: true, sent, failed, answered: answeredCount, total: subscribers.length });
   } catch (err: unknown) {

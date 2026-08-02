@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import RegistrationBanner from '@/app/components/marfa/RegistrationBanner';
+import StickyJoinCTA from '@/app/components/marfa/StickyJoinCTA';
 
 export const metadata: Metadata = {
   title: 'انضم إلى مرفأ | مجتمع رواد الأعمال السعودي',
@@ -169,6 +170,8 @@ export default function JoinPage() {
           ))}
         </div>
       </section>
+
+      <StickyJoinCTA />
     </main>
   );
 }

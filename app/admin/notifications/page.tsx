@@ -193,7 +193,7 @@ export default function AdminNotificationsPage() {
             <div><span className="text-[#64748b]">اللقاء:</span> <span className="text-[#0a0f1e] font-bold">اللقاء {MEETING.meetingNumber}</span></div>
             <div><span className="text-[#64748b]">التاريخ:</span> <span className="text-[#0a0f1e] font-bold">{MEETING.dateStr}</span></div>
             <div><span className="text-[#64748b]">الوقت:</span> <span className="text-[#0a0f1e] font-bold">بعد صلاة الجمعة</span></div>
-            <div><span className="text-[#64748b]">المكان:</span> <span className="text-[#0a0f1e] font-bold">ثمد كوفي</span></div>
+            <div><span className="text-[#64748b]">المكان:</span> <span className="text-[#0a0f1e] font-bold"><a href="https://maps.app.goo.gl/hH2bhED852UMbL6Y9" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#c9a84c]">فندق هوليداي فيلا حائل</a></span></div>
           </div>
           <div className="mt-4 p-4 bg-[#faf8f2] rounded-xl text-sm text-[#64748b]">
             <span className="text-[#c9a84c] font-bold">🤖 تلقائي:</span> كل يوم سبت الساعة 8 صباحاً، يُرسل إشعار تذكيري لجميع المشتركين ({emails.length} مشترك) عن لقاء الجمعة القادم.

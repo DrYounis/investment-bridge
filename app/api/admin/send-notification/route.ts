@@ -11,7 +11,7 @@ const MEETING_DETAILS = {
   number: 3,
   date: 'الجمعة 3 يوليو 2026',
   time: 'بعد صلاة الجمعة',
-  location: 'ثمد كوفي',
+  location: 'فندق هوليداي فيلا حائل',
   topic: 'المالية',
   case: 'حالة "WeWork" (الفشل المالي)',
   challenge: 'كيف تحولت شركة بمليارات الدولارات إلى الإفلاس؟ فهم الفرق بين "النمو" و"الربحية".',
@@ -102,7 +102,8 @@ function buildEmailHTML(name: string, isWelcome: boolean) {
     <!-- Footer -->
     <div style="margin-top: 32px; padding-top: 20px; border-top: 1px solid #c9a84c44; text-align: center;">
       <p style="color: #64748b; font-size: 12px; margin: 0 0 4px 0;">
-        📍 ثمد كوفي — بعد صلاة الجمعة من كل أسبوع
+        📍 فندق هوليداي فيلا حائل — بعد صلاة الجمعة من كل أسبوع
+        🔗 https://maps.app.goo.gl/hH2bhED852UMbL6Y9
       </p>
       <p style="color: #64748b; font-size: 11px; margin: 0;">
         www.marfa.sa &nbsp;|&nbsp; منصة مرفأ الاستثمارية &nbsp;|&nbsp; حائل 🇸🇦

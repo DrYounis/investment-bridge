@@ -6,6 +6,7 @@ import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/service';
 import crypto from 'crypto';
 import { getTier } from '@/lib/contributionTiers';
+import { Resend } from 'resend';
 
 const MEETING_PRODUCT_ID = 'f0848f83-ad00-4528-9936-b2a19f5e3ba2';
 
@@ -137,6 +138,34 @@ export async function POST(request: Request) {
         .update({ amount: paidAmount })
         .eq('user_id', user_id)
         .eq('status', 'active');
+
+      // Notify admin
+      const { data: userProfile } = await supabaseAdmin
+        .from('profiles')
+        .select('email, full_name')
+        .eq('id', user_id)
+        .single();
+      const userEmail = userProfile?.email || 'unknown';
+      const userName = userProfile?.full_name || 'مستخدم';
+
+      if (process.env.RESEND_API_KEY) {
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        await resend.emails.send({
+          from: 'مرفأ <noreply@marfa.sa>',
+          to: 'ceo@marfa.sa',
+          subject: `💰 اشتراك جديد — ${paidAmount} ريال | ${userName}`,
+          html: `<div dir="rtl" style="font-family:'Tajawal',sans-serif;text-align:right">
+            <h2 style="color:#c9a84c">اشتراك جديد في لقاءات مرفأ</h2>
+            <table>
+              <tr><td><b>الاسم:</b></td><td>${userName}</td></tr>
+              <tr><td><b>البريد:</b></td><td>${userEmail}</td></tr>
+              <tr><td><b>المبلغ:</b></td><td style="color:#c9a84c;font-size:1.5rem;font-weight:bold">${paidAmount} ريال</td></tr>
+              <tr><td><b>الفئة:</b></td><td>${tier?.ar || '—'} (${tier?.en || '—'})</td></tr>
+              <tr><td><b>رقم العملية:</b></td><td>${transaction.id}</td></tr>
+            </table>
+          </div>`,
+        }).catch(() => {}); // fire-and-forget
+      }
     }
 
     console.log(`[Paymob Webhook] ✅ Fulfilled: user ${user_id} → ${subscriptionTier}`);

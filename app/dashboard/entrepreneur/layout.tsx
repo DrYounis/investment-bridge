@@ -1,3 +1,4 @@
+import { requireRole } from '@/lib/auth/requireRole';
 import type { Metadata } from 'next';
 import EntrepreneurSidebar from '@/app/components/entrepreneur/Sidebar';
 
@@ -6,11 +7,13 @@ export const metadata: Metadata = {
   description: 'لوحة تحكم رائد الأعمال - مرفأ',
 };
 
-export default function EntrepreneurLayout({
+export default async function EntrepreneurLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  await requireRole(['entrepreneur']);
+
   return (
     <div className="min-h-screen flex" dir="rtl" style={{ background: '#0a0f1e' }}>
       <div className="hidden lg:block">

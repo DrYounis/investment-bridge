@@ -35,7 +35,7 @@ export default function HuntersPage() {
             Venture Collective
           </p>
           <p className="text-[#a0aec0] text-lg max-w-xl mx-auto leading-relaxed" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-            "حاضنة" سلبية. "Family" منغلقة. <strong className="text-white">الصيادين</strong> — مجموعة من البناة والمطورين والمستثمرين
+            &ldquo;حاضنة&rdquo; سلبية. &ldquo;Family&rdquo; منغلقة. <strong className="text-white">الصيادين</strong> — مجموعة من البناة والمطورين والمستثمرين
             يصطادون فرص السوق بنشاط، يبنونها، ويطلقونها.
           </p>
         </div>

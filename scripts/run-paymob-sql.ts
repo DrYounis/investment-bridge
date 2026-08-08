@@ -54,8 +54,8 @@ async function main() {
       await runSql(stmt);
       ok++;
       console.log(`✅ ${ok}/${statements.length}`);
-    } catch (err: any) {
-      const msg = err.message || '';
+    } catch (err: unknown) {
+      const msg = (err as Error).message || '';
       if (msg.includes('already exists') || msg.includes('duplicate') || msg.includes('42701') || msg.includes('42710')) {
         ok++;
         console.log(`⏭️  ${ok}/${statements.length} (skipped)`);

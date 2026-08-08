@@ -9,7 +9,7 @@ function EquityBannerInner() {
 
   useEffect(() => {
     if (searchParams.get('equity') === 'success' && localStorage.getItem('consultation_equity_booked') === 'true') {
-      setShow(true);
+      queueMicrotask(() => setShow(true));
       localStorage.removeItem('consultation_equity_booked');
       window.history.replaceState({}, '', '/consultation');
     }

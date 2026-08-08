@@ -1,5 +1,5 @@
-import AdminDashboardClient from '../(dashboard)/admin/components/AdminDashboardClient';
-import InvestorRequestsTable from '../(dashboard)/admin/components/InvestorRequestsTable';
+import AdminDashboardClient from '@/app/(dashboard)/admin/components/AdminDashboardClient';
+import InvestorRequestsTable from '@/app/(dashboard)/admin/components/InvestorRequestsTable';
 
 export default function AdminPage() {
   return (

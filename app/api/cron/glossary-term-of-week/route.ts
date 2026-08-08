@@ -181,7 +181,8 @@ export async function GET() {
     }
 
     // ── Find all unsent featured terms for this meeting ──
-    const { data: termRows, error: termErr } = await supabase
+    // eslint-disable-next-line prefer-const
+    let { data: termRows, error: termErr } = await supabase
       .from('marfa_glossary_terms')
       .select('*')
       .eq('featured_meeting', nextMeetingNumber)

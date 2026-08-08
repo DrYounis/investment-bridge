@@ -362,8 +362,8 @@ export default function Home() {
                     </p>
                     <div className="flex items-center gap-6">
                       <div className="flex items-baseline gap-2">
-                        <span className="text-3xl font-black text-white">2,500</span>
-                        <span className="text-sm text-[#a0aec0] font-bold uppercase">SAR</span>
+                        <span className="text-lg font-bold text-[#c9a84c]">سعر مخصّص</span>
+                        <span className="text-sm text-[#a0aec0]">حسب احتياجك</span>
                       </div>
                       <div className="px-8 py-3 bg-[#c9a84c] text-[#0a0f1e] rounded-full font-bold hover:bg-[#d4a843] transition-all duration-300 shadow-xl">
                         اطلب الخدمة الآن

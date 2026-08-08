@@ -159,7 +159,7 @@ export default function PitchDeckServicePage() {
                         display:'inline-flex',alignItems:'center',gap:8
                     }}>
                         ابدأ التصميم الآن
-                        <span style={{background:'rgba(10,15,30,0.2)',padding:'2px 10px',borderRadius:4,fontSize:'0.85rem'}}>2500 ريال</span>
+                        <span style={{background:'rgba(10,15,30,0.2)',padding:'2px 10px',borderRadius:4,fontSize:'0.85rem'}}>مجاناً</span>
                     </Link>
                     <Link href="/marfa/assessment" style={{
                         background:'transparent',color:'var(--text-muted)',padding:'14px 28px',
@@ -319,17 +319,17 @@ export default function PitchDeckServicePage() {
                     pointerEvents:'none'
                 }}></div>
                 <h2 style={{fontSize:'clamp(1.5rem, 3vw, 2.4rem)',fontWeight:800,marginBottom:'0.5rem'}}>ابدأ عرضك الاستثماري اليوم</h2>
-                <p style={{color:'var(--text-muted)',marginBottom:'2rem',fontSize:'1rem'}}>خدمة شاملة لمرة واحدة — لا اشتراكات، لا تعقيدات.</p>
+                <p style={{color:'var(--text-muted)',marginBottom:'2rem',fontSize:'1rem'}}>صمم عرضك أولاً — والسعر يُحدد بعد التواصل حسب حجم العمل.</p>
 
                 <div style={{
                     display:'inline-block',background:'var(--navy-card)',
                     border:'1px solid rgba(201,168,76,0.35)',borderRadius:20,
                     padding:'2.5rem 3rem',position:'relative',zIndex:1
                 }}>
-                    <div style={{fontSize:'3.2rem',fontWeight:900,color:'var(--gold)',lineHeight:1,marginBottom:'0.2rem'}}>
-                        2,500 <small style={{fontSize:'1.2rem',fontWeight:400,color:'var(--text-muted)'}}>ريال</small>
+                    <div style={{fontSize:'1.8rem',fontWeight:900,color:'var(--gold)',lineHeight:1,marginBottom:'0.2rem'}}>
+                        سعر مخصّص
                     </div>
-                    <div style={{color:'var(--text-muted)',fontSize:'0.9rem',marginBottom:'1.8rem'}}>دفع مرة واحدة · دون رسوم إضافية</div>
+                    <div style={{color:'var(--text-muted)',fontSize:'0.9rem',marginBottom:'1.8rem'}}>يُحدد بعد التواصل — حسب احتياجات مشروعك</div>
                     <ul style={{listStyle:'none',marginBottom:'2rem',textAlign:'right',padding:0}}>
                         {['توليد محتوى ذكي بالكامل','هوية بصرية مخصصة لشعارك','تصدير PPTX + PDF','Speaker Notes لكل شريحة','وصول لأكثر من 20 قالب','تحليل المستندات (Word/PDF)'].map((p, i) => (
                             <li key={i} style={{
@@ -341,11 +341,12 @@ export default function PitchDeckServicePage() {
                             </li>
                         ))}
                     </ul>
-                    <Link href="/services/pitch-deck/create" style={{
+                    <a href="https://wa.me/966555056545" target="_blank" rel="noopener noreferrer" style={{
                         background:'var(--gold)',color:'var(--navy)',padding:'14px 36px',
                         borderRadius:8,fontWeight:700,fontSize:'1rem',textDecoration:'none',
                         display:'flex',alignItems:'center',justifyContent:'center',gap:8,width:'100%'
-                    }}>ابدأ التصميم الآن ←</Link>
+                    }}>💬 تواصل واتساب للاستفسار ←</a>
+                    <p style={{color:'var(--text-faint)',fontSize:'0.75rem',marginTop:'1rem',textAlign:'center'}}>أو ابدأ التصميم مجاناً ثم تواصل معنا</p>
                 </div>
             </section>
 

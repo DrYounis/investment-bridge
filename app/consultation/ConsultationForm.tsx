@@ -135,11 +135,16 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
     }));
 
     try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
+
       const res = await fetch('/api/paymob/consultation-intention', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: price, name, email, phone, day: selectedDay, slot: selectedSlot, minutes, notes, isFirstTime }),
+        signal: controller.signal,
       });
+      clearTimeout(timeout);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'فشل في إنشاء جلسة الدفع');
       if (data.client_secret) {
@@ -149,7 +154,8 @@ export default function ConsultationForm({ onBooked }: ConsultationFormProps) {
         throw new Error('Missing payment session');
       }
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'حدث خطأ في الدفع');
+      const isTimeout = err instanceof DOMException && err.name === 'AbortError';
+      setError(isTimeout ? 'انتهت مهلة الاتصال — حاول مرة أخرى' : (err instanceof Error ? err.message : 'حدث خطأ في الدفع'));
       setProcessing(false);
       localStorage.removeItem('consultation_booking');
     }

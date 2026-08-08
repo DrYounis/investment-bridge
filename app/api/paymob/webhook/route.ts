@@ -5,6 +5,9 @@
 import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/service';
 import crypto from 'crypto';
+import { getTier } from '@/lib/contributionTiers';
+
+const MEETING_PRODUCT_ID = 'f0848f83-ad00-4528-9936-b2a19f5e3ba2';
 
 function verifyHmac(payload: Record<string, unknown>, hmacSecret: string): boolean {
   try {
@@ -118,6 +121,23 @@ export async function POST(request: Request) {
     await supabaseAdmin.from('profiles')
       .update({ subscription_tier: subscriptionTier, updated_at: now.toISOString() })
       .eq('id', user_id);
+
+    // Meeting product: write contribution tier + amount
+    if (product_id === MEETING_PRODUCT_ID) {
+      const paidAmount = Number(transaction.amount_cents) / 100;
+      const tier = getTier(paidAmount);
+      await supabaseAdmin.from('profiles')
+        .update({
+          contribution_tier: tier?.key ?? null,
+          contribution_amount: paidAmount,
+          updated_at: now.toISOString(),
+        })
+        .eq('id', user_id);
+      await supabaseAdmin.from('subscriptions')
+        .update({ amount: paidAmount })
+        .eq('user_id', user_id)
+        .eq('status', 'active');
+    }
 
     console.log(`[Paymob Webhook] ✅ Fulfilled: user ${user_id} → ${subscriptionTier}`);
     return NextResponse.json({ received: true, fulfilled: true });

@@ -5,17 +5,25 @@
 
 import { createClient } from '@/lib/supabase/client';
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from '@/components/ui/Toast';
+import { CONTRIBUTION_FLOOR } from '@/lib/contributionTiers';
+
+const MEETING_PRODUCT_ID = 'f0848f83-ad00-4528-9936-b2a19f5e3ba2';
 
 export default function CheckoutPage() {
   const { productId } = useParams<{ productId: string }>();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
   const { showToast } = useToast();
   const [product, setProduct] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
+
+  const amountParam = searchParams.get('amount');
+  const customAmount = amountParam ? parseInt(amountParam, 10) : null;
+  const isMeetingProduct = productId === MEETING_PRODUCT_ID;
 
   useEffect(() => {
     if (!productId) return;
@@ -34,12 +42,16 @@ export default function CheckoutPage() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) { showToast('يرجى تسجيل الدخول أولاً', 'warning'); router.push('/login'); return; }
 
+      const effectivePrice = isMeetingProduct && customAmount && customAmount >= CONTRIBUTION_FLOOR
+        ? customAmount
+        : (product ? (product as Record<string, number>).price : 0);
+
       const res = await fetch('/api/paymob/intention', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           productId,
-          price: product ? (product as Record<string, number>).price : 0,
+          price: effectivePrice,
           name: product ? (product as Record<string, string>).name : '',
           applePay,
         }),
@@ -90,7 +102,11 @@ export default function CheckoutPage() {
           </div>
           <div className="flex justify-between mt-6 pt-4 border-t border-white/10">
             <span className="text-[#a0aec0] font-bold">الإجمالي:</span>
-            <span className="text-[#c9a84c] font-bold text-2xl">{String(p.price)} {String(p.currency)}</span>
+            <span className="text-[#c9a84c] font-bold text-2xl">
+              {isMeetingProduct && customAmount && customAmount >= CONTRIBUTION_FLOOR
+                ? `${customAmount.toLocaleString('ar-SA')} ريال`
+                : `${String(p.price)} ${String(p.currency)}`}
+            </span>
           </div>
         </div>
 

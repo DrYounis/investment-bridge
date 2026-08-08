@@ -3,6 +3,9 @@
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { CONTRIBUTION_FLOOR } from '@/lib/contributionTiers';
+
+const MEETING_PRODUCT_ID = 'f0848f83-ad00-4528-9936-b2a19f5e3ba2';
 
 export async function POST(request: Request) {
   try {
@@ -18,6 +21,11 @@ export async function POST(request: Request) {
 
     if (!price || !productId) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
+    // Server-side price floor for meeting product
+    if (productId === MEETING_PRODUCT_ID && price < CONTRIBUTION_FLOOR) {
+      return NextResponse.json({ error: `الحد الأدنى للاشتراك ${CONTRIBUTION_FLOOR} ريال` }, { status: 400 });
     }
 
     const amountInHalalas = Math.round(price * 100);

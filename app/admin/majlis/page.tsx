@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { SCHEDULE_DATA, TOTAL_MEETINGS } from '@/app/components/marfa/scheduleData';
+import ContributorBadge from '@/app/components/ContributorBadge';
 
 interface QuizQuestion {
   id: string;
@@ -21,6 +22,7 @@ interface QuizAnswer {
   feedback: string | null;
   graded_at: string | null;
   created_at: string;
+  contribution_tier?: string | null;
 }
 
 function relativeTime(iso: string): string {
@@ -299,7 +301,10 @@ export default function AdminMajlisPage() {
                         return (
                           <div key={a.id} className="bg-[#060c18] border border-[#1e2d4a] rounded-lg p-4">
                             <div className="flex items-center justify-between mb-2">
-                              <span className="text-sm font-bold text-white">{a.display_name}</span>
+                              <span className="text-sm font-bold text-white inline-flex items-center gap-1.5">
+                                {a.display_name}
+                                <ContributorBadge tier={a.contribution_tier} size="sm" />
+                              </span>
                               <span className="text-xs text-[#4a5a78]">{relativeTime(a.created_at)}</span>
                             </div>
                             <p className="text-sm text-[#8a9bb8] whitespace-pre-wrap leading-relaxed mb-3">{a.answer}</p>

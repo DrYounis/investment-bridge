@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import ContributorBadge from '@/app/components/ContributorBadge';
 
 interface Message {
   id: string;
@@ -10,6 +11,7 @@ interface Message {
   display_name: string;
   body: string;
   created_at: string;
+  contribution_tier?: string | null;
 }
 
 function relativeTime(iso: string): string {
@@ -30,9 +32,10 @@ interface MajlisRoomProps {
   meetingNumber: number;
   userId: string;
   displayName: string;
+  contributionTier?: string | null;
 }
 
-export default function MajlisRoom({ meetingNumber, userId, displayName }: MajlisRoomProps) {
+export default function MajlisRoom({ meetingNumber, userId, displayName, contributionTier }: MajlisRoomProps) {
   const supabase = createClient();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
@@ -171,7 +174,7 @@ export default function MajlisRoom({ meetingNumber, userId, displayName }: Majli
 
     const { error: insertErr } = await supabase
       .from('majlis_messages')
-      .insert({ meeting_number: meetingNumber, user_id: userId, display_name: displayName, body: trimmed });
+      .insert({ meeting_number: meetingNumber, user_id: userId, display_name: displayName, body: trimmed, contribution_tier: contributionTier ?? null });
 
     if (insertErr) {
       setMessages((prev) => prev.filter((m) => m.id !== optimistic.id));
@@ -255,7 +258,10 @@ export default function MajlisRoom({ meetingNumber, userId, displayName }: Majli
                 }}
               >
                 <div className="flex items-center justify-between gap-2 mb-1">
-                  <span className="text-sm font-bold text-[#0a0f1e]">{m.display_name}</span>
+                  <span className="text-sm font-bold text-[#0a0f1e] inline-flex items-center gap-1.5">
+                    {m.display_name}
+                    <ContributorBadge tier={m.contribution_tier} size="sm" />
+                  </span>
                   <span className="text-xs text-[#8a94a8]">{relativeTime(m.created_at)}</span>
                 </div>
                 <p className="text-sm text-[#4a5b78] whitespace-pre-wrap leading-relaxed">{m.body}</p>

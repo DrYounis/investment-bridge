@@ -23,6 +23,14 @@ export default async function MajlisPage({ params }: { params: Promise<{ meeting
   const fridayDate = getFridayDates()[n - 1];
   const displayName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'مستخدم';
 
+  // Fetch contribution tier for badge display
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('contribution_tier')
+    .eq('id', user.id)
+    .single();
+  const contributionTier = profile?.contribution_tier ?? null;
+
   return (
     <div className="min-h-screen bg-[#faf8f2]" dir="rtl">
       <main className="max-w-3xl mx-auto pt-28 pb-16 px-4">
@@ -85,7 +93,7 @@ export default async function MajlisPage({ params }: { params: Promise<{ meeting
           <h2 className="text-lg font-bold text-[#0a0f1e] mb-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
             سؤال الحالة
           </h2>
-          <MajlisQuiz meetingNumber={n} userId={user.id} displayName={displayName} isAdvisor={isAdvisor} />
+          <MajlisQuiz meetingNumber={n} userId={user.id} displayName={displayName} isAdvisor={isAdvisor} contributionTier={contributionTier} />
         </div>
 
         {/* Chat Section */}
@@ -93,7 +101,7 @@ export default async function MajlisPage({ params }: { params: Promise<{ meeting
           <h2 className="text-lg font-bold text-[#0a0f1e] mb-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
             نقاش المجلس
           </h2>
-          <MajlisRoom meetingNumber={n} userId={user.id} displayName={displayName} />
+          <MajlisRoom meetingNumber={n} userId={user.id} displayName={displayName} contributionTier={contributionTier} />
         </div>
       </main>
     </div>

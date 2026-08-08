@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import ContributorBadge from '@/app/components/ContributorBadge';
 
 interface QuizQuestion {
   id: string;
@@ -20,6 +21,7 @@ interface QuizAnswer {
   feedback: string | null;
   graded_at: string | null;
   created_at: string;
+  contribution_tier?: string | null;
 }
 
 interface MajlisQuizProps {
@@ -27,6 +29,7 @@ interface MajlisQuizProps {
   userId: string;
   displayName: string;
   isAdvisor: boolean;
+  contributionTier?: string | null;
 }
 
 function relativeTime(iso: string): string {
@@ -62,7 +65,7 @@ function Stars({ score, onSelect, disabled }: { score: number | null; onSelect?:
   );
 }
 
-export default function MajlisQuiz({ meetingNumber, userId, displayName, isAdvisor }: MajlisQuizProps) {
+export default function MajlisQuiz({ meetingNumber, userId, displayName, isAdvisor, contributionTier }: MajlisQuizProps) {
   // ── Student state ──
   const [question, setQuestion] = useState<QuizQuestion | null>(null);
   const [myAnswer, setMyAnswer] = useState<QuizAnswer | null>(null);
@@ -201,7 +204,7 @@ export default function MajlisQuiz({ meetingNumber, userId, displayName, isAdvis
 
     const { data, error: insertErr } = await supabase
       .from('majlis_quiz_answers')
-      .insert({ meeting_number: meetingNumber, user_id: userId, display_name: displayName, answer: trimmed })
+      .insert({ meeting_number: meetingNumber, user_id: userId, display_name: displayName, answer: trimmed, contribution_tier: contributionTier ?? null })
       .select('*')
       .single();
 
@@ -375,7 +378,10 @@ export default function MajlisQuiz({ meetingNumber, userId, displayName, isAdvis
               return (
                 <div key={a.id} className="bg-white rounded-2xl p-5 border border-[#c9a84c]/20">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-bold text-[#0a0f1e]">{a.display_name}</span>
+                    <span className="text-sm font-bold text-[#0a0f1e] inline-flex items-center gap-1.5">
+                      {a.display_name}
+                      <ContributorBadge tier={a.contribution_tier} size="sm" />
+                    </span>
                     <span className="text-xs text-[#8a94a8]">{relativeTime(a.created_at)}</span>
                   </div>
                   <p className="text-sm text-[#4a5b78] whitespace-pre-wrap leading-relaxed mb-4">{a.answer}</p>

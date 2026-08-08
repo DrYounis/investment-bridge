@@ -82,13 +82,13 @@ export default function MeetingScheduleGate() {
             جدول اللقاءات حصري للمشتركين
           </h3>
           <p className="text-[#4a5b78] text-sm mb-6 leading-relaxed">
-            اشترك في اللقاءات الأسبوعية بـ ١٠٠ ريال شهرياً للوصول للجدول الكامل وملفات PDF والانضمام للمجلس
+            اشترك في اللقاءات الأسبوعية للوصول للجدول الكامل وملفات PDF والانضمام للمجلس
           </p>
           <Link
-            href={`/dashboard/checkout/${MEETING_PRODUCT_ID}`}
+            href="/meetings#subscribe"
             className="inline-flex items-center gap-2 px-6 py-3 bg-[#c9a84c] text-[#0a0f1e] font-bold text-sm rounded-xl hover:bg-[#d4a843] transition-colors shadow-lg"
           >
-            📅 اشترك الآن — ١٠٠ ريال/شهر
+            📅 اشترك الآن — ابتداءً من ١٠٠ ريال/شهر
           </Link>
           <p className="text-xs text-[#8a94a8] mt-3">
             لديك حساب قديم؟ <a href="/login" className="text-[#c9a84c] underline">سجل دخولك</a>

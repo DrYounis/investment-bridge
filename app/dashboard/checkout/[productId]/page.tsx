@@ -5,44 +5,28 @@
 
 import { createClient } from '@/lib/supabase/client';
 import { useEffect, useState } from 'react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/Toast';
-import { isSuperAdminEmail } from '@/lib/auth/adminEmails';
 
 export default function CheckoutPage() {
   const { productId } = useParams<{ productId: string }>();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const supabase = createClient();
   const { showToast } = useToast();
   const [product, setProduct] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
-  const [isTestMode, setIsTestMode] = useState(false);
-  const [testPrice, setTestPrice] = useState(1);
 
   useEffect(() => {
     if (!productId) return;
     const fetchProduct = async () => {
       const { data, error } = await supabase.from('products').select('*').eq('id', productId).single();
       if (error) { showToast('الخطة غير موجودة', 'error'); router.push('/dashboard/plans'); }
-      else {
-        setProduct(data);
-        // Check test mode: admin + ?test=1
-        const testParam = searchParams.get('test');
-        if (testParam === '1') {
-          const { data: { session } } = await supabase.auth.getSession();
-          if (session?.user?.email && isSuperAdminEmail(session.user.email)) {
-            setIsTestMode(true);
-            const customPrice = parseInt(testParam) || 1;
-            setTestPrice(Math.max(1, Math.min(100, customPrice)));
-          }
-        }
-      }
+      else setProduct(data);
       setLoading(false);
     };
     fetchProduct();
-  }, [productId, router, supabase, searchParams]);
+  }, [productId, router, supabase]);
 
   const handlePayment = async (applePay = false) => {
     setProcessing(true);
@@ -55,7 +39,7 @@ export default function CheckoutPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           productId,
-          price: isTestMode ? testPrice : (product ? (product as Record<string, number>).price : 0),
+          price: product ? (product as Record<string, number>).price : 0,
           name: product ? (product as Record<string, string>).name : '',
           applePay,
         }),
@@ -92,13 +76,6 @@ export default function CheckoutPage() {
           إتمام الاشتراك
         </h1>
 
-        {isTestMode && (
-          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 mb-6 text-center">
-            <span className="text-yellow-400 font-bold">🧪 وضع الاختبار — المبلغ {testPrice} ريال فقط</span>
-            <p className="text-yellow-400/70 text-xs mt-1">للمشرفين فقط — المبلغ الحقيقي معطّل مؤقتاً للتجربة</p>
-          </div>
-        )}
-
         <div className="bg-white/5 rounded-xl p-6 border border-white/10 mb-8">
           <h2 className="text-xl font-semibold text-[#a0aec0] mb-4 border-b border-white/10 pb-2">
             ملخص الطلب
@@ -113,13 +90,7 @@ export default function CheckoutPage() {
           </div>
           <div className="flex justify-between mt-6 pt-4 border-t border-white/10">
             <span className="text-[#a0aec0] font-bold">الإجمالي:</span>
-            <span className="text-[#c9a84c] font-bold text-2xl">
-              {isTestMode ? (
-                <><span className="line-through text-[#64748b] text-lg ml-2">{String(p.price)}</span> {testPrice} ريال</>
-              ) : (
-                <>{String(p.price)} {String(p.currency)}</>
-              )}
-            </span>
+            <span className="text-[#c9a84c] font-bold text-2xl">{String(p.price)} {String(p.currency)}</span>
           </div>
         </div>
 

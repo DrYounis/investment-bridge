@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createServiceClient } from '@/lib/supabase/service';
 import { getLatestArticlesForEmail } from '@/lib/supabase/financial-news';
+import { SCHEDULE_DATA } from '@/app/components/marfa/scheduleData';
 
 function getResend() {
   return new Resend(process.env.RESEND_API_KEY);
@@ -29,28 +30,14 @@ function getUpcomingFriday(): { dateStr: string; meetingNumber: number; case: st
   const diffWeeks = Math.round(diffMs / (7 * 24 * 60 * 60 * 1000));
   const meetingNumber = diffWeeks + 1;
 
-  // Map meeting number to case study from SCHEDULE_DATA
-  const schedule = [
-    { case: 'حالة "Airbnb" في البدايات', topic: 'الاستراتيجية', challenge: 'كيف تقنع المستثمر بفكرة "تأجير خيام أو غرف" بينما يوجد فنادق؟' },
-    { case: 'حالة "Zappos" في خدمة العملاء', topic: 'القيادة', challenge: 'هل يمكن بناء ثقافة مؤسسية تجعل الموظف يضحي من أجل العميل؟' },
-    { case: 'حالة "WeWork" (الفشل المالي)', topic: 'المالية', challenge: 'كيف تحولت شركة بمليارات الدولارات إلى الإفلاس؟ فهم الفرق بين "النمو" و"الربحية".' },
-    { case: 'حالة "Liquid Death" (تسويق المياه)', topic: 'التسويق', challenge: 'كيف تبيع منتجاً عادياً جداً (ماء) ببراند عبقري؟' },
-    { case: 'حالة "Amazon Logistics"', topic: 'العمليات', challenge: 'كيف تدار العمليات لتقليل الهدر؟' },
-    { case: 'حالة "Shark Tank" (نماذج حقيقية)', topic: 'التفاوض', challenge: 'تحليل صفقات حقيقية: لماذا رفض المستثمر فكرة عبقرية؟ ولماذا قبل فكرة بسيطة؟' },
-    { case: 'حالة Saudi German Health (تداول: 4009)', topic: 'حوكمة الشركات', challenge: 'إدانة 11 عضو مجلس إدارة بتضخيم إيرادات بـ 358 مليون ريال.' },
-    { case: 'حالة "Netflix" (من تأجير DVD إلى الستريمنج)', topic: 'الابتكار', challenge: 'كيف تُقدم على تدمير نموذج عملك الناجح حالياً لتبني نموذجاً جديداً؟' },
-    { case: 'حالة "Google – Project Aristotle"', topic: 'الموارد البشرية', challenge: 'ما الذي يصنع فريقاً عالي الأداء فعلاً؟ الأمان النفسي مقابل "تجميع النجوم".' },
-    { case: 'حالة "Theranos" (انهيار الثقة الاستثمارية)', topic: 'إدارة المخاطر', challenge: 'كيف يكتشف المستثمر علامات الخطر مبكراً قبل ضخ رأس المال؟' },
-    { case: 'حالة "IKEA" في دخول أسواق جديدة', topic: 'التوسع الدولي', challenge: 'كيف توازن الشركة بين "المعيار العالمي" و"التكيف المحلي"؟' },
-    { case: 'حالة "Johnson & Johnson" (أزمة تايلينول 1982)', topic: 'إدارة الأزمات', challenge: 'كيف تدار أزمة ثقة المستهلك بشفافية تحفظ سمعة العلامة التجارية؟' },
-    { case: 'حالة "Patagonia" (الأرض هي المساهم الوحيد)', topic: 'الاستدامة والمسؤولية', challenge: 'هل يمكن أن يتوافق الربح مع القيم؟' },
-    { case: 'حالة "Quibi" (فشل رغم مليار دولار تمويل)', topic: 'دراسة الجدوى', challenge: 'لماذا يفشل مشروع ضخم التمويل وبفريق نجوم؟' },
-  ];
-
+  // Map meeting number to case study from the single source of truth
   const idx = meetingNumber - 1;
-  const entry = idx >= 0 && idx < schedule.length ? schedule[idx] : schedule[0];
+  if (idx >= SCHEDULE_DATA.length) {
+    console.warn(`[weekly-meeting-notification] meetingNumber ${meetingNumber} is out of bounds (SCHEDULE_DATA has ${SCHEDULE_DATA.length} entries), falling back to meeting 1`);
+  }
+  const entry = idx >= 0 && idx < SCHEDULE_DATA.length ? SCHEDULE_DATA[idx] : SCHEDULE_DATA[0];
 
-  return { dateStr, meetingNumber, ...entry };
+  return { dateStr, meetingNumber, case: entry.case, topic: entry.topic, challenge: entry.challenge };
 }
 
 function buildEmailHTML(email: string, name: string, isWelcome: boolean, meeting: ReturnType<typeof getUpcomingFriday>, articles: { slug: string; title: string; summary: string; article_date: string }[] = []) {

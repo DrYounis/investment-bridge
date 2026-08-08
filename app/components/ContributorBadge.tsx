@@ -1,7 +1,7 @@
 // ContributorBadge — pill showing meeting membership tier next to user names
 // Renders nothing for regular members (tier = null/undefined)
 
-import { getTier } from '@/lib/contributionTiers';
+import { getTierByKey } from '@/lib/contributionTiers';
 
 interface Props {
   tier: string | null | undefined;
@@ -11,13 +11,7 @@ interface Props {
 export default function ContributorBadge({ tier, size = 'md' }: Props) {
   if (!tier) return null;
 
-  const info = getTier(100); // not used — we just need the visual style for the given tier key
-  // Find the matching tier definition
-  const tierDef = tier === 'supporter' ? { ar: 'الداعم', color: '#c9a84c' }
-    : tier === 'patron' ? { ar: 'الراعي', color: '#e0b84f' }
-    : tier === 'founder' ? { ar: 'الشريك المؤسس', color: '#c9a84c' }
-    : null;
-
+  const tierDef = getTierByKey(tier);
   if (!tierDef) return null;
 
   const cls = size === 'sm'
@@ -33,7 +27,7 @@ export default function ContributorBadge({ tier, size = 'md' }: Props) {
         border: `1px solid ${tierDef.color}40`,
       }}
     >
-      {tier === 'founder' ? '✦ ' : ''}{tierDef.ar}
+      {tier === 'captain' ? '✦ ' : ''}{tierDef.ar}
     </span>
   );
 }

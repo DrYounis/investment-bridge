@@ -9,9 +9,9 @@ export interface TierInfo {
 }
 
 export const TIERS: { key: string; minAmount: number; ar: string; en: string; color: string }[] = [
-  { key: 'supporter',  minAmount: 100,  ar: 'الداعم',       en: 'Supporter',        color: '#c9a84c' },
-  { key: 'patron',     minAmount: 500,  ar: 'الراعي',       en: 'Patron',           color: '#e0b84f' },
-  { key: 'founder',    minAmount: 5000, ar: 'الشريك المؤسس', en: 'Founding Partner', color: '#c9a84c' },
+  { key: 'anchor',    minAmount: 100,  ar: 'الراسي',   en: 'The Anchor',    color: '#c9a84c' },
+  { key: 'navigator', minAmount: 500,  ar: 'الملّاح',   en: 'The Navigator', color: '#e0b84f' },
+  { key: 'captain',   minAmount: 5000, ar: 'القبطان',  en: 'The Captain',   color: '#c9a84c' },
 ];
 
 export const PRESET_AMOUNTS = [100, 500, 5000];
@@ -25,4 +25,8 @@ export function getTier(amount: number): TierInfo | null {
     }
   }
   return null;
+}
+
+export function getTierByKey(key: string): TierInfo | null {
+  return TIERS.find(t => t.key === key) ?? null;
 }

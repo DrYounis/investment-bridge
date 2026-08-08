@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { PRESET_AMOUNTS, CONTRIBUTION_FLOOR } from '@/lib/contributionTiers';
+import { PRESET_AMOUNTS, CONTRIBUTION_FLOOR, getTier, TIERS } from '@/lib/contributionTiers';
 
 const MEETING_PRODUCT_ID = 'f0848f83-ad00-4528-9936-b2a19f5e3ba2';
 
@@ -15,49 +15,69 @@ export default function MeetingSubscribeCard() {
 
   const selectedAmount = amount ?? (custom ? parseInt(custom, 10) : null);
   const isValid = selectedAmount !== null && selectedAmount >= CONTRIBUTION_FLOOR && !isNaN(selectedAmount);
+  const selectedTier = isValid ? getTier(selectedAmount!) : null;
+  const customParsed = custom ? parseInt(custom, 10) : null;
+  const customTier = customParsed && customParsed >= CONTRIBUTION_FLOOR && !isNaN(customParsed) ? getTier(customParsed) : null;
+
   const checkoutHref = isValid ? `/dashboard/checkout/${MEETING_PRODUCT_ID}?amount=${selectedAmount}` : '#';
 
   return (
-    <section className="max-w-2xl mx-auto w-full mt-20 mb-12">
+    <section className="max-w-2xl mx-auto w-full mt-20 mb-12" id="subscribe">
       <div className="bg-white rounded-3xl p-8 border border-[#c9a84c]/20 shadow-[0_8px_30px_rgba(10,15,30,0.06)] text-center" dir="rtl">
         <div className="text-5xl mb-4">📅</div>
         <h2 className="text-2xl font-black text-[#0a0f1e] mb-3" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-          اختر باقة اشتراكك الشهري
+          اختر رتبتك في رحلة مرفأ
         </h2>
         <p className="text-[#4a5b78] text-sm mb-6" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-          اشتراك شهري لحضور لقاءات مرفأ — اختر المبلغ الذي يناسبك
+          كل رتبة تمنحك نفس الوصول للقاءات — اختر المستوى الذي يعكس التزامك
         </p>
 
         {/* Preset buttons */}
         <div className="grid grid-cols-3 gap-3 mb-4 max-w-md mx-auto">
-          {PRESET_AMOUNTS.map((n) => (
-            <button
-              key={n}
-              onClick={() => { setAmount(n); setCustom(''); }}
-              className={`py-4 rounded-2xl font-bold text-lg transition-all border-2 ${
-                amount === n
-                  ? 'bg-[#c9a84c] text-[#0a0f1e] border-[#c9a84c] shadow-lg shadow-[#c9a84c]/20'
-                  : 'bg-white text-[#4a5b78] border-[#c9a84c]/20 hover:border-[#c9a84c]/50 hover:text-[#0a0f1e]'
-              }`}
-              style={n === 5000 ? { fontSize: '2rem', lineHeight: '2.5rem', fontWeight: 900 } : {}}
-            >
-              {n.toLocaleString('ar-SA')}
-              <span className="block text-xs font-normal opacity-70">ريال/شهر</span>
-            </button>
-          ))}
+          {PRESET_AMOUNTS.map((n) => {
+            const tier = TIERS.find(t => t.minAmount === n);
+            return (
+              <button
+                key={n}
+                onClick={() => { setAmount(n); setCustom(''); }}
+                className={`py-3 rounded-2xl font-bold transition-all border-2 ${
+                  amount === n
+                    ? 'bg-[#c9a84c] text-[#0a0f1e] border-[#c9a84c] shadow-lg shadow-[#c9a84c]/20'
+                    : 'bg-white text-[#4a5b78] border-[#c9a84c]/20 hover:border-[#c9a84c]/50 hover:text-[#0a0f1e]'
+                }`}
+                style={n === 5000 ? { fontSize: '1.6rem', lineHeight: '2rem', fontWeight: 900 } : {}}
+              >
+                <span className="block text-lg">{n.toLocaleString('ar-SA')}</span>
+                <span className="block text-[10px] font-normal opacity-70">ريال/شهر</span>
+                {tier && (
+                  <span className={`block text-xs font-bold mt-1 ${amount === n ? 'text-[#0a0f1e]/80' : ''}`}
+                    style={amount === n ? {} : { color: tier.color }}>
+                    {tier.ar}
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
 
         {/* Custom amount */}
-        <div className="flex items-center gap-3 max-w-xs mx-auto mb-6">
-          <input
-            type="number"
-            min={CONTRIBUTION_FLOOR}
-            placeholder={`أدخل مبلغاً (الحد الأدنى ${CONTRIBUTION_FLOOR} ريال)`}
-            value={custom}
-            onChange={(e) => { setCustom(e.target.value); setAmount(null); }}
-            className="flex-1 rounded-xl border border-[#c9a84c]/20 px-4 py-3 text-sm text-[#0a0f1e] text-center outline-none focus:border-[#c9a84c] placeholder:text-[#8a94a8]"
-          />
-          <span className="text-sm text-[#8a94a8] shrink-0">ريال</span>
+        <div className="max-w-xs mx-auto mb-3">
+          <div className="flex items-center gap-3">
+            <input
+              type="number"
+              min={CONTRIBUTION_FLOOR}
+              placeholder={`أدخل مبلغاً (الحد الأدنى ${CONTRIBUTION_FLOOR} ريال)`}
+              value={custom}
+              onChange={(e) => { setCustom(e.target.value); setAmount(null); }}
+              className="flex-1 rounded-xl border border-[#c9a84c]/20 px-4 py-3 text-sm text-[#0a0f1e] text-center outline-none focus:border-[#c9a84c] placeholder:text-[#8a94a8]"
+            />
+            <span className="text-sm text-[#8a94a8] shrink-0">ريال</span>
+          </div>
+          {customTier && (
+            <p className="text-xs mt-2 text-[#c9a84c] font-bold">
+              ستحصل على رتبة: {customTier.ar}
+            </p>
+          )}
         </div>
 
         <ul className="space-y-2 mb-8 text-right max-w-xs mx-auto">
@@ -80,7 +100,9 @@ export default function MeetingSubscribeCard() {
           }`}
           aria-disabled={!isValid}
         >
-          {isValid ? `اشترك الآن — ${selectedAmount!.toLocaleString('ar-SA')} ريال/شهر` : 'اختر مبلغ الاشتراك'}
+          {isValid && selectedTier
+            ? `اشترك الآن — ${selectedTier.ar} — ${selectedAmount!.toLocaleString('ar-SA')} ريال/شهر`
+            : 'اختر رتبتك'}
         </Link>
 
         <p className="text-xs text-[#8a94a8] mt-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>

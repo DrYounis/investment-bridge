@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from '@/components/ui/Toast';
-import { CONTRIBUTION_FLOOR } from '@/lib/contributionTiers';
+import { CONTRIBUTION_FLOOR, getTier } from '@/lib/contributionTiers';
 
 const MEETING_PRODUCT_ID = 'f0848f83-ad00-4528-9936-b2a19f5e3ba2';
 
@@ -108,6 +108,12 @@ export default function CheckoutPage() {
                 : `${String(p.price)} ${String(p.currency)}`}
             </span>
           </div>
+          {isMeetingProduct && customAmount && customAmount >= CONTRIBUTION_FLOOR && getTier(customAmount) && (
+            <div className="flex justify-between mt-2">
+              <span className="text-[#64748b]">الرتبة:</span>
+              <span className="text-[#c9a84c] font-bold">{getTier(customAmount)!.ar}</span>
+            </div>
+          )}
         </div>
 
         <div className="space-y-4">

@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import AdminNewsManager from './AdminNewsManager';
 import { createClient } from '@/lib/supabase/client';
+import ContributorBadge from '@/app/components/ContributorBadge';
 
 interface User {
     id: string;
@@ -20,12 +21,15 @@ interface DashboardProps {
 }
 
 // --- 1. واجهة المستثمر (VIP View) ---
-const InvestorView = ({ user }: { user: User }) => (
+const InvestorView = ({ user, contributionTier }: { user: User; contributionTier?: string | null }) => (
     <div className="space-y-8 animate-fadeIn text-right" dir="rtl">
         {/* شريط الترحيب */}
         <div className="bg-gradient-to-l from-slate-900 to-blue-900 rounded-3xl p-8 text-white flex justify-between items-center shadow-xl">
             <div>
-                <h2 className="text-3xl font-bold mb-2">أهلاً بك، {user.name} 👋</h2>
+                <h2 className="text-3xl font-bold mb-2 inline-flex items-center gap-2">
+                  أهلاً بك، {user.name} 👋
+                  <ContributorBadge tier={contributionTier} size="md" />
+                </h2>
                 <p className="text-blue-200">مستثمر معتمد (Tier 1) | محفظة حائل الاستثمارية</p>
             </div>
             <div className="hidden md:block text-center bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/20">
@@ -90,8 +94,16 @@ const InvestorView = ({ user }: { user: User }) => (
 );
 
 // --- 2. واجهة رائد الأعمال (Growth View) ---
-const EntrepreneurView = ({ user }: { user: User }) => (
+const EntrepreneurView = ({ user, contributionTier }: { user: User; contributionTier?: string | null }) => (
     <div className="space-y-8 animate-fadeIn text-right" dir="rtl">
+        {/* شريط الترحيب */}
+        <div className="bg-gradient-to-l from-teal-900 to-teal-700 rounded-3xl p-6 text-white shadow-xl">
+            <h2 className="text-2xl font-bold inline-flex items-center gap-2">
+              أهلاً بك، {user.name} 👋
+              <ContributorBadge tier={contributionTier} size="md" />
+            </h2>
+        </div>
+
         {/* بطاقة حالة المشروع */}
         <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm flex flex-col md:flex-row gap-8 items-center">
             <div className="flex-1">
@@ -213,9 +225,14 @@ const DashboardHome = ({ user }: DashboardProps) => {
         activeProjects: 0,
         meetings: 0
     });
+    const [contributionTier, setContributionTier] = useState<string | null>(null);
     const supabase = createClient();
 
     useEffect(() => {
+        // Fetch contribution tier for badge
+        void supabase.from('profiles').select('contribution_tier').eq('id', user.id).single()
+            .then(({ data }) => { if (data?.contribution_tier) setContributionTier(data.contribution_tier); })
+
         const superAdminEmail = process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL || 'mohamedy2003@gmail.com';
         if (user.role !== 'admin' || user.email !== superAdminEmail) {
             return;
@@ -284,11 +301,11 @@ const DashboardHome = ({ user }: DashboardProps) => {
     }
 
     if (user.role === 'investor') {
-        return <InvestorView user={user} />;
+        return <InvestorView user={user} contributionTier={contributionTier} />;
     }
 
     // الوضع الافتراضي: رائد الأعمال
-    return <EntrepreneurView user={user} />;
+    return <EntrepreneurView user={user} contributionTier={contributionTier} />;
 };
 
 export default DashboardHome;

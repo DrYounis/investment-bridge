@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 // One-shot route — remove after generating the 3 missing guides.
 const TEMP_TOKEN = 'gen-4b7c2e1a-9d3f-4a6e-b8c0-5f1e2d3a4b5c';
@@ -86,6 +87,8 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Invalid num' }, { status: 400 });
   }
 
+  const maxTokens = Math.min(8000, Math.max(1000, parseInt(searchParams.get('max_tokens') || '8000', 10) || 8000));
+
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     return NextResponse.json({ error: 'No API key' }, { status: 503 });
@@ -117,7 +120,7 @@ export async function GET(request: Request) {
     const client = new Anthropic({ apiKey });
     const msg = await client.messages.create({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 8000,
+      max_tokens: maxTokens,
       system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content: userPrompt }],
     });

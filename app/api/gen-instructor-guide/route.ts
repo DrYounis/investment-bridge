@@ -88,6 +88,7 @@ export async function GET(request: Request) {
   }
 
   const maxTokens = Math.min(8000, Math.max(1000, parseInt(searchParams.get('max_tokens') || '8000', 10) || 8000));
+  const model = searchParams.get('model') || 'claude-sonnet-4-5';
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
@@ -119,7 +120,7 @@ export async function GET(request: Request) {
   try {
     const client = new Anthropic({ apiKey });
     const msg = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model,
       max_tokens: maxTokens,
       system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content: userPrompt }],

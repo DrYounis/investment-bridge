@@ -2,25 +2,22 @@ import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 
 export const dynamic = 'force-dynamic';
-export const maxDuration = 300;
+export const maxDuration = 60;
 
 // One-shot route — remove after generating the 3 missing guides.
 const TEMP_TOKEN = 'gen-4b7c2e1a-9d3f-4a6e-b8c0-5f1e2d3a4b5c';
 
-const SYSTEM_PROMPT = `أنت خبير تعليمي في مناهج إدارة الأعمال (MBA) للأسواق الناشئة. مهمتك كتابة دليل مدرّب لدراسة حالة أسبوعية، باللغة العربية الفصحى مع الاحتفاظ بأسماء الأطر والنماذج بالإنجليزية.
-
-اكتب المحتوى بصيغة HTML نظيفة، RTL، للتحويل المباشر إلى PDF. استخدم هيكلاً واضحاً:
-
-<h2>١. نظرة تعليمية سريعة</h2>
+// Guide is generated in two parts to stay under Vercel's 60s function limit.
+const SECTIONS: Record<string, string> = {
+  '1': `<h2>١. نظرة تعليمية سريعة</h2>
 <p>...</p>
 
 <h2>٢. المفاهيم والأطر الأساسية</h2>
 <p>...</p>
 
 <h2>٣. قاموس المصطلحات</h2>
-<table dir="rtl">...</table>
-
-<h2>٤. أسئلة سقراطية للنقاش</h2>
+<table dir="rtl">...</table>`,
+  '2': `<h2>٤. أسئلة سقراطية للنقاش</h2>
 <ol>...</ol>
 
 <h2>٥. أسئلة متوقعة من الحضور</h2>
@@ -30,9 +27,18 @@ const SYSTEM_PROMPT = `أنت خبير تعليمي في مناهج إدارة �
 <p>...</p>
 
 <h2>٧. الإسقاط المحلي</h2>
-<p>...</p>
+<p>...</p>`,
+};
 
-لا تضف أي نص خارج HTML. لا تستخدم markdown. لا تضف \`\`\`html fences.`;
+function buildSystemPrompt(part: string): string {
+  return `أنت خبير تعليمي في مناهج إدارة الأعمال (MBA) للأسواق الناشئة. مهمتك كتابة جزء من دليل مدرّب لدراسة حالة أسبوعية، باللغة العربية الفصحى مع الاحتفاظ بأسماء الأطر والنماذج بالإنجليزية.
+
+اكتب المحتوى بصيغة HTML نظيفة، RTL، للتحويل المباشر إلى PDF. استخدم الأقسام التالية فقط وبنفس ترتيبها وترقيمها بالضبط:
+
+${SECTIONS[part]}
+
+لا تضف أي نص خارج HTML. لا تستخدم markdown. لا تضف \`\`\`html fences. لا تكتب عنواناً للدليل ولا مقدمة ولا خاتمة — ابدأ مباشرة بالقسم الأول المطلوب.`;
+}
 
 const ALL_TOPICS = [
   'اللقاء 1 - الاستراتيجية',
@@ -87,8 +93,9 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Invalid num' }, { status: 400 });
   }
 
-  const maxTokens = Math.min(8000, Math.max(1000, parseInt(searchParams.get('max_tokens') || '8000', 10) || 8000));
-  const model = searchParams.get('model') || 'claude-sonnet-4-5';
+  const part = SECTIONS[searchParams.get('part') || ''] ? (searchParams.get('part') || '1') : '1';
+  const maxTokens = Math.min(6000, Math.max(500, parseInt(searchParams.get('max_tokens') || '4000', 10) || 4000));
+  const model = searchParams.get('model') || 'claude-haiku-4-5';
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
@@ -108,21 +115,23 @@ export async function GET(request: Request) {
 
 المدة الزمنية للقاء: 60 دقيقة. المنهجية: عرض الحالة (15 د) → نقاش وتحليل (30 د) → إسقاط محلي على حائل والسعودية (15 د).
 
-إرشادات إضافية:
+اكتب فقط الأقسام المحددة في تعليمات النظام، بالترتيب نفسه، دون أي أقسام أخرى.
+
+إرشادات:
 - القسم الأول: حدد أهدافاً تعليمية قابلة للقياس
 - القسم الثاني: اشرح 3-5 أطر MBA مرتبطة بالموضوع مع تطبيقها على الحالة
 - القسم الثالث: 15 مصطلحاً ثنائي اللغة كحد أدنى
 - القسم السادس: اربط هذا الموضوع بـ: ${allTopics}
 - القسم السابع: اربط برؤية 2030 ومبادرات حائل (التنمية الريفية، السياحة، قطاع التمور، الطاقة المتجددة)
 
-أخرج HTML فقط. لا تضع مقدمة ولا خاتمة خارج الأقسام المطلوبة.`;
+أخرج HTML فقط. ابدأ مباشرة بأول قسم مطلوب.`;
 
   try {
     const client = new Anthropic({ apiKey });
     const msg = await client.messages.create({
       model,
       max_tokens: maxTokens,
-      system: SYSTEM_PROMPT,
+      system: buildSystemPrompt(part),
       messages: [{ role: 'user', content: userPrompt }],
     });
 
@@ -132,7 +141,6 @@ export async function GET(request: Request) {
       .join('')
       .trim();
 
-    // Defensive strip of markdown fences
     if (html.startsWith('```')) html = html.split('\n').slice(1).join('\n');
     if (html.endsWith('```')) html = html.split('\n').slice(0, -1).join('\n');
     html = html.trim();

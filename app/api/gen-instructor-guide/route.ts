@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 
 export const dynamic = 'force-dynamic';
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 // One-shot route — remove after generating the 3 missing guides.
 const TEMP_TOKEN = 'gen-4b7c2e1a-9d3f-4a6e-b8c0-5f1e2d3a4b5c';

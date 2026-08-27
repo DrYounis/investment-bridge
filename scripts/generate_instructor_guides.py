@@ -117,7 +117,7 @@ def generate_guide(entry: dict) -> str:
     """Call Anthropic and return the HTML content."""
     print(f"  🤖 Generating {entry['encounter']} — {entry['case']} ...")
     msg = client.messages.create(
-        model="claude-sonnet-4-6",
+        model="claude-sonnet-4-20250514",
         max_tokens=8000,
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": build_prompt(entry)}],

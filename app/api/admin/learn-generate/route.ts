@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
 في نهاية المقال أضف ٣ جمل تلخيصية.`;
 
     const msg = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-5',
       max_tokens: 4000,
       messages: [{ role: 'user', content: prompt }],
     });

@@ -14,7 +14,7 @@ export interface SummarizedArticle {
 
 // ── Constants ──────────────────────────────────────────────────────
 
-const CLAUDE_MODEL = 'claude-sonnet-4-20250514';
+const CLAUDE_MODEL = 'claude-sonnet-4-5';
 const MAX_SUMMARY_WORDS = 250;
 const MIN_SUMMARY_WORDS = 200;
 const MAX_TITLE_CHARS = 60;

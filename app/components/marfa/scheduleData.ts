@@ -1,14 +1,35 @@
 // Shared schedule data — single source of truth for both MeetingsSchedule and Majlis
 
-export function getFridayDates() {
-  const baseFriday = new Date(2026, 5, 19);
-  const dates: Date[] = [];
-  for (let i = 0; i < SCHEDULE_DATA.length; i++) {
-    const d = new Date(baseFriday);
-    d.setDate(d.getDate() + i * 7);
-    dates.push(d);
-  }
-  return dates;
+// One-week postponement: اللقاء 10 (originally Friday 2026-08-21) was postponed to
+// 2026-08-28. Meetings 1–9 keep their original dates; meetings 10+ shift +7 days.
+const BASE_FRIDAY = new Date(2026, 5, 19); // اللقاء 1
+const POSTPONED_WEEK_INDEX = 9; // 0-based index of اللقاء 10 (first shifted meeting)
+const POSTPONED_DAYS = 7;
+
+/** Friday date a given 0-based meeting index occurs on (applies the postponement). */
+export function getMeetingDate(index: number): Date {
+  const d = new Date(BASE_FRIDAY);
+  d.setDate(d.getDate() + index * 7 + (index >= POSTPONED_WEEK_INDEX ? POSTPONED_DAYS : 0));
+  return d;
+}
+
+export function getFridayDates(): Date[] {
+  return SCHEDULE_DATA.map((_, i) => getMeetingDate(i));
+}
+
+/** 1-based meeting number for a Friday date, or null if that Friday falls in the postponed gap. */
+export function getMeetingNumberForFriday(friday: Date): number | null {
+  const day = new Date(friday);
+  day.setHours(0, 0, 0, 0);
+  const diffDays = Math.round((day.getTime() - BASE_FRIDAY.getTime()) / 86400000);
+  const gapStart = POSTPONED_WEEK_INDEX * 7;
+  const gapEnd = gapStart + POSTPONED_DAYS;
+  if (diffDays >= gapStart && diffDays < gapEnd) return null;
+  const idx = diffDays < gapStart
+    ? Math.round(diffDays / 7)
+    : Math.round((diffDays - POSTPONED_DAYS) / 7);
+  if (idx < 0 || idx >= SCHEDULE_DATA.length) return null;
+  return idx + 1;
 }
 
 export function formatDate(date: Date): string {
@@ -22,9 +43,10 @@ export function getThisFridayIndex(): number {
   const friday = new Date(now);
   const daysFromFriday = (5 - dayOfWeek + 7) % 7;
   friday.setDate(friday.getDate() + daysFromFriday);
-  const baseFriday = new Date(2026, 5, 19);
-  const diffMs = friday.getTime() - baseFriday.getTime();
-  return Math.round(diffMs / (7 * 86400000));
+  const n = getMeetingNumberForFriday(friday);
+  if (n !== null) return n - 1;
+  // Postponed gap Friday: latest reached meeting is the one just before the shift.
+  return POSTPONED_WEEK_INDEX - 1;
 }
 
 export interface YouTubeLink {

@@ -7,7 +7,7 @@ import { createClient } from '@supabase/supabase-js';
 import { config } from 'dotenv';
 import { resolve } from 'node:path';
 import { Resend } from 'resend';
-import { SCHEDULE_DATA, getFridayDates, formatDate, type YouTubeLink } from '../app/components/marfa/scheduleData';
+import { SCHEDULE_DATA, getFridayDates, getMeetingDate, getMeetingNumberForFriday, formatDate, type YouTubeLink } from '../app/components/marfa/scheduleData';
 
 config({ path: resolve(process.cwd(), '.env.local') });
 
@@ -41,10 +41,7 @@ function getLastFriday(): { dateStr: string; meetingNumber: number; case: string
 
   const dateStr = formatDate(friday);
 
-  const baseFriday = new Date(2026, 5, 19);
-  const diffMs = friday.getTime() - baseFriday.getTime();
-  const diffWeeks = Math.round(diffMs / (7 * 24 * 60 * 60 * 1000));
-  const meetingNumber = diffWeeks + 1;
+  const meetingNumber = getMeetingNumberForFriday(friday) ?? 0;
 
   const idx = meetingNumber - 1;
   const entry = idx >= 0 && idx < SCHEDULE_DATA.length ? SCHEDULE_DATA[idx] : SCHEDULE_DATA[0];
@@ -150,9 +147,9 @@ async function main() {
     const fridayDates = getFridayDates();
     deadlineDate = formatDate(fridayDates[nextN - 1]);
   } else {
-    const finishedFriday = new Date(2026, 5, 19);
-    finishedFriday.setDate(finishedFriday.getDate() + (finishedN - 1) * 7 + 7);
-    deadlineDate = formatDate(finishedFriday);
+    const finishedDate = getMeetingDate(finishedN - 1);
+    finishedDate.setDate(finishedDate.getDate() + 7);
+    deadlineDate = formatDate(finishedDate);
   }
 
   // ── Fetch question ──

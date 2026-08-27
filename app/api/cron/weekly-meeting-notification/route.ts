@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createServiceClient } from '@/lib/supabase/service';
 import { getLatestArticlesForEmail } from '@/lib/supabase/financial-news';
-import { SCHEDULE_DATA } from '@/app/components/marfa/scheduleData';
+import { SCHEDULE_DATA, getMeetingNumberForFriday } from '@/app/components/marfa/scheduleData';
 
 function getResend() {
   return new Resend(process.env.RESEND_API_KEY);
@@ -23,12 +23,8 @@ function getUpcomingFriday(): { dateStr: string; meetingNumber: number; case: st
   ];
   const dateStr = `الجمعة ${friday.getDate()} ${months[friday.getMonth()]} ${friday.getFullYear()}`;
 
-  // Calculate which meeting number this Friday corresponds to
-  // Base: meeting 1 was June 19, 2026
-  const baseFriday = new Date(2026, 5, 19); // June 19, 2026
-  const diffMs = friday.getTime() - baseFriday.getTime();
-  const diffWeeks = Math.round(diffMs / (7 * 24 * 60 * 60 * 1000));
-  const meetingNumber = diffWeeks + 1;
+  // Calculate which meeting number this Friday corresponds to (single source of truth)
+  const meetingNumber = getMeetingNumberForFriday(friday) ?? 0;
 
   // Map meeting number to case study from the single source of truth
   const idx = meetingNumber - 1;

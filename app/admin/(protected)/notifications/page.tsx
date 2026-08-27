@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { isSuperAdminEmail } from '@/lib/auth/adminEmails';
+import { getMeetingNumberForFriday } from '@/app/components/marfa/scheduleData';
 
 function getNextFriday(): { dateStr: string; meetingNumber: number } {
   const now = new Date();
@@ -20,10 +21,7 @@ function getNextFriday(): { dateStr: string; meetingNumber: number } {
   ];
   const dateStr = `الجمعة ${friday.getDate()} ${months[friday.getMonth()]} ${friday.getFullYear()}`;
 
-  const baseFriday = new Date(2026, 5, 19);
-  const diffMs = friday.getTime() - baseFriday.getTime();
-  const diffWeeks = Math.round(diffMs / (7 * 24 * 60 * 60 * 1000));
-  const meetingNumber = diffWeeks + 1;
+  const meetingNumber = getMeetingNumberForFriday(friday) ?? 0;
 
   return { dateStr, meetingNumber };
 }

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createServiceClient } from '@/lib/supabase/service';
-import { SCHEDULE_DATA, formatDate } from '@/app/components/marfa/scheduleData';
+import { SCHEDULE_DATA, formatDate, getMeetingNumberForFriday } from '@/app/components/marfa/scheduleData';
 
 export const dynamic = 'force-dynamic';
 
@@ -171,13 +171,10 @@ export async function GET() {
     const nextFriday = new Date(today);
     nextFriday.setDate(today.getDate() + daysUntilFriday);
 
-    const baseFriday = new Date(2026, 5, 19); // meeting 1 = June 19
-    const diffMs = nextFriday.getTime() - baseFriday.getTime();
-    const diffWeeks = Math.round(diffMs / (7 * 24 * 60 * 60 * 1000));
-    const nextMeetingNumber = diffWeeks + 1;
+    const nextMeetingNumber = getMeetingNumberForFriday(nextFriday);
 
-    if (nextMeetingNumber < 1 || nextMeetingNumber > 14) {
-      return NextResponse.json({ skipped: true, reason: `No scheduled meeting for #${nextMeetingNumber}` });
+    if (nextMeetingNumber === null || nextMeetingNumber < 1 || nextMeetingNumber > 14) {
+      return NextResponse.json({ skipped: true, reason: 'No scheduled meeting' });
     }
 
     // ── Find all unsent featured terms for this meeting ──

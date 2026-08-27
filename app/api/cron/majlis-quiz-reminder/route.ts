@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createServiceClient } from '@/lib/supabase/service';
-import { SCHEDULE_DATA, getFridayDates, formatDate, TOTAL_MEETINGS, type YouTubeLink } from '@/app/components/marfa/scheduleData';
+import { SCHEDULE_DATA, getFridayDates, getMeetingDate, getMeetingNumberForFriday, formatDate, TOTAL_MEETINGS, type YouTubeLink } from '@/app/components/marfa/scheduleData';
 
 function getResend() {
   return new Resend(process.env.RESEND_API_KEY);
@@ -17,11 +17,8 @@ function getLastFriday(): { dateStr: string; meetingNumber: number; case: string
 
   const dateStr = formatDate(friday);
 
-  // meeting 1 = June 19, 2026
-  const baseFriday = new Date(2026, 5, 19);
-  const diffMs = friday.getTime() - baseFriday.getTime();
-  const diffWeeks = Math.round(diffMs / (7 * 24 * 60 * 60 * 1000));
-  const meetingNumber = diffWeeks + 1;
+  // meeting number from the single source of truth (accounts for the postponement)
+  const meetingNumber = getMeetingNumberForFriday(friday) ?? 0;
 
   const idx = meetingNumber - 1;
   const entry = idx >= 0 && idx < SCHEDULE_DATA.length ? SCHEDULE_DATA[idx] : SCHEDULE_DATA[0];
@@ -164,9 +161,9 @@ export async function GET(request: Request) {
       const fridayDates = getFridayDates();
       deadlineDate = formatDate(fridayDates[nextN - 1]);
     } else {
-      const finishedFriday = new Date(2026, 5, 19);
-      finishedFriday.setDate(finishedFriday.getDate() + (finishedN - 1) * 7 + 7);
-      deadlineDate = formatDate(finishedFriday);
+      const finishedDate = getMeetingDate(finishedN - 1);
+      finishedDate.setDate(finishedDate.getDate() + 7);
+      deadlineDate = formatDate(finishedDate);
     }
 
     // ── Fetch question ──

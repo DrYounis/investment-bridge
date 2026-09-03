@@ -19,17 +19,23 @@ const ADMIN_ITEMS = [
   { href: '/admin/product-lines', icon: '🏭', label: 'خطوط الإنتاج' },
 ];
 
+type AdminUser = {
+  full_name?: string | null;
+  user_type?: string | null;
+};
+
 export default function AdminLayoutShell({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
   const router = useRouter();
   const pathname = usePathname();
 
+  const isPublicAdminPage = pathname === '/admin/login' || pathname === '/admin/instructor';
+
   useEffect(() => {
     // Skip auth check on login & instructor pages (instructor is self-protected via API)
-    if (pathname === '/admin/login' || pathname === '/admin/instructor') {
-      setLoading(false);
+    if (isPublicAdminPage) {
       return;
     }
 
@@ -50,14 +56,14 @@ export default function AdminLayoutShell({ children }: { children: React.ReactNo
       setUser({ ...authUser, ...profile });
       setLoading(false);
     })();
-  }, [pathname]);
+  }, [pathname, isPublicAdminPage]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.replace('/login');
   };
 
-  if (loading) {
+  if (loading && !isPublicAdminPage) {
     return <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center"><p className="text-[#8a9bb8]">جاري التحميل...</p></div>;
   }
 

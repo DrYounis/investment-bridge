@@ -146,10 +146,12 @@ export async function POST(request: Request) {
       .update({ subscription_tier: subscriptionTier, updated_at: now.toISOString() })
       .eq('id', user_id);
 
+    const paidAmount = Number(transaction.amount_cents) / 100;
+
     // Meeting product: write contribution tier + amount
+    let tier: ReturnType<typeof getTier> = null;
     if (product_id === MEETING_PRODUCT_ID) {
-      const paidAmount = Number(transaction.amount_cents) / 100;
-      const tier = getTier(paidAmount);
+      tier = getTier(paidAmount);
       await supabaseAdmin.from('profiles')
         .update({
           contribution_tier: tier?.key ?? null,
@@ -161,34 +163,34 @@ export async function POST(request: Request) {
         .update({ amount: paidAmount })
         .eq('user_id', user_id)
         .eq('status', 'active');
+    }
 
-      // Notify admin
-      const { data: userProfile } = await supabaseAdmin
-        .from('profiles')
-        .select('email, full_name')
-        .eq('id', user_id)
-        .single();
-      const userEmail = userProfile?.email || 'unknown';
-      const userName = userProfile?.full_name || 'مستخدم';
+    // Notify admin for ANY product
+    const { data: userProfile } = await supabaseAdmin
+      .from('profiles')
+      .select('email, full_name')
+      .eq('id', user_id)
+      .single();
+    const userEmail = userProfile?.email || 'unknown';
+    const userName = userProfile?.full_name || 'مستخدم';
 
-      if (process.env.RESEND_API_KEY) {
-        const resend = new Resend(process.env.RESEND_API_KEY);
-        await resend.emails.send({
-          from: 'مرفأ <noreply@marfa.sa>',
-          to: 'ceo@marfa.sa',
-          subject: `💰 اشتراك جديد — ${paidAmount} ريال | ${userName}`,
-          html: `<div dir="rtl" style="font-family:'Tajawal',sans-serif;text-align:right">
-            <h2 style="color:#c9a84c">اشتراك جديد في لقاءات مرفأ</h2>
-            <table>
-              <tr><td><b>الاسم:</b></td><td>${userName}</td></tr>
-              <tr><td><b>البريد:</b></td><td>${userEmail}</td></tr>
-              <tr><td><b>المبلغ:</b></td><td style="color:#c9a84c;font-size:1.5rem;font-weight:bold">${paidAmount} ريال</td></tr>
-              <tr><td><b>الفئة:</b></td><td>${tier?.ar || '—'} (${tier?.en || '—'})</td></tr>
-              <tr><td><b>رقم العملية:</b></td><td>${transaction.id}</td></tr>
-            </table>
-          </div>`,
-        }).catch(() => {}); // fire-and-forget
-      }
+    if (process.env.RESEND_API_KEY) {
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      await resend.emails.send({
+        from: 'مرفأ <noreply@marfa.sa>',
+        to: 'ceo@marfa.sa',
+        subject: `💰 اشتراك جديد — ${paidAmount} ريال | ${userName}`,
+        html: `<div dir="rtl" style="font-family:'Tajawal',sans-serif;text-align:right">
+          <h2 style="color:#c9a84c">اشتراك جديد في مرفأ</h2>
+          <table>
+            <tr><td><b>الاسم:</b></td><td>${userName}</td></tr>
+            <tr><td><b>البريد:</b></td><td>${userEmail}</td></tr>
+            <tr><td><b>المبلغ:</b></td><td style="color:#c9a84c;font-size:1.5rem;font-weight:bold">${paidAmount} ريال</td></tr>
+            ${tier ? `<tr><td><b>الفئة:</b></td><td>${tier.ar} (${tier.en})</td></tr>` : ''}
+            <tr><td><b>رقم العملية:</b></td><td>${transaction.id}</td></tr>
+          </table>
+        </div>`,
+      }).catch(() => {}); // fire-and-forget
     }
 
     console.log(`[Paymob Webhook] ✅ Fulfilled: user ${user_id} → ${subscriptionTier}`);

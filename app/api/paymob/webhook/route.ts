@@ -193,6 +193,26 @@ export async function POST(request: Request) {
       }).catch(() => {}); // fire-and-forget
     }
 
+    // Notify the customer about their new tier
+    const tierLabel = subscriptionTier === 'enterprise' ? 'إنتربرايز' : subscriptionTier === 'pro' ? 'برو' : 'مجاني';
+    if (process.env.RESEND_API_KEY && userEmail && userEmail !== 'unknown') {
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      await resend.emails.send({
+        from: 'مرفأ <noreply@marfa.sa>',
+        to: userEmail,
+        subject: '🎉 تم تفعيل اشتراكك في مرفأ',
+        html: `<div dir="rtl" style="font-family:'Tajawal',sans-serif;background:#faf8f2;padding:24px;max-width:560px;margin:0 auto;border:1px solid #c9a84c33;border-radius:16px;text-align:right">
+          <h2 style="color:#c9a84c;margin:0 0 16px">🎉 تم تفعيل اشتراكك</h2>
+          <p style="color:#0a0f1e;font-size:15px;line-height:1.8">مرحباً ${userName}،</p>
+          <p style="color:#4a5b78;font-size:14px;line-height:1.8">يسعدنا إعلامك بأنه تم تفعيل اشتراكك بنجاح في منصة مرفأ.</p>
+          <p style="color:#4a5b78;font-size:14px;line-height:1.8">الفئة الجديدة: <b style="color:#c9a84c">${tierLabel}</b></p>
+          <p style="color:#4a5b78;font-size:14px;line-height:1.8">نشكرك على ثقتك، ونتطلع إلى رؤيتك في لقاءاتنا القادمة.</p>
+          <hr style="border:none;border-top:1px solid #c9a84c33;margin:20px 0">
+          <p style="color:#8a94a8;font-size:12px;margin:0">فريق مرفأ — حيث تَرسو الطموحات</p>
+        </div>`,
+      }).catch(() => {}); // fire-and-forget
+    }
+
     console.log(`[Paymob Webhook] ✅ Fulfilled: user ${user_id} → ${subscriptionTier}`);
     return NextResponse.json({ received: true, fulfilled: true });
   } catch (error: unknown) {

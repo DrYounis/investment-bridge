@@ -39,11 +39,25 @@ function mapTierLevel(tierLevel: string): 'free' | 'pro' | 'enterprise' {
   return 'free';
 }
 
+async function verifyTransactionWithPaymob(transactionId: unknown, amountCents: unknown, secretKey: string | undefined): Promise<boolean> {
+  if (!transactionId || !secretKey) return false;
+  const baseUrl = secretKey.startsWith('sau_') ? 'https://ksa.paymob.com' : 'https://accept.paymob.com';
+  try {
+    const res = await fetch(`${baseUrl}/api/acceptance/transactions/${transactionId}`, {
+      headers: { 'Authorization': `Token ${secretKey}` },
+    });
+    if (!res.ok) return false;
+    const tx = (await res.json()) as { success?: boolean; pending?: boolean; amount_cents?: number };
+    const amountMatches = amountCents === undefined || amountCents === null || Number(tx.amount_cents) === Number(amountCents);
+    return tx.success === true && !tx.pending && amountMatches;
+  } catch {
+    return false;
+  }
+}
+
 export async function POST(request: Request) {
   const hmacSecret = process.env.PAYMOB_HMAC;
-  if (!hmacSecret) {
-    return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
-  }
+  const paymobSecretKey = process.env.PAYMOB_SECRET_KEY;
 
   let payload: Record<string, unknown>;
   try { payload = await request.json() as Record<string, unknown>; } catch {
@@ -55,9 +69,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Missing transaction object' }, { status: 400 });
   }
 
-  if (!verifyHmac(transaction, hmacSecret)) {
-    console.warn('[Paymob Webhook] HMAC FAILED — rejecting');
-    return NextResponse.json({ error: 'Invalid HMAC' }, { status: 401 });
+  // Verify authenticity: prefer HMAC; fall back to server-to-server verification when HMAC is unset
+  if (hmacSecret) {
+    if (!verifyHmac(transaction, hmacSecret)) {
+      console.warn('[Paymob Webhook] HMAC FAILED — rejecting');
+      return NextResponse.json({ error: 'Invalid HMAC' }, { status: 401 });
+    }
+  } else {
+    const verified = await verifyTransactionWithPaymob(transaction.id, transaction.amount_cents, paymobSecretKey);
+    if (!verified) {
+      console.warn('[Paymob Webhook] Server-side verification FAILED — rejecting');
+      return NextResponse.json({ error: 'Unverified transaction' }, { status: 401 });
+    }
   }
 
   if (!transaction.success || transaction.pending) {

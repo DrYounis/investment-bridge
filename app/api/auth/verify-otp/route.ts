@@ -1,8 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/service';
+import { rateLimit, getClientIP } from '@/lib/rate-limit';
 
 export async function POST(req: NextRequest) {
   try {
+    // Rate limit: 5 verification attempts per 15 minutes per IP
+    const ip = getClientIP(req);
+    const limit = rateLimit(ip, { maxRequests: 5, windowMs: 15 * 60 * 1000 });
+    if (!limit.allowed) {
+      return NextResponse.json(
+        { error: 'محاولات كثيرة جداً. يرجى الانتظار قليلاً والمحاولة مرة أخرى.' },
+        { status: 429 }
+      );
+    }
+
     const { email, code, full_name, user_type, phone, commercial_register } = await req.json();
 
     if (!email || !code) {

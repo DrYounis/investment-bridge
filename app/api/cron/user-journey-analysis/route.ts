@@ -17,6 +17,7 @@ interface PageView {
   utm_source?: string | null;
   event_name?: string | null;
   variant?: string | null;
+  is_likely_bot?: boolean | null;
   created_at: string;
 }
 
@@ -28,6 +29,7 @@ interface AggregateStats {
   topPages: [string, number][];
   topReferrers: [string, number][];
   topCountries: [string, number][];
+  botViews: number;
   eventRows: string;
   aiInsightsHtml: string;
 }
@@ -237,10 +239,14 @@ function generateAggregatedInsights(journeys: UserJourney[]): AggregatedInsight[
 // ── Aggregate site-wide stats + AI narrative (merged from the retired weekly-analytics cron) ──
 
 async function buildAggregateStats(views: PageView[], prevViews: PageView[]): Promise<AggregateStats> {
-  const totalViews = views.length;
-  const uniqueVisitors = new Set(views.map((r) => r.visitor_hash)).size;
-  const prevTotalViews = prevViews.length;
-  const prevUniqueVisitors = new Set(prevViews.map((r) => r.visitor_hash)).size;
+  const humanViews = views.filter((r) => !r.is_likely_bot);
+  const botViews = views.length - humanViews.length;
+  const prevHumanViews = prevViews.filter((r) => !r.is_likely_bot);
+
+  const totalViews = humanViews.length;
+  const uniqueVisitors = new Set(humanViews.map((r) => r.visitor_hash)).size;
+  const prevTotalViews = prevHumanViews.length;
+  const prevUniqueVisitors = new Set(prevHumanViews.map((r) => r.visitor_hash)).size;
 
   const viewChangePct = prevTotalViews ? (((totalViews - prevTotalViews) / prevTotalViews) * 100).toFixed(0) : '—';
   const visitorChangePct = prevUniqueVisitors ? (((uniqueVisitors - prevUniqueVisitors) / prevUniqueVisitors) * 100).toFixed(0) : '—';
@@ -256,7 +262,7 @@ async function buildAggregateStats(views: PageView[], prevViews: PageView[]): Pr
   let authTotal = 0;
   let anonTotal = 0;
 
-  for (const r of views) {
+  for (const r of humanViews) {
     pageMap.set(r.path, (pageMap.get(r.path) || 0) + 1);
     if (r.user_hash) { pageAuthMap.set(r.path, (pageAuthMap.get(r.path) || 0) + 1); authTotal++; }
     else { pageAnonMap.set(r.path, (pageAnonMap.get(r.path) || 0) + 1); anonTotal++; }
@@ -338,6 +344,7 @@ Stats:
     topPages: topN(pageMap),
     topReferrers: topN(referrerMap),
     topCountries: topN(countryMap),
+    botViews,
     eventRows,
     aiInsightsHtml,
   };
@@ -388,6 +395,7 @@ function buildAnalysisEmail(journeys: UserJourney[], insights: AggregatedInsight
   <table style="width:100%;margin-bottom:14px"><thead><tr><th colspan="2" style="text-align:start;color:#0a0f1e;font-size:13px;padding-bottom:6px">أهم الصفحات</th></tr></thead><tbody>${siteTop(agg.topPages)}</tbody></table>
   <table style="width:100%;margin-bottom:14px"><thead><tr><th colspan="2" style="text-align:start;color:#0a0f1e;font-size:13px;padding-bottom:6px">أهم المصادر</th></tr></thead><tbody>${siteTop(agg.topReferrers)}</tbody></table>
   <table style="width:100%;margin-bottom:14px"><thead><tr><th colspan="2" style="text-align:start;color:#0a0f1e;font-size:13px;padding-bottom:6px">أهم الدول</th></tr></thead><tbody>${siteTop(agg.topCountries)}</tbody></table>
+  ${agg.botViews > 0 ? `<p style="color:#8a94a8;font-size:12px;margin:0 0 14px 0">🤖 حركة آلية مشتبهة: ${agg.botViews} مشاهدة</p>` : ''}
   ${agg.eventRows ? `<table style="width:100%;margin-bottom:14px"><thead><tr><th colspan="2" style="text-align:start;color:#0a0f1e;font-size:13px;padding-bottom:6px">أحداث التحويل</th></tr></thead><tbody>${agg.eventRows}</tbody></table>` : ''}
   <div style="text-align:center;margin-bottom:28px">
     <a href="https://www.marfa.sa/admin/analytics" style="display:inline-block;border:1px solid #c9a84c;color:#0a0f1e;padding:8px 20px;border-radius:50px;text-decoration:none;font-weight:bold;font-size:12px">افتح لوحة التحليلات المباشرة ←</a>
@@ -494,14 +502,14 @@ export async function GET(request: Request) {
     // ── 1. Fetch this week's page views ──
     const { data: thisWeekViews } = await svc
       .from('page_views')
-      .select('visitor_hash, user_hash, path, country, referrer, device, utm_source, event_name, variant, created_at')
+      .select('visitor_hash, user_hash, path, country, referrer, device, utm_source, event_name, variant, is_likely_bot, created_at')
       .gte('created_at', since)
       .order('created_at', { ascending: true });
 
     // ── 2. Fetch last week's page views (for churn detection + site-wide WoW comparison) ──
     const { data: lastWeekViews } = await svc
       .from('page_views')
-      .select('visitor_hash, user_hash, path, country, referrer, device, utm_source, event_name, variant, created_at')
+      .select('visitor_hash, user_hash, path, country, referrer, device, utm_source, event_name, variant, is_likely_bot, created_at')
       .gte('created_at', prevSince)
       .lt('created_at', since)
       .order('created_at', { ascending: true });

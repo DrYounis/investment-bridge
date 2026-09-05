@@ -18,6 +18,11 @@ const TrackSchema = z.object({
 
 const BOT_RE = /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|whatsapp|telegram|preview|headless|lighthouse|gptbot|claudebot|perplexity/i;
 
+// Scripted-traffic heuristics (spoofed normal browser UA)
+const BOT_ROLLING_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+const BOT_ROLLING_THRESHOLD = 30; // > 30 views in the window
+const BOT_ENTRY_PATHS = new Set(['/login', '/register']);
+
 export async function POST(request: NextRequest) {
   try {
     let body: unknown;
@@ -63,6 +68,32 @@ export async function POST(request: NextRequest) {
     const device = /mobile|android|iphone/i.test(ua) ? 'mobile' : 'desktop';
 
     const svc = createServiceClient();
+
+    // Bot heuristics — flag scripted traffic that spoofs a normal browser UA
+    let isLikelyBot = false;
+    try {
+      // 1. First-ever tracked path is /login or /register (no natural entry point)
+      if (BOT_ENTRY_PATHS.has(path)) {
+        const { count } = await svc
+          .from('page_views')
+          .select('id', { count: 'exact', head: true })
+          .eq('visitor_hash', hash);
+        if (!count) isLikelyBot = true;
+      }
+
+      // 2. Exceeds threshold within a short rolling window
+      const windowStart = new Date(Date.now() - BOT_ROLLING_WINDOW_MS).toISOString();
+      const { count: recent } = await svc
+        .from('page_views')
+        .select('id', { count: 'exact', head: true })
+        .eq('visitor_hash', hash)
+        .gte('created_at', windowStart);
+      if (recent && recent >= BOT_ROLLING_THRESHOLD) isLikelyBot = true;
+    } catch (botErr) {
+      // Non-fatal — bot detection must never break tracking
+      console.error('TRACK_BOT_CHECK', botErr instanceof Error ? botErr.message : String(botErr));
+    }
+
     const { error } = await svc.from('page_views').insert({
       path,
       referrer: referrer || null,
@@ -75,6 +106,7 @@ export async function POST(request: NextRequest) {
       event_name: event || null,
       event_data: event_data || null,
       variant: variant || null,
+      is_likely_bot: isLikelyBot,
     });
 
     if (error) {

@@ -1,7 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect } from 'react';
 import { useAuth } from '@/app/context/AuthContext';
+import { trackEvent } from '@/lib/tracking';
 
 interface RegistrationBannerProps {
   variant?: 'hero' | 'card';
@@ -29,6 +31,10 @@ const VALUE_PROPS: Record<string, { emoji: string; text: string }[]> = {
 export default function RegistrationBanner({ variant = 'card', context = 'home' }: RegistrationBannerProps) {
   const { user } = useAuth();
 
+  useEffect(() => {
+    if (!user) trackEvent('cta_impression', { surface: context });
+  }, [user, context]);
+
   if (user) return null;
 
   const props = VALUE_PROPS[context] || VALUE_PROPS.home;
@@ -53,7 +59,8 @@ export default function RegistrationBanner({ variant = 'card', context = 'home' 
             ))}
           </div>
           <Link
-            href="/join"
+            href={`/join?src=${context}`}
+            onClick={() => trackEvent('cta_click', { surface: context })}
             className="inline-block px-10 py-3.5 rounded-full bg-gradient-to-r from-[#c9a84c] to-[#d4a843] text-[#0a0f1e] font-bold text-base hover:shadow-xl hover:shadow-[#c9a84c]/25 transition-all duration-300"
             style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
           >
@@ -85,7 +92,8 @@ export default function RegistrationBanner({ variant = 'card', context = 'home' 
         ))}
       </div>
       <Link
-        href="/join"
+        href={`/join?src=${context}`}
+        onClick={() => trackEvent('cta_click', { surface: context })}
         className="block w-full text-center py-2.5 rounded-full bg-gradient-to-r from-[#c9a84c] to-[#d4a843] text-[#0a0f1e] text-sm font-bold hover:shadow-lg hover:shadow-[#c9a84c]/25 transition-all duration-300"
         style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
       >

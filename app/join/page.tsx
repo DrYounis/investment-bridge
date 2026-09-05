@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import RegistrationBanner from '@/app/components/marfa/RegistrationBanner';
 import StickyJoinCTA from '@/app/components/marfa/StickyJoinCTA';
+import JoinFunnelTracker from '@/app/components/marfa/JoinFunnelTracker';
 
 export const metadata: Metadata = {
   title: 'انضم إلى مرفأ | مجتمع رواد الأعمال السعودي',
@@ -61,6 +62,7 @@ const PORTFOLIO = [
 export default function JoinPage() {
   return (
     <main className="min-h-screen bg-[#faf8f2]" dir="rtl">
+      <JoinFunnelTracker />
       {/* ── Hero ── */}
       <section className="bg-[#0a0f1e] pt-32 pb-20 px-6 text-center relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-[60%] bg-[#c9a84c]/5 blur-[100px] rounded-full" />

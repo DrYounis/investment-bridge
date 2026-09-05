@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { getCachedJobBySlug, type Job } from '@/lib/jobs';
 import { MANUAL_JOBS_BY_SLUG } from '@/lib/manual-jobs';
-import JobRegistrationCTA from '@/app/components/marfa/JobRegistrationCTA';
+import { resolveVariant } from '@/lib/experiments';
+import JobDetailBody from '@/app/components/marfa/JobDetailBody';
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -82,6 +83,9 @@ export default async function JobDetailPage({
   const postedTime = job.postedAt ? relativeTimeArabic(job.postedAt) : null;
   const hasSalary = job.salaryMin != null && job.salaryMax != null;
 
+  // Experiment flag: EXPERIMENT_JOB_CTA = banner | gate | off (default banner — non-gating)
+  const ctaVariant = resolveVariant('JOB_CTA', ['banner', 'gate', 'off'] as const, 'banner');
+
   return (
     <div className="min-h-screen bg-[#faf8f2]" dir="rtl">
       {/* JSON-LD */}
@@ -158,35 +162,13 @@ export default async function JobDetailPage({
 
       {/* Body */}
       <div className="max-w-4xl mx-auto px-4 md:px-8 py-12">
-        {/* Description */}
-        {job.description && (
-          <div className="bg-white rounded-3xl border border-[#c9a84c]/20 shadow-[0_8px_30px_rgba(10,15,30,0.06)] p-8 mb-8">
-            <h2 className="text-xl font-bold text-[#0a0f1e] mb-4" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-              الوصف الوظيفي
-            </h2>
-            <p className="whitespace-pre-line leading-relaxed text-[#4a5b78]" style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}>
-              {job.description}
-            </p>
-          </div>
-        )}
-
-        {/* Registration CTA for anonymous visitors */}
-        <div className="max-w-md mx-auto mb-8">
-          <JobRegistrationCTA />
-        </div>
-
-        {/* Apply CTA */}
-        <div className="sticky bottom-6">
-          <a
-            href={job.applyLink}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-            className="block w-full max-w-md mx-auto text-center px-6 py-4 rounded-2xl bg-gradient-to-r from-[#c9a84c] to-[#d4a843] text-[#0a0f1e] text-lg font-bold hover:shadow-xl hover:shadow-[#c9a84c]/30 transition-all duration-300"
-            style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
-          >
-            قدّم الآن {job.isLinkedIn ? 'عبر LinkedIn' : `عبر ${job.publisher || 'الموقع الخارجي'}`} ←
-          </a>
-        </div>
+        <JobDetailBody
+          description={job.description}
+          applyLink={job.applyLink}
+          isLinkedIn={job.isLinkedIn}
+          publisher={job.publisher}
+          variant={ctaVariant}
+        />
       </div>
     </div>
   );

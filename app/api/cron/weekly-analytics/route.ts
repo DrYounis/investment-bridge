@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
 
     const { data: rows, error: fetchError } = await svc
       .from('page_views')
-      .select('path,referrer,country,device,visitor_hash,user_hash,utm_source,created_at')
+      .select('path,referrer,country,device,visitor_hash,user_hash,utm_source,event_name,variant,created_at')
       .gte('created_at', prevSince)
       .order('created_at', { ascending: false });
 
@@ -63,6 +63,8 @@ export async function GET(request: NextRequest) {
     const referrerMap = new Map<string, number>();
     const countryMap = new Map<string, number>();
     const utmSourceMap = new Map<string, number>();
+    const eventMap = new Map<string, number>();
+    const eventVariantMap = new Map<string, number>();
     let authTotal = 0;
     let anonTotal = 0;
 
@@ -91,6 +93,11 @@ export async function GET(request: NextRequest) {
       referrerMap.set(ref, (referrerMap.get(ref) || 0) + 1);
       if (r.country) countryMap.set(r.country, (countryMap.get(r.country) || 0) + 1);
       if (r.utm_source) utmSourceMap.set(r.utm_source, (utmSourceMap.get(r.utm_source) || 0) + 1);
+      if (r.event_name) {
+        eventMap.set(r.event_name, (eventMap.get(r.event_name) || 0) + 1);
+        const evKey = r.variant ? `${r.event_name} [${r.variant}]` : r.event_name;
+        eventVariantMap.set(evKey, (eventVariantMap.get(evKey) || 0) + 1);
+      }
       const d = r.created_at.split('T')[0];
       if (dailySeries[d] !== undefined) dailySeries[d]++;
     }
@@ -102,6 +109,12 @@ export async function GET(request: NextRequest) {
       topN(m, limit)
         .map(([k, v]) => `<tr><td style="text-align:right;padding:4px 8px">${k}</td><td style="text-align:start;padding:4px 8px;color:#c9a84c;font-weight:bold">${v}</td></tr>`)
         .join('');
+
+    const eventRows = eventVariantMap.size > 0
+      ? [...eventVariantMap.entries()].sort((a, b) => b[1] - a[1])
+          .map(([k, v]) => `<tr><td style="text-align:right;padding:4px 8px">${k}</td><td style="text-align:start;padding:4px 8px;color:#c9a84c;font-weight:bold">${v}</td></tr>`)
+          .join('')
+      : '';
 
     // ── AI Insights ──────────────────────────────────────────────
 
@@ -132,7 +145,8 @@ Stats:
 - Daily view series (last 14 days): ${JSON.stringify(dailyEntries)}
 - Top 8 pages: ${JSON.stringify(top8Pages)}
 - Top 5 referrer domains: ${JSON.stringify(top5Referrers)}
-- Top 5 UTM sources: ${JSON.stringify(top5Utm)}`;
+- Top 5 UTM sources: ${JSON.stringify(top5Utm)}
+- Conversion events (name → count): ${JSON.stringify(Object.fromEntries(eventMap))}`;
 
       let insights: string;
       try {
@@ -199,6 +213,7 @@ Stats:
     <table style="width:100%;margin-bottom:16px"><thead><tr><th colspan="2" style="text-align:start;color:#0a0f1e;font-size:14px;padding-bottom:8px">أهم ٥ صفحات</th></tr></thead><tbody>${top(pageMap)}</tbody></table>
     <table style="width:100%;margin-bottom:16px"><thead><tr><th colspan="2" style="text-align:start;color:#0a0f1e;font-size:14px;padding-bottom:8px">أهم ٥ مصادر</th></tr></thead><tbody>${top(referrerMap)}</tbody></table>
     <table style="width:100%;margin-bottom:16px"><thead><tr><th colspan="2" style="text-align:start;color:#0a0f1e;font-size:14px;padding-bottom:8px">أهم ٥ دول</th></tr></thead><tbody>${top(countryMap)}</tbody></table>
+    ${eventRows ? `<table style="width:100%;margin-bottom:16px"><thead><tr><th colspan="2" style="text-align:start;color:#0a0f1e;font-size:14px;padding-bottom:8px">أحداث التحويل</th></tr></thead><tbody>${eventRows}</tbody></table>` : ''}
     <div style="text-align:center;margin-top:24px">
       <a href="https://www.marfa.sa/admin/analytics" style="display:inline-block;background:#c9a84c;color:#0a0f1e;padding:14px 32px;border-radius:50px;text-decoration:none;font-weight:bold;font-size:15px">افتح لوحة التحليلات</a>
     </div>

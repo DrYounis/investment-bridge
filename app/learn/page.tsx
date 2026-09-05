@@ -4,6 +4,7 @@ import { getPublishedArticles } from '@/lib/learn/articles';
 import { CATEGORIES, TOPICS } from '@/lib/learn/taxonomy';
 import Link from 'next/link';
 import RegistrationBanner from '@/app/components/marfa/RegistrationBanner';
+import LearnCouncilCard from '@/app/components/marfa/LearnCouncilCard';
 
 export const metadata: Metadata = {
   title: 'مركز المعرفة | مرفأ',
@@ -61,6 +62,9 @@ export default async function LearnHubPage() {
             </p>
           </Link>
         </section>
+
+        {/* Council promo card */}
+        <LearnCouncilCard />
 
         {/* Registration CTA */}
         <section className="mb-16 max-w-md mx-auto">

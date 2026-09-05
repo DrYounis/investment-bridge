@@ -8,6 +8,7 @@ import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import remarkGfm from 'remark-gfm';
 import remarkHtml from 'remark-html';
+import ArticleCouncilCTA from '@/app/components/marfa/ArticleCouncilCTA';
 
 export async function generateMetadata({ params }: { params: Promise<{ category: string; slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -78,6 +79,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ catego
           style={{ fontFamily: 'var(--font-tajawal), sans-serif' }}
           dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
+
+        {/* Council CTA — "طبّق معرفتك" */}
+        <ArticleCouncilCTA articleId={article.id} />
 
         {/* Related */}
         {related.length > 0 && (

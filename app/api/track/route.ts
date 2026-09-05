@@ -11,6 +11,9 @@ const TrackSchema = z.object({
   referrer: z.string().max(500).optional(),
   utm_source: z.string().max(100).optional(),
   utm_campaign: z.string().max(100).optional(),
+  event: z.string().min(1).max(100).optional(),
+  event_data: z.record(z.string(), z.unknown()).optional(),
+  variant: z.string().max(50).optional(),
 });
 
 const BOT_RE = /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|whatsapp|telegram|preview|headless|lighthouse|gptbot|claudebot|perplexity/i;
@@ -25,7 +28,7 @@ export async function POST(request: NextRequest) {
     const parsed = TrackSchema.safeParse(body);
     if (!parsed.success) return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
 
-    const { path, referrer, utm_source, utm_campaign } = parsed.data;
+    const { path, referrer, utm_source, utm_campaign, event, event_data, variant } = parsed.data;
 
     // Skip admin and API paths
     if (path.startsWith('/admin') || path.startsWith('/api')) {
@@ -69,6 +72,9 @@ export async function POST(request: NextRequest) {
       user_hash: userHash,
       utm_source: utm_source || null,
       utm_campaign: utm_campaign || null,
+      event_name: event || null,
+      event_data: event_data || null,
+      variant: variant || null,
     });
 
     if (error) {

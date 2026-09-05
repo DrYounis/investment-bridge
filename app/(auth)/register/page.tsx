@@ -8,6 +8,7 @@ import Input from '../../components/ui/Input'
 import Card from '../../components/ui/Card'
 import OtpVerification from '../../components/ui/OtpVerification'
 import { createClient } from '../../../lib/supabase/client'
+import { trackEvent } from '../../../lib/tracking'
 
 function RegisterForm() {
     const [step, setStep] = useState<'form' | 'otp' | 'success'>('form')
@@ -110,6 +111,9 @@ function RegisterForm() {
             localStorage.removeItem('questionnaireCompleted')
             localStorage.removeItem('userType')
             setStep('success')
+            let signupSurface = 'direct'
+            try { signupSurface = sessionStorage.getItem('marfa_signup_surface') || 'direct' } catch { /* ignore */ }
+            trackEvent('signup_complete', { surface: signupSurface })
             const isAndroid = /android/i.test(navigator.userAgent)
             const delay = isAndroid ? 2000 : 800
             redirectTimeoutRef.current = setTimeout(() => { window.location.href = redirectUrl }, delay)

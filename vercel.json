@@ -26,6 +26,10 @@
       "schedule": "0 3 * * *"
     },
     {
+      "path": "/api/cron/weekly-jobs",
+      "schedule": "0 6 * * 1"
+    },
+    {
       "path": "/api/cron/weekly-analytics",
       "schedule": "30 6 * * 0"
     },

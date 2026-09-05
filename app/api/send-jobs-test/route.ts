@@ -3,16 +3,10 @@ import { createServiceClient } from '@/lib/supabase/service';
 import { getCachedJobs, type Job } from '@/lib/jobs';
 import { Resend } from 'resend';
 
-export const dynamic = 'force-dynamic';
-
+// One-shot test route — remove after sending.
+const TEST_TOKEN = 'jobs-test-7c3e1a';
 const RECIPIENT = 'op.younis@gmail.com';
 const TOP_N = 10;
-
-function isCronAuthorized(request: Request): boolean {
-  const cronSecret = process.env.CRON_SECRET;
-  if (!cronSecret) return false;
-  return request.headers.get('authorization') === `Bearer ${cronSecret}`;
-}
 
 function formatSalary(job: Job): string | null {
   if (job.salaryMin == null || job.salaryMax == null) return null;
@@ -22,14 +16,8 @@ function formatSalary(job: Job): string | null {
 }
 
 export async function GET(request: Request) {
-  if (!isCronAuthorized(request)) {
+  if (request.headers.get('authorization') !== `Bearer ${TEST_TOKEN}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  // Guard: only run on Monday (Vercel fires crons on every deploy).
-  // ?force=1 bypasses the day guard for manual testing (still requires CRON_SECRET).
-  if (new Date().getUTCDay() !== 1 && new URL(request.url).searchParams.get('force') !== '1') {
-    return NextResponse.json({ skipped: true, reason: 'Not Monday' });
   }
 
   const supabase = createServiceClient();
@@ -85,7 +73,7 @@ export async function GET(request: Request) {
   });
 
   if (error) {
-    console.error('WEEKLY_JOBS_EMAIL_FAIL', error.message);
+    console.error('JOBS_TEST_EMAIL_FAIL', error.message);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 

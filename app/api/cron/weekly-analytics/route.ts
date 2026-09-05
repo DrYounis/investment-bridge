@@ -228,7 +228,7 @@ Stats:
       const resend = getResend();
       const result = await resend.emails.send({
         from: 'مرفأ <noreply@marfa.sa>',
-        to: 'mohamedy2003@gmail.com',
+        to: 'op.younis@gmail.com',
         subject: '⚓ مرفأ — تقرير زيارات الموقع الأسبوعي',
         html,
       });

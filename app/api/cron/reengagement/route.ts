@@ -57,7 +57,17 @@ function arabicDate(iso: string): string {
   return `${d.getDate()} ${months[d.getMonth()]}`;
 }
 
-export async function GET() {
+function isCronAuthorized(request: Request): boolean {
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret) return false;
+  return request.headers.get('authorization') === `Bearer ${cronSecret}`;
+}
+
+export async function GET(request: Request) {
+  if (!isCronAuthorized(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   // Guard: Monday only (after Sunday analysis is fresh)
   if (new Date().getUTCDay() !== 1) {
     return NextResponse.json({ skipped: true, reason: 'Not Monday' });

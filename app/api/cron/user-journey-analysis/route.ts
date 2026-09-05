@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/service';
+import { generateWithDeepSeek } from '@/lib/ai/deepseek';
 import { Resend } from 'resend';
 
 export const dynamic = 'force-dynamic';
@@ -12,7 +13,23 @@ interface PageView {
   path: string;
   country: string | null;
   referrer: string | null;
+  device?: string | null;
+  utm_source?: string | null;
+  event_name?: string | null;
+  variant?: string | null;
   created_at: string;
+}
+
+interface AggregateStats {
+  totalViews: number;
+  uniqueVisitors: number;
+  viewChangePct: string;
+  visitorChangePct: string;
+  topPages: [string, number][];
+  topReferrers: [string, number][];
+  topCountries: [string, number][];
+  eventRows: string;
+  aiInsightsHtml: string;
 }
 
 interface QuizAnswer {
@@ -217,9 +234,118 @@ function generateAggregatedInsights(journeys: UserJourney[]): AggregatedInsight[
   return insights;
 }
 
+// ── Aggregate site-wide stats + AI narrative (merged from the retired weekly-analytics cron) ──
+
+async function buildAggregateStats(views: PageView[], prevViews: PageView[]): Promise<AggregateStats> {
+  const totalViews = views.length;
+  const uniqueVisitors = new Set(views.map((r) => r.visitor_hash)).size;
+  const prevTotalViews = prevViews.length;
+  const prevUniqueVisitors = new Set(prevViews.map((r) => r.visitor_hash)).size;
+
+  const viewChangePct = prevTotalViews ? (((totalViews - prevTotalViews) / prevTotalViews) * 100).toFixed(0) : '—';
+  const visitorChangePct = prevUniqueVisitors ? (((uniqueVisitors - prevUniqueVisitors) / prevUniqueVisitors) * 100).toFixed(0) : '—';
+
+  const pageMap = new Map<string, number>();
+  const pageAnonMap = new Map<string, number>();
+  const pageAuthMap = new Map<string, number>();
+  const referrerMap = new Map<string, number>();
+  const countryMap = new Map<string, number>();
+  const utmSourceMap = new Map<string, number>();
+  const eventMap = new Map<string, number>();
+  const eventVariantMap = new Map<string, number>();
+  let authTotal = 0;
+  let anonTotal = 0;
+
+  for (const r of views) {
+    pageMap.set(r.path, (pageMap.get(r.path) || 0) + 1);
+    if (r.user_hash) { pageAuthMap.set(r.path, (pageAuthMap.get(r.path) || 0) + 1); authTotal++; }
+    else { pageAnonMap.set(r.path, (pageAnonMap.get(r.path) || 0) + 1); anonTotal++; }
+    const ref = r.referrer ? (() => { try { return new URL(r.referrer!).hostname; } catch { return 'مباشر'; } })() : 'مباشر';
+    referrerMap.set(ref, (referrerMap.get(ref) || 0) + 1);
+    if (r.country) countryMap.set(r.country, (countryMap.get(r.country) || 0) + 1);
+    if (r.utm_source) utmSourceMap.set(r.utm_source, (utmSourceMap.get(r.utm_source) || 0) + 1);
+    if (r.event_name) {
+      eventMap.set(r.event_name, (eventMap.get(r.event_name) || 0) + 1);
+      const evKey = r.variant ? `${r.event_name} [${r.variant}]` : r.event_name;
+      eventVariantMap.set(evKey, (eventVariantMap.get(evKey) || 0) + 1);
+    }
+  }
+
+  const topN = (m: Map<string, number>, limit = 5): [string, number][] =>
+    [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, limit);
+
+  const eventRows = eventVariantMap.size > 0
+    ? [...eventVariantMap.entries()].sort((a, b) => b[1] - a[1])
+        .map(([k, v]) => `<tr><td style="text-align:right;padding:4px 8px;color:#4a5b78;font-size:13px">${k}</td><td style="text-align:start;padding:4px 8px;color:#c9a84c;font-weight:bold;font-size:13px">${v}</td></tr>`)
+        .join('')
+    : '';
+
+  let aiInsightsHtml = '';
+  try {
+    const top8Pages = topN(pageMap, 8).map(([path, v]) => ({ path, views: v, anonViews: pageAnonMap.get(path) || 0, authViews: pageAuthMap.get(path) || 0 }));
+    const top5Referrers = topN(referrerMap, 5).map(([k, v]) => ({ domain: k, views: v }));
+    const top5Utm = topN(utmSourceMap, 5).map(([k, v]) => ({ source: k, views: v }));
+    const wowGrowth = prevTotalViews ? Math.round(((totalViews - prevTotalViews) / prevTotalViews) * 100) : 0;
+
+    const prompt = `You are a growth analyst for marfa.sa, a Saudi entrepreneurship platform. Given these aggregated web analytics, write 3–5 concise English insights in the style: growth trend, strongest organic acquisition page ("SEO goldmine"), where anonymous readers concentrate and what CTA to add, one actionable recommendation. Plain sentences, no markdown headers.
+
+Stats:
+- Total views (last 7 days): ${totalViews}
+- Unique visitors (last 7 days): ${uniqueVisitors}
+- Week-over-week growth: ${wowGrowth}%
+- Authenticated views: ${authTotal}
+- Anonymous views: ${anonTotal}
+- Top 8 pages: ${JSON.stringify(top8Pages)}
+- Top 5 referrer domains: ${JSON.stringify(top5Referrers)}
+- Top 5 UTM sources: ${JSON.stringify(top5Utm)}
+- Conversion events (name → count): ${JSON.stringify(Object.fromEntries(eventMap))}`;
+
+    let insights: string;
+    try {
+      insights = await generateWithDeepSeek(prompt);
+    } catch (deepseekErr) {
+      console.error('DEEPSEEK_FALLBACK', deepseekErr instanceof Error ? deepseekErr.message : String(deepseekErr));
+      const Anthropic = (await import('@anthropic-ai/sdk')).default;
+      const anthropicKey = process.env.ANTHROPIC_API_KEY;
+      if (!anthropicKey) throw new Error('No Anthropic key for fallback');
+      const client = new Anthropic({ apiKey: anthropicKey });
+      const msg = await client.messages.create({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 600,
+        messages: [{ role: 'user', content: prompt }],
+      });
+      insights = msg.content.filter((b) => b.type === 'text').map((b) => (b as { type: 'text'; text: string }).text).join('').trim();
+    }
+
+    if (insights) {
+      const paragraphs = insights.split('\n').filter((l) => l.trim()).map((l) => l.replace(/^[-*]\s*/, '').trim()).filter(Boolean);
+      aiInsightsHtml = `
+    <div style="background:linear-gradient(135deg,#fdf9ef,#faf6e7);border:1px solid #c9a84c44;border-radius:16px;padding:24px;margin-bottom:24px">
+      <h2 style="color:#b8933a;font-size:16px;margin:0 0 16px 0;text-align:start">🤖 AI Insights</h2>
+      ${paragraphs.map((p) => `<p style="color:#4a5b78;font-size:14px;line-height:1.7;margin:0 0 12px 0;text-align:start">${p}</p>`).join('')}
+    </div>`;
+    }
+  } catch (aiErr) {
+    console.error('AI_INSIGHTS_FAILED', aiErr instanceof Error ? aiErr.message : String(aiErr));
+    // Report must always go out even if AI narrative fails
+  }
+
+  return {
+    totalViews,
+    uniqueVisitors,
+    viewChangePct,
+    visitorChangePct,
+    topPages: topN(pageMap),
+    topReferrers: topN(referrerMap),
+    topCountries: topN(countryMap),
+    eventRows,
+    aiInsightsHtml,
+  };
+}
+
 // ── Email HTML ─────────────────────────────────────────────────────────────
 
-function buildAnalysisEmail(journeys: UserJourney[], insights: AggregatedInsight[], weekStart: string, prevWeekTotal: number): string {
+function buildAnalysisEmail(journeys: UserJourney[], insights: AggregatedInsight[], weekStart: string, prevWeekTotal: number, agg: AggregateStats): string {
   const total = journeys.length;
   const registered = journeys.filter(j => j.isRegistered).length;
   const anon = total - registered;
@@ -242,16 +368,45 @@ function buildAnalysisEmail(journeys: UserJourney[], insights: AggregatedInsight
     </div>
   `).join('');
 
+  const siteTop = (entries: [string, number][]) =>
+    entries.map(([k, v]) => `<tr><td style="text-align:right;padding:4px 8px;color:#4a5b78;font-size:13px">${k}</td><td style="text-align:start;padding:4px 8px;color:#c9a84c;font-weight:bold;font-size:13px">${v}</td></tr>`).join('');
+
+  const siteWideHTML = `
+  ${agg.aiInsightsHtml}
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+    <div style="background:#faf8f2;border-radius:12px;padding:16px;text-align:center">
+      <p style="color:#64748b;font-size:12px;margin:0">إجمالي المشاهدات (٧ أيام)</p>
+      <p style="color:#0a0f1e;font-size:26px;font-weight:900;margin:8px 0">${agg.totalViews.toLocaleString()}</p>
+      <p style="font-size:12px;margin:0;color:${agg.viewChangePct === '—' || Number(agg.viewChangePct) >= 0 ? '#10b981' : '#ef4444'}">${agg.viewChangePct === '—' ? '—' : `${Number(agg.viewChangePct) >= 0 ? '↑' : '↓'} ${Math.abs(Number(agg.viewChangePct))}%`}</p>
+    </div>
+    <div style="background:#faf8f2;border-radius:12px;padding:16px;text-align:center">
+      <p style="color:#64748b;font-size:12px;margin:0">زوار فريدون (٧ أيام)</p>
+      <p style="color:#0a0f1e;font-size:26px;font-weight:900;margin:8px 0">${agg.uniqueVisitors.toLocaleString()}</p>
+      <p style="font-size:12px;margin:0;color:${agg.visitorChangePct === '—' || Number(agg.visitorChangePct) >= 0 ? '#10b981' : '#ef4444'}">${agg.visitorChangePct === '—' ? '—' : `${Number(agg.visitorChangePct) >= 0 ? '↑' : '↓'} ${Math.abs(Number(agg.visitorChangePct))}%`}</p>
+    </div>
+  </div>
+  <table style="width:100%;margin-bottom:14px"><thead><tr><th colspan="2" style="text-align:start;color:#0a0f1e;font-size:13px;padding-bottom:6px">أهم الصفحات</th></tr></thead><tbody>${siteTop(agg.topPages)}</tbody></table>
+  <table style="width:100%;margin-bottom:14px"><thead><tr><th colspan="2" style="text-align:start;color:#0a0f1e;font-size:13px;padding-bottom:6px">أهم المصادر</th></tr></thead><tbody>${siteTop(agg.topReferrers)}</tbody></table>
+  <table style="width:100%;margin-bottom:14px"><thead><tr><th colspan="2" style="text-align:start;color:#0a0f1e;font-size:13px;padding-bottom:6px">أهم الدول</th></tr></thead><tbody>${siteTop(agg.topCountries)}</tbody></table>
+  ${agg.eventRows ? `<table style="width:100%;margin-bottom:14px"><thead><tr><th colspan="2" style="text-align:start;color:#0a0f1e;font-size:13px;padding-bottom:6px">أحداث التحويل</th></tr></thead><tbody>${agg.eventRows}</tbody></table>` : ''}
+  <div style="text-align:center;margin-bottom:28px">
+    <a href="https://www.marfa.sa/admin/analytics" style="display:inline-block;border:1px solid #c9a84c;color:#0a0f1e;padding:8px 20px;border-radius:50px;text-decoration:none;font-weight:bold;font-size:12px">افتح لوحة التحليلات المباشرة ←</a>
+  </div>
+  <div style="border-top:1px solid #c9a84c33;margin-bottom:24px"></div>
+`;
+
   return `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"></head>
 <body style="font-family:'Tajawal','Cairo',sans-serif;direction:rtl;background:#faf8f2;padding:30px;margin:0">
 <div style="max-width:640px;margin:auto;background:#fff;border:1px solid #c9a84c33;border-radius:24px;overflow:hidden;box-shadow:0 8px 30px rgba(10,15,30,0.06)">
 
 <div style="background:linear-gradient(135deg,#0a0f1e,#0d1628);padding:32px 24px;text-align:center">
-  <h1 style="color:#c9a84c;font-size:22px;margin:0 0 6px 0">🧠 تحليل سلوك المستخدمين — ${weekStart}</h1>
-  <p style="color:#a0aec0;font-size:13px;margin:0">تقرير أسبوعي لتوجيه أولويات التطوير</p>
+  <h1 style="color:#c9a84c;font-size:22px;margin:0 0 6px 0">⚓ مرفأ — تقرير الأداء الأسبوعي — ${weekStart}</h1>
+  <p style="color:#a0aec0;font-size:13px;margin:0">حركة الموقع + تحليل سلوك المستخدمين + توصيات التطوير</p>
 </div>
 
 <div style="padding:32px 24px">
+
+  ${siteWideHTML}
 
   <!-- Summary cards -->
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px">
@@ -311,7 +466,17 @@ function buildAnalysisEmail(journeys: UserJourney[], insights: AggregatedInsight
 
 // ── GET handler ────────────────────────────────────────────────────────────
 
-export async function GET() {
+function isCronAuthorized(request: Request): boolean {
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret) return false;
+  return request.headers.get('authorization') === `Bearer ${cronSecret}`;
+}
+
+export async function GET(request: Request) {
+  if (!isCronAuthorized(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   // Guard: only run on Sunday
   if (new Date().getUTCDay() !== 0) {
     return NextResponse.json({ skipped: true, reason: 'Not Sunday' });
@@ -329,14 +494,14 @@ export async function GET() {
     // ── 1. Fetch this week's page views ──
     const { data: thisWeekViews } = await svc
       .from('page_views')
-      .select('visitor_hash, user_hash, path, country, referrer, created_at')
+      .select('visitor_hash, user_hash, path, country, referrer, device, utm_source, event_name, variant, created_at')
       .gte('created_at', since)
       .order('created_at', { ascending: true });
 
-    // ── 2. Fetch last week's page views (for churn detection) ──
+    // ── 2. Fetch last week's page views (for churn detection + site-wide WoW comparison) ──
     const { data: lastWeekViews } = await svc
       .from('page_views')
-      .select('visitor_hash, user_hash, path, created_at')
+      .select('visitor_hash, user_hash, path, country, referrer, device, utm_source, event_name, variant, created_at')
       .gte('created_at', prevSince)
       .lt('created_at', since)
       .order('created_at', { ascending: true });
@@ -473,7 +638,10 @@ export async function GET() {
       }, { onConflict: 'user_id, week_start' });
     }
 
-    // ── 10. Send email ──
+    // ── 10. Site-wide aggregate stats + AI narrative (merged from the retired weekly-analytics cron) ──
+    const aggStats = await buildAggregateStats(views, prevViews);
+
+    // ── 11. Send email ──
     const resend = new Resend(process.env.RESEND_API_KEY);
     const prevWeekTotal = prevUserMap.size;
 
@@ -481,8 +649,8 @@ export async function GET() {
       await resend.emails.send({
         from: 'Marfa Analytics <noreply@marfa.sa>',
         to: 'op.younis@gmail.com',
-        subject: `🧠 تحليل رحلة المستخدم — ${weekStart} | ${journeys.length} مستخدم | ${insights.length} توصية`,
-        html: buildAnalysisEmail(journeys, insights, weekStart, prevWeekTotal),
+        subject: `⚓ مرفأ — تقرير الأداء الأسبوعي — ${weekStart} | ${journeys.length} مستخدم | ${insights.length} توصية`,
+        html: buildAnalysisEmail(journeys, insights, weekStart, prevWeekTotal, aggStats),
       });
     } catch (emailErr) {
       console.error('[user-journey] email failed', emailErr);

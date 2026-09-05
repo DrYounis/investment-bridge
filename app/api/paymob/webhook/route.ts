@@ -178,7 +178,7 @@ export async function POST(request: Request) {
       const resend = new Resend(process.env.RESEND_API_KEY);
       await resend.emails.send({
         from: 'مرفأ <noreply@marfa.sa>',
-        to: 'ceo@marfa.sa',
+        to: ['ceo@marfa.sa', 'op.younis@gmail.com'],
         subject: `💰 اشتراك جديد — ${paidAmount} ريال | ${userName}`,
         html: `<div dir="rtl" style="font-family:'Tajawal',sans-serif;text-align:right">
           <h2 style="color:#c9a84c">اشتراك جديد في مرفأ</h2>

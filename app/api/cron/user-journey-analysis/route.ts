@@ -239,9 +239,20 @@ function generateAggregatedInsights(journeys: UserJourney[]): AggregatedInsight[
 // ── Aggregate site-wide stats + AI narrative (merged from the retired weekly-analytics cron) ──
 
 async function buildAggregateStats(views: PageView[], prevViews: PageView[]): Promise<AggregateStats> {
-  const humanViews = views.filter((r) => !r.is_likely_bot);
+  // Report-time bot heuristic: a visitor with exactly one view all week and no
+  // referrer is itself the anomaly — real users enter via the homepage and browse.
+  // (Cold /login|/register + rolling-window bursts are already flagged in /api/track.)
+  const singleViewHashes = (arr: PageView[]): Set<string> => {
+    const counts = new Map<string, number>();
+    for (const v of arr) counts.set(v.visitor_hash, (counts.get(v.visitor_hash) || 0) + 1);
+    return new Set([...counts.entries()].filter(([, n]) => n === 1).map(([h]) => h));
+  };
+  const singleThisWeek = singleViewHashes(views);
+  const singlePrevWeek = singleViewHashes(prevViews);
+
+  const humanViews = views.filter((v) => !v.is_likely_bot && !(singleThisWeek.has(v.visitor_hash) && !v.referrer));
   const botViews = views.length - humanViews.length;
-  const prevHumanViews = prevViews.filter((r) => !r.is_likely_bot);
+  const prevHumanViews = prevViews.filter((v) => !v.is_likely_bot && !(singlePrevWeek.has(v.visitor_hash) && !v.referrer));
 
   const totalViews = humanViews.length;
   const uniqueVisitors = new Set(humanViews.map((r) => r.visitor_hash)).size;

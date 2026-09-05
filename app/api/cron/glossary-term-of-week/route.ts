@@ -2,8 +2,10 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createServiceClient } from '@/lib/supabase/service';
 import { SCHEDULE_DATA, formatDate, getMeetingNumberForFriday } from '@/app/components/marfa/scheduleData';
+import { sendBatch } from '@/lib/resend-batch';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 function buildMultiTermHTML(
   terms: Array<{
@@ -258,25 +260,16 @@ export async function GET(request: Request) {
     // ── Send emails ──
     const resend = new Resend(process.env.RESEND_API_KEY);
 
-    let sent = 0;
-    let failed = 0;
+    const emails = subscribers.map((sub) => ({
+      from: 'Marfa Learn <noreply@marfa.sa>',
+      to: sub.email,
+      subject,
+      html: singleTerm
+        ? buildTermOfWeekHTML(termRows[0], nextMeetingNumber)
+        : buildMultiTermHTML(termRows, nextMeetingNumber),
+    }));
 
-    for (const sub of subscribers) {
-      try {
-        const { error } = await resend.emails.send({
-          from: 'Marfa Learn <noreply@marfa.sa>',
-          to: sub.email,
-          subject,
-          html: singleTerm
-            ? buildTermOfWeekHTML(termRows[0], nextMeetingNumber)
-            : buildMultiTermHTML(termRows, nextMeetingNumber),
-        });
-        if (error) { failed++; } else { sent++; }
-      } catch {
-        failed++;
-      }
-      await new Promise(r => setTimeout(r, 600));
-    }
+    const { sent, failed } = await sendBatch(resend, emails);
 
     // ── Mark all as sent ──
     const now = new Date().toISOString();

@@ -2,8 +2,10 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createServiceClient } from '@/lib/supabase/service';
 import { SCHEDULE_DATA, getFridayDates, getMeetingDate, getMeetingNumberForFriday, formatDate, TOTAL_MEETINGS } from '@/app/components/marfa/scheduleData';
+import { sendBatch } from '@/lib/resend-batch';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 function getLastFriday(): { dateStr: string; meetingNumber: number; case: string; topic: string } {
   const now = new Date();
@@ -170,21 +172,14 @@ export async function GET(request: Request) {
     const resend = new Resend(process.env.RESEND_API_KEY);
     const subject = `⏰ تذكير — سؤال المجلس بانتظارك | آخر موعد ${deadlineDate}`;
 
-    let sent = 0;
-    let failed = 0;
+    const emails = targeted.map((email) => ({
+      from: 'Marfa Advisory <noreply@marfa.sa>',
+      to: email,
+      subject,
+      html: buildMidweekHTML(meeting, questionRow.question, deadlineDate, answeredCount, subscribers.length),
+    }));
 
-    for (const email of targeted) {
-      try {
-        const { error } = await resend.emails.send({
-          from: 'Marfa Advisory <noreply@marfa.sa>',
-          to: email,
-          subject,
-          html: buildMidweekHTML(meeting, questionRow.question, deadlineDate, answeredCount, subscribers.length),
-        });
-        if (error) { failed++; } else { sent++; }
-      } catch { failed++; }
-      await new Promise(r => setTimeout(r, 600));
-    }
+    const { sent, failed } = await sendBatch(resend, emails);
 
     // ── Admin report ──
     resend.emails.send({

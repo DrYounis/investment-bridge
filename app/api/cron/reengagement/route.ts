@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createServiceClient } from '@/lib/supabase/service';
+import { sendBatch } from '@/lib/resend-batch';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 function buildReengagementHTML(email: string, segment: string, action: string, lastActive: string): string {
   const subjectLine = segment === 'power_user'
@@ -113,9 +115,8 @@ export async function GET(request: Request) {
 
     const alreadyReengagedIds = new Set((alreadySent || []).map(a => a.user_id));
 
-    let sent = 0;
     let skipped = 0;
-    let failed = 0;
+    const emails: { from: string; to: string; subject: string; html: string }[] = [];
 
     for (const user of toReengage) {
       if (alreadyReengagedIds.has(user.user_id)) {
@@ -127,19 +128,17 @@ export async function GET(request: Request) {
       const segment = user.behavior_segment || 'explorer';
       const action = user.recommended_action || '';
 
-      try {
-        const { error } = await resend.emails.send({
-          from: 'Marfa <noreply@marfa.sa>',
-          to: user.email!,
-          subject: segment === 'power_user'
-            ? 'نفتقد نشاطك هذا الأسبوع — عد إلى مرفأ'
-            : 'مرفأ بانتظار عودتك — جرّب أداة مجانية',
-          html: buildReengagementHTML(user.email!, segment, action, lastActive),
-        });
-        if (error) { failed++; } else { sent++; }
-      } catch { failed++; }
-      await new Promise(r => setTimeout(r, 600));
+      emails.push({
+        from: 'Marfa <noreply@marfa.sa>',
+        to: user.email!,
+        subject: segment === 'power_user'
+          ? 'نفتقد نشاطك هذا الأسبوع — عد إلى مرفأ'
+          : 'مرفأ بانتظار عودتك — جرّب أداة مجانية',
+        html: buildReengagementHTML(user.email!, segment, action, lastActive),
+      });
     }
+
+    const { sent, failed } = await sendBatch(resend, emails);
 
     return NextResponse.json({
       success: true,

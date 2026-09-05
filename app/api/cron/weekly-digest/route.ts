@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { createServiceClient } from '@/lib/supabase/service'
+import { sendBatch } from '@/lib/resend-batch'
+
+export const maxDuration = 60
 
 function getResend() {
   return new Resend(process.env.RESEND_API_KEY)
@@ -87,6 +90,8 @@ export async function GET(request: Request) {
 
     const resend = getResend()
     const results: { email: string; status: string }[] = []
+    const emails: { from: string; to: string; subject: string; html: string }[] = []
+    const emailAddrs: string[] = []
 
     for (const profile of profiles) {
       try {
@@ -119,20 +124,22 @@ export async function GET(request: Request) {
 
         const name = profile.full_name || profile.email?.split('@')[0] || 'مستخدم'
 
-        const { error } = await resend.emails.send({
+        emails.push({
           from: 'Marfa <noreply@marfa.sa>',
           to: profile.email || '',
           subject: 'ملخصك الأسبوعي من مرفأ 🚀',
           html: buildDigestHTML(profile.email || '', name, { views, downloads, interests, totalScore, grade }),
         })
-
-        results.push({ email: profile.email || '', status: error ? `فشل: ${error.message}` : 'تم الإرسال' })
+        emailAddrs.push(profile.email || '')
       } catch (err: unknown) {
         results.push({ email: profile.email || '', status: `فشل: ${err instanceof Error ? err.message : String(err)}` })
       }
+    }
 
-      // Rate limit: 600ms between sends
-      await new Promise((r) => setTimeout(r, 600))
+    const { failures } = await sendBatch(resend, emails)
+    const failedByIndex = new Map(failures.map(f => [f.index, f.message]))
+    for (let i = 0; i < emailAddrs.length; i++) {
+      results.push({ email: emailAddrs[i], status: failedByIndex.has(i) ? `فشل: ${failedByIndex.get(i)}` : 'تم الإرسال' })
     }
 
     const sent = results.filter((r) => r.status === 'تم الإرسال').length

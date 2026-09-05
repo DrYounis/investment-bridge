@@ -3,6 +3,9 @@ import { Resend } from 'resend';
 import { createServiceClient } from '@/lib/supabase/service';
 import { getLatestArticlesForEmail } from '@/lib/supabase/financial-news';
 import { SCHEDULE_DATA, getMeetingNumberForFriday } from '@/app/components/marfa/scheduleData';
+import { sendBatch } from '@/lib/resend-batch';
+
+export const maxDuration = 60;
 
 function getResend() {
   return new Resend(process.env.RESEND_API_KEY);
@@ -153,24 +156,20 @@ export async function GET(request: Request) {
     }
 
     const resend = getResend();
-    const results: { email: string; status: string }[] = [];
 
-    for (const sub of recipients) {
-      const name = sub.email.split('@')[0];
-      try {
-        const { error } = await resend.emails.send({
-          from: 'Marfa Meetings <noreply@marfa.sa>',
-          to: sub.email,
-          subject: `🔔 تذكير: لقاء مرفأ ${meeting.meetingNumber} — ${meeting.dateStr} | ${meeting.case}${articles.length > 0 ? ` + ${articles.length} أخبار مالية 📰` : ''}`,
-          html: buildEmailHTML(sub.email, name, isWelcome, meeting, articles),
-        });
-        results.push({ email: sub.email, status: error ? `فشل: ${error.message}` : 'تم الإرسال' });
-      } catch (err: unknown) {
-        results.push({ email: sub.email, status: `فشل: ${err instanceof Error ? err.message : String(err)}` });
-      }
-      // Rate limit: Resend allows 2/sec — wait 600ms between sends
-      await new Promise(r => setTimeout(r, 600));
-    }
+    const emails = recipients.map((sub) => ({
+      from: 'Marfa Meetings <noreply@marfa.sa>',
+      to: sub.email,
+      subject: `🔔 تذكير: لقاء مرفأ ${meeting.meetingNumber} — ${meeting.dateStr} | ${meeting.case}${articles.length > 0 ? ` + ${articles.length} أخبار مالية 📰` : ''}`,
+      html: buildEmailHTML(sub.email, sub.email.split('@')[0], isWelcome, meeting, articles),
+    }));
+
+    const { failures } = await sendBatch(resend, emails);
+    const failedByIndex = new Map(failures.map(f => [f.index, f.message]));
+    const results: { email: string; status: string }[] = recipients.map((sub, i) => ({
+      email: sub.email,
+      status: failedByIndex.has(i) ? `فشل: ${failedByIndex.get(i)}` : 'تم الإرسال',
+    }));
 
     // Notify super admin
     const sent = results.filter(r => r.status === 'تم الإرسال').length;

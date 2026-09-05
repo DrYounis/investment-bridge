@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createServiceClient } from '@/lib/supabase/service';
 import { SCHEDULE_DATA, getFridayDates, getMeetingDate, getMeetingNumberForFriday, formatDate, TOTAL_MEETINGS, type YouTubeLink } from '@/app/components/marfa/scheduleData';
+import { sendBatch } from '@/lib/resend-batch';
+
+export const maxDuration = 60;
 
 function getResend() {
   return new Resend(process.env.RESEND_API_KEY);
@@ -275,20 +278,18 @@ export async function GET(request: Request) {
 
     const subject = `🏛️ المجلس الاستشاري بانتظار قرارك — سؤال حالة اللقاء ${finishedN} | آخر موعد ${deadlineDate}`;
 
-    for (const r of targeted) {
-      try {
-        const { error } = await resend.emails.send({
-          from: 'Marfa Advisory <noreply@marfa.sa>',
-          to: r.email,
-          subject,
-          html: buildMajlisReminderHTML(r.email, meeting, questionText, deadlineDate, nextN, youtubeLinks, glossaryTerms),
-        });
-        results.push({ email: r.email, status: error ? `فشل: ${error.message}` : 'تم الإرسال' });
-      } catch (err: unknown) {
-        results.push({ email: r.email, status: `فشل: ${err instanceof Error ? err.message : String(err)}` });
-      }
-      // Rate limit: Resend allows 2/sec — wait 600ms between sends
-      await new Promise(r => setTimeout(r, 600));
+    const emails = targeted.map((r) => ({
+      from: 'Marfa Advisory <noreply@marfa.sa>',
+      to: r.email,
+      subject,
+      html: buildMajlisReminderHTML(r.email, meeting, questionText, deadlineDate, nextN, youtubeLinks, glossaryTerms),
+    }));
+
+    const { failures } = await sendBatch(resend, emails);
+    const failedByIndex = new Map(failures.map(f => [f.index, f.message]));
+    for (let i = 0; i < targeted.length; i++) {
+      const r = targeted[i];
+      results.push({ email: r.email, status: failedByIndex.has(i) ? `فشل: ${failedByIndex.get(i)}` : 'تم الإرسال' });
     }
 
     // ── Admin report ──

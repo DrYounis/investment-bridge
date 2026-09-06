@@ -101,3 +101,38 @@ export const SCHEDULE_DATA: ScheduleEntry[] = [
 ];
 
 export const TOTAL_MEETINGS = SCHEDULE_DATA.length; // 27
+
+// ── Academic master modules (separate from the 27 real case studies) ───────
+// sourceType classification rule:
+//   'disguised' — built around a known PUBLIC event/number (announced funding
+//     round, acquisition, published financials); company name disguised.
+//   'fictional' — internal decision with no public trace (collapsed retention,
+//     internal pivot, etc.); fully fictional with realistic market context.
+
+export type AcademicModuleSourceType = 'fictional' | 'disguised';
+
+export interface AcademicModule {
+  module: string;          // "1.1"
+  subject: string;         // "Entrepreneurship & Venture Building"
+  titleAr: string;
+  titleEn: string;
+  learningOutcome: string;
+  decisionPoint: string;
+  sourceType: AcademicModuleSourceType;
+  slug: string;            // content file slug
+}
+
+export const ACADEMIC_MODULES: AcademicModule[] = [
+  {
+    module: "1.1",
+    subject: "Entrepreneurship & Venture Building",
+    titleAr: "من الفكرة إلى التحقق",
+    titleEn: "From Idea to Validation",
+    learningOutcome: "Problem-Solution Fit واقتصاديات الـ MVP",
+    decisionPoint: "Pivot أو Persevere؟",
+    sourceType: "fictional",
+    slug: "1.1-from-idea-to-validation",
+  },
+];
+
+export const TOTAL_ACADEMIC_MODULES = ACADEMIC_MODULES.length;

@@ -19,8 +19,8 @@ if (!SUPABASE_URL || !SUPABASE_KEY) {
 
 const svc = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const MIN_STUDENT = 1;
-const MAX_STUDENT = 13;
+// Actual attendees of meetings 1–11 (confirmed 2026-09-06).
+const TARGET_STUDENTS = [2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 16];
 const FIRST_MEETING = 1;
 const LAST_MEETING = 11; // meeting 12 (Sep 11) has not occurred yet
 
@@ -29,8 +29,7 @@ async function main() {
   const { data: profiles, error } = await svc
     .from('profiles')
     .select('id, student_number, full_name')
-    .gte('student_number', MIN_STUDENT)
-    .lte('student_number', MAX_STUDENT)
+    .in('student_number', TARGET_STUDENTS)
     .order('student_number', { ascending: true });
 
   if (error) {
@@ -39,17 +38,14 @@ async function main() {
   }
 
   const found = new Set((profiles || []).map((p) => p.student_number));
-  const missing: number[] = [];
-  for (let n = MIN_STUDENT; n <= MAX_STUDENT; n++) {
-    if (!found.has(n)) missing.push(n);
-  }
+  const missing = TARGET_STUDENTS.filter((n) => !found.has(n));
 
   if (missing.length > 0) {
-    console.error(`Stopping — missing student_number(s): ${missing.join(', ')} (found ${profiles?.length || 0}/${MAX_STUDENT - MIN_STUDENT + 1}).`);
+    console.error(`Stopping — missing student_number(s): ${missing.join(', ')} (found ${profiles?.length || 0}/${TARGET_STUDENTS.length}).`);
     process.exit(1);
   }
 
-  console.log(`Found ${profiles!.length} founding students (student_number ${MIN_STUDENT}–${MAX_STUDENT}).`);
+  console.log(`Found ${profiles!.length} attendees (student_number ${TARGET_STUDENTS.join(',')}).`);
 
   // 2. Backfill meetings 1–11
   const summary: { student_number: number; full_name: string | null; inserted: number; errors: string[] }[] = [];
@@ -82,7 +78,7 @@ async function main() {
     console.log(`  #${r.student_number} | ${r.full_name || '(no name)'} | ${r.inserted} inserted | ${status}`);
     for (const e of r.errors) console.log(`      ${e}`);
   }
-  const expected = MAX_STUDENT * (LAST_MEETING - FIRST_MEETING + 1);
+  const expected = TARGET_STUDENTS.length * (LAST_MEETING - FIRST_MEETING + 1);
   console.log(`\nTotal upserted: ${totalInserted} (expected ${expected}).`);
 }
 

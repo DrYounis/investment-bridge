@@ -133,6 +133,16 @@ export const ACADEMIC_MODULES: AcademicModule[] = [
     sourceType: "fictional",
     slug: "1.1-from-idea-to-validation",
   },
+  {
+    module: "1.2",
+    subject: "Entrepreneurship & Venture Building",
+    titleAr: "تصميم نموذج العمل",
+    titleEn: "Business Model Design",
+    learningOutcome: "Business Model Canvas وتحليل الإيرادات/التكاليف",
+    decisionPoint: "أي قناة إيراد نعتمد؟",
+    sourceType: "fictional",
+    slug: "1.2-business-model-design",
+  },
 ];
 
 export const TOTAL_ACADEMIC_MODULES = ACADEMIC_MODULES.length;

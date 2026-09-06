@@ -18,8 +18,7 @@ export async function GET(request: NextRequest) {
     const { data: profiles, error } = await svc
       .from('profiles')
       .select('student_number, email, full_name')
-      .gte('student_number', 2)
-      .not('student_number', 'in', '(8,14,15)')
+      .in('student_number', [13, 16])
       .order('student_number', { ascending: true });
 
     if (error) {
@@ -49,6 +48,7 @@ export async function GET(request: NextRequest) {
       } catch (e) {
         results.push({ number: p.student_number, email: p.email, ok: false, error: e instanceof Error ? e.message : String(e) });
       }
+      await new Promise((r) => setTimeout(r, 700));
     }
 
     const sent = results.filter((r) => r.ok).length;

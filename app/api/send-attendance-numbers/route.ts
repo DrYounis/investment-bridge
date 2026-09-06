@@ -19,6 +19,7 @@ export async function GET(request: NextRequest) {
       .from('profiles')
       .select('student_number, email, full_name')
       .gte('student_number', 2)
+      .not('student_number', 'in', '(8,14,15)')
       .order('student_number', { ascending: true });
 
     if (error) {

@@ -11,7 +11,7 @@ function getResend() {
   return new Resend(process.env.RESEND_API_KEY);
 }
 
-function getUpcomingFriday(): { dateStr: string; meetingNumber: number; case: string; topic: string; challenge: string } {
+export function getUpcomingFriday(): { dateStr: string; meetingNumber: number; case: string; topic: string; challenge: string } {
   const now = new Date();
   const dayOfWeek = now.getDay(); // 0=Sun, 5=Friday
   let daysUntilFriday = (5 - dayOfWeek + 7) % 7;
@@ -39,7 +39,7 @@ function getUpcomingFriday(): { dateStr: string; meetingNumber: number; case: st
   return { dateStr, meetingNumber, case: entry.case, topic: entry.topic, challenge: entry.challenge };
 }
 
-function buildEmailHTML(email: string, name: string, isWelcome: boolean, meeting: ReturnType<typeof getUpcomingFriday>, articles: { slug: string; title: string; summary: string; article_date: string }[] = []) {
+export function buildEmailHTML(email: string, name: string, isWelcome: boolean, meeting: ReturnType<typeof getUpcomingFriday>, articles: { slug: string; title: string; summary: string; article_date: string }[] = []) {
   const welcomeBlock = isWelcome
     ? `<div style="background: linear-gradient(135deg, #0a0f1e, #1a2540); padding: 30px; border-radius: 16px; margin-bottom: 24px; text-align: center;">
       <h2 style="color: #c9a84c; margin: 0 0 12px 0; font-size: 22px;">🕌 أهلاً بك في مجتمع مرفأ الاستثماري</h2>

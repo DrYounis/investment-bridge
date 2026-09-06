@@ -14,6 +14,7 @@ const NAV_ITEMS = [
 const ADMIN_ITEMS = [
   { href: '/admin/meetings', icon: '📅', label: 'الاجتماعات' },
   { href: '/admin/majlis', icon: '🏛️', label: 'المجلس الاستشاري' },
+  { href: '/admin/attendance', icon: '✅', label: 'الحضور' },
   { href: '/admin/monthly', icon: '📊', label: 'التقييم الشهري' },
   { href: '/admin/projects', icon: '🚀', label: 'المشاريع' },
   { href: '/admin/product-lines', icon: '🏭', label: 'خطوط الإنتاج' },

@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
 
     const { data, error } = await svc
       .from('majlis_attendance')
-      .select('id, meeting_number, profile_id, attended_at, recorded_by, profiles(full_name, student_number)')
+      .select('id, meeting_number, profile_id, attended_at, recorded_by, profiles!profile_id(full_name, student_number)')
       .eq('meeting_number', meeting)
       .order('attended_at', { ascending: true });
 

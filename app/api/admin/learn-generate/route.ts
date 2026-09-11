@@ -8,8 +8,7 @@ import { TOPICS } from '@/lib/learn/taxonomy';
 async function checkAdmin() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  const envEmails = (process.env.SUPER_ADMIN_EMAIL || '').split(',').map(e => e.trim()).filter(Boolean);
-  return isSuperAdminEmail(user?.email, envEmails);
+  return isSuperAdminEmail(user?.email);
 }
 
 export async function POST(request: NextRequest) {

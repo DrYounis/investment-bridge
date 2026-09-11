@@ -119,14 +119,11 @@ function buildEmailHTML(name: string, isWelcome: boolean) {
 
 export async function POST(request: Request) {
   try {
-    // Auth check — session or API key
+    // Auth check — session
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    const apiKey = request.headers.get('x-api-key');
 
-    const isAuthorized =
-      (user?.email && isSuperAdminEmail(user.email)) ||
-      Boolean(apiKey && process.env.INTERNAL_API_SECRET && apiKey === process.env.INTERNAL_API_SECRET);
+    const isAuthorized = Boolean(user?.email && isSuperAdminEmail(user.email));
 
     if (!isAuthorized) {
       return NextResponse.json({ error: 'غير مصرح' }, { status: 403 });

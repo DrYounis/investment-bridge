@@ -36,8 +36,7 @@ export async function POST(request: Request) {
   const supabaseServer = await createServerClient();
   const { data: { user } } = await supabaseServer.auth.getUser();
 
-  const envEmails = (process.env.SUPER_ADMIN_EMAIL || '').split(',').map(e => e.trim()).filter(Boolean);
-  if (!user || !isSuperAdminEmail(user.email, envEmails)) {
+  if (!user || !isSuperAdminEmail(user.email)) {
     return NextResponse.json({ error: 'غير مصرح' }, { status: 403 });
   }
 

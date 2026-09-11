@@ -1,15 +1,27 @@
 // Shared schedule data — single source of truth for both MeetingsSchedule and Majlis
 
-// One-week postponement: اللقاء 10 (originally Friday 2026-08-21) was postponed to
-// 2026-08-28. Meetings 1–9 keep their original dates; meetings 10+ shift +7 days.
+// Cumulative postponements: each entry shifts every meeting from `fromIndex` onward
+// by `days`. Applied in order, so a meeting can be shifted by more than one entry.
+//
+// 1. اللقاء 10 (originally Friday 2026-08-21) postponed one week → 2026-08-28.
+//    Meetings 1–9 keep their original dates; meetings 10+ shift +7 days.
+// 2. اللقاء 12 (originally Friday 2026-09-11) postponed two weeks → 2026-09-25,
+//    because a special AI session (see AI_SPECIAL_SESSION) occupies Friday 2026-09-18.
+//    Meetings 12+ shift an additional +14 days (total +21 from base, +14 vs prior).
 const BASE_FRIDAY = new Date(2026, 5, 19); // اللقاء 1
-const POSTPONED_WEEK_INDEX = 9; // 0-based index of اللقاء 10 (first shifted meeting)
-const POSTPONED_DAYS = 7;
+const POSTPONEMENTS = [
+  { fromIndex: 9, days: 7 },   // اللقاء 10
+  { fromIndex: 11, days: 14 }, // اللقاء 12 (AI week, 2-week shift)
+];
 
-/** Friday date a given 0-based meeting index occurs on (applies the postponement). */
+/** Friday date a given 0-based meeting index occurs on (applies all postponements). */
 export function getMeetingDate(index: number): Date {
   const d = new Date(BASE_FRIDAY);
-  d.setDate(d.getDate() + index * 7 + (index >= POSTPONED_WEEK_INDEX ? POSTPONED_DAYS : 0));
+  let extra = 0;
+  for (const p of POSTPONEMENTS) {
+    if (index >= p.fromIndex) extra += p.days;
+  }
+  d.setDate(d.getDate() + index * 7 + extra);
   return d;
 }
 
@@ -17,19 +29,16 @@ export function getFridayDates(): Date[] {
   return SCHEDULE_DATA.map((_, i) => getMeetingDate(i));
 }
 
-/** 1-based meeting number for a Friday date, or null if that Friday falls in the postponed gap. */
+/** 1-based meeting number for a Friday date, or null if no regular meeting falls on that Friday (postponed gap or AI week). */
 export function getMeetingNumberForFriday(friday: Date): number | null {
   const day = new Date(friday);
   day.setHours(0, 0, 0, 0);
-  const diffDays = Math.round((day.getTime() - BASE_FRIDAY.getTime()) / 86400000);
-  const gapStart = POSTPONED_WEEK_INDEX * 7;
-  const gapEnd = gapStart + POSTPONED_DAYS;
-  if (diffDays >= gapStart && diffDays < gapEnd) return null;
-  const idx = diffDays < gapStart
-    ? Math.round(diffDays / 7)
-    : Math.round((diffDays - POSTPONED_DAYS) / 7);
-  if (idx < 0 || idx >= SCHEDULE_DATA.length) return null;
-  return idx + 1;
+  for (let i = 0; i < SCHEDULE_DATA.length; i++) {
+    const d = getMeetingDate(i);
+    d.setHours(0, 0, 0, 0);
+    if (d.getTime() === day.getTime()) return i + 1;
+  }
+  return null;
 }
 
 export function formatDate(date: Date): string {
@@ -45,8 +54,16 @@ export function getThisFridayIndex(): number {
   friday.setDate(friday.getDate() + daysFromFriday);
   const n = getMeetingNumberForFriday(friday);
   if (n !== null) return n - 1;
-  // Postponed gap Friday: latest reached meeting is the one just before the shift.
-  return POSTPONED_WEEK_INDEX - 1;
+  // Gap Friday (postponed/AI week): fall back to the latest meeting that already happened.
+  const target = new Date(friday);
+  target.setHours(0, 0, 0, 0);
+  let latest = -1;
+  for (let i = 0; i < SCHEDULE_DATA.length; i++) {
+    const d = getMeetingDate(i);
+    d.setHours(0, 0, 0, 0);
+    if (d.getTime() < target.getTime()) latest = i;
+  }
+  return latest;
 }
 
 export interface YouTubeLink {
@@ -101,6 +118,20 @@ export const SCHEDULE_DATA: ScheduleEntry[] = [
 ];
 
 export const TOTAL_MEETINGS = SCHEDULE_DATA.length; // 27
+
+// ── Special sessions (not part of the 27 case-study meetings) ──
+export interface SpecialSession {
+  title: string;
+  date: Date;
+  presenter: string;
+}
+
+/** One-off AI session occupying the Friday that would otherwise be a postponed gap. */
+export const AI_SPECIAL_SESSION: SpecialSession = {
+  title: 'الذكاء الاصطناعي',
+  date: new Date(2026, 8, 18), // الجمعة 18 سبتمبر 2026
+  presenter: 'المهندس أحمد يونس — الرئيس التنفيذي للتقنية في مرفأ',
+};
 
 // ── Academic master modules (separate from the 27 real case studies) ───────
 // sourceType classification rule:

@@ -13,30 +13,30 @@ function getResend() {
 
 export function getUpcomingFriday(): { dateStr: string; meetingNumber: number; case: string; topic: string; challenge: string } {
   const now = new Date();
-  const dayOfWeek = now.getDay(); // 0=Sun, 5=Friday
-  let daysUntilFriday = (5 - dayOfWeek + 7) % 7;
-  if (daysUntilFriday === 0) daysUntilFriday = 0; // if today is Friday, send for today
-
-  const friday = new Date(now);
-  friday.setDate(friday.getDate() + daysUntilFriday);
-
   const months = [
     'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
     'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
   ];
-  const dateStr = `الجمعة ${friday.getDate()} ${months[friday.getMonth()]} ${friday.getFullYear()}`;
 
-  // Calculate which meeting number this Friday corresponds to (single source of truth)
-  const meetingNumber = getMeetingNumberForFriday(friday) ?? 0;
+  const friday = new Date(now);
+  const daysUntilFriday = (5 - friday.getDay() + 7) % 7;
+  friday.setDate(friday.getDate() + daysUntilFriday);
 
-  // Map meeting number to case study from the single source of truth
-  const idx = meetingNumber - 1;
-  if (idx >= SCHEDULE_DATA.length) {
-    console.warn(`[weekly-meeting-notification] meetingNumber ${meetingNumber} is out of bounds (SCHEDULE_DATA has ${SCHEDULE_DATA.length} entries), falling back to meeting 1`);
+  // Skip gap Fridays (postponed / AI weeks) and find the next regular meeting.
+  for (let i = 0; i < 12; i++) {
+    const n = getMeetingNumberForFriday(friday);
+    if (n !== null && n >= 1 && n <= SCHEDULE_DATA.length) {
+      const dateStr = `الجمعة ${friday.getDate()} ${months[friday.getMonth()]} ${friday.getFullYear()}`;
+      const entry = SCHEDULE_DATA[n - 1];
+      return { dateStr, meetingNumber: n, case: entry.case, topic: entry.topic, challenge: entry.challenge };
+    }
+    friday.setDate(friday.getDate() + 7); // next Friday
   }
-  const entry = idx >= 0 && idx < SCHEDULE_DATA.length ? SCHEDULE_DATA[idx] : SCHEDULE_DATA[0];
 
-  return { dateStr, meetingNumber, case: entry.case, topic: entry.topic, challenge: entry.challenge };
+  // Fallback (no regular meeting in the next 12 weeks)
+  const dateStr = `الجمعة ${friday.getDate()} ${months[friday.getMonth()]} ${friday.getFullYear()}`;
+  const entry = SCHEDULE_DATA[0];
+  return { dateStr, meetingNumber: 1, case: entry.case, topic: entry.topic, challenge: entry.challenge };
 }
 
 export function buildEmailHTML(email: string, name: string, isWelcome: boolean, meeting: ReturnType<typeof getUpcomingFriday>, articles: { slug: string; title: string; summary: string; article_date: string }[] = []) {

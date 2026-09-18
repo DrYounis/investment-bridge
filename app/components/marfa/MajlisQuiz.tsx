@@ -209,6 +209,7 @@ export default function MajlisQuiz({ meetingNumber, userId, displayName, isAdvis
       .single();
 
     if (insertErr) {
+      console.error('[majlis-quiz] submit answer', insertErr);
       setMyAnswer(null);
       setError('تعذّر إرسال الإجابة — حاول مرة أخرى');
     } else if (data) {
@@ -241,6 +242,7 @@ export default function MajlisQuiz({ meetingNumber, userId, displayName, isAdvis
       .single();
 
     if (updateErr) {
+      console.error('[majlis-quiz] edit answer', updateErr);
       setMyAnswer(prev);
       setError('تعذّر تعديل الإجابة — حاول مرة أخرى');
     } else if (data) {

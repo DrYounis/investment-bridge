@@ -23,7 +23,8 @@ export async function GET(request: Request) {
   }
 
   try {
-    const pdfBase64 = readFileSync(PDF_PATH).toString('base64');
+    const pdfBuffer = readFileSync(PDF_PATH);
+    const pdfBase64 = pdfBuffer.toString('base64');
 
     const supabase = createServiceClient();
     const singleEmail = searchParams.get('email');
@@ -77,7 +78,13 @@ export async function GET(request: Request) {
 
     const sent = results.filter((r) => r.status === 'تم الإرسال').length;
 
-    return NextResponse.json({ success: true, sent, total: recipients.length, results });
+    return NextResponse.json({
+      success: true,
+      sent,
+      total: recipients.length,
+      attachment: { filename: PDF_FILENAME, bytes: pdfBuffer.length },
+      results,
+    });
   } catch (err: unknown) {
     return NextResponse.json({ error: err instanceof Error ? err.message : String(err) }, { status: 500 });
   }

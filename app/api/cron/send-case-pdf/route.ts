@@ -9,8 +9,8 @@ export const maxDuration = 60;
 // One-shot temp token — this route is removed immediately after use.
 const TEMP_TOKEN = 'b3e9d2f4-7a1c-4e5b-9d0f-6c8a2e7b5d31';
 
-const PDF_PATH = join(process.cwd(), 'public/case-studies/Theranos_Risk_Case_Study.pdf');
-const PDF_FILENAME = 'Theranos_Risk_Case_Study.pdf';
+const PDF_PATH = join(process.cwd(), 'public/case-studies/Marfa_MBA_Theranos_Case_Weekly.pdf');
+const PDF_FILENAME = 'Marfa_MBA_Theranos_Case_Weekly.pdf';
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));

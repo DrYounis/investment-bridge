@@ -46,6 +46,15 @@ export async function GET(request: Request) {
       return NextResponse.json({ message: `Email not found: ${singleEmail}` });
     }
 
+    if (searchParams.get('dryRun') === '1') {
+      return NextResponse.json({
+        dryRun: true,
+        total: recipients.length,
+        attachment: { filename: PDF_FILENAME, bytes: pdfBuffer.length },
+        recipients: recipients.map((s) => s.email),
+      });
+    }
+
     const resend = new Resend(process.env.RESEND_API_KEY);
 
     const subject = '📎 حالة الأسبوع — لقاء مرفأ 13: إدارة المخاطر (Theranos)';

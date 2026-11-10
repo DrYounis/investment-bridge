@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'تواصل معنا | مرفأ',
-  description: 'تواصل مع فريق مرفأ — البريد الإلكتروني للمنصة، الرئيس التنفيذي، المدير التقني، ورئيس المجلس الاستشاري.',
+  description: 'تواصل مع فريق مرفأ — البريد الإلكتروني للمنصة، الرئيس التنفيذي، محاضر اللقاءات، ورئيس المجلس الاستشاري.',
 };
 
 interface ContactLink {
@@ -33,26 +33,26 @@ const CONTACTS: ContactCard[] = [
   {
     emoji: '👨‍💼',
     title: 'الرئيس التنفيذي',
-    subtitle: 'د. محمد يونس',
-    subtitleEn: 'Dr Mohamad Younis',
+    subtitle: 'م. أحمد يونس',
+    subtitleEn: 'Eng Ahmad Younis',
     email: 'ceo@marfa.sa',
     emailLabel: 'ceo@marfa.sa',
     links: [
       { href: 'mailto:ceo@marfa.sa', label: '✉️ ceo@marfa.sa' },
-      { href: 'https://wa.me/966555056545', label: '💬 واتساب', external: true },
-      { href: 'https://www.linkedin.com/in/7gp/', label: '💼 LinkedIn', external: true },
+      { href: 'https://www.linkedin.com/in/ahmad-younis-1110a5b1/', label: '💼 LinkedIn', external: true },
     ],
   },
   {
-    emoji: '⚙️',
-    title: 'المدير التقني',
-    subtitle: 'م. أحمد يونس',
-    subtitleEn: 'Eng Ahmad Younis',
-    email: 'cto@marfa.sa',
-    emailLabel: 'cto@marfa.sa',
+    emoji: '🎓',
+    title: 'محاضر اللقاءات',
+    subtitle: 'د. محمد يونس',
+    subtitleEn: 'Dr Mohamad Younis',
+    email: 'DrYounis@marfa.sa',
+    emailLabel: 'DrYounis@marfa.sa',
     links: [
-      { href: 'mailto:cto@marfa.sa', label: '✉️ cto@marfa.sa' },
-      { href: 'https://www.linkedin.com/in/ahmad-younis-1110a5b1/', label: '💼 LinkedIn', external: true },
+      { href: 'mailto:DrYounis@marfa.sa', label: '✉️ DrYounis@marfa.sa' },
+      { href: 'https://wa.me/966555056545', label: '💬 واتساب', external: true },
+      { href: 'https://www.linkedin.com/in/7gp/', label: '💼 LinkedIn', external: true },
     ],
   },
   {

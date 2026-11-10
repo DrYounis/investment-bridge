@@ -39,6 +39,7 @@ const CONTACTS: ContactCard[] = [
     emailLabel: 'ceo@marfa.sa',
     links: [
       { href: 'mailto:ceo@marfa.sa', label: '✉️ ceo@marfa.sa' },
+      { href: 'https://wa.me/966530628416', label: '💬 واتساب', external: true },
       { href: 'https://www.linkedin.com/in/ahmad-younis-1110a5b1/', label: '💼 LinkedIn', external: true },
     ],
   },

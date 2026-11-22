@@ -8,10 +8,14 @@
 // 2. اللقاء 12 (originally Friday 2026-09-11) postponed two weeks → 2026-09-25,
 //    because a special AI session (see AI_SPECIAL_SESSION) occupies Friday 2026-09-18.
 //    Meetings 12+ shift an additional +14 days (total +21 from base, +14 vs prior).
+// 3. اللقاء 20 (originally Friday 2026-11-20) postponed one week → 2026-11-27,
+//    because a special AI session occupies Friday 2026-11-20.
+//    Meetings 20+ shift an additional +7 days (total +28 from base).
 const BASE_FRIDAY = new Date(2026, 5, 19); // اللقاء 1
 const POSTPONEMENTS = [
   { fromIndex: 9, days: 7 },   // اللقاء 10
   { fromIndex: 11, days: 14 }, // اللقاء 12 (AI week, 2-week shift)
+  { fromIndex: 19, days: 7 },  // اللقاء 20 (AI session 2026-11-20)
 ];
 
 /** Friday date a given 0-based meeting index occurs on (applies all postponements). */
